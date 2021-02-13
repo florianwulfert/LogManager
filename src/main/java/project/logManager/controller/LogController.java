@@ -1,19 +1,18 @@
 package project.logManager.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import project.logManager.exception.SeverityNotFoundException;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,8 +46,12 @@ public class LogController {
 
     @GetMapping("/logs/{severity}")
     public List<LogDTO> getLogsBySeverity(@PathVariable final String severity) {
-        List<Log> logs = logService.getLogsBySeverity(severity);
-        return logDTOMapper.mapLogsToLogDTOs(logs);
+        try {
+            List<Log> logs = logService.getLogsBySeverity(severity);
+            return logDTOMapper.mapLogsToLogDTOs(logs);
+        } catch (IllegalArgumentException e) {
+            throw new SeverityNotFoundException(severity);
+        }
     }
 
     @GetMapping("/logs/messages")

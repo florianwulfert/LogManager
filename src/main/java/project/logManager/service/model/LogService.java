@@ -5,7 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.logManager.common.enums.SeverityEnum;
 import project.logManager.model.entity.Log;
 import project.logManager.model.respository.LogRepository;
 import project.logManager.service.validation.LogValidationService;
@@ -46,7 +45,7 @@ public class LogService {
             return logRepository.findBySeverity(severity);
         }
         LOGGER.error("Given severity '{}' is not allowed!", severity);
-        throw new IllegalArgumentException("Given severity " + severity + " is not allowed!");
+        throw new IllegalArgumentException("Illegal severity!");
     }
 
     public List<Log> searchLogsByMessageParts(String message) {
