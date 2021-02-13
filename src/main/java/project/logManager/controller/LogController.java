@@ -13,6 +13,7 @@ import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,8 +31,11 @@ public class LogController {
     private final LogDTOMapper logDTOMapper;
 
     @GetMapping("/logs")
-    public List<LogDTO> getLogs() {
-        List<Log> logs = logService.getLogs();
+    public List<LogDTO> getLogs(@RequestParam (required = false) final String severity,
+                                @RequestParam (required = false) final String message,
+                                @RequestParam (required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime startDateTime,
+                                @RequestParam (required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime endDateTime) {
+        List<Log> logs = logService.getLogs(severity, message, startDateTime, endDateTime);
         return logDTOMapper.mapLogsToLogDTOs(logs);
     }
 

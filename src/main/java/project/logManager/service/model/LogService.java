@@ -28,7 +28,52 @@ public class LogService {
     private final LogRepository logRepository;
     private final LogValidationService logValidationService;
 
-    public List<Log> getLogs() {
+    public List<Log> getLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate) {
+        if (severity != null && message != null && startDate != null && endDate != null) {
+            return logRepository.findBySeverityAndMessageContainingAndTimestampBetween(severity, message, startDate, endDate);
+        }
+        if (severity != null && message != null && startDate != null) {
+            return logRepository.findBySeverityAndMessageContainingAndTimestampAfter(severity, message, startDate);
+        }
+        if (severity != null && message != null && endDate != null) {
+            return logRepository.findBySeverityAndMessageContainingAndTimestampBefore(severity, message, endDate);
+        }
+        if (severity != null && message != null) {
+            return logRepository.findBySeverityAndMessageContaining(severity, message);
+        }
+        if (severity != null && startDate != null && endDate != null) {
+            return logRepository.findBySeverityAndTimestampBetween(severity, startDate, endDate);
+        }
+        if (severity != null && startDate != null) {
+            return logRepository.findBySeverityAndTimestampAfter(severity, startDate);
+        }
+        if (severity != null && endDate != null) {
+            return logRepository.findBySeverityAndTimestampBefore(severity, endDate);
+        }
+        if (severity != null) {
+            return logRepository.findBySeverity(severity);
+        }
+        if (message != null && startDate != null && endDate != null) {
+            return logRepository.findByMessageContainingAndTimestampBetween(message, startDate, endDate);
+        }
+        if (message != null && startDate != null) {
+            return logRepository.findByMessageContainingAndTimestampAfter(message, startDate);
+        }
+        if (message != null && endDate != null) {
+            return logRepository.findByMessageContainingAndTimestampBefore(message, endDate);
+        }
+        if (message != null) {
+            return logRepository.findByMessageContaining(message);
+        }
+        if (startDate != null && endDate != null) {
+            return logRepository.findByTimestampBetween(startDate, endDate);
+        }
+        if (startDate != null) {
+            return logRepository.findByTimestampAfter(startDate);
+        }
+        if (endDate != null) {
+            return logRepository.findByTimestampBefore(endDate);
+        }
         return logRepository.findAll();
     }
 
