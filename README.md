@@ -1,4 +1,4 @@
-# Logmanager
+# Logmanager API
 
 ### Restschnittstellen:
 * POST: /log

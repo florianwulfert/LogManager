@@ -1,0 +1,365 @@
+{
+	"info": {
+		"_postman_id": "0bf61c60-ef12-4c9c-b0e4-b33207897baa",
+		"name": "LogManager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "logs/date",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "logs/date - wrong date",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "logs/date - missing parameter",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "logs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/logs?severity=INFO&endDateTime=13.02.2021 10:00:00&message=Das&startDateTime=12.02.2021 10:00:00",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"logs"
+					],
+					"query": [
+						{
+							"key": "severity",
+							"value": "INFO"
+						},
+						{
+							"key": "endDateTime",
+							"value": "13.02.2021 10:00:00"
+						},
+						{
+							"key": "message",
+							"value": "Das"
+						},
+						{
+							"key": "startDateTime",
+							"value": "12.02.2021 10:00:00"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logs - wrong date",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/logs?severity=INFO&endDateTime=13.02.2021-10:00:00&message=Das&startDateTime=12.02.2021-10:00:00",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"logs"
+					],
+					"query": [
+						{
+							"key": "severity",
+							"value": "INFO"
+						},
+						{
+							"key": "endDateTime",
+							"value": "13.02.2021-10:00:00"
+						},
+						{
+							"key": "message",
+							"value": "Das"
+						},
+						{
+							"key": "startDateTime",
+							"value": "12.02.2021-10:00:00"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "log",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/log?severity=INFO&message=Das ist ein guter Test",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"log"
+					],
+					"query": [
+						{
+							"key": "severity",
+							"value": "INFO"
+						},
+						{
+							"key": "message",
+							"value": "Das ist ein guter Test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "log - wrong severity",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/log?severity=INFO&message=Das ist ein guter Test",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"log"
+					],
+					"query": [
+						{
+							"key": "severity",
+							"value": "INFO"
+						},
+						{
+							"key": "message",
+							"value": "Das ist ein guter Test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "log - missing parameter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/log?severity=INFO&message=Das ist ein guter Test",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"log"
+					],
+					"query": [
+						{
+							"key": "severity",
+							"value": "INFO"
+						},
+						{
+							"key": "message",
+							"value": "Das ist ein guter Test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logs/severity",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/logs/INFO",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"logs",
+						"INFO"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logs/message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/logs/messages?message=Dies",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"logs",
+						"messages"
+					],
+					"query": [
+						{
+							"key": "message",
+							"value": "Dies"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logs/message - missing parameter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/logs/messages?message=Dies",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"logs",
+						"messages"
+					],
+					"query": [
+						{
+							"key": "message",
+							"value": "Dies"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
