@@ -1,7 +1,19 @@
 package project.logManager.controller;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.exception.SeverityNotFoundException;
+import project.logManager.model.mapper.LogDTOMapper;
+import project.logManager.service.model.LogService;
+
+import java.time.LocalDateTime;
+import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,29 +21,54 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author - EugenFriesen
  * 14.02.2021
  **/
+
+@ExtendWith(MockitoExtension.class)
 class LogControllerTest {
 
-    @BeforeEach
-    void setUp() {
+    @InjectMocks
+    LogController systemUnderTest;
+
+    @Mock
+    LogService logService;
+
+    @Mock
+    LogDTOMapper logDTOMapper;
+
+    @Test
+    void testGetLogs() {
+        LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0 );
+        LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0 );
+        systemUnderTest.getLogs("INFO", "Test", startDate, endDate);
+        Mockito.verify(logService, Mockito.times(1))
+                .getLogs(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
+        Mockito.verify(logDTOMapper, Mockito.times(1)).mapLogsToLogDTOs(Mockito.any());
     }
 
     @Test
-    void getLogs() {
+    void testAddLog() {
+        systemUnderTest.addLog("INFO", "Test");
+        Mockito.verify(logService, Mockito.times(1)).addLog(Mockito.any(), Mockito.any());
     }
 
     @Test
-    void addLog() {
+    void testGetLogsBySeverity() {
+        systemUnderTest.getLogsBySeverity("INFO");
+        Mockito.verify(logService, Mockito.times(1)).getLogsBySeverity(Mockito.any());
+        Mockito.verify(logDTOMapper, Mockito.times(1)).mapLogsToLogDTOs(Mockito.any());
     }
 
     @Test
-    void getLogsBySeverity() {
+    void testFilterLogsByMessageParts() {
+        systemUnderTest.filterLogsByMessageParts("Test");
+        Mockito.verify(logService, Mockito.times(1)).searchLogsByMessageParts(Mockito.any());
+        Mockito.verify(logDTOMapper, Mockito.times(1)).mapLogsToLogDTOs(Mockito.any());
     }
 
     @Test
-    void filterLogsByMessageParts() {
-    }
-
-    @Test
-    void getLogsByDateRange() {
+    void testGetLogsByDateRange() {
+        LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0 );
+        LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0 );
+        systemUnderTest.getLogsByDateRange(startDate, endDate);
+        Mockito.verify(logDTOMapper, Mockito.times(1)).mapLogsToLogDTOs(Mockito.any());
     }
 }
