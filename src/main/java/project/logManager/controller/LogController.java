@@ -1,8 +1,6 @@
 package project.logManager.controller;
 
 import lombok.AllArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +21,6 @@ import java.util.List;
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
 public class LogController {
-
-    private static final Logger LOGGER = LogManager.getLogger(LogController.class);
 
     private final LogService logService;
     private final LogDTOMapper logDTOMapper;
