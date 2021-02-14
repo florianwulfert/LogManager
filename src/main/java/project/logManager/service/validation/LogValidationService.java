@@ -15,7 +15,7 @@ import project.logManager.service.model.LogService;
 @Data
 public class LogValidationService {
 
-    private static final Logger LOGGER = LogManager.getLogger(LogService.class);
+    private static final Logger LOGGER = LogManager.getLogger(LogValidationService.class);
 
     public boolean validateSeverity(String severity) {
         for(SeverityEnum severityEnum : SeverityEnum.values()) {

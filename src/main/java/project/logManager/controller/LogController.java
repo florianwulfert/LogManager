@@ -24,6 +24,8 @@ import java.util.List;
 @RestController
 public class LogController {
 
+    private static final Logger LOGGER = LogManager.getLogger(LogController.class);
+
     private final LogService logService;
     private final LogDTOMapper logDTOMapper;
 
