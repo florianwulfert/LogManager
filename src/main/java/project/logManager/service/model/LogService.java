@@ -32,20 +32,26 @@ public class LogService {
     }
 
     public void addLog(String message, String severity) {
-        Log log = new Log();
-        log.setMessage(message);
-        log.setSeverity(severity);
-        Date timestamp = new Date();
-        log.setTimestamp(timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-        logRepository.save(log);
+        if (message != null && severity != null) {
+            if (logValidationService.validateSeverity(severity)) {
+                Log log = new Log();
+                log.setMessage(message);
+                log.setSeverity(severity);
+                Date timestamp = new Date();
+                log.setTimestamp(timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+                logRepository.save(log);
+            } else {
+                LOGGER.error("Given severity '{}' is not allowed!", severity);
+                throw new IllegalArgumentException("Illegal severity!");
+            }
+        } else {
+            LOGGER.error("One of the input parameter was not given!");
+            throw new RuntimeException("One of the input parameter was not given!");
+        }
     }
 
     public List<Log> getLogsBySeverity(String severity) {
-        if (logValidationService.validateSeverity(severity)) {
-            return logRepository.findBySeverity(severity);
-        }
-        LOGGER.error("Given severity '{}' is not allowed!", severity);
-        throw new IllegalArgumentException("Illegal severity!");
+        return logRepository.findBySeverity(severity);
     }
 
     public List<Log> searchLogsByMessageParts(String message) {

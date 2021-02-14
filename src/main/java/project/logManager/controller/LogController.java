@@ -24,24 +24,32 @@ import java.util.List;
 @RestController
 public class LogController {
 
-    private static final Logger LOGGER = LogManager.getLogger(LogController.class);
-
     private final LogService logService;
     private final LogDTOMapper logDTOMapper;
 
     @GetMapping("/logs")
-    public List<LogDTO> getLogs(@RequestParam (required = false) final String severity,
-                                @RequestParam (required = false) final String message,
-                                @RequestParam (required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime startDateTime,
-                                @RequestParam (required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime endDateTime) {
-        List<Log> logs = logService.getLogs(severity, message, startDateTime, endDateTime);
-        return logDTOMapper.mapLogsToLogDTOs(logs);
+    public List<LogDTO> getLogs(@RequestParam(required = false) final String severity,
+                                @RequestParam(required = false) final String message,
+                                @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime startDateTime,
+                                @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime endDateTime) {
+        try {
+            List<Log> logs = logService.getLogs(severity, message, startDateTime, endDateTime);
+            return logDTOMapper.mapLogsToLogDTOs(logs);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @PostMapping("/log")
     public void addLog(@RequestParam final String severity,
                        @RequestParam final String message) {
-        logService.addLog(message, severity);
+        try {
+            logService.addLog(message, severity);
+        } catch (IllegalArgumentException ie) {
+            throw new SeverityNotFoundException(severity);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @GetMapping("/logs/{severity}")
@@ -49,22 +57,30 @@ public class LogController {
         try {
             List<Log> logs = logService.getLogsBySeverity(severity);
             return logDTOMapper.mapLogsToLogDTOs(logs);
-        } catch (IllegalArgumentException e) {
-            throw new SeverityNotFoundException(severity);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @GetMapping("/logs/messages")
     public List<LogDTO> filterLogsByMessageParts(@RequestParam final String message) {
-        List<Log> logs = logService.searchLogsByMessageParts(message);
-        return logDTOMapper.mapLogsToLogDTOs(logs);
+        try {
+            List<Log> logs = logService.searchLogsByMessageParts(message);
+            return logDTOMapper.mapLogsToLogDTOs(logs);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @GetMapping("/logs/date")
     public List<LogDTO> getLogsByDateRange(@RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime startDateTime,
                                            @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime endDateTime) {
-        List<Log> logs = logService.searchLogsByDateRange(startDateTime, endDateTime);
-        return logDTOMapper.mapLogsToLogDTOs(logs);
+        try {
+            List<Log> logs = logService.searchLogsByDateRange(startDateTime, endDateTime);
+            return logDTOMapper.mapLogsToLogDTOs(logs);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
 }
