@@ -91,6 +91,11 @@ class LogServiceTest {
 
     @Test
     void testSeverityMessage () {
+        Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
+        systemUnderTest.addLog("Katze", "INFO");
+        Mockito.verify(logRepository).save(arg.capture());
+        systemUnderTest.addLog()
+
 
 
     }
