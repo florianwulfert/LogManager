@@ -1,12 +1,9 @@
 package project.logManager.service.model;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.Log;
 import project.logManager.model.respository.LogRepository;
@@ -17,7 +14,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
 
 /**
  * @author - EugenFriesen
@@ -35,6 +32,9 @@ class LogServiceTest {
 
     @Mock
     LogValidationService logValidationService;
+
+    @Captor
+    ArgumentCaptor<Log> arg;
 
     @Test
     void testGetLogs() {
@@ -78,6 +78,21 @@ class LogServiceTest {
         systemUnderTest.getLogsBySeverity("INFO");
         Mockito.verify(logRepository, Mockito.times(1))
                 .findBySeverity(Mockito.any());
+    }
+
+    @Test
+    void testKatzeMessage() {
+        Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
+        systemUnderTest.addLog("Katze", "INFO");
+        Mockito.verify(logRepository).save(arg.capture());
+        Assertions.assertEquals("Hund", arg.getValue().getMessage());
+        Assertions.assertEquals("INFO",arg.getValue().getSeverity());
+    }
+
+    @Test
+    void testSeverityMessage () {
+
+
     }
 
     @Test

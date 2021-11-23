@@ -1,6 +1,9 @@
 package project.logManager.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,6 +13,9 @@ import java.time.LocalDateTime;
  * 12.02.2021
  **/
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name="log")
@@ -17,8 +23,7 @@ public class Log {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @SequenceGenerator(name = "LogSequence", sequenceName = "log_seq", allocationSize = 1)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "LogSequence")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique=true,  nullable = false)
     Integer id;
 

@@ -42,3 +42,11 @@
 * Der Logmanger besitzt eine H2-Datenbank
 * Hierfür ist notwendig unter D: ein Ordner data hinzuzufügen
 * Der Username für die Datenbank ist "blogger"
+
+### Aufgaben
+Aufgabe 1:
+  Message = Katze --> Hund in Datenbank.
+  Nachricht an User --> Katze wurde in Hund übersetzt.
+
+Aufgabe2:
+  Message an User -> Die Nachricht wurde als ... + savarity (z.b. INFO, ERROR, usw.) + abgespeichert

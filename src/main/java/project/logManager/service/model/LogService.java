@@ -31,9 +31,17 @@ public class LogService {
         return logRepository.findLogs(severity, message, startDate, endDate);
     }
 
-    public void addLog(String message, String severity) {
+    public String addLog(String message, String severity) {
+        String returnMessage = "";
         if (message != null && severity != null) {
             if (logValidationService.validateSeverity(severity)) {
+                if (message.equals("Katze")) {
+                    message = "Hund";
+                    returnMessage = "Katze wurde in Hund übersetzt!\n";
+                }
+
+                returnMessage = returnMessage + String.format("Die Nachricht wurde als %s abgespeichert!", severity);
+
                 Log log = new Log();
                 log.setMessage(message);
                 log.setSeverity(severity);
@@ -48,6 +56,7 @@ public class LogService {
             LOGGER.error("One of the input parameter was not given!");
             throw new RuntimeException("One of the input parameter was not given!");
         }
+        return returnMessage;
     }
 
     public List<Log> getLogsBySeverity(String severity) {
@@ -60,5 +69,9 @@ public class LogService {
 
     public List<Log> searchLogsByDateRange(LocalDateTime startDateTime, LocalDateTime endDateTime) {
         return logRepository.findByTimestampBetween(startDateTime, endDateTime);
+    }
+
+    public List<Log> searchLogsByID(Integer id) {
+        return logRepository.findById(id);
     }
 }

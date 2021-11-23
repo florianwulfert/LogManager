@@ -21,7 +21,12 @@ public interface LogRepository extends JpaRepository<Log, Long> {
             " AND (:startDate is null or log.timestamp > :startDate)" +
             " AND (:endDate is null or log.timestamp < :endDate)")
     List<Log> findLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate);
+
     List<Log> findBySeverity(String severity);
+
     List<Log> findByMessageContaining(String message);
+
     List<Log> findByTimestampBetween(LocalDateTime startDate, LocalDateTime endDate);
+
+    List <Log> findById(Integer id);
 }

@@ -39,16 +39,17 @@ public class LogController {
     }
 
     @PostMapping("/log")
-    public void addLog(@RequestParam final String severity,
-                       @RequestParam final String message) {
+    public String addLog(@RequestParam final String severity,
+                         @RequestParam final String message) {
         try {
-            logService.addLog(message, severity);
+            return logService.addLog(message, severity);
         } catch (IllegalArgumentException ie) {
             throw new SeverityNotFoundException(severity);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
+
 
     @GetMapping("/logs/{severity}")
     public List<LogDTO> getLogsBySeverity(@PathVariable final String severity) {
@@ -75,6 +76,16 @@ public class LogController {
                                            @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime endDateTime) {
         try {
             List<Log> logs = logService.searchLogsByDateRange(startDateTime, endDateTime);
+            return logDTOMapper.mapLogsToLogDTOs(logs);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @GetMapping("/logs/id")
+    public List<LogDTO> getLogsByID (@RequestParam final Integer id) {
+        try {
+            List<Log> logs = logService.searchLogsByID(id);
             return logDTOMapper.mapLogsToLogDTOs(logs);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
