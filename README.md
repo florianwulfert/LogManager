@@ -64,3 +64,10 @@ Aufgabe 4:
  * a) Erstelle eine Methode im LogRepository, die Logeinträge anhand der Severity aus der Datenbank löscht und lass sie von einer Methode aus dem LogService aufrufen.
  * b) Erstelle einen Endpunkt im LogController (/log/delete) mit dem RequestParam severity. Der Endpunkt soll mit @DeleteMapping annotiert werden. Der Endpunkt soll die Methode im LogService aufrufen.
  * c) Im LogService soll implementiert werden, dass alle gelöschten Einträge aus der Datenbank als Liste an den User zurückgegeben werden. Die Ausgabe an den User soll damit wie folgt lauten: Es wurden die Einträge mit der ID .., .., .. aus der Datenbank gelöscht.
+ 
+Aufgabe 5:
+- Erzeuge eine neue Tabelle in Datenbank User und gebe die Möglichkeit einen User zu erzeugen.
+* a) Die Entity User soll wie folgt aussehen:
+    * id, name, geburtsdatum, gewicht, groesse, lieblingsfarbe
+* b) Es soll ein UserRepository erstellt werden mit der Methode addUser. Diese soll von einer Methode aus dem zu erzeugenden UserService aufgerufen werden.
+* c) Erstelle einen Endpunkt im UserController, der zuvor erzeugt werden muss, mit dem ein User angelegt werden kann.
