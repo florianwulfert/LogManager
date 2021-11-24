@@ -7,6 +7,7 @@ import project.logManager.model.entity.Log;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author - EugenFriesen
@@ -14,7 +15,7 @@ import java.util.List;
  **/
 
 @Repository
-public interface LogRepository extends JpaRepository<Log, Long> {
+public interface LogRepository extends JpaRepository<Log, Integer> {
     @Query("SELECT log FROM Log log" +
             " WHERE (:severity is null or log.severity = :severity)" +
             " AND (:message is null or log.message like concat('%',:message,'%'))" +
@@ -28,5 +29,7 @@ public interface LogRepository extends JpaRepository<Log, Long> {
 
     List<Log> findByTimestampBetween(LocalDateTime startDate, LocalDateTime endDate);
 
-    List <Log> findById(Integer id);
+    Optional<Log> findById(Integer id);
+
+    void deleteById(Integer id);
 }

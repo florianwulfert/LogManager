@@ -71,7 +71,11 @@ public class LogService {
         return logRepository.findByTimestampBetween(startDateTime, endDateTime);
     }
 
-    public List<Log> searchLogsByID(Integer id) {
-        return logRepository.findById(id);
+    public Log searchLogsByID(Integer id) {
+        return logRepository.findById(id).isPresent() ? logRepository.findById(id).get() : null;
+    }
+
+    public void deleteById(Integer id) {
+        logRepository.deleteById(id);
     }
 }

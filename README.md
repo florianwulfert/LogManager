@@ -50,3 +50,11 @@ Aufgabe 1:
 
 Aufgabe2:
   Message an User -> Die Nachricht wurde als ... + savarity (z.b. INFO, ERROR, usw.) + abgespeichert
+
+Aufgabe 3:
+  Erzeuge die Möglichkeit, dass ein Eintrag anhand der ID aus der Datenbank gelöscht wird.
+ * a) Erstelle eine Methode im LogRepository, die einen Log Eintrag anhand der ID aus der Datenbank löscht.
+ * b) Erstelle eine Methode im LogService, die die erstellte Methode (aus a)) aus dem Repository aufruft.
+   * Erstelle einen Test dazu.
+ * c) Erstelle einen Endpoint im LogController (/log/delete/{Id}). Der Endpoint soll mit @PutMapping annotiert werden.
+   * Erstelle einen Test dazu.

@@ -145,4 +145,11 @@ class LogServiceTest {
         Mockito.verify(logRepository)
                 .findById(1);
     }
+
+    @Test
+    void testDeleteById() {
+        systemUnderTest.deleteById(1);
+        Mockito.verify(logRepository)
+                .deleteById(1);
+    }
 }

@@ -11,6 +11,7 @@ import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -85,8 +86,19 @@ public class LogController {
     @GetMapping("/logs/id")
     public List<LogDTO> getLogsByID (@RequestParam final Integer id) {
         try {
-            List<Log> logs = logService.searchLogsByID(id);
-            return logDTOMapper.mapLogsToLogDTOs(logs);
+            Log logs = logService.searchLogsByID(id);
+            List<Log> returnlist=new ArrayList<>();
+            returnlist.add(logs);
+            return logDTOMapper.mapLogsToLogDTOs(returnlist);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/logs/delete/{id}")
+    public void deleteLogsByID (@PathVariable final Integer id) {
+        try {
+            logService.deleteById(id);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
