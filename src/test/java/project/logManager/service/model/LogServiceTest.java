@@ -92,12 +92,16 @@ class LogServiceTest {
     @Test
     void testSeverityMessage () {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
-        systemUnderTest.addLog("Katze", "INFO");
-        Mockito.verify(logRepository).save(arg.capture());
-        systemUnderTest.addLog()
+        Assertions.assertEquals("Die Nachricht wurde als INFO abgespeichert!",
+                systemUnderTest.addLog("Papagei", "INFO"));
+    }
 
-
-
+    @Test
+    void testKatzeReturnMessage() {
+        Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
+        Assertions.assertEquals("Katze wurde in Hund übersetzt!\n" +
+                        "Die Nachricht wurde als INFO abgespeichert!",
+                systemUnderTest.addLog("Katze", "INFO"));
     }
 
     @Test
@@ -133,5 +137,12 @@ class LogServiceTest {
         log.setMessage(message);
         log.setTimestamp(timestamp);
         return log;
+    }
+
+    @Test
+    void testSearchLogsByID() {
+        systemUnderTest.searchLogsByID(1);
+        Mockito.verify(logRepository)
+                .findById(1);
     }
 }
