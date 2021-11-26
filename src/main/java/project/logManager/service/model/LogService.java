@@ -90,11 +90,10 @@ public class LogService {
         String iDs = "";
 
         for (Log log : deletedLogs) {
-            String komma = "";
+            iDs += log.getId();
             if (deletedLogs.lastIndexOf(log) < deletedLogs.size()-1) {
-                komma = ", ";
+                iDs += ", ";
             }
-            iDs += log.getId() + komma;
         }
 
         return message1 + iDs + message2;

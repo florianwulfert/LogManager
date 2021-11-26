@@ -38,13 +38,13 @@ class LogServiceTest {
 
     @Test
     void testGetLogs() {
-        LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0 );
+        LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0);
         List<Log> logs = new ArrayList<>();
         Log log = createNewLog(1, "INFO", "Das ist ein Test", timestamp);
         logs.add(log);
-        Mockito.when(logRepository.findLogs(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any())).thenReturn(logs);
-        LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0 );
-        LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0 );
+        Mockito.when(logRepository.findLogs(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(logs);
+        LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
         systemUnderTest.getLogs("INFO", "Test", startDate, endDate);
         Mockito.verify(logRepository, Mockito.times(1))
                 .findLogs(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
@@ -70,7 +70,7 @@ class LogServiceTest {
 
     @Test
     void testGetLogsBySeverity() {
-        LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0 );
+        LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0);
         List<Log> logs = new ArrayList<>();
         Log log = createNewLog(2, "INFO", "Das ist ein Test", timestamp);
         logs.add(log);
@@ -86,11 +86,11 @@ class LogServiceTest {
         systemUnderTest.addLog("Katze", "INFO");
         Mockito.verify(logRepository).save(arg.capture());
         Assertions.assertEquals("Hund", arg.getValue().getMessage());
-        Assertions.assertEquals("INFO",arg.getValue().getSeverity());
+        Assertions.assertEquals("INFO", arg.getValue().getSeverity());
     }
 
     @Test
-    void testSeverityMessage () {
+    void testSeverityMessage() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
         Assertions.assertEquals("Die Nachricht wurde als INFO abgespeichert!",
                 systemUnderTest.addLog("Papagei", "INFO"));
@@ -106,7 +106,7 @@ class LogServiceTest {
 
     @Test
     void testSearchLogsByMessageParts() {
-        LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0 );
+        LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0);
         List<Log> logs = new ArrayList<>();
         Log log = createNewLog(3, "INFO", "Das war ein Test", timestamp);
         logs.add(log);
@@ -118,13 +118,13 @@ class LogServiceTest {
 
     @Test
     void testSearchLogsByDateRange() {
-        LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0 );
+        LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0);
         List<Log> logs = new ArrayList<>();
         Log log = createNewLog(4, "WARNING", "Das ist ein Test", timestamp);
         logs.add(log);
         Mockito.when(logRepository.findByTimestampBetween(Mockito.any(), Mockito.any())).thenReturn(logs);
-        LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0 );
-        LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0 );
+        LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
         systemUnderTest.searchLogsByDateRange(startDate, endDate);
         Mockito.verify(logRepository, Mockito.times(1))
                 .findByTimestampBetween(Mockito.any(), Mockito.any());
@@ -155,8 +155,24 @@ class LogServiceTest {
 
     @Test
     void testDeleteBySeverity() {
-        systemUnderTest.deleteBySeverity("INFO");
-        Mockito.verify(logRepository)
-                .deleteBySeverity("INFO");
+        List<Log> logs = new ArrayList<>();
+        logs.add(Log.builder()
+                .timestamp(LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0))
+                .id(1)
+                .severity("INFO")
+                .message("Pizza")
+                .build());
+
+        logs.add(Log.builder()
+                .timestamp(LocalDateTime.of(2021, Month.JANUARY, 21, 17, 0, 0))
+                .id(8)
+                .severity("INFO")
+                .message("Haus")
+                .build());
+
+        Mockito.when(logRepository.deleteBySeverity(Mockito.anyString())).thenReturn(logs);
+        Assertions.assertEquals("Es wurden die Einträge mit den IDs 1, 8 aus der Datenbank gelöscht",
+                systemUnderTest.deleteBySeverity("INFO"));
+        Mockito.verify(logRepository).deleteBySeverity("INFO");
     }
 }
