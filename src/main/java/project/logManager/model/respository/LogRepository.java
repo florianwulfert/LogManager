@@ -32,4 +32,6 @@ public interface LogRepository extends JpaRepository<Log, Integer> {
     Optional<Log> findById(Integer id);
 
     void deleteById(Integer id);
+
+    List<Log> deleteBySeverity(String severity);
 }

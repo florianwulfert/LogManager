@@ -152,4 +152,11 @@ class LogServiceTest {
         Mockito.verify(logRepository)
                 .deleteById(1);
     }
+
+    @Test
+    void testDeleteBySeverity() {
+        systemUnderTest.deleteBySeverity("INFO");
+        Mockito.verify(logRepository)
+                .deleteBySeverity("INFO");
+    }
 }

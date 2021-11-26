@@ -104,4 +104,13 @@ public class LogController {
         }
     }
 
+    @DeleteMapping("/logs/del/severity")
+    public String deleteBySeverity (@RequestParam final String severity) {
+        try {
+            return logService.deleteBySeverity(severity);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
 }

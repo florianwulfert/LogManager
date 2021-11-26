@@ -25,13 +25,13 @@
     * severity: String (Erlaubt: TRACE, DEBUG, INFO, WARNING, ERROR; FATAL)
 * GET: /logs/message
   * Filtern nach Message
-  * Geforderte Paramter:
+  * Geforderte Parameter:
     * message (Eine Teilsuche der Lognachrichten ist möglich)
   * Mögliche Fehler:
     * Bad request (Parameter "message" wurde nicht mitgegeben)
 * GET: /logs/date
   * Filtern nach Range
-  * Geforder Parameter:
+  * Gefordert Parameter:
     * startDateTime: LocalDateTime (Format: dd.MM.yyyy HH:mm:ss)
     * endDateTime: LocalDateTime (Format: dd.MM.yyyy HH:mm:ss)
   * Mögliche Fehler:
@@ -66,7 +66,7 @@ Aufgabe 4:
  * c) Im LogService soll implementiert werden, dass alle gelöschten Einträge aus der Datenbank als Liste an den User zurückgegeben werden. Die Ausgabe an den User soll damit wie folgt lauten: Es wurden die Einträge mit der ID .., .., .. aus der Datenbank gelöscht.
  
 Aufgabe 5:
-- Erzeuge eine neue Tabelle in Datenbank User und gebe die Möglichkeit einen User zu erzeugen.
+- Erzeuge eine neue Tabelle User in der Datenbank und gebe die Möglichkeit einen User zu erzeugen.
 * a) Die Entity User soll wie folgt aussehen:
     * id, name, geburtsdatum, gewicht, groesse, lieblingsfarbe
 * b) Es soll ein UserRepository erstellt werden mit der Methode addUser. Diese soll von einer Methode aus dem zu erzeugenden UserService aufgerufen werden.

@@ -79,4 +79,10 @@ class LogControllerTest {
         systemUnderTest.deleteLogsByID(1);
         Mockito.verify(logService).deleteById(1);
     }
+
+    @Test
+    void testDeleteBySeverity() {
+        systemUnderTest.deleteBySeverity("INFO");
+        Mockito.verify(logService).deleteBySeverity("INFO");
+    }
 }

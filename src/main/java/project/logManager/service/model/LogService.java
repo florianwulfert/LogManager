@@ -9,6 +9,7 @@ import project.logManager.model.entity.Log;
 import project.logManager.model.respository.LogRepository;
 import project.logManager.service.validation.LogValidationService;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -19,6 +20,7 @@ import java.util.List;
  * 12.02.2021
  **/
 
+@Transactional
 @Service
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class LogService {
@@ -77,5 +79,24 @@ public class LogService {
 
     public void deleteById(Integer id) {
         logRepository.deleteById(id);
+    }
+
+    public String deleteBySeverity(String severity) {
+        List<Log> deletedLogs = logRepository.deleteBySeverity(severity);
+
+        String isEmpty = deletedLogs.size() == 0 ? "" : " ";
+        String message1 = "Es wurden die Einträge mit den IDs" + isEmpty;
+        String message2 = " aus der Datenbank gelöscht";
+        String iDs = "";
+
+        for (Log log : deletedLogs) {
+            String komma = "";
+            if (deletedLogs.lastIndexOf(log) < deletedLogs.size()-1) {
+                komma = ", ";
+            }
+            iDs += log.getId() + komma;
+        }
+
+        return message1 + iDs + message2;
     }
 }
