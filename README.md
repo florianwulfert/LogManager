@@ -69,5 +69,21 @@ Aufgabe 5:
 - Erzeuge eine neue Tabelle User in der Datenbank und gebe die Möglichkeit einen User zu erzeugen.
 * a) Die Entity User soll wie folgt aussehen:
     * id, name, geburtsdatum, gewicht, groesse, lieblingsfarbe
-* b) Es soll ein UserRepository erstellt werden mit der Methode addUser. Diese soll von einer Methode aus dem zu erzeugenden UserService aufgerufen werden.
+* b) Im UserService soll eine Methode saveUser(User) aufgerufen werden, die aus dem Repository kommt.
 * c) Erstelle einen Endpunkt im UserController, der zuvor erzeugt werden muss, mit dem ein User angelegt werden kann.
+
+Aufgabe 6:
+- Erweitere die Dokumentation um die hinzugefügten Endpunkte. Achte dabei auf die Unterscheidung zwischen Log und User.
+
+Aufgabe 7:
+- Dokumentiere das Hinzufügen eines Users, indem du die Tabelle Log verwendest.
+* a) Im UserService soll in der Methode addLog der LogService aufgerufen werden. Dabei soll die Methode addLog verwendet werden.
+* b) Es sollen die Nachricht "Der User <username> wurde angelegt" und die Severity INFO hinterlegt werden.
+* c) Erweitere die Methode im UserService um ein try/catch und fange die Exception ab.
+* d) Konnte der User nicht angelegt werden und du landest in dem catch, dann soll die Nachricht "Der User <username> konnte nicht angelegt werden. Grund: <exception>" mit der Severity "ERROR" abgespeichert werden.
+
+Aufgabe 8:
+- Erzeuge die Möglichkeit nach Nutzern zu suchen und sie zu löschen.
+* a) erweitere UserService und UserController mit den entsprechenden Methoden. Verwende die Interfaces von denen das UserRepository erbt.
+* b) schreibe Tests
+* c) erweitere die Dokumentation um die hinzugefügten Endpunkte.
