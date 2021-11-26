@@ -77,9 +77,9 @@ Aufgabe 6:
 
 Aufgabe 7:
 - Dokumentiere das Hinzufügen eines Users, indem du die Tabelle Log verwendest.
-* a) Im UserService soll in der Methode addLog der LogService aufgerufen werden. Dabei soll die Methode addLog verwendet werden.
+* a) Im UserService soll in der Methode addUser der LogService aufgerufen werden. Dabei soll die Methode addLog verwendet werden.
 * b) Es sollen die Nachricht "Der User <username> wurde angelegt" und die Severity INFO hinterlegt werden.
-* c) Erweitere die Methode im UserService um ein try/catch und fange die Exception ab.
+* c) Erweitere die Methode im UserService um ein try/catch und fange die Exception ab (catch (RuntimeException ex) {...}).
 * d) Konnte der User nicht angelegt werden und du landest in dem catch, dann soll die Nachricht "Der User <username> konnte nicht angelegt werden. Grund: <exception>" mit der Severity "ERROR" abgespeichert werden.
 
 Aufgabe 8:
@@ -87,3 +87,10 @@ Aufgabe 8:
 * a) erweitere UserService und UserController mit den entsprechenden Methoden. Verwende die Interfaces von denen das UserRepository erbt.
 * b) schreibe Tests
 * c) erweitere die Dokumentation um die hinzugefügten Endpunkte.
+
+Aufgabe 9: 
+- Erzeuge die Möglichkeit als User manuelle Logs anzulegen.
+* a) Erweitere die Entity Log um ein User-Attribut.
+* b) Der User soll in der Methode addLog im LogController namentlich mit übergeben werden. 
+  * Im UserService soll der User gefunden werden.
+  * Anschließend soll der User mit übergeben werden, um einen Logeintrag anzulegen.
