@@ -14,7 +14,9 @@ import java.time.LocalDate;
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 public class UserService {
     private final UserRepository userRepository;
-    public void addUser(String name, LocalDate geburtsdatum, double gewicht,
+    private final LogService logService;
+
+    public String addUser(String name, LocalDate geburtsdatum, double gewicht,
                           double groesse, String lieblingsfarbe) {
         User user = User.builder()
                 .name(name)
@@ -24,7 +26,12 @@ public class UserService {
                 .lieblingsfarbe(lieblingsfarbe)
                 .build();
         userRepository.save(user);
-    }
 
+        try {
+            return logService.addLog("Der User " + user.getName() + " wurde angelegt", "INFO");
+        }catch (RuntimeException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 }
 
