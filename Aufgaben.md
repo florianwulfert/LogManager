@@ -49,3 +49,4 @@ Aufgabe 9:
 * b) Der User soll in der Methode addLog im LogController namentlich mit übergeben werden.
     * Im UserService soll der User gefunden werden.
     * Anschließend soll der User mit übergeben werden, um einen Logeintrag anzulegen.
+* c) Durch diese Änderung wird die Methode addUser nicht mehr funktionieren, da nach Aufgabe 7 im UserService die Methode addLog aufgerufen wird. Hierfür ist es notwendig auch den Endpunkt addUser um einen User zu erweitern.
