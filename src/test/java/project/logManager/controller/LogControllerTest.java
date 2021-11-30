@@ -41,8 +41,8 @@ class LogControllerTest {
 
     @Test
     void testAddLog() {
-        systemUnderTest.addLog("INFO", "Test");
-        Mockito.verify(logService, Mockito.times(1)).addLog(Mockito.any(), Mockito.any());
+        systemUnderTest.addLog("INFO", "Test", "Peter");
+        Mockito.verify(logService, Mockito.times(1)).addLog(Mockito.any(), Mockito.any(), Mockito.any());
     }
 
     @Test

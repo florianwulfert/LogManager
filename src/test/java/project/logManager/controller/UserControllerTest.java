@@ -29,6 +29,17 @@ class UserControllerTest {
 
     }
 
+    @Test
+    void testFindUserById() {
+        systemUnderTest.findUserByID(1);
+        Mockito.verify(userService).findUserById(1);
+    }
+
+    @Test
+    void testDeleteUserById() {
+        systemUnderTest.deleteUserByID(1);
+        Mockito.verify(userService).deleteById(1);
+    }
 
 
 }

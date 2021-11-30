@@ -53,11 +53,11 @@
     * Bad request (Der Parameter wurde nicht als Integer eingegeben)E
     * Internal Server Error (Die gewünschte ID existiert nicht oder es wurde kein Wert übergeben)
 * DELETE: /logs/del/severity
-  * Ein Eintrag in der Datenbank wird gelöscht, basierend auf der severity.
+  * Vorhandene Einträge zu der gewählten severity werden gelöscht. 
   * Geforderte Parameter:
     * severity: String
   * Mögliche Fehler
-    _*** KEINE GEFUNDEN**_ 
+    _*** KEINE GEFUNDEN***_ 
 
 ### Restschnittstellen User:
 * POST: /user
@@ -71,6 +71,19 @@
   * Mögliche Fehler:
     * Bad request (Datumformat falsch oder wenn String statt double übergeben wird)
     * Bad request (Es wird kein Parameter übergeben)
+* GET: /user/id
+  * Ein User kann mithilfe der ID gefunden werden
+  * Geforderte Parameter:
+    * id: Integer
+  * Mögliche Fehler:
+    * Bad request (Es wird nichts übergeben)
+    * Bad request (Es wird kein Integer übergeben)
+* DELETE: /user/delete/{id}
+  * Ein User wird anhand der ID gelöscht
+  * Geforderte Parameter:
+    * id: Integer
+  * Mögliche Fehler:
+    * Internal Server Error (ID unbekannt)
 
 ### Datenbank
 * Der Logmanager besitzt eine H2-Datenbank

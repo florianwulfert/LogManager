@@ -1,3 +1,5 @@
+
+
 ### Aufgaben
 Aufgabe 1:
 - Message = Katze --> Hund in Datenbank.
@@ -49,4 +51,21 @@ Aufgabe 9:
 * b) Der User soll in der Methode addLog im LogController namentlich mit übergeben werden.
     * Im UserService soll der User gefunden werden.
     * Anschließend soll der User mit übergeben werden, um einen Logeintrag anzulegen.
-* c) Durch diese Änderung wird die Methode addUser nicht mehr funktionieren, da nach Aufgabe 7 im UserService die Methode addLog aufgerufen wird. Hierfür ist es notwendig auch den Endpunkt addUser um einen User zu erweitern.
+* c) ***Durch diese Änderung wird die Methode addUser nicht mehr funktionieren, da nach Aufgabe 7 im UserService die Methode addLog aufgerufen wird. Hierfür ist es notwendig auch den Endpunkt addUser um einen User zu erweitern.***
+
+Aufgabe 10:
+- Refactoring - Optimierung des bereits vorhandenen Codes
+* a) LogService - DeleteBySeverity - Rückgabe bei einer leeren Liste: "Keine Einträge gefunden"
+* b) LogService - DeleteBySeverity - Die Strings sollen mit einem StringBuilder verkettet werden.
+* c) UserService - AddLog - Stringformatter verwenden (der user wurde angelegt)
+* d) LogRepository leeren, aus anderen Repositories erben
+* e) Verwende im LogDTOMapper Mapstruct - im POM hinzufügen
+* f) Enum Farben erstellen (User darf nur diese Farben benutzen)
+
+Aufgabe 11:
+- BMI Rechner erstellen
+* a) BMI ausrechnen im UserService
+* b) anhand des Geburtsdatums Alter berechnen und zurückgeben
+* c) mit switch case: übergewichtig, untergewichtig, normalgewichtig
+* d) Endpoint erstellen und dokumentieren
+* c) Tests schreiben

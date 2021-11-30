@@ -27,6 +27,9 @@ public class Log {
     @Column(name = "id", unique=true,  nullable = false)
     Integer id;
 
+    @Column(name = "user", nullable = false)
+    String user;
+
     @Column(name = "severity", nullable = false)
     String severity;
 

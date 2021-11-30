@@ -53,19 +53,19 @@ class LogServiceTest {
     @Test
     void testAddLog() {
         Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(true);
-        systemUnderTest.addLog("My new log message", "INFO");
+        systemUnderTest.addLog("My new log message", "INFO", "Peter");
         Mockito.verify(logRepository, Mockito.times(1)).save(Mockito.any());
     }
 
     @Test
     void testAddLogWrongSeverity() {
         Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(false);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> systemUnderTest.addLog("Ein Test", "KATZE"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> systemUnderTest.addLog("Ein Test", "KATZE", "Mia"));
     }
 
     @Test
     void testAddLogNullParameter() {
-        Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addLog(null, "KATZE"));
+        Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addLog(null, "KATZE", "Mia"));
     }
 
     @Test
@@ -83,7 +83,7 @@ class LogServiceTest {
     @Test
     void testKatzeMessage() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
-        systemUnderTest.addLog("Katze", "INFO");
+        systemUnderTest.addLog("Katze", "INFO", "Mia");
         Mockito.verify(logRepository).save(arg.capture());
         Assertions.assertEquals("Hund", arg.getValue().getMessage());
         Assertions.assertEquals("INFO", arg.getValue().getSeverity());
@@ -93,7 +93,7 @@ class LogServiceTest {
     void testSeverityMessage() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
         Assertions.assertEquals("Die Nachricht wurde als INFO abgespeichert!",
-                systemUnderTest.addLog("Papagei", "INFO"));
+                systemUnderTest.addLog("Papagei", "INFO", "Paul"));
     }
 
     @Test
@@ -101,7 +101,7 @@ class LogServiceTest {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
         Assertions.assertEquals("Katze wurde in Hund übersetzt!\n" +
                         "Die Nachricht wurde als INFO abgespeichert!",
-                systemUnderTest.addLog("Katze", "INFO"));
+                systemUnderTest.addLog("Katze", "INFO", "Mia"));
     }
 
     @Test

@@ -41,9 +41,10 @@ public class LogController {
 
     @PostMapping("/log")
     public String addLog(@RequestParam final String severity,
-                         @RequestParam final String message) {
+                         @RequestParam final String message,
+                         @RequestParam final String nameUser) {
         try {
-            return logService.addLog(message, severity);
+            return logService.addLog(message, severity, nameUser);
         } catch (IllegalArgumentException ie) {
             throw new SeverityNotFoundException(severity);
         } catch (RuntimeException e) {

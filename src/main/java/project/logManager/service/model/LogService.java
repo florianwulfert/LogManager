@@ -33,20 +33,21 @@ public class LogService {
         return logRepository.findLogs(severity, message, startDate, endDate);
     }
 
-    public String addLog(String message, String severity) {
-        String returnMessage = "";
-        if (message != null && severity != null) {
+    public String addLog(String message, String severity, String userName) {
+        String MainMessage = "";
+        if (message != null && severity != null && userName != null) {
             if (logValidationService.validateSeverity(severity)) {
                 if (message.equals("Katze")) {
                     message = "Hund";
-                    returnMessage = "Katze wurde in Hund übersetzt!\n";
+                    MainMessage = "Katze wurde in Hund übersetzt!\n";
                 }
 
-                returnMessage = returnMessage + String.format("Die Nachricht wurde als %s abgespeichert!", severity);
+                MainMessage = MainMessage + String.format("Die Nachricht wurde als %s abgespeichert!", severity);
 
                 Log log = new Log();
                 log.setMessage(message);
                 log.setSeverity(severity);
+                log.setUser(userName);
                 Date timestamp = new Date();
                 log.setTimestamp(timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
                 logRepository.save(log);
@@ -58,7 +59,7 @@ public class LogService {
             LOGGER.error("One of the input parameter was not given!");
             throw new RuntimeException("One of the input parameter was not given!");
         }
-        return returnMessage;
+        return MainMessage;
     }
 
     public List<Log> getLogsBySeverity(String severity) {
@@ -83,6 +84,11 @@ public class LogService {
 
     public String deleteBySeverity(String severity) {
         List<Log> deletedLogs = logRepository.deleteBySeverity(severity);
+        if (deletedLogs.isEmpty()) {
+            return "Keine Einträge gefunden!";
+        }
+
+        StringBuilder sb = new StringBuilder();
 
         String isEmpty = deletedLogs.size() == 0 ? "" : " ";
         String message1 = "Es wurden die Einträge mit den IDs" + isEmpty;
@@ -96,6 +102,7 @@ public class LogService {
             }
         }
 
-        return message1 + iDs + message2;
+        sb.append(message1).append(iDs).append(message2);
+        return sb.toString();
     }
 }
