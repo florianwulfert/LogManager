@@ -29,10 +29,15 @@ public class UserService {
 
 
         try {
-            return logService.addLog("Der User wurde angelegt", "INFO", "Peter");
+            String message = String.format(
+
+                    "INFO",
+                    "Peter"
+            );
+            return String.format(logService.addLog("Der User %s wurde angelegt", "INFO", User.builder().name("Peter").build()));
 
         }catch (RuntimeException ex) {
-            logService.addLog("Der User konnte nicht angelegt werden", "ERROR", "Peter");
+            logService.addLog("Der User konnte nicht angelegt werden", "ERROR", User.builder().name("Peter").build());
             throw new RuntimeException(ex.getMessage());
 
         }

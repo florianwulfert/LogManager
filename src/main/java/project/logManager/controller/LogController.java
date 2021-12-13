@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import project.logManager.exception.SeverityNotFoundException;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
+import project.logManager.model.entity.User;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
 
@@ -42,7 +43,7 @@ public class LogController {
     @PostMapping("/log")
     public String addLog(@RequestParam final String severity,
                          @RequestParam final String message,
-                         @RequestParam final String nameUser) {
+                         @RequestParam final User nameUser) {
         try {
             return logService.addLog(message, severity, nameUser);
         } catch (IllegalArgumentException ie) {

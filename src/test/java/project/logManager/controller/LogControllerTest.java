@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.model.entity.User;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
 
@@ -41,7 +42,7 @@ class LogControllerTest {
 
     @Test
     void testAddLog() {
-        systemUnderTest.addLog("INFO", "Test", "Peter");
+        systemUnderTest.addLog("INFO", "Test", User.builder().name("Peter").build());
         Mockito.verify(logService, Mockito.times(1)).addLog(Mockito.any(), Mockito.any(), Mockito.any());
     }
 

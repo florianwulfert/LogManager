@@ -47,7 +47,7 @@ Aufgabe 8:
 
 Aufgabe 9:
 - Erzeuge die Möglichkeit als User manuelle Logs anzulegen.
-* a) Erweitere die Entity Log um ein User-Attribut.
+* a) Erweitere die Entity Log um ein User-Attribut. ***Wie?***
 * b) Der User soll in der Methode addLog im LogController namentlich mit übergeben werden.
     * Im UserService soll der User gefunden werden.
     * Anschließend soll der User mit übergeben werden, um einen Logeintrag anzulegen.

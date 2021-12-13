@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.logManager.model.entity.Log;
+import project.logManager.model.entity.User;
 import project.logManager.model.respository.LogRepository;
 import project.logManager.service.validation.LogValidationService;
 
@@ -33,7 +34,7 @@ public class LogService {
         return logRepository.findLogs(severity, message, startDate, endDate);
     }
 
-    public String addLog(String message, String severity, String userName) {
+    public String addLog(String message, String severity, User userName) {
         String MainMessage = "";
         if (message != null && severity != null && userName != null) {
             if (logValidationService.validateSeverity(severity)) {

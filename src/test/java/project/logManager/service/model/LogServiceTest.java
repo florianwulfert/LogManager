@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.Log;
+import project.logManager.model.entity.User;
 import project.logManager.model.respository.LogRepository;
 import project.logManager.service.validation.LogValidationService;
 
@@ -53,19 +54,19 @@ class LogServiceTest {
     @Test
     void testAddLog() {
         Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(true);
-        systemUnderTest.addLog("My new log message", "INFO", "Peter");
+        systemUnderTest.addLog("My new log message", "INFO", User.builder().name("Peter").build());
         Mockito.verify(logRepository, Mockito.times(1)).save(Mockito.any());
     }
 
     @Test
     void testAddLogWrongSeverity() {
         Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(false);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> systemUnderTest.addLog("Ein Test", "KATZE", "Mia"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> systemUnderTest.addLog("Ein Test", "KATZE", User.builder().name("Mia").build()));
     }
 
     @Test
     void testAddLogNullParameter() {
-        Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addLog(null, "KATZE", "Mia"));
+        Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addLog(null, "KATZE", User.builder().name("Mia").build()));
     }
 
     @Test
@@ -83,7 +84,7 @@ class LogServiceTest {
     @Test
     void testKatzeMessage() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
-        systemUnderTest.addLog("Katze", "INFO", "Mia");
+        systemUnderTest.addLog("Katze", "INFO", User.builder().name("Mia").build());
         Mockito.verify(logRepository).save(arg.capture());
         Assertions.assertEquals("Hund", arg.getValue().getMessage());
         Assertions.assertEquals("INFO", arg.getValue().getSeverity());
@@ -93,7 +94,7 @@ class LogServiceTest {
     void testSeverityMessage() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
         Assertions.assertEquals("Die Nachricht wurde als INFO abgespeichert!",
-                systemUnderTest.addLog("Papagei", "INFO", "Paul"));
+                systemUnderTest.addLog("Papagei", "INFO", User.builder().name("Paul").build()));
     }
 
     @Test
@@ -101,7 +102,7 @@ class LogServiceTest {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
         Assertions.assertEquals("Katze wurde in Hund übersetzt!\n" +
                         "Die Nachricht wurde als INFO abgespeichert!",
-                systemUnderTest.addLog("Katze", "INFO", "Mia"));
+                systemUnderTest.addLog("Katze", "INFO", User.builder().name("Mia").build()));
     }
 
     @Test

@@ -24,11 +24,11 @@ public class Log {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique=true,  nullable = false)
+    @Column(name = "id", unique = true, nullable = false)
     Integer id;
 
     @Column(name = "user", nullable = false)
-    String user;
+    User user;
 
     @Column(name = "severity", nullable = false)
     String severity;
@@ -39,3 +39,6 @@ public class Log {
     @Column(name = "timestamp", nullable = false)
     LocalDateTime timestamp;
 }
+
+
+
