@@ -15,7 +15,8 @@
 	<description>Persistent Logging</description>
 	<properties>
 		<java.version>11</java.version>
-	</properties>
+	  <log4j2.version>2.15.0</log4j2.version>
+  </properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
