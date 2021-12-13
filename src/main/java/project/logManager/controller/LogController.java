@@ -10,6 +10,7 @@ import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
+import project.logManager.service.model.UserService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class LogController {
 
     private final LogService logService;
     private final LogDTOMapper logDTOMapper;
+    private final UserService userService;
 
     @GetMapping("/logs")
     public List<LogDTO> getLogs(@RequestParam(required = false) final String severity,
@@ -43,10 +45,14 @@ public class LogController {
     @PostMapping("/log")
     public String addLog(@RequestParam final String severity,
                          @RequestParam final String message,
-                         @RequestParam final User nameUser) {
+                         @RequestParam final String nameUser) {
         try {
-            return logService.addLog(message, severity, nameUser);
-        } catch (IllegalArgumentException ie) {
+            User user = userService.findUserByName(nameUser);
+            if (user == null) {
+                throw new RuntimeException(String.format("User %s nicht gefunden", nameUser));
+            }
+            return logService.addLog(message, severity, user);
+        } catch (IllegalArgumentException e) {
             throw new SeverityNotFoundException(severity);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());

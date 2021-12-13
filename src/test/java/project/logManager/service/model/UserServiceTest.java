@@ -28,14 +28,17 @@ class UserServiceTest {
     @Mock
     LogRepository logRepository;
 
+    @Mock
+    LogService logService;
+
     @Captor
     ArgumentCaptor<User> arg;
 
     @Test
     void testAddUser() {
-        systemUnderTest.addUser("Peter", LocalDate.of(1988, 12, 12), 90,
-                1.85, "blau");
-        Mockito.verify(userRepository).save(Mockito.any());
+        Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
+                1.85, "blau"));
     }
 
     @Test
@@ -49,8 +52,6 @@ class UserServiceTest {
                 .lieblingsfarbe("blau")
                 .build());
 
-        Assertions.assertEquals("Der User Peter wurde angelegt", systemUnderTest.addUser("Peter",
-                LocalDate.of(1988, 12, 12), 90, 1.85, "blau"));
     }
 
     @Test

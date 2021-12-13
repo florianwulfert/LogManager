@@ -22,9 +22,9 @@ class UserControllerTest {
 
     @Test
     void testAddUser() {
-        systemUnderTest.addUser("Peter", LocalDate.of(1988, 12, 12),
+        systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12),
                 87.5, 1.85, "blau");
-        Mockito.verify(userService).addUser("Peter", LocalDate.of(1988, 12, 12),
+        Mockito.verify(userService).addUser("Florian", "Peter", LocalDate.of(1988, 12, 12),
                 87.5, 1.85, "blau");
 
     }

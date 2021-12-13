@@ -6,9 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.logManager.model.entity.User;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
+import project.logManager.service.model.UserService;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -30,6 +30,9 @@ class LogControllerTest {
     @Mock
     LogDTOMapper logDTOMapper;
 
+    @Mock
+    UserService userService;
+
     @Test
     void testGetLogs() {
         LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0 );
@@ -42,7 +45,7 @@ class LogControllerTest {
 
     @Test
     void testAddLog() {
-        systemUnderTest.addLog("INFO", "Test", User.builder().name("Peter").build());
+        systemUnderTest.addLog("INFO", "Test", "Peter");
         Mockito.verify(logService, Mockito.times(1)).addLog(Mockito.any(), Mockito.any(), Mockito.any());
     }
 

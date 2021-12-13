@@ -22,7 +22,7 @@ Aufgabe 4:
 * [x] b) Erstelle einen Endpunkt im LogController (/log/delete) mit dem RequestParam severity. Der Endpunkt soll mit @DeleteMapping annotiert werden. Der Endpunkt soll die Methode im LogService aufrufen.
 * [x] c) Im LogService soll implementiert werden, dass alle gelöschten Einträge aus der Datenbank als Liste an den User zurückgegeben werden. Die Ausgabe an den User soll damit wie folgt lauten: Es wurden die Einträge mit der ID .., .., .. aus der Datenbank gelöscht.
 
-Aufgabe 5: **funktioniert aktuell nicht**
+Aufgabe 5:
 - [x] Erzeuge eine neue Tabelle User in der Datenbank und gebe die Möglichkeit einen User zu erzeugen.
 * [x] a) Die Entity User soll wie folgt aussehen:
     * id, name, geburtsdatum, gewicht, groesse, lieblingsfarbe
@@ -46,18 +46,18 @@ Aufgabe 8:
 * [x] c) erweitere die Dokumentation um die hinzugefügten Endpunkte.
 
 Aufgabe 9:
-- [ ] Erzeuge die Möglichkeit als User manuelle Logs anzulegen.
-* [x] a) Erweitere die Entity Log um ein User-Attribut. ***Wie?***
-* [ ] b) Der User soll in der Methode addLog im LogController namentlich mit übergeben werden.
+- [x] Erzeuge die Möglichkeit als User manuelle Logs anzulegen.
+* [x] a) Erweitere die Entity Log um ein User-Attribut.
+* [x] b) Der User soll in der Methode addLog im LogController namentlich mit übergeben werden.
     * Im UserService soll der User gefunden werden.
     * Anschließend soll der User mit übergeben werden, um einen Logeintrag anzulegen.
-* [ ] c) ***Durch diese Änderung wird die Methode addUser nicht mehr funktionieren, da nach Aufgabe 7 im UserService die Methode addLog aufgerufen wird. Hierfür ist es notwendig auch den Endpunkt addUser um einen User zu erweitern.***
+* [x] c) Durch diese Änderung wird die Methode addUser nicht mehr funktionieren, da nach Aufgabe 7 im UserService die Methode addLog aufgerufen wird. Hierfür ist es notwendig auch den Endpunkt addUser um einen User zu erweitern.
 
 Aufgabe 10:
 - [ ] Refactoring - Optimierung des bereits vorhandenen Codes
 * [x] a) LogService - DeleteBySeverity - Rückgabe bei einer leeren Liste: "Keine Einträge gefunden"
 * [ ] b) LogService - DeleteBySeverity - Die Strings sollen mit einem StringBuilder verkettet werden.
-* [ ] c) UserService - AddLog - Stringformatter verwenden (der user wurde angelegt)
+* [x] c) UserService - AddLog - Stringformatter verwenden (der user wurde angelegt)
 * [ ] d) LogRepository leeren, aus anderen Repositories erben
 * [ ] e) Verwende im LogDTOMapper Mapstruct - im POM hinzufügen
 * [ ] f) Enum Farben erstellen (User darf nur diese Farben benutzen)

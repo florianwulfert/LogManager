@@ -27,7 +27,8 @@ public class Log {
     @Column(name = "id", unique = true, nullable = false)
     Integer id;
 
-    @Column(name = "user", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user")
     User user;
 
     @Column(name = "severity", nullable = false)

@@ -36,7 +36,7 @@ public class LogService {
 
     public String addLog(String message, String severity, User userName) {
         String MainMessage = "";
-        if (message != null && severity != null && userName != null) {
+        if (message != null && severity != null) {
             if (logValidationService.validateSeverity(severity)) {
                 if (message.equals("Katze")) {
                     message = "Hund";
