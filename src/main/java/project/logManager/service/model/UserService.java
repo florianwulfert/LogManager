@@ -1,5 +1,9 @@
 package project.logManager.service.model;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,11 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.logManager.model.entity.User;
 import project.logManager.model.respository.UserRepository;
-
-import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -39,11 +38,13 @@ public class UserService {
             if (findUserByName(name) != null) {
                 throw new RuntimeException(String.format("User %s bereits vorhanden", name));
             }
+            // prüfe, ob noch kein User vorhanden ist
             List<User> users = userRepository.findAll();
             if (users.isEmpty()) {
                 saveUser(user, null);
                 return;
             }
+            // prüfe, ob ausführender User vorhanden ist
             User activeUser = findUserByName(actor);
             if (activeUser == null) {
                 throw new RuntimeException(String.format("User %s nicht gefunden", actor));
