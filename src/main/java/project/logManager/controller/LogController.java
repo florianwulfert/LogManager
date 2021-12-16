@@ -1,7 +1,6 @@
 package project.logManager.controller;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import project.logManager.exception.SeverityNotFoundException;
@@ -20,13 +19,14 @@ import java.util.List;
  * @author - EugenFriesen
  * 12.02.2021
  **/
-
-@AllArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 @RestController
 public class LogController {
 
     private final LogService logService;
+
     private final LogDTOMapper logDTOMapper;
+
     private final UserService userService;
 
     @GetMapping("/logs")
@@ -36,7 +36,7 @@ public class LogController {
                                 @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime endDateTime) {
         try {
             List<Log> logs = logService.getLogs(severity, message, startDateTime, endDateTime);
-            return logDTOMapper.mapLogsToLogDTOs(logs);
+            return logDTOMapper.logsToLogDTOs(logs);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -64,7 +64,7 @@ public class LogController {
     public List<LogDTO> getLogsBySeverity(@PathVariable final String severity) {
         try {
             List<Log> logs = logService.getLogsBySeverity(severity);
-            return logDTOMapper.mapLogsToLogDTOs(logs);
+            return logDTOMapper.logsToLogDTOs(logs);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
@@ -74,7 +74,7 @@ public class LogController {
     public List<LogDTO> filterLogsByMessageParts(@RequestParam final String message) {
         try {
             List<Log> logs = logService.searchLogsByMessageParts(message);
-            return logDTOMapper.mapLogsToLogDTOs(logs);
+            return logDTOMapper.logsToLogDTOs(logs);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -85,7 +85,7 @@ public class LogController {
                                            @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime endDateTime) {
         try {
             List<Log> logs = logService.searchLogsByDateRange(startDateTime, endDateTime);
-            return logDTOMapper.mapLogsToLogDTOs(logs);
+            return logDTOMapper.logsToLogDTOs(logs);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -97,7 +97,7 @@ public class LogController {
             Log logs = logService.searchLogsByID(id);
             List<Log> returnlist=new ArrayList<>();
             returnlist.add(logs);
-            return logDTOMapper.mapLogsToLogDTOs(returnlist);
+            return logDTOMapper.logsToLogDTOs(returnlist);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }

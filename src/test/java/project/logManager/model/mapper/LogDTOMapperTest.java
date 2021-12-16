@@ -1,6 +1,5 @@
 package project.logManager.model.mapper;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,8 +8,6 @@ import project.logManager.model.entity.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author - EugenFriesen
@@ -26,6 +23,6 @@ class LogDTOMapperTest {
     @Test
     void mapLogsToLogDTOs() {
         List<Log> logs = new ArrayList<>();
-        systemUnderTest.mapLogsToLogDTOs(logs);
+        systemUnderTest.logsToLogDTOs(logs);
     }
 }

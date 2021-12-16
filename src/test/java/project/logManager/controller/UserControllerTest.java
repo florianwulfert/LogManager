@@ -6,7 +6,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.logManager.common.enums.UserFarbenEnum;
 import project.logManager.service.model.UserService;
 
 import java.time.LocalDate;
@@ -24,9 +23,9 @@ class UserControllerTest {
     @Test
     void testAddUser() {
         systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12),
-                87.5, 1.85, UserFarbenEnum.GELB);
+                87.5, 1.85, "GELB");
         Mockito.verify(userService).addUser("Florian", "Peter", LocalDate.of(1988, 12, 12),
-                87.5, 1.85, UserFarbenEnum.GELB);
+                87.5, 1.85, "GELB");
 
     }
 

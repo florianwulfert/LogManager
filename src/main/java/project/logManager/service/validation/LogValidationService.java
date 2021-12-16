@@ -26,9 +26,9 @@ public class LogValidationService {
         return false;
     }
 
-    public boolean validateFarbenEnum(UserFarbenEnum userFarben) {
+    public boolean validateFarbenEnum(String userFarben) {
         for(UserFarbenEnum farbenEnum : UserFarbenEnum.values()) {
-            if (userFarben.equals(UserFarbenEnum.values())) {
+            if (userFarben.equals(farbenEnum.getFarbe())) {
                 return true;
             }
         }

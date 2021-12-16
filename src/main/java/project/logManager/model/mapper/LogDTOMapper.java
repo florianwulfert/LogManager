@@ -1,10 +1,9 @@
 package project.logManager.model.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,20 +11,11 @@ import java.util.List;
  * 13.02.2021
  **/
 
-@Component
-public class LogDTOMapper {
+@Mapper(componentModel = "spring")
+public interface LogDTOMapper {
+    LogDTO logToLogDTO(Log log);
 
-    public List<LogDTO> mapLogsToLogDTOs(List<Log> logs) {
-        List<LogDTO> logDTOS = new ArrayList<>();
-        for (Log log : logs) {
-            LogDTO logDTO = new LogDTO();
-            logDTO.setMessage(log.getMessage());
-            logDTO.setSeverity(log.getSeverity());
-            logDTO.setTimestamp(log.getTimestamp());
-            logDTOS.add(logDTO);
-        }
-        return logDTOS;
-    }
+    List<LogDTO> logsToLogDTOs(List<Log> logs);
 }
 
 

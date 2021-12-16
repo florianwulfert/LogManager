@@ -15,8 +15,19 @@
 	<description>Persistent Logging</description>
 	<properties>
 		<java.version>11</java.version>
-  	</properties>
+		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+	</properties>
 	<dependencies>
+		<dependency> <groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>${org.mapstruct.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${org.mapstruct.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-engine</artifactId>
@@ -68,5 +79,6 @@
 			</plugin>
 		</plugins>
 	</build>
+
 
 </project>
