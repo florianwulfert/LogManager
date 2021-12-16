@@ -58,7 +58,7 @@ Aufgabe 10:
 * [x] a) LogService - DeleteBySeverity - Rückgabe bei einer leeren Liste: "Keine Einträge gefunden"
 * [ ] b) LogService - DeleteBySeverity - Die Strings sollen mit einem StringBuilder verkettet werden.
 * [x] c) UserService - AddLog - Stringformatter verwenden (der user wurde angelegt)
-* [ ] d) LogRepository leeren, aus anderen Repositories erben
+* [x] d) LogRepository leeren, aus anderen Repositories erben
 * [ ] e) Verwende im LogDTOMapper Mapstruct - im POM hinzufügen
 * [ ] f) Enum Farben erstellen (User darf nur diese Farben benutzen)
 
