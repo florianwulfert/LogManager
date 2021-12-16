@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import project.logManager.common.enums.UserFarbenEnum;
 import project.logManager.model.entity.User;
 import project.logManager.model.respository.UserRepository;
 
@@ -24,13 +25,13 @@ public class UserService {
 
 
     public void addUser(String actor, String name, LocalDate geburtsdatum, double gewicht,
-                        double groesse, String lieblingsfarbe) {
+                        double groesse, UserFarbenEnum lieblingsFarbe) {
         User user = User.builder()
                 .name(name)
                 .geburtsdatum(geburtsdatum)
                 .gewicht(gewicht)
                 .groesse(groesse)
-                .lieblingsfarbe(lieblingsfarbe)
+                .lieblingsfarbe(lieblingsFarbe.getFarbe())
                 .build();
 
 
@@ -52,7 +53,6 @@ public class UserService {
         }catch (RuntimeException ex) {
             logService.addLog("Der User konnte nicht angelegt werden", "ERROR", null);
             throw new RuntimeException(ex.getMessage());
-
         }
     }
 
@@ -79,5 +79,7 @@ public class UserService {
         logService.addLog(String.format("Der User %s wurde angelegt", user.getName()), "INFO", actor);
         userRepository.save(user);
     }
+
 }
+
 

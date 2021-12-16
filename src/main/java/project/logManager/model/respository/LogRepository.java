@@ -7,7 +7,6 @@ import project.logManager.model.entity.Log;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author - EugenFriesen
@@ -28,10 +27,6 @@ public interface LogRepository extends JpaRepository<Log, Integer> {
     List<Log> findByMessageContaining(String message);
 
     List<Log> findByTimestampBetween(LocalDateTime startDate, LocalDateTime endDate);
-
-    Optional<Log> findById(Integer id);
-
-    void deleteById(Integer id);
 
     List<Log> deleteBySeverity(String severity);
 }

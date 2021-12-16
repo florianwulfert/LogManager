@@ -31,7 +31,7 @@ public class LogService {
     private final LogValidationService logValidationService;
 
     public List<Log> getLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate) {
-        return logRepository.findLogs(severity, message, startDate, endDate);
+        return logRepository.findAll();
     }
 
     public String addLog(String message, String severity, User userName) {
@@ -94,6 +94,7 @@ public class LogService {
         String isEmpty = deletedLogs.size() == 0 ? "" : " ";
         String message1 = "Es wurden die Einträge mit den IDs" + isEmpty;
         String message2 = " aus der Datenbank gelöscht";
+
         String iDs = "";
 
         for (Log log : deletedLogs) {
@@ -103,7 +104,7 @@ public class LogService {
             }
         }
 
-        sb.append(message1).append(iDs).append(message2);
+        sb.append("Es wurden die Einträge mit den IDs").append(isEmpty).append(iDs).append(" aus der Datenbank gelöscht");
         return sb.toString();
     }
 }

@@ -14,9 +14,10 @@ import java.util.List;
 
 @Component
 public class LogDTOMapper {
+
     public List<LogDTO> mapLogsToLogDTOs(List<Log> logs) {
         List<LogDTO> logDTOS = new ArrayList<>();
-        for(Log log: logs) {
+        for (Log log : logs) {
             LogDTO logDTO = new LogDTO();
             logDTO.setMessage(log.getMessage());
             logDTO.setSeverity(log.getSeverity());
@@ -26,3 +27,5 @@ public class LogDTOMapper {
         return logDTOS;
     }
 }
+
+

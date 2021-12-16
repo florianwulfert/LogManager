@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import project.logManager.common.enums.UserFarbenEnum;
 import project.logManager.service.model.UserService;
 
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public class UserController {
                         @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate geburtsdatum,
                         @RequestParam double gewicht,
                         @RequestParam double groesse,
-                        @RequestParam String lieblingsfarbe) {
+                        @RequestParam UserFarbenEnum lieblingsfarbe) {
 
         try {
             userService.addUser(actor, name, geburtsdatum, gewicht, groesse, lieblingsfarbe);

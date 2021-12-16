@@ -69,3 +69,9 @@ Aufgabe 11:
 * [ ] c) mit switch case: übergewichtig, untergewichtig, normalgewichtig
 * [ ] d) Endpoint erstellen und dokumentieren
 * [ ] c) Tests schreiben
+* Kriterien
+  * 3 verschiedene Arten den BMI zu berechnen
+    1. Bei addUser Nachricht: der User wurde angelegt + laut BMI ist er unter/normal/übergewichtig
+    2. User beim Namen finden und seinen BMI berechnen
+    3. Gar kein User, nur Angaben zu Alter, Gewicht und Größe - kein User wird gespeichert, nur der BMI wird berechnet.
+  4. Eine Methode im UserService erstellen dafür
