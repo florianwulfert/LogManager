@@ -1,19 +1,15 @@
 package project.logManager.controller;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
@@ -59,8 +55,8 @@ public class UserController {
         @RequestParam final String actor) {
         try {
             User user = userService.findUserByName(actor);
-            userService.deleteById(id, user);
-            return String.format("User mit der id %s wurde gelöscht!", id);
+            User deletedUser = userService.deleteById(id, user);
+            return String.format("User %s wurde gelöscht!", deletedUser.getName());
         } catch (RuntimeException e) {
             return e.getMessage();
         }

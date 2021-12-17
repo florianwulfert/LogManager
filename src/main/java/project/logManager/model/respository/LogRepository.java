@@ -1,11 +1,13 @@
 package project.logManager.model.respository;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import project.logManager.model.entity.Log;
+import project.logManager.model.entity.User;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author - EugenFriesen
@@ -22,4 +24,6 @@ public interface LogRepository extends JpaRepository<Log, Integer> {
     List<Log> findLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate);
 
     List<Log> deleteBySeverity(String severity);
+
+    List<Log> findByUser(User user);
 }

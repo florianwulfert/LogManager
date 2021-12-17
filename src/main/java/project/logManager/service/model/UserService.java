@@ -1,9 +1,5 @@
 package project.logManager.service.model;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +7,11 @@ import org.springframework.stereotype.Service;
 import project.logManager.model.entity.User;
 import project.logManager.model.respository.UserRepository;
 import project.logManager.service.validation.ValidationService;
+
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -61,16 +62,30 @@ public class UserService {
     }
 
     public List<User> findUserList() {
-      return userRepository.findAll();
+        return userRepository.findAll();
     }
 
     public Optional<User> findUserById(Integer id) {
-        return userRepository.findById(id).isPresent() ? userRepository.findById(id) : null;
+        return userRepository.findById(id).isPresent() ? userRepository.findById(id) : Optional.empty();
     }
 
-    public void deleteById(Integer id, User actor) {
+    public User deleteById(Integer id, User actor) {
+        Optional<User> user = findUserById(id);
+        if (id.equals(actor.getId())) {
+            throw new RuntimeException("Ein User kann sich nicht selbst löschen!");
+        }
+        if (user.isEmpty()) {
+            throw new RuntimeException(String.format("User mit der ID %s konnte nicht gefunden werden", id));
+        } else {
+            if (logService.searchLogByActorId(user.get())) {
+                throw new RuntimeException(String.format("User %s kann nicht gelöscht werden, " +
+                        "da er in einer anderen Tabelle referenziert wird!", user.get().getName()));
+            }
+        }
+
         userRepository.deleteById(id);
-        logService.addLog(String.format("User mit der id %s wurde gelöscht", id),"WARNING", actor);
+        logService.addLog(String.format("User mit der ID %s wurde gelöscht", id), "WARNING", actor);
+        return user.get();
     }
 
     public User findUserByName(String userName) {

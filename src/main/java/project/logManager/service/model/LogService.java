@@ -1,10 +1,5 @@
 package project.logManager.service.model;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +8,12 @@ import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.respository.LogRepository;
 import project.logManager.service.validation.ValidationService;
+
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author - EugenFriesen
@@ -67,6 +68,11 @@ public class LogService {
 
     public void deleteById(Integer id) {
         logRepository.deleteById(id);
+    }
+
+    public boolean searchLogByActorId(User actor) {
+        List<Log> logs = logRepository.findByUser(actor);
+        return !logs.isEmpty();
     }
 
     public String deleteBySeverity(String severity) {
