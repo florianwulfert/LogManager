@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.respository.LogRepository;
-import project.logManager.service.validation.LogValidationService;
+import project.logManager.service.validation.ValidationService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -28,7 +28,7 @@ public class LogService {
     private static final Logger LOGGER = LogManager.getLogger(LogService.class);
 
     private final LogRepository logRepository;
-    private final LogValidationService logValidationService;
+    private final ValidationService logValidationService;
 
     public List<Log> getLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate) {
         return logRepository.findLogs(severity, message, startDate, endDate);
@@ -91,8 +91,6 @@ public class LogService {
 
         StringBuilder sb = new StringBuilder();
 
-        String isEmpty = deletedLogs.size() == 0 ? "" : " ";
-
         String iDs = "";
 
         for (Log log : deletedLogs) {
@@ -102,7 +100,7 @@ public class LogService {
             }
         }
 
-        sb.append("Es wurden die Einträge mit den IDs").append(isEmpty).append(iDs).append(" aus der Datenbank gelöscht");
+        sb.append("Es wurden die Einträge mit den IDs ").append(iDs).append(" aus der Datenbank gelöscht");
         return sb.toString();
     }
 }

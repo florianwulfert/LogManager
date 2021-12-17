@@ -13,9 +13,9 @@ import project.logManager.common.enums.UserFarbenEnum;
  **/
 @Service
 @Data
-public class LogValidationService {
+public class ValidationService {
 
-    private static final Logger LOGGER = LogManager.getLogger(LogValidationService.class);
+    private static final Logger LOGGER = LogManager.getLogger(ValidationService.class);
 
     public boolean validateSeverity(String severity) {
         for(SeverityEnum severityEnum : SeverityEnum.values()) {

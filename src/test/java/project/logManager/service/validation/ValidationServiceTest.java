@@ -1,14 +1,12 @@
 package project.logManager.service.validation;
 
-import lombok.Data;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author - EugenFriesen
@@ -16,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
  **/
 
 @ExtendWith(MockitoExtension.class)
-class LogValidationServiceTest {
+class ValidationServiceTest {
 
     @InjectMocks
-    LogValidationService systemUnderTest;
+    ValidationService systemUnderTest;
 
     @Test
     void validateSeverity() {
@@ -30,4 +28,15 @@ class LogValidationServiceTest {
     void validateSeverityWrongSeverity() {
         assertFalse(systemUnderTest.validateSeverity("KATZE"));
     }
+
+    @Test
+    void validateUserFarben() {
+        assertTrue(systemUnderTest.validateFarbenEnum("blau"));
+    }
+
+    @Test
+    void validateWrongUserFarben() {
+        assertFalse(systemUnderTest.validateFarbenEnum("gold"));
+    }
+
 }

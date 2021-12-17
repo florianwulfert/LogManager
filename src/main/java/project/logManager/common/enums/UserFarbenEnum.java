@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @AllArgsConstructor
 public enum UserFarbenEnum {
-    BLAU("blau"), GRÜN("grün"), ROT("rot"), ORANGE("orange"), GELB("gelb"), SCHWARZ("schwarz"), WEIẞ("weiß");
+    BLAU("blau"), ROT("rot"), ORANGE("orange"), GELB("gelb"), SCHWARZ("schwarz");
 
 
     @Setter

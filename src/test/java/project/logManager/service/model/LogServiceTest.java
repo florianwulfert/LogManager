@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.respository.LogRepository;
-import project.logManager.service.validation.LogValidationService;
+import project.logManager.service.validation.ValidationService;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -32,7 +32,7 @@ class LogServiceTest {
     LogRepository logRepository;
 
     @Mock
-    LogValidationService logValidationService;
+    ValidationService logValidationService;
 
     @Captor
     ArgumentCaptor<Log> arg;
@@ -176,4 +176,11 @@ class LogServiceTest {
                 systemUnderTest.deleteBySeverity("INFO"));
         Mockito.verify(logRepository).deleteBySeverity("INFO");
     }
+
+    @Test
+    void testNoEntriesFound() {
+        Assertions.assertEquals("Keine Einträge gefunden!", systemUnderTest.deleteBySeverity("INFO"));
+        Mockito.verify(logRepository).deleteBySeverity("INFO");
+    }
+
 }

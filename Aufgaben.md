@@ -54,13 +54,13 @@ Aufgabe 9:
 * [x] c) Durch diese Änderung wird die Methode addUser nicht mehr funktionieren, da nach Aufgabe 7 im UserService die Methode addLog aufgerufen wird. Hierfür ist es notwendig auch den Endpunkt addUser um einen User zu erweitern.
 
 Aufgabe 10:
-- [ ] Refactoring - Optimierung des bereits vorhandenen Codes
+- [x] Refactoring - Optimierung des bereits vorhandenen Codes
 * [x] a) LogService - DeleteBySeverity - Rückgabe bei einer leeren Liste: "Keine Einträge gefunden"
-* [ ] b) LogService - DeleteBySeverity - Die Strings sollen mit einem StringBuilder verkettet werden.
+* [x] b) LogService - DeleteBySeverity - Die Strings sollen mit einem StringBuilder verkettet werden.
 * [x] c) UserService - AddLog - Stringformatter verwenden (der user wurde angelegt)
 * [x] d) LogRepository leeren, aus anderen Repositories erben
-* [ ] e) Verwende im LogDTOMapper Mapstruct - im POM hinzufügen
-* [ ] f) Enum Farben erstellen (User darf nur diese Farben benutzen)
+* [x] e) Verwende im LogDTOMapper Mapstruct - im POM hinzufügen
+* [x] f) Enum Farben erstellen (User darf nur diese Farben benutzen)
 
 Aufgabe 11:
 - [ ] BMI Rechner erstellen

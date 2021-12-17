@@ -5,10 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.logManager.common.enums.UserFarbenEnum;
 import project.logManager.model.entity.User;
 import project.logManager.model.respository.UserRepository;
-import project.logManager.service.validation.LogValidationService;
+import project.logManager.service.validation.ValidationService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ class UserServiceTest {
     UserRepository userRepository;
 
     @Mock
-    LogValidationService logValidationService;
+    ValidationService logValidationService;
 
     @Mock
     LogService logService;
@@ -36,15 +35,15 @@ class UserServiceTest {
     ArgumentCaptor<User> arg;
 
     @Test
-    void testIfColorIsCorrect() {
-        Mockito.when(logValidationService.validateFarbenEnum(Mockito.any())).thenReturn(false);
+    void testIfColorIsNotCorrect() {
+        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(false);
         Assertions.assertThrows(IllegalArgumentException.class, () -> systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
                 1.85, "GELB"));
     }
 
     @Test
     void testIfUsersListIsEmpty() {
-        Mockito.when((logValidationService.validateFarbenEnum("GELB"))).thenReturn(true);
+        Mockito.when((logValidationService.validateFarbenEnum(Mockito.anyString()))).thenReturn(true);
         systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
                 1.85, "GELB");
         Mockito.verify(logService).addLog("Der User Peter wurde angelegt", "INFO", null);
@@ -54,7 +53,7 @@ class UserServiceTest {
     @Test
     void testFindByNameIsNotNull() {
         List<User> users = addTestUser();
-        Mockito.when((logValidationService.validateFarbenEnum(UserFarbenEnum.GELB.getFarbe()))).thenReturn(true);
+        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users);
         Assertions.assertThrows(RuntimeException.class, () ->  systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
                 1.85, "GELB"));
@@ -63,11 +62,24 @@ class UserServiceTest {
     @Test
     void testIfActiveUserExists() {
         List<User> testUsers = addTestUser();
-        Mockito.when(logValidationService.validateFarbenEnum(UserFarbenEnum.ROT.getFarbe())).thenReturn(true);
+        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
         Mockito.when(userRepository.findAll()).thenReturn(testUsers);
         Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
                 1.85, "GELB"));
         }
+
+
+    @Test
+    void testIfEverythingIsCorrectAtAddUser() {
+        List<User> testUsers = addTestUser();
+        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
+        Mockito.when(userRepository.findUserByName(testUsers.get(0).getName())).thenReturn(new ArrayList<>());
+        Mockito.when(userRepository.findAll()).thenReturn(testUsers);
+        Mockito.when(userRepository.findUserByName(testUsers.get(1).getName())).thenReturn(testUsers);
+        systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
+                1.85, "GELB");
+        Mockito.verify(userRepository).save(Mockito.any());
+    }
 
     private List<User> addTestUser() {
         List<User> users = new ArrayList<>();
