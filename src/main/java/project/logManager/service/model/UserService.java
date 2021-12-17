@@ -31,8 +31,6 @@ public class UserService {
                 .groesse(groesse)
                 .lieblingsfarbe(lieblingsFarbe.toLowerCase())
                 .build();
-
-
         if (logValidationService.validateFarbenEnum(lieblingsFarbe.toLowerCase())) {
             try {
                 // prüfe, ob user bereits vorhanden ist
