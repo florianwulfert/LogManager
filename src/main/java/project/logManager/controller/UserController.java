@@ -32,11 +32,19 @@ public class UserController {
         }
     }
 
+    @GetMapping("/users")
+    public void findUsers() {
+        try {
+            userService.findUserList();
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @GetMapping("/user/id")
     public void findUserByID (@RequestParam final Integer id) {
         try {
             userService.findUserById(id);
-
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
