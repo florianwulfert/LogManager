@@ -1,6 +1,8 @@
 package project.logManager.controller;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
 
 @AllArgsConstructor(onConstructor_ = {@Autowired})
@@ -34,18 +37,18 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public void findUsers() {
+    public List<User> findUsers() {
         try {
-            userService.findUserList();
+            return userService.findUserList();
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @GetMapping("/user/id")
-    public void findUserByID (@RequestParam final Integer id) {
+    public Optional<User> findUserByID (@RequestParam final Integer id) {
         try {
-            userService.findUserById(id);
+            return userService.findUserById(id);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }
