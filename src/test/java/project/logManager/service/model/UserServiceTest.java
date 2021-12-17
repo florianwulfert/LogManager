@@ -1,17 +1,20 @@
 package project.logManager.service.model;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.User;
 import project.logManager.model.respository.UserRepository;
 import project.logManager.service.validation.ValidationService;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -109,7 +112,7 @@ class UserServiceTest {
 
     @Test
     void testDeleteUserById() {
-        systemUnderTest.deleteById(1);
+        systemUnderTest.deleteById(1, addTestUser().get(1));
         Mockito.verify(userRepository).deleteById(1);
     }
 }

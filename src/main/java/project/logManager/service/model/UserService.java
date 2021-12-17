@@ -68,8 +68,9 @@ public class UserService {
         return userRepository.findById(id).isPresent() ? userRepository.findById(id) : null;
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(Integer id, User actor) {
         userRepository.deleteById(id);
+        logService.addLog(String.format("User mit der id %s wurde gelöscht", id),"WARN", actor);
     }
 
     public User findUserByName(String userName) {
