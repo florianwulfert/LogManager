@@ -70,7 +70,7 @@ public class UserService {
 
     public void deleteById(Integer id, User actor) {
         userRepository.deleteById(id);
-        logService.addLog(String.format("User mit der id %s wurde gelöscht", id),"WARN", actor);
+        logService.addLog(String.format("User mit der id %s wurde gelöscht", id),"WARNING", actor);
     }
 
     public User findUserByName(String userName) {

@@ -56,9 +56,10 @@ public class UserController {
 
     @DeleteMapping("/user/delete/{id}")
     public String deleteUserByID (@PathVariable final Integer id,
-        @RequestParam final User actor) {
+        @RequestParam final String actor) {
         try {
-            userService.deleteById(id, actor);
+            User user = userService.findUserByName(actor);
+            userService.deleteById(id, user);
             return String.format("User mit der id %s wurde gelöscht!", id);
         } catch (RuntimeException e) {
             return e.getMessage();
