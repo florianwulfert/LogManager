@@ -1,10 +1,9 @@
 package project.logManager.model.mapper;
 
+import java.util.List;
 import org.mapstruct.Mapper;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
-
-import java.util.List;
 
 /**
  * @author - EugenFriesen
@@ -14,7 +13,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface LogDTOMapper {
     LogDTO logToLogDTO(Log log);
-
     List<LogDTO> logsToLogDTOs(List<Log> logs);
 }
 

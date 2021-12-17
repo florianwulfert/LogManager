@@ -1,21 +1,24 @@
 package project.logManager.service.model;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
-import org.mockito.junit.jupiter.MockitoExtension;
-import project.logManager.model.entity.Log;
-import project.logManager.model.entity.User;
-import project.logManager.model.respository.LogRepository;
-import project.logManager.service.validation.ValidationService;
+import static org.mockito.ArgumentMatchers.anyString;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.ArgumentMatchers.anyString;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.model.entity.Log;
+import project.logManager.model.entity.User;
+import project.logManager.model.respository.LogRepository;
+import project.logManager.service.validation.ValidationService;
 
 /**
  * @author - EugenFriesen
@@ -93,7 +96,7 @@ class LogServiceTest {
     @Test
     void testSeverityMessage() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
-        Assertions.assertEquals("Die Nachricht wurde als INFO abgespeichert!",
+        Assertions.assertEquals("Es wurde die Nachricht \"Papagei\" als INFO abgespeichert!",
                 systemUnderTest.addLog("Papagei", "INFO", User.builder().name("Paul").build()));
     }
 
@@ -101,7 +104,7 @@ class LogServiceTest {
     void testKatzeReturnMessage() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
         Assertions.assertEquals("Katze wurde in Hund übersetzt!\n" +
-                        "Die Nachricht wurde als INFO abgespeichert!",
+                        "Es wurde die Nachricht \"Hund\" als INFO abgespeichert!",
                 systemUnderTest.addLog("Katze", "INFO", User.builder().name("Mia").build()));
     }
 

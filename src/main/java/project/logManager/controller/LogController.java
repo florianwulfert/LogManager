@@ -1,8 +1,16 @@
 package project.logManager.controller;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import project.logManager.exception.SeverityNotFoundException;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
@@ -10,10 +18,6 @@ import project.logManager.model.entity.User;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
 import project.logManager.service.model.UserService;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author - EugenFriesen
@@ -55,7 +59,7 @@ public class LogController {
         } catch (IllegalArgumentException e) {
             throw new SeverityNotFoundException(severity);
         } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
+            return e.getMessage();
         }
     }
 

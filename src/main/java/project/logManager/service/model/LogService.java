@@ -1,5 +1,10 @@
 package project.logManager.service.model;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,12 +14,6 @@ import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.respository.LogRepository;
 import project.logManager.service.validation.ValidationService;
-
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author - EugenFriesen
@@ -35,15 +34,15 @@ public class LogService {
     }
 
     public String addLog(String message, String severity, User userName) {
-        String MainMessage = "";
+        String returnMessage = "";
         if (message != null && severity != null) {
             if (logValidationService.validateSeverity(severity)) {
                 if (message.equals("Katze")) {
                     message = "Hund";
-                    MainMessage = "Katze wurde in Hund übersetzt!\n";
+                    returnMessage = "Katze wurde in Hund übersetzt!\n";
                 }
 
-                MainMessage = MainMessage + String.format("Die Nachricht wurde als %s abgespeichert!", severity);
+                returnMessage = returnMessage + String.format("Es wurde die Nachricht \"%s\" als %s abgespeichert!", message, severity);
 
                 Log log = new Log();
                 log.setMessage(message);
@@ -60,7 +59,7 @@ public class LogService {
             LOGGER.error("One of the input parameter was not given!");
             throw new RuntimeException("One of the input parameter was not given!");
         }
-        return MainMessage;
+        return returnMessage;
     }
 
     public List<Log> getLogsBySeverity(String severity) {
