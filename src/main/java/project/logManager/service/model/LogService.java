@@ -5,10 +5,9 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
@@ -22,7 +21,7 @@ import project.logManager.service.validation.ValidationService;
 
 @Transactional
 @Service
-@AllArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class LogService {
     private static final Logger LOGGER = LogManager.getLogger(LogService.class);
 

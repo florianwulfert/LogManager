@@ -16,13 +16,20 @@
 	<properties>
 		<java.version>11</java.version>
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+    <verstion.lombok-mapstruct-binding>0.2.0</verstion.lombok-mapstruct-binding>
 	</properties>
 	<dependencies>
-		<dependency> <groupId>org.mapstruct</groupId>
+		<dependency>
+      <groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct-processor</artifactId>
 			<version>${org.mapstruct.version}</version>
 			<optional>true</optional>
 		</dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok-mapstruct-binding</artifactId>
+      <version>${verstion.lombok-mapstruct-binding}</version>
+    </dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
