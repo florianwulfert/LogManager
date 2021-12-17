@@ -1,12 +1,11 @@
 package project.logManager.model.respository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import project.logManager.model.entity.Log;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author - EugenFriesen
@@ -21,12 +20,6 @@ public interface LogRepository extends JpaRepository<Log, Integer> {
             " AND (:startDate is null or log.timestamp > :startDate)" +
             " AND (:endDate is null or log.timestamp < :endDate)")
     List<Log> findLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate);
-
-    List<Log> findBySeverity(String severity);
-
-    List<Log> findByMessageContaining(String message);
-
-    List<Log> findByTimestampBetween(LocalDateTime startDate, LocalDateTime endDate);
 
     List<Log> deleteBySeverity(String severity);
 }

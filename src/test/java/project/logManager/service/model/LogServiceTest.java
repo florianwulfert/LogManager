@@ -73,18 +73,6 @@ class LogServiceTest {
     }
 
     @Test
-    void testGetLogsBySeverity() {
-        LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0);
-        List<Log> logs = new ArrayList<>();
-        Log log = createNewLog(2, "INFO", "Das ist ein Test", timestamp);
-        logs.add(log);
-        Mockito.when(logRepository.findBySeverity(Mockito.any())).thenReturn(logs);
-        systemUnderTest.getLogsBySeverity("INFO");
-        Mockito.verify(logRepository, Mockito.times(1))
-                .findBySeverity(Mockito.any());
-    }
-
-    @Test
     void testKatzeMessage() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
         systemUnderTest.addLog("Katze", "INFO", User.builder().name("Mia").build());
@@ -106,32 +94,6 @@ class LogServiceTest {
         Assertions.assertEquals("Katze wurde in Hund übersetzt!\n" +
                         "Es wurde die Nachricht \"Hund\" als INFO abgespeichert!",
                 systemUnderTest.addLog("Katze", "INFO", User.builder().name("Mia").build()));
-    }
-
-    @Test
-    void testSearchLogsByMessageParts() {
-        LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0);
-        List<Log> logs = new ArrayList<>();
-        Log log = createNewLog(3, "INFO", "Das war ein Test", timestamp);
-        logs.add(log);
-        Mockito.when(logRepository.findByMessageContaining(Mockito.any())).thenReturn(logs);
-        systemUnderTest.searchLogsByMessageParts("Test");
-        Mockito.verify(logRepository, Mockito.times(1))
-                .findByMessageContaining(Mockito.any());
-    }
-
-    @Test
-    void testSearchLogsByDateRange() {
-        LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0);
-        List<Log> logs = new ArrayList<>();
-        Log log = createNewLog(4, "WARNING", "Das ist ein Test", timestamp);
-        logs.add(log);
-        Mockito.when(logRepository.findByTimestampBetween(Mockito.any(), Mockito.any())).thenReturn(logs);
-        LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
-        LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
-        systemUnderTest.searchLogsByDateRange(startDate, endDate);
-        Mockito.verify(logRepository, Mockito.times(1))
-                .findByTimestampBetween(Mockito.any(), Mockito.any());
     }
 
     private Log createNewLog(int id, String severity, String message, LocalDateTime timestamp) {

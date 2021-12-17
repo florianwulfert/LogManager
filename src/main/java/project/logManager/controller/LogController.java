@@ -28,9 +28,7 @@ import project.logManager.service.model.UserService;
 public class LogController {
 
     private final LogService logService;
-
     private final LogDTOMapper logDTOMapper;
-
     private final UserService userService;
 
     @GetMapping("/logs")
@@ -63,38 +61,6 @@ public class LogController {
         }
     }
 
-
-    @GetMapping("/logs/{severity}")
-    public List<LogDTO> getLogsBySeverity(@PathVariable final String severity) {
-        try {
-            List<Log> logs = logService.getLogsBySeverity(severity);
-            return logDTOMapper.logsToLogDTOs(logs);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @GetMapping("/logs/messages")
-    public List<LogDTO> filterLogsByMessageParts(@RequestParam final String message) {
-        try {
-            List<Log> logs = logService.searchLogsByMessageParts(message);
-            return logDTOMapper.logsToLogDTOs(logs);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    @GetMapping("/logs/date")
-    public List<LogDTO> getLogsByDateRange(@RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime startDateTime,
-                                           @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime endDateTime) {
-        try {
-            List<Log> logs = logService.searchLogsByDateRange(startDateTime, endDateTime);
-            return logDTOMapper.logsToLogDTOs(logs);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
     @GetMapping("/logs/id")
     public List<LogDTO> getLogsByID (@RequestParam final Integer id) {
         try {
@@ -116,7 +82,7 @@ public class LogController {
         }
     }
 
-    @DeleteMapping("/logs/del/severity")
+    @DeleteMapping("/logs/delete/severity")
     public String deleteBySeverity (@RequestParam final String severity) {
         try {
             return logService.deleteBySeverity(severity);

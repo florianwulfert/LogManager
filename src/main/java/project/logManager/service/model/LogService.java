@@ -61,18 +61,6 @@ public class LogService {
         return returnMessage;
     }
 
-    public List<Log> getLogsBySeverity(String severity) {
-        return logRepository.findBySeverity(severity);
-    }
-
-    public List<Log> searchLogsByMessageParts(String message) {
-        return logRepository.findByMessageContaining(message);
-    }
-
-    public List<Log> searchLogsByDateRange(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return logRepository.findByTimestampBetween(startDateTime, endDateTime);
-    }
-
     public Log searchLogsByID(Integer id) {
         return logRepository.findById(id).isPresent() ? logRepository.findById(id).get() : null;
     }
