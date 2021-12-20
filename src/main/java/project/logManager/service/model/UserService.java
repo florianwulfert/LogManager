@@ -23,7 +23,7 @@ public class UserService {
 
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
-    public void addUser(String actor, String name, LocalDate geburtsdatum, double gewicht,
+    public User addUser(String actor, String name, LocalDate geburtsdatum, double gewicht,
                         double groesse, String lieblingsFarbe) {
         User user = User.builder()
                 .name(name)
@@ -42,7 +42,7 @@ public class UserService {
                 List<User> users = userRepository.findAll();
                 if (users.isEmpty()) {
                     saveUser(user, null);
-                    return;
+                    return user;
                 }
                 // prüfe, ob ausführender User vorhanden ist
                 User activeUser = findUserByName(actor);
@@ -59,6 +59,7 @@ public class UserService {
             LOGGER.error("Given color '{}' is not allowed!", lieblingsFarbe);
             throw new IllegalArgumentException("Illegal color!");
         }
+        return user;
     }
 
     public List<User> findUserList() {
@@ -101,6 +102,22 @@ public class UserService {
         logService.addLog(String.format("Der User %s wurde angelegt", user.getName()), "INFO", actor);
         userRepository.save(user);
     }
+
+    public Double berechneBMI(Double groesse, Double gewicht, Double bmi) {
+        User user = addUser("dv", "dv", LocalDate.of(1988, 12, 12), 88, 1.85, "blau");
+        groesse = user.getGroesse();
+        gewicht = user.getGewicht();
+
+        bmi = groesse / (gewicht * gewicht);
+
+        return bmi;
+    }
+
+
+
+
+
+
 }
 
 

@@ -1,20 +1,18 @@
 package project.logManager.service.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.function.Executable;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.User;
 import project.logManager.model.respository.UserRepository;
 import project.logManager.service.validation.ValidationService;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -104,6 +102,13 @@ class UserServiceTest {
         return users;
     }
 
+
+    @Test
+    void testFindUserList() {
+        systemUnderTest.findUserList();
+        Mockito.verify(userRepository).findAll();
+    }
+
     @Test
     void testFindUserById() {
         systemUnderTest.findUserById(1);
@@ -112,7 +117,9 @@ class UserServiceTest {
 
     @Test
     void testDeleteUserById() {
-        systemUnderTest.deleteById(1, addTestUser().get(1));
+        List<User> testUser = addTestUser();
+        Mockito.when(systemUnderTest.findUserById(1).equals(testUser.get(1))).thenReturn(true);
+        Assertions.assertThrows(RuntimeException.class, (Executable) systemUnderTest.deleteById(1, testUser.get(1)));
         Mockito.verify(userRepository).deleteById(1);
     }
 }
