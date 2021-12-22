@@ -3,7 +3,6 @@ package project.logManager.service.model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.User;
@@ -56,7 +55,7 @@ class UserServiceTest {
         List<User> users = addTestUser();
         Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users);
-        Assertions.assertThrows(RuntimeException.class, () ->  systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
+        Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
                 1.85, "GELB"));
     }
 
@@ -67,7 +66,7 @@ class UserServiceTest {
         Mockito.when(userRepository.findAll()).thenReturn(testUsers);
         Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
                 1.85, "GELB"));
-        }
+    }
 
 
     @Test
@@ -102,7 +101,6 @@ class UserServiceTest {
         return users;
     }
 
-
     @Test
     void testFindUserList() {
         systemUnderTest.findUserList();
@@ -116,10 +114,37 @@ class UserServiceTest {
     }
 
     @Test
-    void testDeleteUserById() {
+    void testIfUserToDeleteIsEqualToActor() {
         List<User> testUser = addTestUser();
-        Mockito.when(systemUnderTest.findUserById(1).equals(testUser.get(1))).thenReturn(true);
-        Assertions.assertThrows(RuntimeException.class, (Executable) systemUnderTest.deleteById(1, testUser.get(1)));
-        Mockito.verify(userRepository).deleteById(1);
+        systemUnderTest.findUserById(1);
+        Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.deleteById(1, testUser.get(1)));
     }
+
+    @Test
+    void testIfUserIsEmpty() {
+        List<User> testUser = addTestUser();
+        Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.deleteById(1, testUser.get(1)));
+    }
+
+    @Test
+    void testIfUserIsUsedSomewhere() {
+        List<User> testUser = addTestUser();
+        systemUnderTest.findUserById(1);
+        logService.searchLogByActorId(testUser.get(0));
+        Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.deleteById(1, testUser.get(1)));
+    }
+
+    @Test
+    void testDeleteById() {
+        List<User> testUser = addTestUser();
+        systemUnderTest.findUserById(1);
+        systemUnderTest.deleteById(1, testUser.get(0));
+        Mockito.verify(userRepository).deleteById(1);
+
+    }
+
 }
+
