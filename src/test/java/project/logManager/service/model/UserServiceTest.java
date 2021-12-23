@@ -128,7 +128,7 @@ class UserServiceTest {
                 systemUnderTest.deleteById(1, testUser.get(1)));
     }
 
-    @Test
+    /*@Test
     void testIfUserIsUsedSomewhere() {
         List<User> testUser = addTestUser();
         systemUnderTest.findUserById(1);
@@ -144,7 +144,7 @@ class UserServiceTest {
         systemUnderTest.deleteById(1, testUser.get(0));
         Mockito.verify(userRepository).deleteById(1);
 
-    }
+    }*/
 
 }
 

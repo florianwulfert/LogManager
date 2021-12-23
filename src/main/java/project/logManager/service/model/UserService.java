@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import project.logManager.model.entity.BMI;
 import project.logManager.model.entity.User;
 import project.logManager.model.respository.UserRepository;
 import project.logManager.service.validation.ValidationService;
@@ -103,14 +104,60 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Double berechneBMI(Double groesse, Double gewicht, Double bmi) {
-        User user = addUser("dv", "dv", LocalDate.of(1988, 12, 12), 88, 1.85, "blau");
-        groesse = user.getGroesse();
-        gewicht = user.getGewicht();
 
-        bmi = groesse / (gewicht * gewicht);
+    public String berechneBMI(Integer alter, Double groesse, Double gewicht) {
+        BMI bmiUser = BMI.builder()
+                .alter(alter)
+                .groesse(groesse)
+                .gewicht(gewicht)
+                .build();
+        Double bmi = bmiUser.getGewicht() / (bmiUser.getGroesse() * bmiUser.getGroesse());
 
-        return bmi;
+        String messageWeightStatus = switch (bmiUser.getAlter().intValue()) {
+            case bmiUser.getAlter() > 40:
+        }
+        if () {
+            switch (bmi.intValue()) {
+                case bmi <= 18.5:
+                    return "untergewichtig";
+                break;
+                case bmi > 18.5 || bmi < 25:
+                    String message = "normalgewichtig";
+                    return message;
+
+                case bmi > 25:
+                    String message = "übergewichtig";
+                    return message;
+
+            }
+        }
+        if (bmiUser.getAlter() >= 18 || bmiUser.getAlter() <= 40) {
+            switch (bmi.intValue()) {
+                case bmi <= 18.5:
+                    return "untergewichtig (aufgrund des Alters kann der leicht verschoben sein)";
+                break;
+                case bmi > 18.5 || bmi < 25:
+                    String message = "normalgewichtig (aufgrund des Alters kann der leicht verschoben sein)";
+                    return message;
+
+                case bmi > 25:
+                    String message = "übergewichtig (aufgrund des Alters kann der leicht verschoben sein)";
+                    return message;
+
+            }
+        }
+
+        if (bmiUser.getAlter() < 18) {
+            throw new RuntimeException("Der User ist zu jung für eine genaue Bestimmung des BMI");
+        }
+
+        String bmiMessage = String.format("Der User hat ein BMI von %s und ist somit %s", bmi, );
+        return bmiMessage;
+    }
+
+    public Integer getAgeFromBirthDate(LocalDate geburtsDatum) {
+        int alter = geburtsDatum.getYear() - LocalDate.now().getYear();
+        return alter;
     }
 
 
