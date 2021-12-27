@@ -37,16 +37,19 @@ class UserServiceTest {
     @Test
     void testIfColorIsNotCorrect() {
         Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(false);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
+        Assertions.assertThrows(IllegalArgumentException.class, () -> systemUnderTest.addUser
+                ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
                 1.85, "GELB"));
     }
 
     @Test
     void testIfUsersListIsEmpty() {
         Mockito.when((logValidationService.validateFarbenEnum(Mockito.anyString()))).thenReturn(true);
-        systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
+        systemUnderTest.addUser("Florian", "Peter",
+                LocalDate.of(1988, 12, 12), 90,
                 1.85, "GELB");
-        Mockito.verify(logService).addLog("Der User Peter wurde angelegt", "INFO", null);
+        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. " +
+                "Der User hat einen BMI von 26,2966 und ist somit übergewichtig", "INFO", null);
         Mockito.verify(userRepository).save(Mockito.any());
     }
 
@@ -55,7 +58,8 @@ class UserServiceTest {
         List<User> users = addTestUser();
         Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users);
-        Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
+        Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser
+                ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
                 1.85, "GELB"));
     }
 
@@ -64,7 +68,8 @@ class UserServiceTest {
         List<User> testUsers = addTestUser();
         Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
         Mockito.when(userRepository.findAll()).thenReturn(testUsers);
-        Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
+        Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser
+                ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
                 1.85, "GELB"));
     }
 
@@ -76,7 +81,8 @@ class UserServiceTest {
         Mockito.when(userRepository.findUserByName(testUsers.get(0).getName())).thenReturn(new ArrayList<>());
         Mockito.when(userRepository.findAll()).thenReturn(testUsers);
         Mockito.when(userRepository.findUserByName(testUsers.get(1).getName())).thenReturn(testUsers);
-        systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
+        systemUnderTest.addUser("Florian", "Peter", LocalDate.of
+                        (1988, 12, 12), 90,
                 1.85, "GELB");
         Mockito.verify(userRepository).save(Mockito.any());
     }
@@ -145,6 +151,18 @@ class UserServiceTest {
         Mockito.verify(userRepository).deleteById(1);
 
     }*/
+
+    @Test
+    void testFindUserAndCalculateBMI() {
+        systemUnderTest.findUserAndCalculateBMI(addTestUser().get(0).getName());
+        Mockito.verify(userRepository).findUserAndCalculateBMI(addTestUser().get(0).getName());
+    }
+
+    @Test
+    void testBerechneBMI() {
+        systemUnderTest.berechneBMI(LocalDate.of(2000, 12, 12), 1.80, 100.0);
+
+    }
 
 }
 

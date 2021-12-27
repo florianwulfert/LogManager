@@ -11,4 +11,6 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findUserByName(String name);
 
+    List<User> findUserAndCalculateBMI(String name);
+
 }

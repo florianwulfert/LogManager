@@ -61,4 +61,13 @@ public class UserController {
             return e.getMessage();
         }
     }
+
+    @GetMapping("/user/bmi")
+    public String findUserAndCalculateBMI (@RequestParam final String userName) {
+        try {
+            return userService.findUserAndCalculateBMI(userName);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 }

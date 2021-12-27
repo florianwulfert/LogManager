@@ -88,6 +88,15 @@
   * Mögliche Fehler:
     * Internal Server Error (ID unbekannt)
 
+###Restschnittstellen BMI
+* POST: /bmi
+  * Der BMI wird berechnet, ohne das ein User gespeichert wird
+  * Geforderte Parameter:
+    * alter: Integer
+    * groesse: Double
+    * gewicht: Double
+  * Mögliche Fehler:
+
 ### Datenbank
 * Der Logmanager besitzt eine H2-Datenbank
 * Hierfür ist notwendig unter D: ein Ordner data hinzuzufügen

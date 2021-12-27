@@ -1,8 +1,5 @@
 package project.logManager.controller;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,6 +8,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 
@@ -42,6 +43,13 @@ class UserControllerTest {
         List<User> testUser = addTestUser();
         systemUnderTest.deleteUserByID(1, testUser.get(1).getName());
         Mockito.verify(userService).deleteById(1, testUser.get(1));
+    }
+
+    @Test
+    void testFindUserAndCalculateBMI() {
+        List<User> testUser = addTestUser();
+        systemUnderTest.findUserAndCalculateBMI(testUser.get(0).getName());
+        Mockito.verify(userService).findUserAndCalculateBMI(testUser.get(0).getName());
     }
 
     private List<User> addTestUser() {
