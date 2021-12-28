@@ -87,6 +87,10 @@
     * id: Integer
   * Mögliche Fehler:
     * Internal Server Error (ID unbekannt)
+* GET: /user/bmi
+  * Beim Erstellen des Users wird sein BMI ausgerechnet und eine entsprechende Nachricht wird ausgegeben.
+  * Geforderte Parameter:
+    * 
 
 ###Restschnittstellen BMI
 * POST: /bmi

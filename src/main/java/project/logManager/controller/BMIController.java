@@ -20,7 +20,7 @@ public class BMIController {
                               @RequestParam Double gewicht,
                               @RequestParam Double groesse) {
         try {
-            userService.berechneBMI(geburtsDatum, groesse, gewicht);
+            userService.berechneBMI(groesse, gewicht);
         return "BMI wurde berechnet!";
         } catch (RuntimeException e) {
             return e.getMessage();

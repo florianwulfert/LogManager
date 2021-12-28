@@ -41,8 +41,9 @@ class UserControllerTest {
     @Test
     void testDeleteUserById() {
         List<User> testUser = addTestUser();
-        systemUnderTest.deleteUserByID(1, testUser.get(1).getName());
-        Mockito.verify(userService).deleteById(1, testUser.get(1));
+        systemUnderTest.deleteUserByID(testUser.get(0).getId(), testUser.get(1).getName());
+        Mockito.verify(userService).findUserByName(testUser.get(1).getName());
+        Mockito.verify(userService).deleteById(testUser.get(0).getId(), testUser.get(0));
     }
 
     @Test

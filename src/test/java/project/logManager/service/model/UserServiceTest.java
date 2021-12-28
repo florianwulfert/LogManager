@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.User;
+import project.logManager.model.respository.BMIRepository;
 import project.logManager.model.respository.UserRepository;
 import project.logManager.service.validation.ValidationService;
 
@@ -30,6 +31,9 @@ class UserServiceTest {
 
     @Mock
     LogService logService;
+
+    @Mock
+    BMIRepository bmiRepository;
 
     @Captor
     ArgumentCaptor<User> arg;
@@ -160,7 +164,8 @@ class UserServiceTest {
 
     @Test
     void testBerechneBMI() {
-        systemUnderTest.berechneBMI(LocalDate.of(2000, 12, 12), 1.80, 100.0);
+        systemUnderTest.berechneBMI(1.80, 100.0);
+        Mockito.verify(userRepository).calculateBMI(1.80, 100.0);
 
     }
 

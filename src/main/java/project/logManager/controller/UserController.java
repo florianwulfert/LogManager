@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @GetMapping("/user/bmi")
-    public String findUserAndCalculateBMI (@RequestParam final String userName) {
+    public Double findUserAndCalculateBMI (@RequestParam final String userName) {
         try {
             return userService.findUserAndCalculateBMI(userName);
         } catch (RuntimeException e) {

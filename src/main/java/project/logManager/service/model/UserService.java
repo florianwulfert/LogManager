@@ -99,64 +99,44 @@ public class UserService {
         }
     }
 
-    public String findUserAndCalculateBMI(String userName) {
+    public Double findUserAndCalculateBMI(String userName) {
         User user = findUserByName(userName);
-        String bmi = berechneBMI(user.getGeburtsdatum(), user.getGroesse(), user.getGewicht());
-        return bmi;
+        return berechneBMI(user.getGroesse(), user.getGewicht());
     }
 
     private void saveUser(User user, User actor) {
         logService.addLog(String.format("Der User %s wurde angelegt. " +
-                berechneBMI(user.getGeburtsdatum(), user.getGroesse(), user.getGewicht()), user.getName()),
+                berechneBMI(user.getGroesse(), user.getGewicht()), user.getName()),
                 "INFO", actor);
         userRepository.save(user);
     }
 
 
-    public String berechneBMI(LocalDate geburtsDatum, Double groesse, Double gewicht) {
+    public Double berechneBMI(Double groesse, Double gewicht) {
         BMI bmiUser = BMI.builder()
-                .alter(getAgeFromBirthDate(geburtsDatum))
                 .groesse(groesse)
                 .gewicht(gewicht)
                 .build();
+        return bmiUser.getGewicht() / (bmiUser.getGroesse() * bmiUser.getGroesse());
+    }
 
-        double bmi = bmiUser.getGewicht() / (bmiUser.getGroesse() * bmiUser.getGroesse());
+    public String berechneBmiWithMessage(LocalDate geburtsDatum, Double groesse, Double gewicht) {
+        Double bmi = berechneBMI(groesse, gewicht);
+        int alterUser = getAgeFromBirthDate(geburtsDatum);
 
-        if (bmiUser.getAlter() < 18) {
+        if (alterUser < 18) {
             throw new RuntimeException("Der User ist zu jung für eine genaue Bestimmung des BMI");
         }
 
-        if (bmiUser.getAlter() >= 18 || bmiUser.getAlter() <= 40) {
-
-            if (bmi <= 18.5) {
-                return String.format("Der User hat einen BMI von %s und ist somit untergewichtig",
-                        bmi);
-            } else if (bmi > 18.5) {
-                return String.format("Der User hat einen BMI von %s und ist somit normalgewichtig",
-                        bmi);
-            } else if (bmi > 25) {
-                return String.format("Der User hat einen BMI von %s und ist somit übergewichtig", bmi);
-            } else {
-                throw new IllegalStateException("Unexpected value: " + bmi);
-            }
+        if (bmi > 18.5 && bmi <= 25) {
+            return String.format("Der User hat einen BMI von %s und ist somit normalgewichtig", bmi);
+        } else if (bmi <= 18.5 && bmi > 0) {
+            return String.format("Der User hat einen BMI von %s und ist somit untergewichtig", bmi);
+        } else if (bmi > 25) {
+            return String.format("Der User hat einen BMI von %s und ist somit übergewichtig", bmi);
+        } else {
+            throw new IllegalStateException("Unexpected value: " + bmi);
         }
-
-        if (bmiUser.getAlter() > 40) {
-            if (bmi <= 18.5) {
-                return String.format("Der User hat einen BMI von %s und ist somit untergewichtig" +
-                        "(aufgrund des Alters kann der eigentliche BMI-Wert leicht verschoben sein)", bmi);
-            } else if (bmi > 18.5) {
-                return String.format("Der User hat einen BMI von %s und ist somit normalgewichtig" +
-                        "(aufgrund des Alters kann der eigentliche BMI-Wert leicht verschoben sein)", bmi);
-            } else if (bmi > 25) {
-                return String.format("Der User hat einen BMI von %s und ist somit übergewichtig" +
-                        "(aufgrund des Alters kann der eigentliche BMI-Wert leicht verschoben sein)", bmi);
-            } else {
-                throw new IllegalStateException("Unexpected value: " + bmi);
-            }
-
-        }return bmiUser.getWeightMessage();
-
     }
 
     public Integer getAgeFromBirthDate(LocalDate geburtsDatum) {
