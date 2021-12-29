@@ -62,12 +62,34 @@ public class UserController {
         }
     }
 
-    @GetMapping("/user/bmi")
+    @GetMapping("/user/findBmi")
     public Double findUserAndCalculateBMI (@RequestParam final String userName) {
         try {
             return userService.findUserAndCalculateBMI(userName);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @PostMapping("/user/bmi")
+    public String berechneBMI(@RequestParam Double gewicht,
+                              @RequestParam Double groesse) {
+        try {
+            userService.berechneBMI(gewicht, groesse);
+            return "BMI wurde berechnet";
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
+    }
+
+    @PostMapping("/user/bmiWithMessage")
+    public String berechneBMIwithMessage(@RequestParam LocalDate geburtsDatum,
+                                         @RequestParam Double gewicht,
+                                         @RequestParam Double groesse) {
+        try {
+            return userService.berechneBmiWithMessage(geburtsDatum, gewicht,groesse);
+        } catch (RuntimeException e) {
+            return e.getMessage();
         }
     }
 }

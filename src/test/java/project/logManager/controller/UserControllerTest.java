@@ -53,6 +53,22 @@ class UserControllerTest {
         Mockito.verify(userService).findUserAndCalculateBMI(testUser.get(0).getName());
     }
 
+    @Test
+    void testBerechneBMI() {
+        List<User> testUser = addTestUser();
+        systemUnderTest.berechneBMI(testUser.get(0).getGewicht(), testUser.get(0).getGroesse());
+        Mockito.verify(userService).berechneBMI(testUser.get(0).getGewicht(), testUser.get(0).getGroesse());
+    }
+
+    @Test
+    void testBerechneBMIWithMessage() {
+        List<User> testUser = addTestUser();
+        systemUnderTest.berechneBMIwithMessage(LocalDate.of(2000, 12, 12),
+                80.0, 1.75);
+        Mockito.verify(userService).berechneBmiWithMessage(LocalDate.of(2000, 12, 12),
+                80.0, 1.75);
+    }
+
     private List<User> addTestUser() {
       List<User> users = new ArrayList<>();
       users.add(User.builder()

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.User;
-import project.logManager.model.respository.BMIRepository;
 import project.logManager.model.respository.UserRepository;
 import project.logManager.service.validation.ValidationService;
 
@@ -31,9 +30,6 @@ class UserServiceTest {
 
     @Mock
     LogService logService;
-
-    @Mock
-    BMIRepository bmiRepository;
 
     @Captor
     ArgumentCaptor<User> arg;
@@ -91,26 +87,6 @@ class UserServiceTest {
         Mockito.verify(userRepository).save(Mockito.any());
     }
 
-    private List<User> addTestUser() {
-        List<User> users = new ArrayList<>();
-        users.add(User.builder()
-                .name("Peter")
-                .geburtsdatum(LocalDate.of(1988, 12, 12))
-                .gewicht(90)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
-                .build());
-
-        users.add(User.builder()
-                .name("Florian")
-                .geburtsdatum(LocalDate.of(1988, 12, 12))
-                .gewicht(90)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
-                .build());
-        return users;
-    }
-
     @Test
     void testFindUserList() {
         systemUnderTest.findUserList();
@@ -121,6 +97,13 @@ class UserServiceTest {
     void testFindUserById() {
         systemUnderTest.findUserById(1);
         Mockito.verify(userRepository).findById(1);
+    }
+
+    @Test
+    void testFindUserByName() {
+        List<User> testUser = addTestUser();
+        systemUnderTest.findUserByName(testUser.get(1).getName());
+        Mockito.verify(userRepository).findUserByNameWithoutList(testUser.get(1).getName());
     }
 
     @Test
@@ -158,15 +141,60 @@ class UserServiceTest {
 
     @Test
     void testFindUserAndCalculateBMI() {
-        systemUnderTest.findUserAndCalculateBMI(addTestUser().get(0).getName());
-        Mockito.verify(userRepository).findUserAndCalculateBMI(addTestUser().get(0).getName());
+        List<User> testUser = addTestUser();
+        systemUnderTest.findUserAndCalculateBMI(testUser.get(0).getName());
     }
 
     @Test
     void testBerechneBMI() {
-        systemUnderTest.berechneBMI(1.80, 100.0);
-        Mockito.verify(userRepository).calculateBMI(1.80, 100.0);
+        systemUnderTest.berechneBMI(100.0, 1.8);
+    }
 
+    @Test
+    void testBerechneBMIWhenUserTooYoung() {
+        List<User> testUser = addTestUser();
+        Assertions.assertThrows(RuntimeException.class,
+                () -> systemUnderTest.berechneBmiWithMessage(testUser.get(0).getGeburtsdatum(),
+                        testUser.get(0).getGewicht(),
+                        testUser.get(0).getGroesse()));
+    }
+
+    @Test
+    void testBerechneBMIWithNormalWeight() {
+        systemUnderTest.berechneBmiWithMessage(LocalDate.of(1988, 12, 12),
+                75.0, 1.80);
+    }
+    @Test
+    void testBerechneBMIWithUnderweight() {
+        systemUnderTest.berechneBmiWithMessage(LocalDate.of(1988, 12, 12),
+                55.0, 1.80);
+    }
+    @Test
+    void testBerechneBMIWithOverweight() {
+        systemUnderTest.berechneBmiWithMessage(LocalDate.of(2000, 12,12),
+                100.0, 1.50);
+    }
+
+
+
+    private List<User> addTestUser() {
+        List<User> users = new ArrayList<>();
+        users.add(User.builder()
+                .name("Peter")
+                .geburtsdatum(LocalDate.of(2005, 12, 12))
+                .gewicht(90)
+                .groesse(1.85)
+                .lieblingsfarbe("gelb")
+                .build());
+
+        users.add(User.builder()
+                .name("Florian")
+                .geburtsdatum(LocalDate.of(1988, 12, 12))
+                .gewicht(90)
+                .groesse(1.85)
+                .lieblingsfarbe("gelb")
+                .build());
+        return users;
     }
 
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import project.logManager.model.entity.BMI;
 import project.logManager.model.entity.User;
 import project.logManager.model.respository.UserRepository;
 import project.logManager.service.validation.ValidationService;
@@ -92,7 +91,7 @@ public class UserService {
 
     public User findUserByName(String userName) {
         try {
-            return userRepository.findUserByName(userName).get(0);
+            return userRepository.findUserByNameWithoutList(userName);
         } catch (IndexOutOfBoundsException e) {
             LOGGER.warn(String.format("User mit dem Namen %s konnte nicht gefunden werden", userName));
             return null;
@@ -101,7 +100,7 @@ public class UserService {
 
     public Double findUserAndCalculateBMI(String userName) {
         User user = findUserByName(userName);
-        return berechneBMI(user.getGroesse(), user.getGewicht());
+        return berechneBMI(user.getGewicht(), user.getGroesse());
     }
 
     private void saveUser(User user, User actor) {
@@ -112,16 +111,16 @@ public class UserService {
     }
 
 
-    public Double berechneBMI(Double groesse, Double gewicht) {
-        BMI bmiUser = BMI.builder()
-                .groesse(groesse)
+    public Double berechneBMI(Double gewicht, Double groesse) {
+        User bmiUser = User.builder()
                 .gewicht(gewicht)
+                .groesse(groesse)
                 .build();
         return bmiUser.getGewicht() / (bmiUser.getGroesse() * bmiUser.getGroesse());
     }
 
-    public String berechneBmiWithMessage(LocalDate geburtsDatum, Double groesse, Double gewicht) {
-        Double bmi = berechneBMI(groesse, gewicht);
+    public String berechneBmiWithMessage(LocalDate geburtsDatum, Double gewicht, Double groesse) {
+        Double bmi = berechneBMI(gewicht, groesse);
         int alterUser = getAgeFromBirthDate(geburtsDatum);
 
         if (alterUser < 18) {
@@ -140,7 +139,7 @@ public class UserService {
     }
 
     public Integer getAgeFromBirthDate(LocalDate geburtsDatum) {
-        return geburtsDatum.getYear() - LocalDate.now().getYear();
+        return LocalDate.now().getYear() - geburtsDatum.getYear();
     }
 
 
