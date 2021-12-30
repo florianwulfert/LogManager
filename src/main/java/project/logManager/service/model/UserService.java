@@ -45,11 +45,11 @@ public class UserService {
                     return user;
                 }
                 // prüfe, ob ausführender User vorhanden ist
-                User activeUser = findUserByName(actor);
+                List<User> activeUser = findUserByName(actor);
                 if (activeUser == null) {
                     throw new RuntimeException(String.format("User %s nicht gefunden", actor));
                 }
-                saveUser(user, activeUser);
+                saveUser(user, activeUser.get(0));
 
             } catch (RuntimeException ex) {
                 logService.addLog("Der User konnte nicht angelegt werden", "ERROR", null);
@@ -89,18 +89,18 @@ public class UserService {
         return user.get();
     }
 
-    public User findUserByName(String userName) {
+    public List<User> findUserByName(String userName) {
         try {
-            return userRepository.findUserByNameWithoutList(userName);
+            return userRepository.findUserByName(userName);
         } catch (IndexOutOfBoundsException e) {
             LOGGER.warn(String.format("User mit dem Namen %s konnte nicht gefunden werden", userName));
             return null;
         }
     }
 
-    public Double findUserAndCalculateBMI(String userName) {
-        User user = findUserByName(userName);
-        return berechneBMI(user.getGewicht(), user.getGroesse());
+    public Double findUserAndCalculateBMI(String userName, Double gewicht, Double groesse) {
+        List<User> user = findUserByName(userName);
+        return berechneBMI(gewicht, groesse);
     }
 
     private void saveUser(User user, User actor) {

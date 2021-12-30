@@ -49,8 +49,11 @@ class UserControllerTest {
     @Test
     void testFindUserAndCalculateBMI() {
         List<User> testUser = addTestUser();
-        systemUnderTest.findUserAndCalculateBMI(testUser.get(0).getName());
-        Mockito.verify(userService).findUserAndCalculateBMI(testUser.get(0).getName());
+        systemUnderTest.findUserAndCalculateBMI(testUser.get(0).getName(), testUser.get(0).getGewicht(),
+                testUser.get(0).getGroesse());
+        Mockito.verify(userService).findUserAndCalculateBMI(testUser.get(0).getName()
+                ,testUser.get(0).getGewicht(),
+                testUser.get(0).getGroesse());
     }
 
     @Test

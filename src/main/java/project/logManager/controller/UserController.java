@@ -54,8 +54,8 @@ public class UserController {
     public String deleteUserByID (@PathVariable final Integer id,
         @RequestParam final String actor) {
         try {
-            User user = userService.findUserByName(actor);
-            User deletedUser = userService.deleteById(id, user);
+            List<User> user = userService.findUserByName(actor);
+            User deletedUser = userService.deleteById(id, user.get(0));
             return String.format("User %s wurde gelöscht!", deletedUser.getName());
         } catch (RuntimeException e) {
             return e.getMessage();
@@ -63,9 +63,11 @@ public class UserController {
     }
 
     @GetMapping("/user/findBmi")
-    public Double findUserAndCalculateBMI (@RequestParam final String userName) {
+    public Double findUserAndCalculateBMI (@RequestParam final String userName,
+                                           @RequestParam final Double gewicht,
+                                           @RequestParam final Double groesse) {
         try {
-            return userService.findUserAndCalculateBMI(userName);
+            return userService.findUserAndCalculateBMI(userName, gewicht, groesse);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }

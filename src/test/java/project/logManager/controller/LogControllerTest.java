@@ -1,10 +1,5 @@
 package project.logManager.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,6 +11,12 @@ import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.model.respository.UserRepository;
 import project.logManager.service.model.LogService;
 import project.logManager.service.model.UserService;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author - EugenFriesen
@@ -52,7 +53,7 @@ class LogControllerTest {
 
     @Test
     void testAddLog() {
-        Mockito.when(userService.findUserByName(Mockito.any())).thenReturn(addTestUser().get(0));
+        Mockito.when(userService.findUserByName(Mockito.any())).thenReturn(addTestUser());
         systemUnderTest.addLog("INFO", "Test", "Hans");
         Mockito.verify(logService, Mockito.times(1)).addLog(Mockito.any(), Mockito.any(), Mockito.any());
     }

@@ -43,48 +43,44 @@ class UserServiceTest {
     }
 
     @Test
-    void testIfUsersListIsEmpty() {
-        Mockito.when((logValidationService.validateFarbenEnum(Mockito.anyString()))).thenReturn(true);
-        systemUnderTest.addUser("Florian", "Peter",
-                LocalDate.of(1988, 12, 12), 90,
-                1.85, "GELB");
-        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. " +
-                "Der User hat einen BMI von 26,2966 und ist somit übergewichtig", "INFO", null);
-        Mockito.verify(userRepository).save(Mockito.any());
-    }
-
-    @Test
     void testFindByNameIsNotNull() {
         List<User> users = addTestUser();
         Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
-        Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users);
+        Mockito.when(systemUnderTest.findUserByName(Mockito.anyString())).thenReturn(users);
         Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser
                 ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
-                1.85, "GELB"));
+                        1.85, "GELB"));
     }
 
     @Test
     void testIfActiveUserExists() {
-        List<User> testUsers = addTestUser();
         Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
-        Mockito.when(userRepository.findAll()).thenReturn(testUsers);
         Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser
                 ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
                 1.85, "GELB"));
     }
-
 
     @Test
     void testIfEverythingIsCorrectAtAddUser() {
         List<User> testUsers = addTestUser();
         Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
-        Mockito.when(userRepository.findUserByName(testUsers.get(0).getName())).thenReturn(new ArrayList<>());
+        Mockito.when(userRepository.findUserByName("Peter")).thenReturn(new ArrayList<>());
         Mockito.when(userRepository.findAll()).thenReturn(testUsers);
-        Mockito.when(userRepository.findUserByName(testUsers.get(1).getName())).thenReturn(testUsers);
-        systemUnderTest.addUser("Florian", "Peter", LocalDate.of
+        Mockito.when(userRepository.findUserByName(testUsers.get(0).getName())).thenReturn(testUsers);
+        systemUnderTest.addUser(testUsers.get(0).getName(), "Olaf", LocalDate.of
                         (1988, 12, 12), 90,
                 1.85, "GELB");
         Mockito.verify(userRepository).save(Mockito.any());
+    }
+
+    @Test
+    void testUserKonnteNichtAngelegtWerden() {
+        List<User> users = addTestUser();
+        Mockito.when((logValidationService.validateFarbenEnum(Mockito.anyString()))).thenReturn(true);
+        Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser("Paul", users.get(0).getName(),
+                LocalDate.of(2000, 11, 18), 80,
+                1.85, "GRÜN"));
+        Mockito.verify(logService).addLog("Der User konnte nicht angelegt werden", "ERROR", null);
     }
 
     @Test
@@ -101,9 +97,8 @@ class UserServiceTest {
 
     @Test
     void testFindUserByName() {
-        List<User> testUser = addTestUser();
-        systemUnderTest.findUserByName(testUser.get(1).getName());
-        Mockito.verify(userRepository).findUserByNameWithoutList(testUser.get(1).getName());
+        systemUnderTest.findUserByName(Mockito.anyString());
+        Mockito.verify(userRepository).findUserByName(Mockito.anyString());
     }
 
     @Test
@@ -142,7 +137,8 @@ class UserServiceTest {
     @Test
     void testFindUserAndCalculateBMI() {
         List<User> testUser = addTestUser();
-        systemUnderTest.findUserAndCalculateBMI(testUser.get(0).getName());
+        systemUnderTest.findUserAndCalculateBMI(testUser.get(0).getName(), testUser.get(0).getGewicht(),
+                testUser.get(0).getGroesse());
     }
 
     @Test
