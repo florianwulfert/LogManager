@@ -109,6 +109,29 @@ class UserServiceTest {
     }
 
     @Test
+    void testDeleteById() {
+        List<User> testUsers = addTestUser();
+
+        systemUnderTest.deleteById(1, testUsers.get(1).getName());
+        Mockito.verify(logService).addLog("User mit der ID 1 wurde gelöscht.",
+                "WARNING", "Hans");
+    }
+
+    @Test
+    void testIfIdEqualsActorID() {
+        List<User> testUsers = addTestUser();
+        Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.deleteById(testUsers.get(0).getId(), testUsers.get(0).getName()));
+    }
+
+    @Test
+    void testIfUserToDeleteListIsEmpty() {
+        List<User> users = addTestUser();
+        Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.deleteById(1, "Peter"));
+    }
+
+    @Test
     void testFindUserAndCalculateBMI() {
         List<User> testUser = addTestUser();
         systemUnderTest.findUserAndCalculateBMI(testUser.get(0).getName(), testUser.get(0).getGewicht(),
