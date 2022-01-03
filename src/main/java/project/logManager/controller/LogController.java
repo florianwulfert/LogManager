@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import project.logManager.exception.SeverityNotFoundException;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
-import project.logManager.model.entity.User;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
 import project.logManager.service.model.UserService;
@@ -45,11 +44,7 @@ public class LogController {
                          @RequestParam final String message,
                          @RequestParam final String nameUser) {
         try {
-            List<User> user = userService.findUserByName(nameUser);
-            if (user == null) {
-                throw new RuntimeException(String.format("User %s nicht gefunden", nameUser));
-            }
-            return logService.addLog(message, severity, user.get(0));
+            return logService.addLog(message, severity, nameUser);
         } catch (IllegalArgumentException e) {
             throw new SeverityNotFoundException(severity);
         } catch (RuntimeException e) {

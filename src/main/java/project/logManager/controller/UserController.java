@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import project.logManager.model.entity.User;
+import project.logManager.model.respository.UserRepository;
 import project.logManager.service.model.UserService;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @PostMapping("/user")
     public String addUser(@RequestParam String actor,
@@ -54,8 +56,18 @@ public class UserController {
     public String deleteUserByID (@PathVariable final Integer id,
         @RequestParam final String actor) {
         try {
-            List<User> user = userService.findUserByName(actor);
-            User deletedUser = userService.deleteById(id, user.get(0));
+            User deletedUser = userService.deleteById(id, actor);
+            return String.format("User %s wurde gelöscht!", deletedUser.getName());
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
+    }
+
+    @DeleteMapping("/user/delete/name/{name}")
+    public String deleteUserByName (@PathVariable final String name,
+        @RequestParam final String actor) {
+        try {
+            User deletedUser = userService.deleteByName(name, actor);
             return String.format("User %s wurde gelöscht!", deletedUser.getName());
         } catch (RuntimeException e) {
             return e.getMessage();

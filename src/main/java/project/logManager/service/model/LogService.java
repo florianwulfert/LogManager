@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.respository.LogRepository;
+import project.logManager.model.respository.UserRepository;
 import project.logManager.service.validation.ValidationService;
 
 import javax.transaction.Transactional;
@@ -28,12 +29,13 @@ public class LogService {
 
     private final LogRepository logRepository;
     private final ValidationService logValidationService;
+    private final UserRepository userRepository;
 
     public List<Log> getLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate) {
         return logRepository.findLogs(severity, message, startDate, endDate);
     }
 
-    public String addLog(String message, String severity, User userName) {
+    public String addLog(String message, String severity, String userName) {
         String returnMessage = "";
         if (message != null && severity != null) {
             if (logValidationService.validateSeverity(severity)) {
@@ -47,7 +49,11 @@ public class LogService {
                 Log log = new Log();
                 log.setMessage(message);
                 log.setSeverity(severity);
-                log.setUser(userName);
+                User user = userRepository.findUserByName(userName);
+                if (user == null) {
+                    throw new RuntimeException(String.format("User %s nicht gefunden", userName));
+                }
+                log.setUser(user);
                 Date timestamp = new Date();
                 log.setTimestamp(timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
                 logRepository.save(log);
@@ -55,6 +61,9 @@ public class LogService {
                 LOGGER.error("Given severity '{}' is not allowed!", severity);
                 throw new IllegalArgumentException("Illegal severity!");
             }
+
+
+
         } else {
             LOGGER.error("One of the input parameter was not given!");
             throw new RuntimeException("One of the input parameter was not given!");

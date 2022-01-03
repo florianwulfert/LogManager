@@ -9,6 +9,8 @@ import project.logManager.model.respository.UserRepository;
 import project.logManager.service.validation.ValidationService;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +36,8 @@ public class UserService {
                 .build();
         if (logValidationService.validateFarbenEnum(lieblingsFarbe.toLowerCase())) {
             try {
-                // prüfe, ob user bereits vorhanden ist
-                if (findUserByName(name) != null) {
+                // prüfe, ob zu erstellender User bereits vorhanden ist
+                if (userRepository.findUserByName(name) != null) {
                     throw new RuntimeException(String.format("User %s bereits vorhanden", name));
                 }
                 // prüfe, ob noch kein User vorhanden ist
@@ -45,11 +47,11 @@ public class UserService {
                     return user;
                 }
                 // prüfe, ob ausführender User vorhanden ist
-                List<User> activeUser = findUserByName(actor);
+                User activeUser = userRepository.findUserByName(actor);
                 if (activeUser == null) {
                     throw new RuntimeException(String.format("User %s nicht gefunden", actor));
                 }
-                saveUser(user, activeUser.get(0));
+                saveUser(user, activeUser.getName());
 
             } catch (RuntimeException ex) {
                 logService.addLog("Der User konnte nicht angelegt werden", "ERROR", null);
@@ -70,8 +72,9 @@ public class UserService {
         return userRepository.findById(id).isPresent() ? userRepository.findById(id) : Optional.empty();
     }
 
-    public User deleteById(Integer id, User actor) {
+    public User deleteById(Integer id, String actorName) {
         Optional<User> user = findUserById(id);
+        User actor = userRepository.findUserByName(actorName);
         if (id.equals(actor.getId())) {
             throw new RuntimeException("Ein User kann sich nicht selbst löschen!");
         }
@@ -85,38 +88,47 @@ public class UserService {
         }
 
         userRepository.deleteById(id);
-        logService.addLog(String.format("User mit der ID %s wurde gelöscht", id), "WARNING", actor);
+        logService.addLog(String.format("User mit der ID %s wurde gelöscht", id), "WARNING", actorName);
         return user.get();
     }
 
-    public List<User> findUserByName(String userName) {
-        try {
-            return userRepository.findUserByName(userName);
-        } catch (IndexOutOfBoundsException e) {
-            LOGGER.warn(String.format("User mit dem Namen %s konnte nicht gefunden werden", userName));
-            return null;
+    public User deleteByName(String name, String actorName) {
+        if (name.equals(actorName)) {
+            throw new RuntimeException("Ein User kann sich nicht selbst löschen!");
         }
+        User userToDelete = userRepository.findUserByName(name);
+        User actor = userRepository.findUserByName(actorName);
+        if (userToDelete == null) {
+            throw new RuntimeException(String.format("User mit dem Namen %s konnte nicht gefunden werden", name));
+        } else {
+            if (logService.searchLogByActorId(userToDelete)) {
+                throw new RuntimeException(String.format("User %s kann nicht gelöscht werden, " +
+                        "da er in einer anderen Tabelle referenziert wird!", userToDelete));
+            }
+        }
+
+        userRepository.deleteById(userToDelete.getId());
+        logService.addLog(String.format("User mit dem Namen %s wurde gelöscht", name), "WARNING", actorName);
+        return userToDelete;
     }
 
     public Double findUserAndCalculateBMI(String userName, Double gewicht, Double groesse) {
-        List<User> user = findUserByName(userName);
+        userRepository.findUserByName(userName);
         return berechneBMI(gewicht, groesse);
     }
 
-    private void saveUser(User user, User actor) {
+    private void saveUser(User user, String actor) {
         logService.addLog(String.format("Der User %s wurde angelegt. " +
-                berechneBMI(user.getGroesse(), user.getGewicht()), user.getName()),
+                berechneBmiWithMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse()), user.getName()),
                 "INFO", actor);
         userRepository.save(user);
     }
 
 
     public Double berechneBMI(Double gewicht, Double groesse) {
-        User bmiUser = User.builder()
-                .gewicht(gewicht)
-                .groesse(groesse)
-                .build();
-        return bmiUser.getGewicht() / (bmiUser.getGroesse() * bmiUser.getGroesse());
+        BigDecimal bigDecimal = new BigDecimal(gewicht / (groesse* groesse)).
+                setScale(2, RoundingMode.DOWN);
+        return bigDecimal.doubleValue();
     }
 
     public String berechneBmiWithMessage(LocalDate geburtsDatum, Double gewicht, Double groesse) {
@@ -124,15 +136,15 @@ public class UserService {
         int alterUser = getAgeFromBirthDate(geburtsDatum);
 
         if (alterUser < 18) {
-            throw new RuntimeException("Der User ist zu jung für eine genaue Bestimmung des BMI");
+            throw new RuntimeException("Der User ist zu jung für eine genaue Bestimmung des BMI.");
         }
 
         if (bmi > 18.5 && bmi <= 25) {
-            return String.format("Der User hat einen BMI von %s und ist somit normalgewichtig", bmi);
+            return String.format("Der User hat einen BMI von %s und ist somit normalgewichtig.", bmi);
         } else if (bmi <= 18.5 && bmi > 0) {
-            return String.format("Der User hat einen BMI von %s und ist somit untergewichtig", bmi);
+            return String.format("Der User hat einen BMI von %s und ist somit untergewichtig.", bmi);
         } else if (bmi > 25) {
-            return String.format("Der User hat einen BMI von %s und ist somit übergewichtig", bmi);
+            return String.format("Der User hat einen BMI von %s und ist somit übergewichtig.", bmi);
         } else {
             throw new IllegalStateException("Unexpected value: " + bmi);
         }

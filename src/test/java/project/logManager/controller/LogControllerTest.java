@@ -53,9 +53,8 @@ class LogControllerTest {
 
     @Test
     void testAddLog() {
-        Mockito.when(userService.findUserByName(Mockito.any())).thenReturn(addTestUser());
-        systemUnderTest.addLog("INFO", "Test", "Hans");
-        Mockito.verify(logService, Mockito.times(1)).addLog(Mockito.any(), Mockito.any(), Mockito.any());
+        systemUnderTest.addLog("INFO", "Test", "Peter");
+        Mockito.verify(logService).addLog(Mockito.any(), Mockito.any(), Mockito.any());
     }
 
     @Test

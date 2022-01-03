@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.User;
+import project.logManager.model.respository.UserRepository;
 import project.logManager.service.model.UserService;
 
 import java.time.LocalDate;
@@ -22,6 +23,9 @@ class UserControllerTest {
 
     @Mock
     UserService userService;
+
+    @Mock
+    UserRepository userRepository;
 
     @Test
     void testAddUser() {
@@ -42,8 +46,8 @@ class UserControllerTest {
     void testDeleteUserById() {
         List<User> testUser = addTestUser();
         systemUnderTest.deleteUserByID(testUser.get(0).getId(), testUser.get(1).getName());
-        Mockito.verify(userService).findUserByName(testUser.get(1).getName());
-        Mockito.verify(userService).deleteById(testUser.get(0).getId(), testUser.get(0));
+        Mockito.verify(userRepository).findUserByName(testUser.get(1).getName());
+        Mockito.verify(userService).deleteById(testUser.get(0).getId(), testUser.get(0).getName());
     }
 
     @Test
