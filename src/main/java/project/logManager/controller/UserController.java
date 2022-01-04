@@ -74,6 +74,7 @@ public class UserController {
         }
     }
 
+    //BMI Controller auslagern mit path variable bmi/{user}
     @GetMapping("/user/findBmi")
     public Double findUserAndCalculateBMI (@RequestParam final String userName,
                                            @RequestParam final Double gewicht,
@@ -82,17 +83,6 @@ public class UserController {
             return userService.findUserAndCalculateBMI(userName, gewicht, groesse);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    @PostMapping("/user/bmi")
-    public String berechneBMI(@RequestParam Double gewicht,
-                              @RequestParam Double groesse) {
-        try {
-            userService.berechneBMI(gewicht, groesse);
-            return "BMI wurde berechnet";
-        } catch (RuntimeException e) {
-            return e.getMessage();
         }
     }
 

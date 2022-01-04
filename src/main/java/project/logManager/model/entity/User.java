@@ -41,5 +41,8 @@ public class User {
     @Column(name = "lieblingsfarbe", nullable = false)
     String lieblingsfarbe;
 
+    @Column(name = "bmi", nullable = false)
+    double bmi;
+
 
 }

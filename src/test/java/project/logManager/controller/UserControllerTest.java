@@ -69,13 +69,6 @@ class UserControllerTest {
     }
 
     @Test
-    void testBerechneBMI() {
-        List<User> testUser = addTestUser();
-        systemUnderTest.berechneBMI(testUser.get(0).getGewicht(), testUser.get(0).getGroesse());
-        Mockito.verify(userService).berechneBMI(testUser.get(0).getGewicht(), testUser.get(0).getGroesse());
-    }
-
-    @Test
     void testBerechneBMIWithMessage() {
         systemUnderTest.berechneBMIwithMessage(LocalDate.of(2000, 12, 12),
                 80.0, 1.75);
