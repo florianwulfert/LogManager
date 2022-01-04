@@ -44,13 +44,15 @@ public class LogService {
                     returnMessage = "Katze wurde in Hund übersetzt!\n";
                 }
 
-                returnMessage = returnMessage + String.format("Es wurde die Nachricht \"%s\" als %s abgespeichert!", message, severity);
+                returnMessage = returnMessage + String.format("Es wurde die Nachricht \"%s\" als %s abgespeichert!",
+                        message, severity);
 
                 Log log = new Log();
                 log.setMessage(message);
                 log.setSeverity(severity);
                 User user = userRepository.findUserByName(userName);
                 if (user == null) {
+                    LOGGER.error(String.format("User %s nicht gefunden", userName));
                     throw new RuntimeException(String.format("User %s nicht gefunden", userName));
                 }
                 log.setUser(user);
@@ -61,9 +63,6 @@ public class LogService {
                 LOGGER.error("Given severity '{}' is not allowed!", severity);
                 throw new IllegalArgumentException("Illegal severity!");
             }
-
-
-
         } else {
             LOGGER.error("One of the input parameter was not given!");
             throw new RuntimeException("One of the input parameter was not given!");
@@ -79,7 +78,7 @@ public class LogService {
         logRepository.deleteById(id);
     }
 
-    public boolean searchLogByActorId(User actor) {
+    public boolean existLogByActorId(User actor) {
         List<Log> logs = logRepository.findByUser(actor);
         return !logs.isEmpty();
     }

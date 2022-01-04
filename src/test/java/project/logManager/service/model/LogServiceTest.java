@@ -6,9 +6,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.Log;
+import project.logManager.model.entity.User;
 import project.logManager.model.respository.LogRepository;
+import project.logManager.model.respository.UserRepository;
 import project.logManager.service.validation.ValidationService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
@@ -33,6 +36,9 @@ class LogServiceTest {
     @Mock
     ValidationService logValidationService;
 
+    @Mock
+    UserRepository userRepository;
+
     @Captor
     ArgumentCaptor<Log> arg;
 
@@ -53,24 +59,44 @@ class LogServiceTest {
     @Test
     void testAddLog() {
         Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(true);
-        systemUnderTest.addLog("My new log message", "INFO", "Peter");
+        Mockito.when(userRepository.findUserByName("Paul")).thenReturn(User.builder()
+                .name("Paul")
+                .id(1)
+                .geburtsdatum(LocalDate.of(2000,12,12))
+                .gewicht(85.0)
+                .groesse(1.85)
+                .lieblingsfarbe("gelb")
+                .build());
+        systemUnderTest.addLog("My new log message", "INFO", "Paul");
         Mockito.verify(logRepository, Mockito.times(1)).save(Mockito.any());
     }
 
     @Test
     void testAddLogWrongSeverity() {
         Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(false);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> systemUnderTest.addLog("Ein Test", "KATZE", "Peter"));
+        RuntimeException ex = Assertions.assertThrows(IllegalArgumentException.class, () ->
+                systemUnderTest.addLog("Ein Test", "KATZE", "Peter"));
+        Assertions.assertEquals("Illegal severity!", ex.getMessage());
     }
 
     @Test
     void testAddLogNullParameter() {
-        Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addLog(null, "KATZE", "Peter"));
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.addLog(null, "KATZE", "Peter"));
+        Assertions.assertEquals("One of the input parameter was not given!", ex.getMessage());
     }
 
     @Test
     void testKatzeMessage() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
+        Mockito.when(userRepository.findUserByName("Mia")).thenReturn(User.builder()
+                .name("Mia")
+                .id(1)
+                .geburtsdatum(LocalDate.of(2000,12,12))
+                .gewicht(85.0)
+                .groesse(1.85)
+                .lieblingsfarbe("gelb")
+                .build());
         systemUnderTest.addLog("Katze", "INFO", "Mia");
         Mockito.verify(logRepository).save(arg.capture());
         Assertions.assertEquals("Hund", arg.getValue().getMessage());
@@ -80,6 +106,14 @@ class LogServiceTest {
     @Test
     void testSeverityMessage() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
+        Mockito.when(userRepository.findUserByName("Paul")).thenReturn(User.builder()
+                .name("Paul")
+                .id(1)
+                .geburtsdatum(LocalDate.of(2000,12,12))
+                .gewicht(85.0)
+                .groesse(1.85)
+                .lieblingsfarbe("gelb")
+                .build());
         Assertions.assertEquals("Es wurde die Nachricht \"Papagei\" als INFO abgespeichert!",
                 systemUnderTest.addLog("Papagei", "INFO", "Paul"));
     }
@@ -87,9 +121,25 @@ class LogServiceTest {
     @Test
     void testKatzeReturnMessage() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
+        Mockito.when(userRepository.findUserByName("Peter")).thenReturn(User.builder()
+                .name("Peter")
+                .id(1)
+                .geburtsdatum(LocalDate.of(2000,12,12))
+                .gewicht(85.0)
+                .groesse(1.85)
+                .lieblingsfarbe("gelb")
+                .build());
         Assertions.assertEquals("Katze wurde in Hund übersetzt!\n" +
                         "Es wurde die Nachricht \"Hund\" als INFO abgespeichert!",
                 systemUnderTest.addLog("Katze", "INFO", "Peter"));
+    }
+
+    @Test
+    void testIfUserIsNull() {
+        Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
+                () -> systemUnderTest.addLog("Hallo", "INFO", "Peter"));
+        Assertions.assertEquals("User Peter nicht gefunden", ex.getMessage());
     }
 
     private Log createNewLog(int id, String severity, String message, LocalDateTime timestamp) {
@@ -117,7 +167,7 @@ class LogServiceTest {
 
     @Test
     void testSearchLogByActorId() {
-        systemUnderTest.searchLogByActorId(Mockito.any());
+        systemUnderTest.existLogByActorId(Mockito.any());
         Mockito.verify(logRepository).findByUser(Mockito.any());
     }
 

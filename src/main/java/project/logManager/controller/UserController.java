@@ -54,10 +54,10 @@ public class UserController {
 
     @DeleteMapping("/user/delete/{id}")
     public String deleteUserByID (@PathVariable final Integer id,
-        @RequestParam final String actor) {
+                                  @RequestParam final String actor) {
         try {
-            User deletedUser = userService.deleteById(id, actor);
-            return String.format("User %s wurde gelöscht!", deletedUser.getName());
+            userService.deleteById(id, actor);
+            return String.format("User mit der ID %s wurde gelöscht!", id);
         } catch (RuntimeException e) {
             return e.getMessage();
         }
@@ -65,10 +65,10 @@ public class UserController {
 
     @DeleteMapping("/user/delete/name/{name}")
     public String deleteUserByName (@PathVariable final String name,
-        @RequestParam final String actor) {
+                                    @RequestParam final String actor) {
         try {
-            User deletedUser = userService.deleteByName(name, actor);
-            return String.format("User %s wurde gelöscht!", deletedUser.getName());
+            userService.deleteByName(name, actor);
+            return String.format("User %s wurde gelöscht!", name);
         } catch (RuntimeException e) {
             return e.getMessage();
         }

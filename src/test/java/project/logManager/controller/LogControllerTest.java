@@ -8,9 +8,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.User;
 import project.logManager.model.mapper.LogDTOMapper;
-import project.logManager.model.respository.UserRepository;
 import project.logManager.service.model.LogService;
-import project.logManager.service.model.UserService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,12 +32,6 @@ class LogControllerTest {
 
     @Mock
     LogDTOMapper logDTOMapper;
-
-    @Mock
-    UserService userService;
-
-    @Mock
-    UserRepository userRepository;
 
     @Test
     void testGetLogs() {
