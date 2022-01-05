@@ -34,13 +34,11 @@ class UserControllerTest {
 
     @Test
     void testAddUser() {
-        Assertions.assertEquals("User Peter erstellt!",
+        Assertions.assertEquals("User Peter erstellt! Der User hat einen BMI von 26.29",
         systemUnderTest.addUser(users.get(1).getName(), users.get(0).getName(), users.get(0).getGeburtsdatum(),
-                users.get(0).getGewicht(), users.get(0).getGroesse(), users.get(0).getLieblingsfarbe(),
-                users.get(0).getBmi()));
+                90.0, 1.85, users.get(0).getLieblingsfarbe()));
         Mockito.verify(userService).addUser(users.get(1).getName(), users.get(0).getName(), users.get(0).getGeburtsdatum(),
-                users.get(0).getGewicht(), users.get(0).getGroesse(), users.get(0).getLieblingsfarbe(),
-                users.get(0).getBmi());
+                users.get(0).getGewicht(), users.get(0).getGroesse(), users.get(0).getLieblingsfarbe());
     }
 
     @Test
@@ -90,7 +88,7 @@ class UserControllerTest {
               .id(1)
           .name("Peter")
           .geburtsdatum(LocalDate.of(1988, 12, 12))
-          .gewicht(90)
+          .gewicht(90.0)
           .groesse(1.85)
           .lieblingsfarbe("gelb")
               .bmi(26.29)
@@ -100,7 +98,7 @@ class UserControllerTest {
               .id(2)
           .name("Florian")
           .geburtsdatum(LocalDate.of(1988, 12, 12))
-          .gewicht(70)
+          .gewicht(70.0)
           .groesse(1.85)
           .lieblingsfarbe("gelb")
               .bmi(20.45)

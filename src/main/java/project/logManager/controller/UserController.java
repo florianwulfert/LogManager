@@ -23,10 +23,9 @@ public class UserController {
                         @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate geburtsdatum,
                         @RequestParam double gewicht,
                         @RequestParam double groesse,
-                        @RequestParam String lieblingsfarbe,
-                        @RequestParam double bmi) {
+                        @RequestParam String lieblingsfarbe) {
         try {
-            userService.addUser(actor, name, geburtsdatum, gewicht, groesse, lieblingsfarbe, bmi);
+            Double bmi = userService.addUser(actor, name, geburtsdatum, gewicht, groesse, lieblingsfarbe);
             return String.format("User %s erstellt! Der User hat einen BMI von %s", name, bmi);
         } catch (RuntimeException e) {
             return e.getMessage();

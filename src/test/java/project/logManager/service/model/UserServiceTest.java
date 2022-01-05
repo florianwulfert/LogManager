@@ -47,7 +47,7 @@ class UserServiceTest {
         Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(false);
         RuntimeException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> systemUnderTest.addUser
                 ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
-                1.85, "Lila", users.get(0).getBmi()));
+                1.85, "Lila"));
         Assertions.assertEquals("Farbe falsch!", ex.getMessage());
     }
 
@@ -57,7 +57,7 @@ class UserServiceTest {
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser
                 ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
-                        1.85, "GELB", users.get(0).getBmi()));
+                        1.85, "GELB"));
         Assertions.assertEquals("User Peter bereits vorhanden", ex.getMessage());
     }
 
@@ -69,7 +69,7 @@ class UserServiceTest {
         Mockito.when(userRepository.findUserByName("Florian")).thenReturn(null);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser
                 ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
-                1.85, "GELB", users.get(0).getBmi()));
+                1.85, "GELB"));
         Assertions.assertEquals("User Florian nicht gefunden", ex.getMessage());
         Mockito.verify(logService).addLog("Der User konnte nicht angelegt werden",
                 "ERROR", "Peter");
@@ -83,7 +83,7 @@ class UserServiceTest {
         Mockito.when(userRepository.findUserByName(users.get(1).getName())).thenReturn(users.get(1));
         systemUnderTest.addUser(users.get(1).getName(), "Peter", LocalDate.of
                         (1988, 12, 12), 90,
-                1.85, "GELB", users.get(0).getBmi());
+                1.85, "GELB");
         Mockito.verify(userRepository).save(Mockito.any());
     }
 
@@ -92,7 +92,7 @@ class UserServiceTest {
         Mockito.when((logValidationService.validateFarbenEnum(Mockito.anyString()))).thenReturn(true);
         systemUnderTest.addUser("Paul", users.get(0).getName(),
                 LocalDate.of(2000, 11, 18), 80,
-                1.85, "blau", users.get(0).getBmi());
+                1.85, "blau");
         Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Der User hat einen BMI " +
                 "von 23.37 und ist somit normalgewichtig.", "INFO", null);
     }
@@ -210,7 +210,8 @@ class UserServiceTest {
 
     @Test
     void testBerechneBMI() {
-        systemUnderTest.berechneBMI(100.0, 1.8);
+        Assertions.assertEquals(30.86,
+                systemUnderTest.berechneBMI(100.0, 1.8));
     }
 
     @Test
@@ -254,7 +255,7 @@ class UserServiceTest {
                 .id(1)
                 .name("Peter")
                 .geburtsdatum(LocalDate.of(2005, 12, 12))
-                .gewicht(90)
+                .gewicht(90.0)
                 .groesse(1.85)
                 .lieblingsfarbe("gelb")
                         .bmi(26.29)
@@ -264,7 +265,7 @@ class UserServiceTest {
                 .id(2)
                 .name("Florian")
                 .geburtsdatum(LocalDate.of(1988, 12, 12))
-                .gewicht(70)
+                .gewicht(70.0)
                 .groesse(1.85)
                 .lieblingsfarbe("gelb")
                         .bmi(20.45)

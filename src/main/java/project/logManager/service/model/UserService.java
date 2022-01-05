@@ -25,16 +25,17 @@ public class UserService {
 
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
-    public void addUser(String actor, String name, LocalDate geburtsdatum, double gewicht,
-                        double groesse, String lieblingsFarbe, double bmi) {
+    public Double addUser(String actor, String name, LocalDate geburtsdatum, double gewicht,
+                        double groesse, String lieblingsFarbe) {
         User user = User.builder()
                 .name(name)
                 .geburtsdatum(geburtsdatum)
                 .gewicht(gewicht)
                 .groesse(groesse)
                 .lieblingsfarbe(lieblingsFarbe.toLowerCase())
-                .bmi(bmi)
+                .bmi(berechneBMI(gewicht, groesse))
                 .build();
+
         if (logValidationService.validateFarbenEnum(lieblingsFarbe.toLowerCase())) {
             try {
                 // prüfe, ob zu erstellender User bereits vorhanden ist
@@ -46,7 +47,7 @@ public class UserService {
                 List<User> users = userRepository.findAll();
                 if (users.isEmpty()) {
                     saveUser(user, null);
-                    return;
+                    return user.getBmi();
                 }
                 // prüfe, ob ausführender User vorhanden ist
                 User activeUser = userRepository.findUserByName(actor);
@@ -55,7 +56,7 @@ public class UserService {
                     throw new RuntimeException(String.format("User %s nicht gefunden", actor));
                 }
                 saveUser(user, activeUser.getName());
-
+                return user.getBmi();
             } catch (RuntimeException ex) {
                 LOGGER.error("Der User konnte nicht angelegt werden");
                 logService.addLog("Der User konnte nicht angelegt werden", "ERROR", name);
