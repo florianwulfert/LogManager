@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import project.logManager.model.entity.User;
-import project.logManager.model.respository.UserRepository;
 import project.logManager.service.model.UserService;
 
 import java.time.LocalDate;
@@ -17,7 +16,6 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
 
     @PostMapping("/user")
     public String addUser(@RequestParam String actor,
@@ -25,10 +23,11 @@ public class UserController {
                         @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate geburtsdatum,
                         @RequestParam double gewicht,
                         @RequestParam double groesse,
-                        @RequestParam String lieblingsfarbe) {
+                        @RequestParam String lieblingsfarbe,
+                        @RequestParam double bmi) {
         try {
-            userService.addUser(actor, name, geburtsdatum, gewicht, groesse, lieblingsfarbe);
-            return String.format("User %s erstellt!", name);
+            userService.addUser(actor, name, geburtsdatum, gewicht, groesse, lieblingsfarbe, bmi);
+            return String.format("User %s erstellt! Der User hat einen BMI von %s", name, bmi);
         } catch (RuntimeException e) {
             return e.getMessage();
         }
@@ -87,7 +86,7 @@ public class UserController {
     }
 
     @PostMapping("/user/bmiWithMessage")
-    public String berechneBMIwithMessage(@RequestParam LocalDate geburtsDatum,
+    public String berechneBMIwithMessage(@RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate geburtsDatum,
                                          @RequestParam Double gewicht,
                                          @RequestParam Double groesse) {
         try {

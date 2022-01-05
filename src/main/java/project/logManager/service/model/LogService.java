@@ -60,12 +60,12 @@ public class LogService {
                 log.setTimestamp(timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
                 logRepository.save(log);
             } else {
-                LOGGER.error("Given severity '{}' is not allowed!", severity);
-                throw new IllegalArgumentException("Illegal severity!");
+                LOGGER.error("Die übergebene severity '{}' ist nicht zugelassen!", severity);
+                throw new IllegalArgumentException("Severity falsch!");
             }
         } else {
-            LOGGER.error("One of the input parameter was not given!");
-            throw new RuntimeException("One of the input parameter was not given!");
+            LOGGER.error("Einer der benötigten Parameter wurde nicht übergeben!");
+            throw new RuntimeException("Einer der benötigten Parameter wurde nicht übergeben!");
         }
         return returnMessage;
     }

@@ -64,9 +64,9 @@ Aufgabe 10:
 
 Aufgabe 11:
 - [ ] BMI Rechner erstellen
-* [ ] a) BMI ausrechnen im UserService
-* [ ] b) anhand des Geburtsdatums Alter berechnen und zurückgeben
-* [ ] c) mit switch case: übergewichtig, untergewichtig, normalgewichtig
+* [x] a) BMI ausrechnen im UserService
+* [x] b) anhand des Geburtsdatums Alter berechnen und zurückgeben
+* [x] c) mit switch case: übergewichtig, untergewichtig, normalgewichtig
 * [ ] d) Endpoint erstellen und dokumentieren
 * [ ] c) Tests schreiben
 * Kriterien
@@ -75,12 +75,12 @@ Aufgabe 11:
     2. User beim Namen finden und seinen BMI berechnen
     3. Gar kein User, nur Angaben zu Alter, Gewicht und Größe - kein User wird gespeichert, nur der BMI wird berechnet.
   4. Eine Methode im UserService erstellen dafür
-* Entity um bmi erweitern
-* Log Ausgaben auf Deutsch übersetzen
-* In postman user srstellt + bmi
-* bmi wurde berechnet + wert in postman konsole und lognachricht dazu in intellij
-* bmi service erstellen und bmicontroller, bmi service von use und bmi controller aufrufen
-* Datum in bmiwithmessage anpassen
-* finuserandcalculatebmi anpassen
-* nachrichten wergen gewicht in variable auslagern
-* Doku schreiben
+* [x] Entity um bmi erweitern
+* [x] Log Ausgaben auf Deutsch übersetzen
+* [ ] In postman user erstellt + bmi
+* [ ] bmi wurde berechnet + wert in postman konsole und lognachricht dazu in intellij
+* [ ] bmi service erstellen und bmicontroller, bmi service von use und bmi controller aufrufen
+* [x] Datum in bmiwithmessage anpassen
+* [ ] finuserandcalculatebmi anpassen
+* [ ] nachrichten wergen gewicht in variable auslagern
+* [ ] Doku schreiben

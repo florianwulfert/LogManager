@@ -26,13 +26,14 @@ public class UserService {
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
     public void addUser(String actor, String name, LocalDate geburtsdatum, double gewicht,
-                        double groesse, String lieblingsFarbe) {
+                        double groesse, String lieblingsFarbe, double bmi) {
         User user = User.builder()
                 .name(name)
                 .geburtsdatum(geburtsdatum)
                 .gewicht(gewicht)
                 .groesse(groesse)
                 .lieblingsfarbe(lieblingsFarbe.toLowerCase())
+                .bmi(bmi)
                 .build();
         if (logValidationService.validateFarbenEnum(lieblingsFarbe.toLowerCase())) {
             try {
@@ -61,8 +62,8 @@ public class UserService {
                 throw new RuntimeException(ex.getMessage());
             }
         } else {
-            LOGGER.error("Given color '{}' is not allowed!", lieblingsFarbe);
-            throw new IllegalArgumentException("Illegal color!");
+            LOGGER.error("Die übergebene Farbe '{}' ist nicht zugelassen!", lieblingsFarbe);
+            throw new IllegalArgumentException("Farbe falsch!");
         }
     }
 
@@ -117,7 +118,7 @@ public class UserService {
         }
         if (actor == null) {
             LOGGER.error(String.format("User mit dem Namen %s konnte nicht gefunden werden", actorName ));
-            throw new RuntimeException(String.format("User mit dem Namen %s konnte werden", actorName));
+            throw new RuntimeException(String.format("User mit dem Namen %s konnte nicht gefunden werden", actorName));
         }
 
         userRepository.deleteById(userToDelete.getId());
@@ -139,7 +140,6 @@ public class UserService {
                 user.getName()));
         userRepository.save(user);
     }
-
 
     public Double berechneBMI(Double gewicht, Double groesse) {
         BigDecimal bigDecimal = new BigDecimal(gewicht / (groesse * groesse)).

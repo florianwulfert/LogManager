@@ -1,6 +1,7 @@
 package project.logManager.controller;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,13 +25,22 @@ class UserControllerTest {
     @Mock
     UserService userService;
 
+    List<User> users;
+
+    @BeforeEach
+    void init() {
+        users = addTestUser();
+    }
+
     @Test
     void testAddUser() {
         Assertions.assertEquals("User Peter erstellt!",
-        systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12),
-                87.5, 1.85, "GELB"));
-        Mockito.verify(userService).addUser("Florian", "Peter", LocalDate.of(1988, 12, 12),
-                87.5, 1.85, "GELB");
+        systemUnderTest.addUser(users.get(1).getName(), users.get(0).getName(), users.get(0).getGeburtsdatum(),
+                users.get(0).getGewicht(), users.get(0).getGroesse(), users.get(0).getLieblingsfarbe(),
+                users.get(0).getBmi()));
+        Mockito.verify(userService).addUser(users.get(1).getName(), users.get(0).getName(), users.get(0).getGeburtsdatum(),
+                users.get(0).getGewicht(), users.get(0).getGroesse(), users.get(0).getLieblingsfarbe(),
+                users.get(0).getBmi());
     }
 
     @Test
@@ -47,7 +57,6 @@ class UserControllerTest {
 
     @Test
     void testDeleteUserById() {
-        List<User> users = addTestUser();
         systemUnderTest.deleteUserByID(users.get(0).getId(), users.get(1).getName());
         Mockito.verify(userService).deleteById(1, users.get(1).getName());
     }
@@ -60,12 +69,11 @@ class UserControllerTest {
 
     @Test
     void testFindUserAndCalculateBMI() {
-        List<User> testUser = addTestUser();
-        systemUnderTest.findUserAndCalculateBMI(testUser.get(0).getName(), testUser.get(0).getGewicht(),
-                testUser.get(0).getGroesse());
-        Mockito.verify(userService).findUserAndCalculateBMI(testUser.get(0).getName()
-                ,testUser.get(0).getGewicht(),
-                testUser.get(0).getGroesse());
+        systemUnderTest.findUserAndCalculateBMI(users.get(0).getName(), users.get(0).getGewicht(),
+                users.get(0).getGroesse());
+        Mockito.verify(userService).findUserAndCalculateBMI(users.get(0).getName()
+                ,users.get(0).getGewicht(),
+                users.get(0).getGroesse());
     }
 
     @Test
@@ -85,15 +93,17 @@ class UserControllerTest {
           .gewicht(90)
           .groesse(1.85)
           .lieblingsfarbe("gelb")
+              .bmi(26.29)
           .build());
 
       users.add(User.builder()
               .id(2)
           .name("Florian")
           .geburtsdatum(LocalDate.of(1988, 12, 12))
-          .gewicht(90)
+          .gewicht(70)
           .groesse(1.85)
           .lieblingsfarbe("gelb")
+              .bmi(20.45)
           .build());
       return users;
     }
