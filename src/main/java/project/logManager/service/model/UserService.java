@@ -22,6 +22,7 @@ public class UserService {
     private final LogService logService;
     private final UserRepository userRepository;
     private final ValidationService logValidationService;
+    private final BmiService bmiService;
 
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
@@ -134,10 +135,10 @@ public class UserService {
 
     private void saveUser(User user, String actor) {
         logService.addLog(String.format("Der User %s wurde angelegt. " +
-                        berechneBmiWithMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse()), user.getName()),
+                        bmiService.berechneBmi(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse()), user.getName()),
                 "INFO", actor);
         LOGGER.info(String.format("Der User %s wurde angelegt. " +
-                berechneBmiWithMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse()),
+                bmiService.berechneBmi(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse()),
                 user.getName()));
         userRepository.save(user);
     }
@@ -147,32 +148,4 @@ public class UserService {
                 setScale(2, RoundingMode.DOWN);
         return bigDecimal.doubleValue();
     }
-
-    public String berechneBmiWithMessage(LocalDate geburtsDatum, Double gewicht, Double groesse) {
-        Double bmi = berechneBMI(gewicht, groesse);
-        int alterUser = getAgeFromBirthDate(geburtsDatum);
-
-        if (alterUser < 18) {
-            LOGGER.warn("Der User ist zu jung für eine genaue Bestimmung des BMI.");
-            return "Der User ist zu jung für eine genaue Bestimmung des BMI.";
-        }
-
-        if (bmi > 18.5 && bmi <= 25) {
-            return String.format("Der User hat einen BMI von %s und ist somit normalgewichtig.", bmi);
-        } else if (bmi <= 18.5 && bmi > 0) {
-            return String.format("Der User hat einen BMI von %s und ist somit untergewichtig.", bmi);
-        } else if (bmi > 25) {
-            return String.format("Der User hat einen BMI von %s und ist somit übergewichtig.", bmi);
-        } else {
-            LOGGER.error("Unexpected value");
-            throw new IllegalStateException("Unexpected value");
-        }
-    }
-
-    public Integer getAgeFromBirthDate(LocalDate geburtsDatum) {
-        return LocalDate.now().getYear() - geburtsDatum.getYear();
-    }
 }
-
-
-

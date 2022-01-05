@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import project.logManager.model.entity.User;
+import project.logManager.service.model.BmiService;
 import project.logManager.service.model.UserService;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private final BmiService bmiService;
 
     @PostMapping("/user")
     public String addUser(@RequestParam String actor,
@@ -85,11 +87,11 @@ public class UserController {
     }
 
     @PostMapping("/user/bmiWithMessage")
-    public String berechneBMIwithMessage(@RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate geburtsDatum,
+    public String berechneBMI(@RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate geburtsDatum,
                                          @RequestParam Double gewicht,
                                          @RequestParam Double groesse) {
         try {
-            return userService.berechneBmiWithMessage(geburtsDatum, gewicht,groesse);
+            return bmiService.berechneBmi(geburtsDatum, gewicht,groesse);
         } catch (RuntimeException e) {
             return e.getMessage();
         }

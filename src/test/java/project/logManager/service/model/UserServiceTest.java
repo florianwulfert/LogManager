@@ -82,7 +82,7 @@ class UserServiceTest {
         Mockito.when(userRepository.findAll()).thenReturn(users);
         Mockito.when(userRepository.findUserByName(users.get(1).getName())).thenReturn(users.get(1));
         systemUnderTest.addUser(users.get(1).getName(), "Peter", LocalDate.of
-                        (1988, 12, 12), 90,
+                        (1988, 12, 12), 90.0,
                 1.85, "GELB");
         Mockito.verify(userRepository).save(Mockito.any());
     }
@@ -212,41 +212,6 @@ class UserServiceTest {
     void testBerechneBMI() {
         Assertions.assertEquals(30.86,
                 systemUnderTest.berechneBMI(100.0, 1.8));
-    }
-
-    @Test
-    void testBerechneBMIWhenUserTooYoung() {
-        Assertions.assertEquals("Der User ist zu jung für eine genaue Bestimmung des BMI.",
-                systemUnderTest.berechneBmiWithMessage(users.get(0).getGeburtsdatum(),
-                        users.get(0).getGewicht(),
-                        users.get(0).getGroesse()));
-    }
-
-    @Test
-    void testBerechneBMIWithNormalWeight() {
-        Assertions.assertEquals("Der User hat einen BMI von 23.14 und ist somit normalgewichtig.",
-                systemUnderTest.berechneBmiWithMessage(LocalDate.of(1988, 12, 12),
-                75.0, 1.80));
-    }
-    @Test
-    void testBerechneBMIWithUnderweight() {
-        Assertions.assertEquals("Der User hat einen BMI von 16.97 und ist somit untergewichtig.",
-                systemUnderTest.berechneBmiWithMessage(LocalDate.of(1988, 12, 12),
-                55.0, 1.80));
-    }
-    @Test
-    void testBerechneBMIWithOverweight() {
-        Assertions.assertEquals("Der User hat einen BMI von 44.44 und ist somit übergewichtig.",
-        systemUnderTest.berechneBmiWithMessage(LocalDate.of(2000, 12,12),
-                100.0, 1.50));
-    }
-
-    @Test
-    void testBMIisUnexpectedValue() {
-        RuntimeException ex = Assertions.assertThrows(IllegalStateException.class, () ->
-                systemUnderTest.berechneBmiWithMessage(LocalDate.of(2000, 12, 12),
-                -100.0, 1.85));
-        Assertions.assertEquals("Unexpected value", ex.getMessage());
     }
 
     private List<User> addTestUser() {

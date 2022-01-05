@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.User;
+import project.logManager.service.model.BmiService;
 import project.logManager.service.model.UserService;
 
 import java.time.LocalDate;
@@ -24,6 +25,9 @@ class UserControllerTest {
 
     @Mock
     UserService userService;
+
+    @Mock
+    BmiService bmiService;
 
     List<User> users;
 
@@ -76,9 +80,9 @@ class UserControllerTest {
 
     @Test
     void testBerechneBMIWithMessage() {
-        systemUnderTest.berechneBMIwithMessage(LocalDate.of(2000, 12, 12),
+        systemUnderTest.berechneBMI(LocalDate.of(2000, 12, 12),
                 80.0, 1.75);
-        Mockito.verify(userService).berechneBmiWithMessage(LocalDate.of(2000, 12, 12),
+        Mockito.verify(bmiService).berechneBmi(LocalDate.of(2000, 12, 12),
                 80.0, 1.75);
     }
 
