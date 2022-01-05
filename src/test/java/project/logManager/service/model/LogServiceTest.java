@@ -76,14 +76,15 @@ class LogServiceTest {
         Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(false);
         RuntimeException ex = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 systemUnderTest.addLog("Ein Test", "KATZE", "Peter"));
-        Assertions.assertEquals("Illegal severity!", ex.getMessage());
+        Assertions.assertEquals("Severity falsch!", ex.getMessage());
     }
 
     @Test
     void testAddLogNullParameter() {
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.addLog(null, "KATZE", "Peter"));
-        Assertions.assertEquals("One of the input parameter was not given!", ex.getMessage());
+        Assertions.assertEquals("Einer der benötigten Parameter wurde nicht übergeben!",
+                ex.getMessage());
     }
 
     @Test
