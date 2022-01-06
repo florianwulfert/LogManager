@@ -5,10 +5,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.logManager.service.model.BmiService;
-import project.logManager.service.model.UserService;
 
 import java.time.LocalDate;
 
@@ -17,10 +17,9 @@ import java.time.LocalDate;
 public class BmiController {
 
     private final BmiService bmiService;
-    private final UserService userService;
 
-    @GetMapping("/bmiMessage")
-    public String getBmiMessage(
+    @GetMapping("/bmi")
+    public String getBmi(
             @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate geburtsdatum,
             @RequestParam double gewicht,
             @RequestParam double groesse) {
@@ -31,20 +30,10 @@ public class BmiController {
         }
     }
 
-    @GetMapping("/bmi")
-    public Double berechneBmi(@RequestParam double gewicht,
-                              @RequestParam double groesse) {
+    @GetMapping("/bmi/{user}")
+    public Double findUserAndCalculateBMI (@PathVariable final String user) {
         try {
-            return bmiService.berechneBMI(gewicht, groesse);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    @GetMapping("/user/findBmi")
-    public Double findUserAndCalculateBMI (@RequestParam final String userName) {
-        try {
-            return bmiService.findUserAndCalculateBMI(userName);
+            return bmiService.findUserAndCalculateBMI(user);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }

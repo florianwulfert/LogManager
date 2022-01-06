@@ -38,6 +38,8 @@ class UserControllerTest {
 
     @Test
     void testAddUser() {
+        Mockito.when(userService.addUser(users.get(1).getName(), users.get(0).getName(), users.get(0).getGeburtsdatum(),
+                90.0, 1.85, users.get(0).getLieblingsfarbe())).thenReturn(26.29);
         Assertions.assertEquals("User Peter erstellt! Der User hat einen BMI von 26.29",
         systemUnderTest.addUser(users.get(1).getName(), users.get(0).getName(), users.get(0).getGeburtsdatum(),
                 90.0, 1.85, users.get(0).getLieblingsfarbe()));

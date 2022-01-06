@@ -25,15 +25,9 @@ class BmiControllerTest {
 
     @Test
     void testGetBmiMessage() {
-        systemUnderTest.getBmiMessage(LocalDate.of(2000,12,12), 90.0, 1.8);
+        systemUnderTest.getBmi(LocalDate.of(2000,12,12), 90.0, 1.8);
         Mockito.verify(bmiService).getBmiMessage
                 (LocalDate.of(2000,12,12), 90.0, 1.8);
-    }
-
-    @Test
-    void testBerechneBmi() {
-        systemUnderTest.berechneBmi(90.0, 1.8);
-        Mockito.verify(bmiService).berechneBMI(90.0, 1.8);
     }
 
     @Test
