@@ -84,3 +84,7 @@ Aufgabe 11:
 * [x] finuserandcalculatebmi anpassen
 * [x] nachrichten wergen gewicht in variable auslagern
 * [ ] Doku schreiben
+* [ ] Auf Vollständigkeit der zu übergebenden Parameter überprüfen
+* [ ] Alle Logs/alle User auf einmal löschen einbauen
+* Logger.info aus userService löschen
+

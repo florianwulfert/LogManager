@@ -20,6 +20,7 @@ import java.time.LocalDate;
 public class BmiService extends DateUtil {
     private final UserRepository userRepository;
 
+
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
     public String getBmiMessage(LocalDate geburtsDatum, Double gewicht, Double groesse) {

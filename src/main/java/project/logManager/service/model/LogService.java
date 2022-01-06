@@ -50,8 +50,9 @@ public class LogService {
                 Log log = new Log();
                 log.setMessage(message);
                 log.setSeverity(severity);
+                boolean isUserAvailable = !userRepository.findAll().isEmpty();
                 User user = userRepository.findUserByName(userName);
-                if (user == null) {
+                if (isUserAvailable && user == null) {
                     LOGGER.error(String.format("User %s nicht gefunden", userName));
                     throw new RuntimeException(String.format("User %s nicht gefunden", userName));
                 }
@@ -95,7 +96,7 @@ public class LogService {
 
         for (Log log : deletedLogs) {
             iDs += log.getId();
-            if (deletedLogs.lastIndexOf(log) < deletedLogs.size()-1) {
+            if (deletedLogs.lastIndexOf(log) < deletedLogs.size() - 1) {
                 iDs += ", ";
             }
         }

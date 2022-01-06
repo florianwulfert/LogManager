@@ -38,17 +38,20 @@ public class UserService {
         if (logValidationService.validateFarbenEnum(lieblingsFarbe.toLowerCase())) {
             try {
                 // prüfe, ob zu erstellender User bereits vorhanden ist
+                LOGGER.info("prüfe, ob zu erstellender User bereits vorhanden ist");
                 if (userRepository.findUserByName(name) != null) {
                     LOGGER.warn(String.format("User %s bereits vorhanden", name));
                     throw new RuntimeException(String.format("User %s bereits vorhanden", name));
                 }
                 // prüfe, ob noch kein User vorhanden ist
+                LOGGER.info("prüfe, ob noch kein User vorhanden ist");
                 List<User> users = userRepository.findAll();
                 if (users.isEmpty()) {
                     saveUser(user, null);
                     return user.getBmi();
                 }
                 // prüfe, ob ausführender User vorhanden ist
+                LOGGER.info("prüfe, ob ausführender User vorhanden ist");
                 User activeUser = userRepository.findUserByName(actor);
                 if (activeUser == null) {
                     LOGGER.error("Active User (actor) ist null!");
