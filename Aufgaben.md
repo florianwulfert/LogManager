@@ -68,7 +68,7 @@ Aufgabe 11:
 * [x] b) anhand des Geburtsdatums Alter berechnen und zurückgeben
 * [x] c) mit switch case: übergewichtig, untergewichtig, normalgewichtig
 * [ ] d) Endpoint erstellen und dokumentieren
-* [ ] c) Tests schreiben
+* [x] c) Tests schreiben
 * Kriterien
   * 3 verschiedene Arten den BMI zu berechnen
     1. Bei addUser Nachricht: der User wurde angelegt + laut BMI ist er unter/normal/übergewichtig
@@ -79,8 +79,8 @@ Aufgabe 11:
 * [x] Log Ausgaben auf Deutsch übersetzen
 * [ ] In postman user erstellt + bmi
 * [ ] bmi wurde berechnet + wert in postman konsole und lognachricht dazu in intellij
-* [ ] bmi service erstellen und bmicontroller, bmi service von use und bmi controller aufrufen
+* [x] bmi service erstellen und bmicontroller, bmi service vom bmiController aufrufen
 * [x] Datum in bmiwithmessage anpassen
-* [ ] finuserandcalculatebmi anpassen
-* [ ] nachrichten wergen gewicht in variable auslagern
+* [x] finuserandcalculatebmi anpassen
+* [x] nachrichten wergen gewicht in variable auslagern
 * [ ] Doku schreiben

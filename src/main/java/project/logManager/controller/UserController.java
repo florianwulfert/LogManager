@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import project.logManager.model.entity.User;
-import project.logManager.service.model.BmiService;
 import project.logManager.service.model.UserService;
 
 import java.time.LocalDate;
@@ -17,7 +16,6 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    private final BmiService bmiService;
 
     @PostMapping("/user")
     public String addUser(@RequestParam String actor,
@@ -69,29 +67,6 @@ public class UserController {
         try {
             userService.deleteByName(name, actor);
             return String.format("User %s wurde gelöscht!", name);
-        } catch (RuntimeException e) {
-            return e.getMessage();
-        }
-    }
-
-    //BMI Controller auslagern mit path variable bmi/{user}
-    @GetMapping("/user/findBmi")
-    public Double findUserAndCalculateBMI (@RequestParam final String userName,
-                                           @RequestParam final Double gewicht,
-                                           @RequestParam final Double groesse) {
-        try {
-            return userService.findUserAndCalculateBMI(userName, gewicht, groesse);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    @PostMapping("/user/bmiWithMessage")
-    public String berechneBMI(@RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate geburtsDatum,
-                                         @RequestParam Double gewicht,
-                                         @RequestParam Double groesse) {
-        try {
-            return bmiService.berechneBmi(geburtsDatum, gewicht,groesse);
         } catch (RuntimeException e) {
             return e.getMessage();
         }

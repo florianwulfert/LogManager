@@ -9,8 +9,6 @@ import project.logManager.model.respository.UserRepository;
 import project.logManager.service.validation.ValidationService;
 
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +32,7 @@ public class UserService {
                 .gewicht(gewicht)
                 .groesse(groesse)
                 .lieblingsfarbe(lieblingsFarbe.toLowerCase())
-                .bmi(berechneBMI(gewicht, groesse))
+                .bmi(bmiService.berechneBMI(gewicht, groesse))
                 .build();
 
         if (logValidationService.validateFarbenEnum(lieblingsFarbe.toLowerCase())) {
@@ -128,24 +126,13 @@ public class UserService {
         LOGGER.info(String.format("User mit dem Namen %s wurde gelöscht", name));
     }
 
-    public Double findUserAndCalculateBMI(String userName, Double gewicht, Double groesse) {
-        userRepository.findUserByName(userName);
-        return berechneBMI(gewicht, groesse);
-    }
-
     private void saveUser(User user, String actor) {
-        logService.addLog(String.format("Der User %s wurde angelegt. " +
-                        bmiService.berechneBmi(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse()), user.getName()),
+        String bmi = bmiService.getBmiMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse());
+        logService.addLog(String.format("Der User %s wurde angelegt. %s", user.getName(), bmi),
                 "INFO", actor);
         LOGGER.info(String.format("Der User %s wurde angelegt. " +
-                bmiService.berechneBmi(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse()),
+                bmiService.getBmiMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse()),
                 user.getName()));
         userRepository.save(user);
-    }
-
-    public Double berechneBMI(Double gewicht, Double groesse) {
-        BigDecimal bigDecimal = new BigDecimal(gewicht / (groesse * groesse)).
-                setScale(2, RoundingMode.DOWN);
-        return bigDecimal.doubleValue();
     }
 }

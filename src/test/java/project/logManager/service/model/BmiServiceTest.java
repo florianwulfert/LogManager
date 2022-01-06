@@ -5,8 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.User;
+import project.logManager.model.respository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,6 +22,9 @@ class BmiServiceTest {
     @InjectMocks
     BmiService systemUnderTest;
 
+    @Mock
+    UserRepository userRepository;
+
     List<User> users;
 
     @BeforeEach
@@ -29,7 +35,7 @@ class BmiServiceTest {
     @Test
     void testBerechneBMIWhenUserTooYoung() {
         Assertions.assertEquals("Der User ist zu jung für eine genaue Bestimmung des BMI.",
-                systemUnderTest.berechneBmi(users.get(0).getGeburtsdatum(),
+                systemUnderTest.getBmiMessage(users.get(0).getGeburtsdatum(),
                         users.get(0).getGewicht(),
                         users.get(0).getGroesse()));
     }
@@ -37,28 +43,40 @@ class BmiServiceTest {
     @Test
     void testBerechneBMIWithNormalWeight() {
         Assertions.assertEquals("Der User hat einen BMI von 23.14 und ist somit normalgewichtig.",
-                systemUnderTest.berechneBmi(LocalDate.of(1988, 12, 12),
+                systemUnderTest.getBmiMessage(LocalDate.of(1988, 12, 12),
                         75.0, 1.80));
     }
     @Test
     void testBerechneBMIWithUnderweight() {
         Assertions.assertEquals("Der User hat einen BMI von 16.97 und ist somit untergewichtig.",
-                systemUnderTest.berechneBmi(LocalDate.of(1988, 12, 12),
+                systemUnderTest.getBmiMessage(LocalDate.of(1988, 12, 12),
                         55.0, 1.80));
     }
     @Test
     void testBerechneBMIWithOverweight() {
         Assertions.assertEquals("Der User hat einen BMI von 44.44 und ist somit übergewichtig.",
-                systemUnderTest.berechneBmi(LocalDate.of(2000, 12,12),
+                systemUnderTest.getBmiMessage(LocalDate.of(2000, 12,12),
                         100.0, 1.50));
     }
 
     @Test
     void testBMIisUnexpectedValue() {
         RuntimeException ex = Assertions.assertThrows(IllegalStateException.class, () ->
-                systemUnderTest.berechneBmi(LocalDate.of(2000, 12, 12),
+                systemUnderTest.getBmiMessage(LocalDate.of(2000, 12, 12),
                         -100.0, 1.85));
         Assertions.assertEquals("Unexpected value", ex.getMessage());
+    }
+
+    @Test
+    void testBerechneBMI() {
+        Assertions.assertEquals(30.86,
+                systemUnderTest.berechneBMI(100.0, 1.8));
+    }
+
+    @Test
+    void testFindUserAndCalculateBMI() {
+        Mockito.when(userRepository.findUserByName(users.get(0).getName())).thenReturn(users.get(0));
+        systemUnderTest.findUserAndCalculateBMI(users.get(0).getName());
     }
 
     private List<User> addTestUser() {

@@ -30,6 +30,9 @@ class UserServiceTest {
     UserRepository userRepository;
 
     @Mock
+    BmiService bmiService;
+
+    @Mock
     ValidationService logValidationService;
 
     @Mock
@@ -76,25 +79,29 @@ class UserServiceTest {
     }
 
     @Test
-    void testIfEverythingIsCorrectAtAddUser() {
+    void testAddUser() {
         Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
         Mockito.when(userRepository.findUserByName(users.get(0).getName())).thenReturn(null);
         Mockito.when(userRepository.findAll()).thenReturn(users);
+        Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("Test");
         Mockito.when(userRepository.findUserByName(users.get(1).getName())).thenReturn(users.get(1));
         systemUnderTest.addUser(users.get(1).getName(), "Peter", LocalDate.of
                         (1988, 12, 12), 90.0,
                 1.85, "GELB");
+        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Test",
+                "INFO", "Florian");
         Mockito.verify(userRepository).save(Mockito.any());
     }
 
     @Test
     void testUsersListIsEmpty() {
         Mockito.when((logValidationService.validateFarbenEnum(Mockito.anyString()))).thenReturn(true);
+        Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(),
+                Mockito.any())).thenReturn("Test");
         systemUnderTest.addUser("Paul", users.get(0).getName(),
                 LocalDate.of(2000, 11, 18), 80,
                 1.85, "blau");
-        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Der User hat einen BMI " +
-                "von 23.37 und ist somit normalgewichtig.", "INFO", null);
+        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Test", "INFO", null);
     }
 
     @Test
@@ -200,18 +207,6 @@ class UserServiceTest {
         systemUnderTest.deleteByName("Peter", "Florian");
         Mockito.verify(logService).addLog("User mit dem Namen Peter wurde gelöscht",
                 "WARNING", "Florian");
-    }
-
-    @Test
-    void testFindUserAndCalculateBMI() {
-        systemUnderTest.findUserAndCalculateBMI(users.get(0).getName(), users.get(0).getGewicht(),
-                users.get(0).getGroesse());
-    }
-
-    @Test
-    void testBerechneBMI() {
-        Assertions.assertEquals(30.86,
-                systemUnderTest.berechneBMI(100.0, 1.8));
     }
 
     private List<User> addTestUser() {
