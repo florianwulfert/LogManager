@@ -77,8 +77,8 @@ Aufgabe 11:
   4. Eine Methode im UserService erstellen dafür
 * [x] Entity um bmi erweitern
 * [x] Log Ausgaben auf Deutsch übersetzen
-* [ ] In postman user erstellt + bmi
-* [ ] bmi wurde berechnet + wert in postman konsole und lognachricht dazu in intellij
+* [x] In postman user erstellt + bmi
+* [x] bmi wurde berechnet + wert in postman konsole und lognachricht dazu in intellij
 * [x] bmi service erstellen und bmicontroller, bmi service vom bmiController aufrufen
 * [x] Datum in bmiwithmessage anpassen
 * [x] finuserandcalculatebmi anpassen
@@ -86,5 +86,6 @@ Aufgabe 11:
 * [ ] Doku schreiben
 * [ ] Auf Vollständigkeit der zu übergebenden Parameter überprüfen
 * [ ] Alle Logs/alle User auf einmal löschen einbauen
-* Logger.info aus userService löschen
+* [x] Logger.info aus userService löschen
+* [ ] testIfUserIsNull im LogServiceTest anpassen
 

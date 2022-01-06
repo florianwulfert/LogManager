@@ -51,8 +51,8 @@ public class BmiService extends DateUtil {
         return bigDecimal.doubleValue();
     }
 
-    public Double findUserAndCalculateBMI(String userName) {
+    public String findUserAndCalculateBMI(String userName) {
         User user = userRepository.findUserByName(userName);
-        return berechneBMI(user.getGewicht(), user.getGroesse());
+        return getBmiMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse());
     }
 }

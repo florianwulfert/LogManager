@@ -209,6 +209,14 @@ class UserServiceTest {
                 "WARNING", "Florian");
     }
 
+    /*@Test
+    void testDeleteAll() {
+        Mockito.when(userRepository.deleteAll()).thenReturn(userRepository.deleteAll());
+        systemUnderTest.deleteAll();
+        Mockito.verify(logService).addLog("Alle User wurden aus der Datenbank gelöscht",
+                "INFO", Mockito.any());
+    }*/
+
     private List<User> addTestUser() {
         List<User> users = new ArrayList<>();
         users.add(User.builder()

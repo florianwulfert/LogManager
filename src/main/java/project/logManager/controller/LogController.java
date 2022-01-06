@@ -52,11 +52,11 @@ public class LogController {
         }
     }
 
-    @GetMapping("/logs/id")
-    public List<LogDTO> getLogsByID (@RequestParam final Integer id) {
+    @GetMapping("/logs/{id}")
+    public List<LogDTO> getLogsByID (@PathVariable final Integer id) {
         try {
             Log logs = logService.searchLogsByID(id);
-            List<Log> returnlist=new ArrayList<>();
+            List<Log> returnlist = new ArrayList<>();
             returnlist.add(logs);
             return logDTOMapper.logsToLogDTOs(returnlist);
         } catch (RuntimeException e) {

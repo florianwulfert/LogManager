@@ -25,7 +25,8 @@ public class UserService {
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
     public Double addUser(String actor, String name, LocalDate geburtsdatum, double gewicht,
-                        double groesse, String lieblingsFarbe) {
+                          double groesse, String lieblingsFarbe) {
+
         User user = User.builder()
                 .name(name)
                 .geburtsdatum(geburtsdatum)
@@ -38,20 +39,17 @@ public class UserService {
         if (logValidationService.validateFarbenEnum(lieblingsFarbe.toLowerCase())) {
             try {
                 // prüfe, ob zu erstellender User bereits vorhanden ist
-                LOGGER.info("prüfe, ob zu erstellender User bereits vorhanden ist");
                 if (userRepository.findUserByName(name) != null) {
                     LOGGER.warn(String.format("User %s bereits vorhanden", name));
                     throw new RuntimeException(String.format("User %s bereits vorhanden", name));
                 }
                 // prüfe, ob noch kein User vorhanden ist
-                LOGGER.info("prüfe, ob noch kein User vorhanden ist");
                 List<User> users = userRepository.findAll();
                 if (users.isEmpty()) {
                     saveUser(user, null);
                     return user.getBmi();
                 }
                 // prüfe, ob ausführender User vorhanden ist
-                LOGGER.info("prüfe, ob ausführender User vorhanden ist");
                 User activeUser = userRepository.findUserByName(actor);
                 if (activeUser == null) {
                     LOGGER.error("Active User (actor) ist null!");
@@ -86,11 +84,11 @@ public class UserService {
             throw new RuntimeException("Ein User kann sich nicht selbst löschen!");
         }
         if (user.isEmpty()) {
-            LOGGER.error(String.format("User mit der ID %s konnte nicht gefunden werden",id));
+            LOGGER.error(String.format("User mit der ID %s konnte nicht gefunden werden", id));
             throw new RuntimeException(String.format("User mit der ID %s konnte nicht gefunden werden", id));
         } else {
             if (logService.existLogByActorId(user.get())) {
-                LOGGER.error(String.format( "User %s kann nicht gelöscht werden, " +
+                LOGGER.error(String.format("User %s kann nicht gelöscht werden, " +
                         "da er in einer anderen Tabelle referenziert wird!", user.get().getName()));
                 throw new RuntimeException(String.format("User %s kann nicht gelöscht werden, " +
                         "da er in einer anderen Tabelle referenziert wird!", user.get().getName()));
@@ -99,7 +97,7 @@ public class UserService {
 
         userRepository.deleteById(id);
         logService.addLog(String.format("User mit der ID %s wurde gelöscht.", id), "WARNING", actorName);
-        LOGGER.info(String.format("User mit der ID %s wurde gelöscht.", id ));
+        LOGGER.info(String.format("User mit der ID %s wurde gelöscht.", id));
     }
 
     public void deleteByName(String name, String actorName) {
@@ -114,13 +112,13 @@ public class UserService {
             throw new RuntimeException(String.format("User mit dem Namen %s konnte nicht gefunden werden", name));
         }
         if (logService.existLogByActorId(userToDelete)) {
-            LOGGER.error(String.format( "User %s kann nicht gelöscht werden, " +
+            LOGGER.error(String.format("User %s kann nicht gelöscht werden, " +
                     "da er in einer anderen Tabelle referenziert wird!", name));
             throw new RuntimeException(String.format("User %s kann nicht gelöscht werden, " +
                     "da er in einer anderen Tabelle referenziert wird!", userToDelete.getName()));
         }
         if (actor == null) {
-            LOGGER.error(String.format("User mit dem Namen %s konnte nicht gefunden werden", actorName ));
+            LOGGER.error(String.format("User mit dem Namen %s konnte nicht gefunden werden", actorName));
             throw new RuntimeException(String.format("User mit dem Namen %s konnte nicht gefunden werden", actorName));
         }
 
@@ -129,12 +127,17 @@ public class UserService {
         LOGGER.info(String.format("User mit dem Namen %s wurde gelöscht", name));
     }
 
+    public void deleteAll() {
+        userRepository.deleteAll();
+        logService.addLog("Alle User wurden aus der Datenbank gelöscht", "INFO", null);
+    }
+
     private void saveUser(User user, String actor) {
         String bmi = bmiService.getBmiMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse());
         logService.addLog(String.format("Der User %s wurde angelegt. %s", user.getName(), bmi),
                 "INFO", actor);
         LOGGER.info(String.format("Der User %s wurde angelegt. " +
-                bmiService.getBmiMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse()),
+                        bmiService.getBmiMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse()),
                 user.getName()));
         userRepository.save(user);
     }

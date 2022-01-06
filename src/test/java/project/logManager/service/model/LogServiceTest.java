@@ -138,6 +138,8 @@ class LogServiceTest {
     @Test
     void testIfUserIsNull() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
+        Mockito.when(userRepository.findAll()).thenReturn(null);
+        Mockito.when(userRepository.findUserByName(null)).thenReturn(null);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
                 () -> systemUnderTest.addLog("Hallo", "INFO", "Peter"));
         Assertions.assertEquals("User Peter nicht gefunden", ex.getMessage());
@@ -161,7 +163,8 @@ class LogServiceTest {
 
     @Test
     void testDeleteById() {
-        systemUnderTest.deleteById(1);
+        Assertions.assertEquals("Eintrag mit der ID 1 wurde aus der Datenbank gelöscht",
+                systemUnderTest.deleteById(1));
         Mockito.verify(logRepository)
                 .deleteById(1);
     }

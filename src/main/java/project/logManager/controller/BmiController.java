@@ -31,7 +31,7 @@ public class BmiController {
     }
 
     @GetMapping("/bmi/{user}")
-    public Double findUserAndCalculateBMI (@PathVariable final String user) {
+    public String findUserAndCalculateBMI (@PathVariable final String user) {
         try {
             return bmiService.findUserAndCalculateBMI(user);
         } catch (RuntimeException e) {

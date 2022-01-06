@@ -75,8 +75,9 @@ public class LogService {
         return logRepository.findById(id).isPresent() ? logRepository.findById(id).get() : null;
     }
 
-    public void deleteById(Integer id) {
+    public String deleteById(Integer id) {
         logRepository.deleteById(id);
+        return String.format("Eintrag mit der ID %s wurde aus der Datenbank gelöscht", id);
     }
 
     public boolean existLogByActorId(User actor) {

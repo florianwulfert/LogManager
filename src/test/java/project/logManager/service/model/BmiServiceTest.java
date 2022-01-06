@@ -75,8 +75,8 @@ class BmiServiceTest {
 
     @Test
     void testFindUserAndCalculateBMI() {
-        Mockito.when(userRepository.findUserByName(users.get(0).getName())).thenReturn(users.get(0));
-        systemUnderTest.findUserAndCalculateBMI(users.get(0).getName());
+        Mockito.when(userRepository.findUserByName(users.get(1).getName())).thenReturn(users.get(1));
+        systemUnderTest.findUserAndCalculateBMI(users.get(1).getName());
     }
 
     private List<User> addTestUser() {
