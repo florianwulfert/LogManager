@@ -55,12 +55,13 @@
   * Mögliche Fehler:
     * Bad request (Der Parameter wurde nicht als Integer eingegeben)E
     * Internal Server Error (Die gewünschte ID existiert nicht oder es wurde kein Wert übergeben)
-* DELETE: /logs/del/severity
+* DELETE: /logs/delete/severity
   * Vorhandene Einträge zu der gewählten severity werden gelöscht. 
   * Geforderte Parameter:
     * severity: String
   * Mögliche Fehler
-    _*** KEINE GEFUNDEN***_ 
+  * DELETE: /logs/delete
+    * Alle Logs werden aus der Datenbank gelöscht
 
 ### Restschnittstellen User:
 * POST: /user
@@ -74,6 +75,11 @@
   * Mögliche Fehler:
     * Bad request (Datumformat falsch oder wenn String statt double übergeben wird)
     * Bad request (Es wird kein Parameter übergeben)
+* GET: /users
+  * Eine Liste der in der Datenbank vorhandenen User wird ausgegeben
+  * Geforderte Parameter:
+    * --
+  * Mögliche Fehler:
 * GET: /user/id
   * Ein User kann mithilfe der ID gefunden werden
   * Geforderte Parameter:
@@ -87,19 +93,26 @@
     * id: Integer
   * Mögliche Fehler:
     * Internal Server Error (ID unbekannt)
-* GET: /user/bmi
-  * Beim Erstellen des Users wird sein BMI ausgerechnet und eine entsprechende Nachricht wird ausgegeben.
+* DELETE: /user/delete/name/{name}
+  * Ein User wird anhand des Namens gelöscht
   * Geforderte Parameter:
-    * 
+    * name: String
+    * actor: String
+* DELETE: /user/delete
+  * Alle User werden aus der Datenbank gelöscht
 
 ###Restschnittstellen BMI
-* POST: /bmi
-  * Der BMI wird berechnet, ohne das ein User gespeichert wird
+* GET: /bmi
+  * Der BMI wird berechnet, ohne das ein User gespeichert wird und eine entsprechende Nachricht wird ausgegeben
   * Geforderte Parameter:
-    * alter: Integer
+    * geburtsDatum: LocalDate
     * groesse: Double
     * gewicht: Double
   * Mögliche Fehler:
+* GET: /bmi/{user}
+  * Ein User wird gefunden und sein BMI wird ausgegeben
+  * Geforderte Parameter:
+    * user: String
 
 ### Datenbank
 * Der Logmanager besitzt eine H2-Datenbank

@@ -163,6 +163,12 @@ class LogServiceTest {
         Mockito.verify(logRepository).deleteBySeverity("INFO");
     }
 
+    @Test
+    void testDeleteAll() {
+        systemUnderTest.deleteAll();
+        Mockito.verify(logRepository).deleteAll();
+    }
+
     private Log createNewLog(int id, String severity, String message, LocalDateTime timestamp) {
         Log log = new Log();
         log.setId(id);

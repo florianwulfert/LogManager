@@ -112,4 +112,9 @@ public class LogService {
         sb.append("Es wurden die Einträge mit den IDs ").append(iDs).append(" aus der Datenbank gelöscht");
         return sb.toString();
     }
+
+    public void deleteAll() {
+        logRepository.deleteAll();
+        LOGGER.info("Alle Logs wurden aus der Datenbank gelöscht!");
+    }
 }

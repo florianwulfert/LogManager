@@ -70,7 +70,7 @@ public class UserService {
             } catch (ErsterUserUngleichActorException er) {
                 try {
                     logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
-                    return null;
+                    throw new ErsterUserUngleichActorException(actor, user.getName());
                 } catch (RuntimeException rex) {
                     throw new RuntimeException(er.getMessage());
                 }
@@ -81,7 +81,8 @@ public class UserService {
             }
         } else {
             LOGGER.error("Die übergebene Farbe '{}' ist nicht zugelassen!", lieblingsFarbe);
-            throw new IllegalArgumentException("Farbe falsch!");
+            throw new IllegalArgumentException("Farbe falsch! Wählen Sie eine der folgenden Farben: " +
+                    "blau, rot, orange, gelb, schwarz");
         }
     }
 

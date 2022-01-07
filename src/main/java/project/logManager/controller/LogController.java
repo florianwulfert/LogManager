@@ -82,4 +82,13 @@ public class LogController {
         }
     }
 
+    @DeleteMapping("/logs/delete")
+    public String deleteAll() {
+        try {
+            logService.deleteAll();
+            return "Alle Logs wurden aus der Datenbank gelöscht!";
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 }

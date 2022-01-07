@@ -6,15 +6,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.logManager.model.entity.User;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author - EugenFriesen
@@ -67,22 +63,9 @@ class LogControllerTest {
         Mockito.verify(logService).deleteBySeverity("INFO");
     }
 
-    private List<User> addTestUser() {
-        List<User> users = new ArrayList<>();
-        users.add(User.builder()
-                .name("Peter")
-                .geburtsdatum(LocalDate.of(1988, 12, 12))
-                .gewicht(90)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
-                .build());
-        users.add(User.builder()
-                .name("Florian")
-                .geburtsdatum(LocalDate.of(1988, 12, 12))
-                .gewicht(90)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
-                .build());
-        return users;
+    @Test
+    void testDeleteAll() {
+        systemUnderTest.deleteAll();
+        Mockito.verify(logService).deleteAll();
     }
 }

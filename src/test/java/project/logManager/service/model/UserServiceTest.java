@@ -22,8 +22,6 @@ import java.util.Optional;
 
 
 @ExtendWith(MockitoExtension.class)
-
-
 class UserServiceTest {
 
     @InjectMocks
@@ -56,8 +54,9 @@ class UserServiceTest {
         Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(false);
         RuntimeException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> systemUnderTest.addUser
                 ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
-                1.85, "Lila"));
-        Assertions.assertEquals("Farbe falsch!", ex.getMessage());
+                        1.85, "Lila"));
+        Assertions.assertEquals("Farbe falsch! Wählen Sie eine der folgenden Farben: " +
+                "blau, rot, orange, gelb, schwarz", ex.getMessage());
     }
 
     @Test
@@ -78,7 +77,7 @@ class UserServiceTest {
         Mockito.when(userRepository.findUserByName("Florian")).thenReturn(null);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser
                 ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
-                1.85, "GELB"));
+                        1.85, "GELB"));
         Assertions.assertEquals("User Florian nicht gefunden", ex.getMessage());
         Mockito.verify(logService).addLog("Der User konnte nicht angelegt werden",
                 "ERROR", "Florian");
@@ -107,14 +106,14 @@ class UserServiceTest {
         systemUnderTest.addUser(users.get(0).getName(), users.get(0).getName(),
                 LocalDate.of(2000, 11, 18), 80,
                 1.85, "blau");
-        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Test", "INFO","Peter");
+        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Test", "INFO", "Peter");
     }
 
     @Test
     void testIfUserNotEqualActorAndEmptyList() {
         Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
-        systemUnderTest.addUser(users.get(0).getName(),users.get(1).getName(),
+                systemUnderTest.addUser(users.get(0).getName(), users.get(1).getName(),
                 users.get(1).getGeburtsdatum(), 80.0,
                 1.9, "gelb"));
         Assertions.assertEquals("User kann nicht angelegt werden, da noch keine User in der " +
@@ -241,7 +240,7 @@ class UserServiceTest {
                 .message("Test")
                 .severity("INFO")
                 .id(1)
-                .timestamp(LocalDateTime.of(2000, 12, 12, 12,12,12))
+                .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
                 .build());
         Mockito.when(logRepository.findAll()).thenReturn(testLogs);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
@@ -259,7 +258,7 @@ class UserServiceTest {
                 .gewicht(90.0)
                 .groesse(1.85)
                 .lieblingsfarbe("gelb")
-                        .bmi(26.29)
+                .bmi(26.29)
                 .build());
 
         users.add(User.builder()
@@ -269,7 +268,7 @@ class UserServiceTest {
                 .gewicht(70.0)
                 .groesse(1.85)
                 .lieblingsfarbe("gelb")
-                        .bmi(20.45)
+                .bmi(20.45)
                 .build());
         return users;
     }

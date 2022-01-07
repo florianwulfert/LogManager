@@ -67,7 +67,7 @@ Aufgabe 11:
 * [x] a) BMI ausrechnen im UserService
 * [x] b) anhand des Geburtsdatums Alter berechnen und zurückgeben
 * [x] c) mit switch case: übergewichtig, untergewichtig, normalgewichtig
-* [ ] d) Endpoint erstellen und dokumentieren
+* [x] d) Endpoint erstellen und dokumentieren
 * [x] c) Tests schreiben
 * Kriterien
   * 3 verschiedene Arten den BMI zu berechnen
@@ -84,8 +84,12 @@ Aufgabe 11:
 * [x] finuserandcalculatebmi anpassen
 * [x] nachrichten wergen gewicht in variable auslagern
 * [ ] Doku schreiben
-* [ ] Auf Vollständigkeit der zu übergebenden Parameter überprüfen
-* [ ] Alle Logs/alle User auf einmal löschen einbauen
+* [x] Alle Logs/alle User auf einmal löschen einbauen
 * [x] Logger.info aus userService löschen
 * [x] testIfUserIsNull im LogServiceTest anpassen
 * [x] in LogServiceTest User in eigene Methode auslagern
+* [ ] Meldungen erstellen, falls in Postman falsches Format eingegeben wurde 
+(getUserId, deleteLogId, deleteUserId, getLogId, postUser - gewicht, groesse, datum, getUserBmi)
+* [ ] MR erstellen
+* [ ] Integration Tests: webmvc-Tests, SpringBoot-Tests
+* [ ] Swagger aufsetzen
