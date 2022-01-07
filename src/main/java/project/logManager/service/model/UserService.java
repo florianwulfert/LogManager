@@ -5,7 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.logManager.model.entity.User;
-import project.logManager.model.respository.UserRepository;
+import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.ValidationService;
 
 import javax.transaction.Transactional;

@@ -6,8 +6,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
-import project.logManager.model.respository.LogRepository;
-import project.logManager.model.respository.UserRepository;
+import project.logManager.model.repository.LogRepository;
+import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.ValidationService;
 
 import javax.transaction.Transactional;
@@ -50,7 +50,7 @@ public class LogService {
                 Log log = new Log();
                 log.setMessage(message);
                 log.setSeverity(severity);
-                boolean isUserAvailable = !userRepository.findAll().isEmpty();
+                boolean isUserAvailable = userRepository.findAll().isEmpty();
                 User user = userRepository.findUserByName(userName);
                 if (isUserAvailable && user == null) {
                     LOGGER.error(String.format("User %s nicht gefunden", userName));

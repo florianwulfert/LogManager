@@ -7,8 +7,8 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
-import project.logManager.model.respository.LogRepository;
-import project.logManager.model.respository.UserRepository;
+import project.logManager.model.repository.LogRepository;
+import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.ValidationService;
 
 import java.time.LocalDate;
@@ -138,20 +138,11 @@ class LogServiceTest {
     @Test
     void testIfUserIsNull() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
-        Mockito.when(userRepository.findAll()).thenReturn(null);
-        Mockito.when(userRepository.findUserByName(null)).thenReturn(null);
+        Mockito.when(userRepository.findAll()).thenReturn(new ArrayList<>());
+        Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(Mockito.any());
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
                 () -> systemUnderTest.addLog("Hallo", "INFO", "Peter"));
         Assertions.assertEquals("User Peter nicht gefunden", ex.getMessage());
-    }
-
-    private Log createNewLog(int id, String severity, String message, LocalDateTime timestamp) {
-        Log log = new Log();
-        log.setId(id);
-        log.setSeverity(severity);
-        log.setMessage(message);
-        log.setTimestamp(timestamp);
-        return log;
     }
 
     @Test
@@ -204,4 +195,12 @@ class LogServiceTest {
         Mockito.verify(logRepository).deleteBySeverity("INFO");
     }
 
+    private Log createNewLog(int id, String severity, String message, LocalDateTime timestamp) {
+        Log log = new Log();
+        log.setId(id);
+        log.setSeverity(severity);
+        log.setMessage(message);
+        log.setTimestamp(timestamp);
+        return log;
+    }
 }

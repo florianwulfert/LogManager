@@ -1,4 +1,4 @@
-package project.logManager.model.respository;
+package project.logManager.model.repository;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
