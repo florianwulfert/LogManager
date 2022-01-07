@@ -72,5 +72,13 @@ public class UserController {
         }
     }
 
-
+    @DeleteMapping("/user/delete")
+    public String deleteAll() {
+        try {
+            userService.deleteAll();
+            return "Alle User wurden aus der Datenbank gelöscht";
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
+    }
 }

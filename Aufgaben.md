@@ -87,5 +87,5 @@ Aufgabe 11:
 * [ ] Auf Vollständigkeit der zu übergebenden Parameter überprüfen
 * [ ] Alle Logs/alle User auf einmal löschen einbauen
 * [x] Logger.info aus userService löschen
-* [ ] testIfUserIsNull im LogServiceTest anpassen
-
+* [x] testIfUserIsNull im LogServiceTest anpassen
+* [x] in LogServiceTest User in eigene Methode auslagern

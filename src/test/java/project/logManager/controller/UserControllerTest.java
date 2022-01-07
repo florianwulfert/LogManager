@@ -71,6 +71,12 @@ class UserControllerTest {
         Mockito.verify(userService).deleteByName("Peter", "Hans");
     }
 
+    @Test
+    void testDeleteAll() {
+        systemUnderTest.deleteAll();
+        Mockito.verify(userService).deleteAll();
+    }
+
     private List<User> addTestUser() {
       List<User> users = new ArrayList<>();
       users.add(User.builder()

@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import project.logManager.exception.ErsterUserUngleichActorException;
 import project.logManager.model.entity.User;
+import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.ValidationService;
 
@@ -21,6 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final ValidationService logValidationService;
     private final BmiService bmiService;
+    private final LogRepository logRepository;
 
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
@@ -46,20 +49,34 @@ public class UserService {
                 // prüfe, ob noch kein User vorhanden ist
                 List<User> users = userRepository.findAll();
                 if (users.isEmpty()) {
-                    saveUser(user, null);
-                    return user.getBmi();
+                    if (user.getName().equals(actor)) {
+                        saveUser(user, user.getName());
+                        return user.getBmi();
+                    } else {
+                        LOGGER.warn("User kann nicht angelegt werden, da noch keine User in der " +
+                                "Datenbank angelegt sind. Erster User muss sich selbst anlegen! " +
+                                user.getName() + " ungleich " + actor);
+                        throw new ErsterUserUngleichActorException(actor, user.getName());
+                    }
                 }
                 // prüfe, ob ausführender User vorhanden ist
                 User activeUser = userRepository.findUserByName(actor);
                 if (activeUser == null) {
-                    LOGGER.error("Active User (actor) ist null!");
+                    LOGGER.error("Actor ist null!");
                     throw new RuntimeException(String.format("User %s nicht gefunden", actor));
                 }
                 saveUser(user, activeUser.getName());
                 return user.getBmi();
+            } catch (ErsterUserUngleichActorException er) {
+                try {
+                    logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
+                    return null;
+                } catch (RuntimeException rex) {
+                    throw new RuntimeException(er.getMessage());
+                }
             } catch (RuntimeException ex) {
                 LOGGER.error("Der User konnte nicht angelegt werden");
-                logService.addLog("Der User konnte nicht angelegt werden", "ERROR", name);
+                logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
                 throw new RuntimeException(ex.getMessage());
             }
         } else {
@@ -128,17 +145,23 @@ public class UserService {
     }
 
     public void deleteAll() {
+        if (!logRepository.findAll().isEmpty()) {
+            LOGGER.warn("User können nicht gelöscht werden, da sie in einer anderen Tabelle " +
+                    "referenziert werden");
+            throw new RuntimeException("User können nicht gelöscht werden, da sie in einer anderen Tabelle " +
+                    "referenziert werden");
+        }
         userRepository.deleteAll();
-        logService.addLog("Alle User wurden aus der Datenbank gelöscht", "INFO", null);
+        LOGGER.info("Alle User wurden aus der Datenbank gelöscht!");
     }
 
     private void saveUser(User user, String actor) {
+        userRepository.save(user);
         String bmi = bmiService.getBmiMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse());
         logService.addLog(String.format("Der User %s wurde angelegt. %s", user.getName(), bmi),
                 "INFO", actor);
         LOGGER.info(String.format("Der User %s wurde angelegt. " +
                         bmiService.getBmiMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse()),
                 user.getName()));
-        userRepository.save(user);
     }
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import project.logManager.common.dto.LogMessageDto;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -36,30 +37,18 @@ public class LogService {
     }
 
     public String addLog(String message, String severity, String userName) {
-        String returnMessage = "";
         if (message != null && severity != null) {
             if (logValidationService.validateSeverity(severity)) {
-                if (message.equals("Katze")) {
-                    message = "Hund";
-                    returnMessage = "Katze wurde in Hund übersetzt!\n";
-                }
+                LogMessageDto logMessage = logValidationService.validateMessage(message);
+                User user = checkActor(userName);
+                saveLog(message, severity, user);
 
-                returnMessage = returnMessage + String.format("Es wurde die Nachricht \"%s\" als %s abgespeichert!",
-                        message, severity);
-
-                Log log = new Log();
-                log.setMessage(message);
-                log.setSeverity(severity);
-                boolean isUserAvailable = userRepository.findAll().isEmpty();
-                User user = userRepository.findUserByName(userName);
-                if (isUserAvailable && user == null) {
-                    LOGGER.error(String.format("User %s nicht gefunden", userName));
-                    throw new RuntimeException(String.format("User %s nicht gefunden", userName));
-                }
-                log.setUser(user);
-                Date timestamp = new Date();
-                log.setTimestamp(timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-                logRepository.save(log);
+                logMessage.setReturnMessage(logMessage.getReturnMessage() +
+                        String.format("Es wurde die Nachricht \"%s\" als %s abgespeichert!",
+                                logMessage.getMessage(), severity));
+                LOGGER.info(String.format("Es wurde die Nachricht \"%s\" als %s abgespeichert!",
+                        logMessage.getMessage(), severity));
+                return logMessage.getReturnMessage();
             } else {
                 LOGGER.error("Die übergebene severity '{}' ist nicht zugelassen!", severity);
                 throw new IllegalArgumentException("Severity falsch!");
@@ -68,7 +57,25 @@ public class LogService {
             LOGGER.error("Einer der benötigten Parameter wurde nicht übergeben!");
             throw new RuntimeException("Einer der benötigten Parameter wurde nicht übergeben!");
         }
-        return returnMessage;
+    }
+
+    private void saveLog(String message, String severity, User user) {
+        Log log = new Log();
+        log.setMessage(message);
+        log.setSeverity(severity);
+        log.setUser(user);
+        Date timestamp = new Date();
+        log.setTimestamp(timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        logRepository.save(log);
+    }
+
+    private User checkActor(String userName) {
+        User user = userRepository.findUserByName(userName);
+        if (user == null) {
+            LOGGER.error(String.format("User %s nicht gefunden", userName));
+            throw new RuntimeException(String.format("User %s nicht gefunden", userName));
+        }
+        return user;
     }
 
     public Log searchLogsByID(Integer id) {

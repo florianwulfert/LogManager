@@ -1,10 +1,14 @@
 package project.logManager.service.model;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.common.dto.LogMessageDto;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -39,8 +43,14 @@ class LogServiceTest {
     @Mock
     UserRepository userRepository;
 
-    @Captor
-    ArgumentCaptor<Log> arg;
+    List<LogMessageDto> customLogMessageDto;
+    List<User> users;
+
+    @BeforeEach
+    void init() {
+        customLogMessageDto = createCustomLogMessageDto();
+        users = addTestUser();
+    }
 
     @Test
     void testGetLogs() {
@@ -59,15 +69,11 @@ class LogServiceTest {
     @Test
     void testAddLog() {
         Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(true);
-        Mockito.when(userRepository.findUserByName("Paul")).thenReturn(User.builder()
-                .name("Paul")
-                .id(1)
-                .geburtsdatum(LocalDate.of(2000,12,12))
-                .gewicht(85.0)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
-                .build());
-        systemUnderTest.addLog("My new log message", "INFO", "Paul");
+        Mockito.when(logValidationService.validateMessage(Mockito.anyString()))
+                .thenReturn(customLogMessageDto.get(1));
+        Mockito.when(userRepository.findUserByName("Paul")).thenReturn(users.get(0));
+        Assertions.assertEquals("Es wurde die Nachricht \"Banane\" als INFO abgespeichert!",
+        systemUnderTest.addLog("Banane", "INFO", "Paul"));
         Mockito.verify(logRepository, Mockito.times(1)).save(Mockito.any());
     }
 
@@ -88,49 +94,12 @@ class LogServiceTest {
     }
 
     @Test
-    void testKatzeMessage() {
-        Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
-        Mockito.when(userRepository.findUserByName("Mia")).thenReturn(User.builder()
-                .name("Mia")
-                .id(1)
-                .geburtsdatum(LocalDate.of(2000,12,12))
-                .gewicht(85.0)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
-                .build());
-        systemUnderTest.addLog("Katze", "INFO", "Mia");
-        Mockito.verify(logRepository).save(arg.capture());
-        Assertions.assertEquals("Hund", arg.getValue().getMessage());
-        Assertions.assertEquals("INFO", arg.getValue().getSeverity());
-    }
-
-    @Test
-    void testSeverityMessage() {
-        Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
-        Mockito.when(userRepository.findUserByName("Paul")).thenReturn(User.builder()
-                .name("Paul")
-                .id(1)
-                .geburtsdatum(LocalDate.of(2000,12,12))
-                .gewicht(85.0)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
-                .build());
-        Assertions.assertEquals("Es wurde die Nachricht \"Papagei\" als INFO abgespeichert!",
-                systemUnderTest.addLog("Papagei", "INFO", "Paul"));
-    }
-
-    @Test
     void testKatzeReturnMessage() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
-        Mockito.when(userRepository.findUserByName("Peter")).thenReturn(User.builder()
-                .name("Peter")
-                .id(1)
-                .geburtsdatum(LocalDate.of(2000,12,12))
-                .gewicht(85.0)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
-                .build());
-        Assertions.assertEquals("Katze wurde in Hund übersetzt!\n" +
+        Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
+        Mockito.when(logValidationService.validateMessage(Mockito.anyString()))
+                .thenReturn(customLogMessageDto.get(0));
+        Assertions.assertEquals(customLogMessageDto.get(0).getReturnMessage() +
                         "Es wurde die Nachricht \"Hund\" als INFO abgespeichert!",
                 systemUnderTest.addLog("Katze", "INFO", "Peter"));
     }
@@ -138,7 +107,6 @@ class LogServiceTest {
     @Test
     void testIfUserIsNull() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
-        Mockito.when(userRepository.findAll()).thenReturn(new ArrayList<>());
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(Mockito.any());
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
                 () -> systemUnderTest.addLog("Hallo", "INFO", "Peter"));
@@ -202,5 +170,33 @@ class LogServiceTest {
         log.setMessage(message);
         log.setTimestamp(timestamp);
         return log;
+    }
+
+    private List<User> addTestUser() {
+        List<User> users = new ArrayList<>();
+        users.add(User.builder()
+                .name("Peter")
+                .id(1)
+                .geburtsdatum(LocalDate.of(2000, 12, 12))
+                .gewicht(85.0)
+                .groesse(1.85)
+                .lieblingsfarbe("gelb")
+                .build());
+        return users;
+    }
+
+    private List<LogMessageDto> createCustomLogMessageDto() {
+        List<LogMessageDto> customLogMessageDto = new ArrayList<>();
+        customLogMessageDto.add(LogMessageDto
+                .builder()
+                .message("Hund")
+                .returnMessage("Katze wurde in Hund übersetzt!\n")
+                .build());
+        customLogMessageDto.add(LogMessageDto
+                .builder()
+                .message("Banane")
+                .returnMessage("")
+                .build());
+        return customLogMessageDto;
     }
 }

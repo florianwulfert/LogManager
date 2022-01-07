@@ -8,11 +8,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
+import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.ValidationService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +37,9 @@ class UserServiceTest {
 
     @Mock
     ValidationService logValidationService;
+
+    @Mock
+    LogRepository logRepository;
 
     @Mock
     LogService logService;
@@ -75,7 +81,7 @@ class UserServiceTest {
                 1.85, "GELB"));
         Assertions.assertEquals("User Florian nicht gefunden", ex.getMessage());
         Mockito.verify(logService).addLog("Der User konnte nicht angelegt werden",
-                "ERROR", "Peter");
+                "ERROR", "Florian");
     }
 
     @Test
@@ -98,10 +104,22 @@ class UserServiceTest {
         Mockito.when((logValidationService.validateFarbenEnum(Mockito.anyString()))).thenReturn(true);
         Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(),
                 Mockito.any())).thenReturn("Test");
-        systemUnderTest.addUser("Paul", users.get(0).getName(),
+        systemUnderTest.addUser(users.get(0).getName(), users.get(0).getName(),
                 LocalDate.of(2000, 11, 18), 80,
                 1.85, "blau");
-        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Test", "INFO", null);
+        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Test", "INFO","Peter");
+    }
+
+    @Test
+    void testIfUserNotEqualActorAndEmptyList() {
+        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+        systemUnderTest.addUser(users.get(0).getName(),users.get(1).getName(),
+                users.get(1).getGeburtsdatum(), 80.0,
+                1.9, "gelb"));
+        Assertions.assertEquals("User kann nicht angelegt werden, da noch keine User in der " +
+                "Datenbank angelegt sind. Erster User muss sich selbst anlegen! " +
+                users.get(1).getName() + " ungleich " + users.get(0).getName(), ex.getMessage());
     }
 
     @Test
@@ -209,13 +227,28 @@ class UserServiceTest {
                 "WARNING", "Florian");
     }
 
-    /*@Test
+    @Test
     void testDeleteAll() {
-        Mockito.when(userRepository.deleteAll()).thenReturn(userRepository.deleteAll());
         systemUnderTest.deleteAll();
-        Mockito.verify(logService).addLog("Alle User wurden aus der Datenbank gelöscht",
-                "INFO", Mockito.any());
-    }*/
+        Mockito.verify(userRepository).deleteAll();
+    }
+
+    @Test
+    void testIfLogsExistForDeleteAll() {
+        List<Log> testLogs = new ArrayList<>();
+        testLogs.add(Log
+                .builder()
+                .message("Test")
+                .severity("INFO")
+                .id(1)
+                .timestamp(LocalDateTime.of(2000, 12, 12, 12,12,12))
+                .build());
+        Mockito.when(logRepository.findAll()).thenReturn(testLogs);
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.deleteAll());
+        Assertions.assertEquals("User können nicht gelöscht werden, da sie in einer anderen Tabelle " +
+                "referenziert werden", ex.getMessage());
+    }
 
     private List<User> addTestUser() {
         List<User> users = new ArrayList<>();
