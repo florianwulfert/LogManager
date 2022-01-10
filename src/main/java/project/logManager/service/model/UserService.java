@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import project.logManager.exception.ErsterUserUngleichActorException;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -41,43 +40,15 @@ public class UserService {
                 .build();
 
         if (userValidationService.validateFarbenEnum(lieblingsFarbe.toLowerCase())) {
-            try {
-                userValidationService.checkIfUserToPostExists(name);
-                userValidationService.checkIfUsersListIsEmpty(actor, user);
-                User activeUser = userValidationService.checkIfActorExists(actor);
-                saveUser(user, activeUser.getName());
-                return user.getBmi();
-                //erste.. exception in uservalidationservice schieben
-            } catch (ErsterUserUngleichActorException er) {
-                handleErsterUserUngleichActor(actor, user, er);
-            } catch (RuntimeException ex) {
-                handleUserKonnteNichtAngelegtWerden(actor, ex);
-            }
+            userValidationService.checkIfUserToPostExists(name);
+            userValidationService.checkIfUsersListIsEmpty(actor, user);
+            User activeUser = userValidationService.checkIfActorExists(actor);
+            saveUser(user, activeUser.getName());
+            return user.getBmi();
         } else {
-            handleFarbeNichtZugelassen(lieblingsFarbe);
+            userValidationService.handleFarbeNichtZugelassen(lieblingsFarbe);
         }
         return null;
-    }
-
-    private void handleUserKonnteNichtAngelegtWerden(String actor, RuntimeException ex) {
-        LOGGER.error("Der User konnte nicht angelegt werden");
-        logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
-        throw new RuntimeException(ex.getMessage());
-    }
-
-    private void handleErsterUserUngleichActor(String actor, User user, ErsterUserUngleichActorException er) {
-        try {
-            logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
-            throw new  ErsterUserUngleichActorException(actor, user.getName());
-        } catch (RuntimeException rex) {
-            throw new RuntimeException(er.getMessage());
-        }
-    }
-
-    private void handleFarbeNichtZugelassen(String lieblingsFarbe) {
-        LOGGER.error("Die übergebene Farbe '{}' ist nicht zugelassen!", lieblingsFarbe);
-        throw new IllegalArgumentException("Farbe falsch! Wählen Sie eine der folgenden Farben: " +
-                "blau, rot, orange, gelb, schwarz");
     }
 
     public List<User> findUserList() {

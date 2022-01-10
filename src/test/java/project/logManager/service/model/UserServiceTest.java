@@ -51,13 +51,12 @@ class UserServiceTest {
     }
 
     @Test
-    void testIfColorIsNotCorrect() {
+    void testColorIsIncorrect() {
         Mockito.when(userValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(false);
-        RuntimeException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> systemUnderTest.addUser
-                ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
-                        1.85, "Lila"));
-        Assertions.assertEquals("Farbe falsch! Wählen Sie eine der folgenden Farben: " +
-                "blau, rot, orange, gelb, schwarz", ex.getMessage());
+        systemUnderTest.addUser(users.get(1).getName(), "Peter", LocalDate.of
+                (1988, 12, 12), 90.0,
+                1.85, "GELB");
+        Mockito.verify(userValidationService).handleFarbeNichtZugelassen("GELB");
     }
 
     @Test
