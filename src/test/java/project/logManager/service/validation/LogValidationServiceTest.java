@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  **/
 
 @ExtendWith(MockitoExtension.class)
-class ValidationServiceTest {
+class LogValidationServiceTest {
 
     @InjectMocks
-    ValidationService systemUnderTest;
+    LogValidationService systemUnderTest;
 
     @Test
     void validateSeverity() {
@@ -29,16 +29,6 @@ class ValidationServiceTest {
     @Test
     void validateSeverityWrongSeverity() {
         assertFalse(systemUnderTest.validateSeverity("KATZE"));
-    }
-
-    @Test
-    void validateUserFarben() {
-        assertTrue(systemUnderTest.validateFarbenEnum("blau"));
-    }
-
-    @Test
-    void validateWrongUserFarben() {
-        assertFalse(systemUnderTest.validateFarbenEnum("gold"));
     }
 
     @Test

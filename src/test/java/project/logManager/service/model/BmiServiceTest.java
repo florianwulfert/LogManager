@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 
@@ -77,6 +78,13 @@ class BmiServiceTest {
     void testFindUserAndCalculateBMI() {
         Mockito.when(userRepository.findUserByName(users.get(1).getName())).thenReturn(users.get(1));
         systemUnderTest.findUserAndCalculateBMI(users.get(1).getName());
+    }
+
+    @Test
+    void testUserIsNull() {
+        UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () ->
+                systemUnderTest.findUserAndCalculateBMI(users.get(0).getName()));
+        Assertions.assertEquals("User Peter konnte nicht identifiziert werden!", ex.getMessage());
     }
 
     private List<User> addTestUser() {

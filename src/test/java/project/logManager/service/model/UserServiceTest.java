@@ -8,11 +8,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
-import project.logManager.service.validation.ValidationService;
+import project.logManager.service.validation.UserValidationService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,10 +35,10 @@ class UserServiceTest {
     BmiService bmiService;
 
     @Mock
-    ValidationService logValidationService;
+    LogRepository logRepository;
 
     @Mock
-    LogRepository logRepository;
+    UserValidationService userValidationService;
 
     @Mock
     LogService logService;
@@ -51,7 +52,7 @@ class UserServiceTest {
 
     @Test
     void testIfColorIsNotCorrect() {
-        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(false);
+        Mockito.when(userValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(false);
         RuntimeException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> systemUnderTest.addUser
                 ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
                         1.85, "Lila"));
@@ -60,36 +61,10 @@ class UserServiceTest {
     }
 
     @Test
-    void testFindByNameIsNotNull() {
-        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
-        Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
-        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser
-                ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
-                        1.85, "GELB"));
-        Assertions.assertEquals("User Peter bereits vorhanden", ex.getMessage());
-    }
-
-    @Test
-    void testIfActiveUserExists() {
-        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
-        Mockito.when(userRepository.findUserByName(users.get(0).getName())).thenReturn(null);
-        Mockito.when(userRepository.findAll()).thenReturn(users);
-        Mockito.when(userRepository.findUserByName("Florian")).thenReturn(null);
-        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser
-                ("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
-                        1.85, "GELB"));
-        Assertions.assertEquals("User Florian nicht gefunden", ex.getMessage());
-        Mockito.verify(logService).addLog("Der User konnte nicht angelegt werden",
-                "ERROR", "Florian");
-    }
-
-    @Test
     void testAddUser() {
-        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
-        Mockito.when(userRepository.findUserByName(users.get(0).getName())).thenReturn(null);
-        Mockito.when(userRepository.findAll()).thenReturn(users);
+        Mockito.when(userValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
         Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("Test");
-        Mockito.when(userRepository.findUserByName(users.get(1).getName())).thenReturn(users.get(1));
+        Mockito.when(userValidationService.checkIfActorExists(Mockito.anyString())).thenReturn(users.get(1));
         systemUnderTest.addUser(users.get(1).getName(), "Peter", LocalDate.of
                         (1988, 12, 12), 90.0,
                 1.85, "GELB");
@@ -100,25 +75,14 @@ class UserServiceTest {
 
     @Test
     void testUsersListIsEmpty() {
-        Mockito.when((logValidationService.validateFarbenEnum(Mockito.anyString()))).thenReturn(true);
+        Mockito.when((userValidationService.validateFarbenEnum(Mockito.anyString()))).thenReturn(true);
         Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(),
                 Mockito.any())).thenReturn("Test");
+        Mockito.when(userValidationService.checkIfActorExists(Mockito.anyString())).thenReturn(users.get(0));
         systemUnderTest.addUser(users.get(0).getName(), users.get(0).getName(),
                 LocalDate.of(2000, 11, 18), 80,
                 1.85, "blau");
         Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Test", "INFO", "Peter");
-    }
-
-    @Test
-    void testIfUserNotEqualActorAndEmptyList() {
-        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
-        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
-                systemUnderTest.addUser(users.get(0).getName(), users.get(1).getName(),
-                users.get(1).getGeburtsdatum(), 80.0,
-                1.9, "gelb"));
-        Assertions.assertEquals("User kann nicht angelegt werden, da noch keine User in der " +
-                "Datenbank angelegt sind. Erster User muss sich selbst anlegen! " +
-                users.get(1).getName() + " ungleich " + users.get(0).getName(), ex.getMessage());
     }
 
     @Test
@@ -147,6 +111,14 @@ class UserServiceTest {
         systemUnderTest.deleteById(2, users.get(0).getName());
         Mockito.verify(logService).addLog("User mit der ID 2 wurde gelöscht.",
                 "WARNING", "Peter");
+    }
+
+    @Test
+    void testIfActorIdIsNull() {
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(users.get(0)));
+        UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () ->
+                systemUnderTest.deleteById(2, users.get(0).getName()));
+        Assertions.assertEquals("User Peter konnte nicht identifiziert werden!", ex.getMessage());
     }
 
     @Test
@@ -209,7 +181,7 @@ class UserServiceTest {
     }
 
     @Test
-    void testIfActorIsNull() {
+    void testIfActorNameIsNull() {
         Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
                 () -> systemUnderTest.deleteByName("Peter", "hallo"));

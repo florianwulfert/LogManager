@@ -13,7 +13,7 @@ import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
-import project.logManager.service.validation.ValidationService;
+import project.logManager.service.validation.LogValidationService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,7 +38,7 @@ class LogServiceTest {
     LogRepository logRepository;
 
     @Mock
-    ValidationService logValidationService;
+    LogValidationService logValidationService;
 
     @Mock
     UserRepository userRepository;

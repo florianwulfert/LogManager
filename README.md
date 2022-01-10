@@ -10,7 +10,7 @@
     * severity: String (Erlaubt: TRACE, DEBUG, INFO, WARNING, ERROR; FATAL)
     * message: String
   * Mögliche Fehler:
-    * Bad request (Ein Parameter wurde nicht mitgegeben)  
+    * Ein Parameter wurde nicht mitgegeben
     * Severity "severity" is not allowed. Please Choose on these ... (siehe oben) 
 * GET: /logs
   * Es können Logs gefiltert abgerufen werden.

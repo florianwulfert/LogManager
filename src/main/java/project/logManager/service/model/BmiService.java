@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.logManager.common.utils.DateUtil;
+import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 
@@ -45,6 +46,7 @@ public class BmiService extends DateUtil {
             throw new IllegalStateException("Unexpected value");
         }
     }
+
     public Double berechneBMI(Double gewicht, Double groesse) {
         BigDecimal bigDecimal = new BigDecimal(gewicht / (groesse * groesse)).
                 setScale(2, RoundingMode.DOWN);
@@ -53,6 +55,9 @@ public class BmiService extends DateUtil {
 
     public String findUserAndCalculateBMI(String userName) {
         User user = userRepository.findUserByName(userName);
+        if (user == null) {
+            throw new UserNotFoundException(userName);
+        }
         return getBmiMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse());
     }
 }

@@ -9,7 +9,7 @@ import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
-import project.logManager.service.validation.ValidationService;
+import project.logManager.service.validation.LogValidationService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -29,7 +29,7 @@ public class LogService {
     private static final Logger LOGGER = LogManager.getLogger(LogService.class);
 
     private final LogRepository logRepository;
-    private final ValidationService logValidationService;
+    private final LogValidationService logValidationService;
     private final UserRepository userRepository;
 
     public List<Log> getLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate) {
@@ -83,8 +83,8 @@ public class LogService {
     }
 
     public String deleteById(Integer id) {
-        logRepository.deleteById(id);
-        return String.format("Eintrag mit der ID %s wurde aus der Datenbank gelöscht", id);
+            logRepository.deleteById(id);
+            return String.format("Eintrag mit der ID %s wurde aus der Datenbank gelöscht", id);
     }
 
     public boolean existLogByActorId(User actor) {

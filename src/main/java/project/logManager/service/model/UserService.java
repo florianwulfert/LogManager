@@ -5,10 +5,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.logManager.exception.ErsterUserUngleichActorException;
+import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
-import project.logManager.service.validation.ValidationService;
+import project.logManager.service.validation.UserValidationService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -21,9 +22,9 @@ import java.util.Optional;
 public class UserService {
     private final LogService logService;
     private final UserRepository userRepository;
-    private final ValidationService logValidationService;
     private final BmiService bmiService;
     private final LogRepository logRepository;
+    private final UserValidationService userValidationService;
 
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
@@ -39,51 +40,44 @@ public class UserService {
                 .bmi(bmiService.berechneBMI(gewicht, groesse))
                 .build();
 
-        if (logValidationService.validateFarbenEnum(lieblingsFarbe.toLowerCase())) {
+        if (userValidationService.validateFarbenEnum(lieblingsFarbe.toLowerCase())) {
             try {
-                // prüfe, ob zu erstellender User bereits vorhanden ist
-                if (userRepository.findUserByName(name) != null) {
-                    LOGGER.warn(String.format("User %s bereits vorhanden", name));
-                    throw new RuntimeException(String.format("User %s bereits vorhanden", name));
-                }
-                // prüfe, ob noch kein User vorhanden ist
-                List<User> users = userRepository.findAll();
-                if (users.isEmpty()) {
-                    if (user.getName().equals(actor)) {
-                        saveUser(user, user.getName());
-                        return user.getBmi();
-                    } else {
-                        LOGGER.warn("User kann nicht angelegt werden, da noch keine User in der " +
-                                "Datenbank angelegt sind. Erster User muss sich selbst anlegen! " +
-                                user.getName() + " ungleich " + actor);
-                        throw new ErsterUserUngleichActorException(actor, user.getName());
-                    }
-                }
-                // prüfe, ob ausführender User vorhanden ist
-                User activeUser = userRepository.findUserByName(actor);
-                if (activeUser == null) {
-                    LOGGER.error("Actor ist null!");
-                    throw new RuntimeException(String.format("User %s nicht gefunden", actor));
-                }
+                userValidationService.checkIfUserToPostExists(name);
+                userValidationService.checkIfUsersListIsEmpty(actor, user);
+                User activeUser = userValidationService.checkIfActorExists(actor);
                 saveUser(user, activeUser.getName());
                 return user.getBmi();
+                //erste.. exception in uservalidationservice schieben
             } catch (ErsterUserUngleichActorException er) {
-                try {
-                    logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
-                    throw new ErsterUserUngleichActorException(actor, user.getName());
-                } catch (RuntimeException rex) {
-                    throw new RuntimeException(er.getMessage());
-                }
+                handleErsterUserUngleichActor(actor, user, er);
             } catch (RuntimeException ex) {
-                LOGGER.error("Der User konnte nicht angelegt werden");
-                logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
-                throw new RuntimeException(ex.getMessage());
+                handleUserKonnteNichtAngelegtWerden(actor, ex);
             }
         } else {
-            LOGGER.error("Die übergebene Farbe '{}' ist nicht zugelassen!", lieblingsFarbe);
-            throw new IllegalArgumentException("Farbe falsch! Wählen Sie eine der folgenden Farben: " +
-                    "blau, rot, orange, gelb, schwarz");
+            handleFarbeNichtZugelassen(lieblingsFarbe);
         }
+        return null;
+    }
+
+    private void handleUserKonnteNichtAngelegtWerden(String actor, RuntimeException ex) {
+        LOGGER.error("Der User konnte nicht angelegt werden");
+        logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
+        throw new RuntimeException(ex.getMessage());
+    }
+
+    private void handleErsterUserUngleichActor(String actor, User user, ErsterUserUngleichActorException er) {
+        try {
+            logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
+            throw new  ErsterUserUngleichActorException(actor, user.getName());
+        } catch (RuntimeException rex) {
+            throw new RuntimeException(er.getMessage());
+        }
+    }
+
+    private void handleFarbeNichtZugelassen(String lieblingsFarbe) {
+        LOGGER.error("Die übergebene Farbe '{}' ist nicht zugelassen!", lieblingsFarbe);
+        throw new IllegalArgumentException("Farbe falsch! Wählen Sie eine der folgenden Farben: " +
+                "blau, rot, orange, gelb, schwarz");
     }
 
     public List<User> findUserList() {
@@ -97,6 +91,9 @@ public class UserService {
     public void deleteById(Integer id, String actorName) {
         Optional<User> user = findUserById(id);
         User actor = userRepository.findUserByName(actorName);
+        if (actor == null) {
+            throw new UserNotFoundException(actorName);
+        }
         if (id.equals(actor.getId())) {
             LOGGER.error("Ein User kann sich nicht selbst löschen!");
             throw new RuntimeException("Ein User kann sich nicht selbst löschen!");
@@ -156,7 +153,7 @@ public class UserService {
         LOGGER.info("Alle User wurden aus der Datenbank gelöscht!");
     }
 
-    private void saveUser(User user, String actor) {
+    public void saveUser(User user, String actor) {
         userRepository.save(user);
         String bmi = bmiService.getBmiMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse());
         logService.addLog(String.format("Der User %s wurde angelegt. %s", user.getName(), bmi),

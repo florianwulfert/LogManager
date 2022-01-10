@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import project.logManager.exception.UserNotFoundException;
 import project.logManager.service.model.BmiService;
 
 import java.time.LocalDate;
@@ -34,8 +35,8 @@ public class BmiController {
     public String findUserAndCalculateBMI (@PathVariable final String user) {
         try {
             return bmiService.findUserAndCalculateBMI(user);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
+        } catch (UserNotFoundException e) {
+            return e.getMessage();
         }
     }
 

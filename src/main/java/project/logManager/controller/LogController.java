@@ -65,11 +65,11 @@ public class LogController {
     }
 
     @DeleteMapping("/logs/delete/{id}")
-    public void deleteLogsByID (@PathVariable final Integer id) {
+    public String deleteLogsByID (@PathVariable final Integer id) {
         try {
-            logService.deleteById(id);
+            return logService.deleteById(id);
         } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
+            return e.getMessage();
         }
     }
 
