@@ -1,5 +1,6 @@
 package project.logManager.controller;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -40,9 +41,26 @@ class LogControllerTest {
     }
 
     @Test
+    void testGetLogsThrowsException() {
+        LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0 );
+        LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0 );
+        Mockito.when(logService.getLogs(Mockito.anyString(), Mockito.anyString(),
+                Mockito.any(), Mockito.any())).thenThrow(RuntimeException.class);
+        Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.getLogs("INFO", "Test", startDate, endDate));
+        Mockito.verify(logService).getLogs(Mockito.anyString(), Mockito.anyString(),
+                Mockito.any(), Mockito.any());
+    }
+
+    @Test
     void testAddLog() {
         systemUnderTest.addLog("INFO", "Test", "Peter");
         Mockito.verify(logService).addLog(Mockito.any(), Mockito.any(), Mockito.any());
+    }
+
+    @Test
+    void testAddLogThrowsException() {
+
     }
 
     @Test
@@ -52,9 +70,19 @@ class LogControllerTest {
     }
 
     @Test
+    void testGetLogsByIdThrowsException() {
+
+    }
+
+    @Test
     void testDeleteById() {
         systemUnderTest.deleteLogsByID(1);
         Mockito.verify(logService).deleteById(1);
+    }
+
+    @Test
+    void testDeleteByIdThrowsException() {
+
     }
 
     @Test
@@ -64,8 +92,18 @@ class LogControllerTest {
     }
 
     @Test
+    void testDeleteBySeverityThrowsException() {
+
+    }
+
+    @Test
     void testDeleteAll() {
         systemUnderTest.deleteAll();
         Mockito.verify(logService).deleteAll();
+    }
+
+    @Test
+    void testDeleteAllThrowsException() {
+
     }
 }

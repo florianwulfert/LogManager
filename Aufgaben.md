@@ -90,7 +90,7 @@ Aufgabe 11:
 * [x] in LogServiceTest User in eigene Methode auslagern
 * [x] Meldungen erstellen, falls in Postman falsches Format eingegeben wurde 
 (getUserId, deleteLogId, deleteUserId, getLogId, postUser - gewicht, groesse, datum, getUserBmi)
-* [ ] Beim Erstellen des Users sollte auch die BodyweightMessage mit übergeben werden
+* [x] Beim Erstellen des Users sollte auch die BodyweightMessage mit übergeben werden
 * [ ] MR erstellen
 * [ ] Integration Tests: webmvc-Tests, SpringBoot-Tests
 * [ ] Swagger aufsetzen

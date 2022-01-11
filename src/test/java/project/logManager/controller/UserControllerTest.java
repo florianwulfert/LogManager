@@ -39,8 +39,8 @@ class UserControllerTest {
     @Test
     void testAddUser() {
         Mockito.when(userService.addUser(users.get(1).getName(), users.get(0).getName(), users.get(0).getGeburtsdatum(),
-                90.0, 1.85, users.get(0).getLieblingsfarbe())).thenReturn(26.29);
-        Assertions.assertEquals("User Peter erstellt! Der User hat einen BMI von 26.29",
+                90.0, 1.85, users.get(0).getLieblingsfarbe())).thenReturn("Test");
+        Assertions.assertEquals("User Peter wurde erstellt. Test",
         systemUnderTest.addUser(users.get(1).getName(), users.get(0).getName(), users.get(0).getGeburtsdatum(),
                 90.0, 1.85, users.get(0).getLieblingsfarbe()));
         Mockito.verify(userService).addUser(users.get(1).getName(), users.get(0).getName(), users.get(0).getGeburtsdatum(),
@@ -48,8 +48,30 @@ class UserControllerTest {
     }
 
     @Test
+    void testAddUserThrowsException() {
+        Mockito.when(userService.addUser(users.get(1).getName(), users.get(0).getName(),
+                users.get(0).getGeburtsdatum(),
+                90.0, 1.85, users.get(0).getLieblingsfarbe()))
+                .thenThrow(RuntimeException.class);
+        Assertions.assertNull(systemUnderTest.addUser(users.get(1).getName(), users.get(0).getName(),
+                        users.get(0).getGeburtsdatum(),
+                        90.0, 1.85, users.get(0).getLieblingsfarbe()));
+        Mockito.verify(userService).addUser(users.get(1).getName(), users.get(0).getName(),
+                users.get(0).getGeburtsdatum(),
+                90.0, 1.85, users.get(0).getLieblingsfarbe());
+    }
+
+    @Test
     void testFindUsers() {
         systemUnderTest.findUsers();
+        Mockito.verify(userService).findUserList();
+    }
+
+    @Test
+    void testFindUsersThrowsException() {
+        Mockito.when(userService.findUserList()).thenThrow(RuntimeException.class);
+        Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.findUsers());
         Mockito.verify(userService).findUserList();
     }
 
@@ -60,9 +82,25 @@ class UserControllerTest {
     }
 
     @Test
+    void testFindUserByIdThrowsException() {
+        Mockito.when(userService.findUserById(Mockito.any())).thenThrow(RuntimeException.class);
+        Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.findUserByID(1));
+        Mockito.verify(userService).findUserById(1);
+    }
+
+    @Test
     void testDeleteUserById() {
         systemUnderTest.deleteUserByID(users.get(0).getId(), users.get(1).getName());
         Mockito.verify(userService).deleteById(1, users.get(1).getName());
+    }
+
+    @Test
+    void testDeleteByIdThrowsException() {
+        Mockito.when(userService.deleteById(1, "Hans"))
+                .thenThrow(RuntimeException.class);
+        Assertions.assertNull(systemUnderTest.deleteUserByID(1, "Hans"));
+        Mockito.verify(userService).deleteById(1, "Hans");
     }
 
     @Test
@@ -72,8 +110,24 @@ class UserControllerTest {
     }
 
     @Test
+    void testDeleteByNameThrowsException() {
+        Mockito.when(userService.deleteByName( "Hans", "Peter"))
+                .thenThrow(RuntimeException.class);
+        Assertions.assertNull(systemUnderTest.deleteUserByName("Hans","Peter"));
+        Mockito.verify(userService).deleteByName("Hans", "Peter");
+    }
+
+    @Test
     void testDeleteAll() {
         systemUnderTest.deleteAll();
+        Mockito.verify(userService).deleteAll();
+    }
+
+    @Test
+    void testDeleteAllThrowsException() {
+        Mockito.when(userService.deleteAll())
+                .thenThrow(RuntimeException.class);
+        Assertions.assertNull(systemUnderTest.deleteAll());
         Mockito.verify(userService).deleteAll();
     }
 

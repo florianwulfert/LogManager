@@ -51,17 +51,7 @@ class UserServiceTest {
     }
 
     @Test
-    void testColorIsIncorrect() {
-        Mockito.when(userValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(false);
-        systemUnderTest.addUser(users.get(1).getName(), "Peter", LocalDate.of
-                (1988, 12, 12), 90.0,
-                1.85, "GELB");
-        Mockito.verify(userValidationService).handleFarbeNichtZugelassen("GELB");
-    }
-
-    @Test
     void testAddUser() {
-        Mockito.when(userValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
         Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("Test");
         Mockito.when(userValidationService.checkIfActorExists(Mockito.anyString())).thenReturn(users.get(1));
         systemUnderTest.addUser(users.get(1).getName(), "Peter", LocalDate.of
@@ -74,14 +64,15 @@ class UserServiceTest {
 
     @Test
     void testUsersListIsEmpty() {
-        Mockito.when((userValidationService.validateFarbenEnum(Mockito.anyString()))).thenReturn(true);
         Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(),
                 Mockito.any())).thenReturn("Test");
-        Mockito.when(userValidationService.checkIfActorExists(Mockito.anyString())).thenReturn(users.get(0));
+        Mockito.when(userValidationService.checkIfUsersListIsEmpty(Mockito.anyString(), Mockito.any())).thenReturn(true);
         systemUnderTest.addUser(users.get(0).getName(), users.get(0).getName(),
                 LocalDate.of(2000, 11, 18), 80,
                 1.85, "blau");
-        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Test", "INFO", "Peter");
+        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Test",
+                "INFO", "Peter");
+        Mockito.verify(userRepository).save(Mockito.any());
     }
 
     @Test

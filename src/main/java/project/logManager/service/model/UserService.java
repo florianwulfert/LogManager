@@ -27,7 +27,7 @@ public class UserService {
 
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
-    public Double addUser(String actor, String name, LocalDate geburtsdatum, double gewicht,
+    public String addUser(String actor, String name, LocalDate geburtsdatum, double gewicht,
                           double groesse, String lieblingsFarbe) {
 
         User user = User.builder()
@@ -39,16 +39,15 @@ public class UserService {
                 .bmi(bmiService.berechneBMI(gewicht, groesse))
                 .build();
 
-        if (userValidationService.validateFarbenEnum(lieblingsFarbe.toLowerCase())) {
-            userValidationService.checkIfUserToPostExists(name);
-            userValidationService.checkIfUsersListIsEmpty(actor, user);
+        userValidationService.validateFarbenEnum(lieblingsFarbe.toLowerCase());
+        userValidationService.checkIfUserToPostExists(name);
+        if (userValidationService.checkIfUsersListIsEmpty(actor, user)) {
+            saveUser(user, actor);
+        } else {
             User activeUser = userValidationService.checkIfActorExists(actor);
             saveUser(user, activeUser.getName());
-            return user.getBmi();
-        } else {
-            userValidationService.handleFarbeNichtZugelassen(lieblingsFarbe);
         }
-        return null;
+        return bmiService.getBmiMessage(geburtsdatum, gewicht, groesse);
     }
 
     public List<User> findUserList() {
@@ -59,7 +58,7 @@ public class UserService {
         return userRepository.findById(id).isPresent() ? userRepository.findById(id) : Optional.empty();
     }
 
-    public void deleteById(Integer id, String actorName) {
+    public String deleteById(Integer id, String actorName) {
         Optional<User> user = findUserById(id);
         User actor = userRepository.findUserByName(actorName);
         if (actor == null) {
@@ -84,9 +83,10 @@ public class UserService {
         userRepository.deleteById(id);
         logService.addLog(String.format("User mit der ID %s wurde gelöscht.", id), "WARNING", actorName);
         LOGGER.info(String.format("User mit der ID %s wurde gelöscht.", id));
+        return String.format("User mit der ID %s wurde gelöscht!", id);
     }
 
-    public void deleteByName(String name, String actorName) {
+    public String deleteByName(String name, String actorName) {
         if (name.equals(actorName)) {
             LOGGER.error("Ein User kann sich nicht selbst löschen!");
             throw new RuntimeException("Ein User kann sich nicht selbst löschen!");
@@ -111,9 +111,10 @@ public class UserService {
         userRepository.deleteById(userToDelete.getId());
         logService.addLog(String.format("User mit dem Namen %s wurde gelöscht", name), "WARNING", actorName);
         LOGGER.info(String.format("User mit dem Namen %s wurde gelöscht", name));
+        return String.format("User %s wurde gelöscht!", name);
     }
 
-    public void deleteAll() {
+    public String deleteAll() {
         if (!logRepository.findAll().isEmpty()) {
             LOGGER.warn("User können nicht gelöscht werden, da sie in einer anderen Tabelle " +
                     "referenziert werden");
@@ -122,6 +123,7 @@ public class UserService {
         }
         userRepository.deleteAll();
         LOGGER.info("Alle User wurden aus der Datenbank gelöscht!");
+        return "Alle User wurden aus der Datenbank gelöscht";
     }
 
     public void saveUser(User user, String actor) {

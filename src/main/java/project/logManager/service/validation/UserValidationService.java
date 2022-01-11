@@ -3,6 +3,7 @@ package project.logManager.service.validation;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 import project.logManager.common.enums.UserFarbenEnum;
 import project.logManager.exception.ErsterUserUngleichActorException;
 import project.logManager.model.entity.User;
@@ -12,45 +13,49 @@ import project.logManager.service.model.UserService;
 
 import java.util.List;
 
+@Component
 @RequiredArgsConstructor
 public class UserValidationService {
 
-    private final UserService userService;
     private final UserRepository userRepository;
     private final LogService logService;
 
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
-    public boolean validateFarbenEnum(String userFarben) {
+    public void validateFarbenEnum(String userFarben) {
         for (UserFarbenEnum farbenEnum : UserFarbenEnum.values()) {
             if (userFarben.equals(farbenEnum.getFarbe())) {
-                return true;
+                return;
             }
         }
-        return false;
-    }
-
-    public void handleFarbeNichtZugelassen(String lieblingsFarbe) {
-        LOGGER.error("Die übergebene Farbe '{}' ist nicht zugelassen!", lieblingsFarbe);
+        LOGGER.error("Die übergebene Farbe '{}' ist nicht zugelassen!", userFarben);
         throw new IllegalArgumentException("Farbe falsch! Wählen Sie eine der folgenden Farben: " +
                 "blau, rot, orange, gelb, schwarz");
     }
 
-    public void checkIfUsersListIsEmpty(String actor, User user) {
+    public boolean checkIfUsersListIsEmpty(String actor, User user) {
         try {
             List<User> users = userRepository.findAll();
             if (users.isEmpty()) {
-                if (user.getName().equals(actor)) {
-                    userService.saveUser(user, user.getName());
-                } else {
+                if (!user.getName().equals(actor)) {
                     LOGGER.warn("User kann nicht angelegt werden, da noch keine User in der " +
                             "Datenbank angelegt sind. Erster User muss sich selbst anlegen! " +
                             user.getName() + " ungleich " + actor);
                     throw new ErsterUserUngleichActorException(actor, user.getName());
                 }
             }
+            return true;
         } catch (ErsterUserUngleichActorException ex) {
-            handleErsterUserUngleichActor(actor, user, ex);
+            handleErsterUserUngleichActor(actor, ex);
+            return false;
+        }
+    }
+
+    private void handleErsterUserUngleichActor(String actor, ErsterUserUngleichActorException er) {
+        try {
+            logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
+        } catch (RuntimeException rex) {
+            throw new RuntimeException(er.getMessage());
         }
     }
 
@@ -63,9 +68,14 @@ public class UserValidationService {
             }
             return activeUser;
         } catch (RuntimeException rex) {
-            handleUserKonnteNichtAngelegtWerden(actor, rex);
+            throw new RuntimeException(handleUserKonnteNichtAngelegtWerden(actor, rex));
         }
-        return null;
+    }
+
+    private String handleUserKonnteNichtAngelegtWerden(String actor, RuntimeException ex) {
+        LOGGER.error("Der User konnte nicht angelegt werden");
+        logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
+        return ex.getMessage();
     }
 
     public void checkIfUserToPostExists(String name) {
@@ -76,21 +86,6 @@ public class UserValidationService {
             }
         } catch (RuntimeException rex) {
             throw new RuntimeException(rex.getMessage());
-        }
-    }
-
-    private void handleUserKonnteNichtAngelegtWerden(String actor, RuntimeException ex) {
-        LOGGER.error("Der User konnte nicht angelegt werden");
-        logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
-        throw new RuntimeException(ex.getMessage());
-    }
-
-    private void handleErsterUserUngleichActor(String actor, User user, ErsterUserUngleichActorException er) {
-        try {
-            logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
-            throw new  ErsterUserUngleichActorException(actor, user.getName());
-        } catch (RuntimeException rex) {
-            throw new RuntimeException(er.getMessage());
         }
     }
 

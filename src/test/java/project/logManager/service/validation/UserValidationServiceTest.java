@@ -8,18 +8,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.logManager.exception.ErsterUserUngleichActorException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
+import project.logManager.service.model.LogService;
 import project.logManager.service.model.UserService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 
 @ExtendWith(MockitoExtension.class)
 class UserValidationServiceTest {
@@ -33,43 +29,73 @@ class UserValidationServiceTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    LogService logService;
+
     List<User> users;
+
     @BeforeEach
     void init() {
         users = addTestUser();
     }
 
-    @Test
-    void validateUserFarben() {
-        assertTrue(systemUnderTest.validateFarbenEnum("blau"));
-    }
-
-    @Test
-    void validateWrongUserFarben() {
-        assertFalse(systemUnderTest.validateFarbenEnum("gold"));
-    }
 
     @Test
     void testIfColorIsNotCorrect() {
         RuntimeException ex = Assertions.assertThrows(IllegalArgumentException.class, () ->
-                systemUnderTest.handleFarbeNichtZugelassen("gold"));
+                systemUnderTest.validateFarbenEnum("gold"));
         Assertions.assertEquals("Farbe falsch! Wählen Sie eine der folgenden Farben: " +
                 "blau, rot, orange, gelb, schwarz", ex.getMessage());
     }
 
     @Test
     void testCheckIfUsersListIsEmpty() {
-        systemUnderTest.checkIfUsersListIsEmpty("Florian", users.get(1));
-        Mockito.verify(userService).saveUser(users.get(1), "Florian");
+        Assertions.assertTrue(systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(0)),
+                "Test");
     }
 
     @Test
     void testIfUserNotEqualActor() {
-        ErsterUserUngleichActorException ex = Assertions.assertThrows(ErsterUserUngleichActorException.class, () ->
-                systemUnderTest.checkIfUsersListIsEmpty("Hans", users.get(0)));
+        Mockito.when(logService.addLog(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
+                .thenThrow(RuntimeException.class);
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.checkIfUsersListIsEmpty(users.get(1).getName(), users.get(0)));
         Assertions.assertEquals("User kann nicht angelegt werden, da noch keine User in der " +
                 "Datenbank angelegt sind. Erster User muss sich selbst anlegen!" +
-                "Hans ungleich Peter", ex.getMessage());
+                " Peter ungleich Florian", ex.getMessage());
+    }
+
+    //Der Fall trifft aktuell nicht ein, wird aber aus Testcoverage-Gründen getestet
+    @Test
+    void testIfLogServiceDoesNotThrowException() {
+        systemUnderTest.checkIfUsersListIsEmpty("Hänsel", users.get(0));
+    }
+
+    @Test
+    void testIfActorExists() {
+        Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
+        Assertions.assertEquals(users.get(0),
+                systemUnderTest.checkIfActorExists(users.get(0).getName()));
+    }
+
+    @Test
+    void testIfActorIsNull() {
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.checkIfActorExists(users.get(1).getName()));
+        Assertions.assertEquals("User Florian nicht gefunden", ex.getMessage());
+    }
+
+    @Test
+    void testIfUserToPostExists() {
+        Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.checkIfUserToPostExists(users.get(0).getName()));
+        Assertions.assertEquals("User Peter bereits vorhanden", ex.getMessage());
+    }
+
+    @Test
+    void testIfUserToPostIsNull() {
+        systemUnderTest.checkIfUserToPostExists(users.get(0).getName());
     }
 
     private List<User> addTestUser() {
