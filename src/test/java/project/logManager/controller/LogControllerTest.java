@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.exception.SeverityNotFoundException;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
 
@@ -59,8 +60,22 @@ class LogControllerTest {
     }
 
     @Test
-    void testAddLogThrowsException() {
+    void testAddLogThrowsIAException() {
+         Mockito.when(logService.addLog(Mockito.anyString(), Mockito.anyString(),
+                 Mockito.anyString())).thenThrow(IllegalArgumentException.class);
+         Assertions.assertThrows(SeverityNotFoundException.class, () ->
+                 systemUnderTest.addLog("INFO", "Test", "Peter"));
+         Mockito.verify(logService).addLog(Mockito.anyString(),Mockito.anyString(),
+                 Mockito.anyString());
+    }
 
+    @Test
+    void testAddLogThrowsRuntimeException() {
+        Mockito.when(logService.addLog(Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString())).thenThrow(RuntimeException.class);
+        Assertions.assertNull(systemUnderTest.addLog("INFO", "Test", "Hans"));
+        Mockito.verify(logService).addLog(Mockito.anyString(),Mockito.anyString(),
+                Mockito.anyString());
     }
 
     @Test
@@ -72,9 +87,9 @@ class LogControllerTest {
     @Test
     void testGetLogsByIdThrowsException() {
         Mockito.when(logService.searchLogsByID(Mockito.any())).thenThrow(RuntimeException.class);
-
-        systemUnderTest.getLogsByID(1);
-
+        Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.getLogsByID(1));
+        Mockito.verify(logService).searchLogsByID(Mockito.any());
     }
 
     @Test
@@ -85,7 +100,9 @@ class LogControllerTest {
 
     @Test
     void testDeleteByIdThrowsException() {
-
+        Mockito.when(logService.deleteById(Mockito.any())).thenThrow(RuntimeException.class);
+        Assertions.assertNull(systemUnderTest.deleteLogsByID(1));
+        Mockito.verify(logService).deleteById(Mockito.any());
     }
 
     @Test
@@ -96,7 +113,10 @@ class LogControllerTest {
 
     @Test
     void testDeleteBySeverityThrowsException() {
-
+        Mockito.when(logService.deleteBySeverity(Mockito.anyString())).thenThrow(RuntimeException.class);
+        Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.deleteBySeverity("INFO"));
+        Mockito.verify(logService).deleteBySeverity(Mockito.anyString());
     }
 
     @Test
@@ -107,6 +127,9 @@ class LogControllerTest {
 
     @Test
     void testDeleteAllThrowsException() {
-
+        Mockito.when(logService.deleteAll()).thenThrow(RuntimeException.class);
+        Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.deleteAll());
+        Mockito.verify(logService).deleteAll();
     }
 }

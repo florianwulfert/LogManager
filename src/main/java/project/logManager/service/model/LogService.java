@@ -113,8 +113,9 @@ public class LogService {
         return sb.toString();
     }
 
-    public void deleteAll() {
+    public String deleteAll() {
         logRepository.deleteAll();
         LOGGER.info("Alle Logs wurden aus der Datenbank gelöscht!");
+        return "Alle Logs wurden aus der Datenbank gelöscht!";
     }
 }
