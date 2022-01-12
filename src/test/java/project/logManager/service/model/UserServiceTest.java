@@ -1,25 +1,28 @@
 package project.logManager.service.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.exception.UserNotFoundException;
+import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
-import project.logManager.model.respository.UserRepository;
-import project.logManager.service.validation.ValidationService;
+import project.logManager.model.repository.LogRepository;
+import project.logManager.model.repository.UserRepository;
+import project.logManager.service.validation.UserValidationService;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 
 @ExtendWith(MockitoExtension.class)
-
-
 class UserServiceTest {
 
     @InjectMocks
@@ -29,79 +32,53 @@ class UserServiceTest {
     UserRepository userRepository;
 
     @Mock
-    ValidationService logValidationService;
+    BmiService bmiService;
+
+    @Mock
+    LogRepository logRepository;
+
+    @Mock
+    UserValidationService userValidationService;
 
     @Mock
     LogService logService;
 
-    @Captor
-    ArgumentCaptor<User> arg;
+    List<User> users;
 
-    @Test
-    void testIfColorIsNotCorrect() {
-        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(false);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
-                1.85, "GELB"));
+    @BeforeEach
+    void init() {
+        users = addTestUser();
     }
 
     @Test
-    void testIfUsersListIsEmpty() {
-        Mockito.when((logValidationService.validateFarbenEnum(Mockito.anyString()))).thenReturn(true);
-        systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
+    void testAddUser() {
+        Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("Test");
+        Mockito.when(userValidationService.checkIfActorExists(Mockito.anyString())).thenReturn(users.get(1));
+        systemUnderTest.addUser(users.get(1).getName(), "Peter", LocalDate.of
+                        (1988, 12, 12), 90.0,
                 1.85, "GELB");
-        Mockito.verify(logService).addLog("Der User Peter wurde angelegt", "INFO", null);
+        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Test",
+                "INFO", "Florian");
         Mockito.verify(userRepository).save(Mockito.any());
     }
 
     @Test
-    void testFindByNameIsNotNull() {
-        List<User> users = addTestUser();
-        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
-        Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users);
-        Assertions.assertThrows(RuntimeException.class, () ->  systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
-                1.85, "GELB"));
-    }
-
-    @Test
-    void testIfActiveUserExists() {
-        List<User> testUsers = addTestUser();
-        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
-        Mockito.when(userRepository.findAll()).thenReturn(testUsers);
-        Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
-                1.85, "GELB"));
-        }
-
-
-    @Test
-    void testIfEverythingIsCorrectAtAddUser() {
-        List<User> testUsers = addTestUser();
-        Mockito.when(logValidationService.validateFarbenEnum(Mockito.anyString())).thenReturn(true);
-        Mockito.when(userRepository.findUserByName(testUsers.get(0).getName())).thenReturn(new ArrayList<>());
-        Mockito.when(userRepository.findAll()).thenReturn(testUsers);
-        Mockito.when(userRepository.findUserByName(testUsers.get(1).getName())).thenReturn(testUsers);
-        systemUnderTest.addUser("Florian", "Peter", LocalDate.of(1988, 12, 12), 90,
-                1.85, "GELB");
+    void testUsersListIsEmpty() {
+        Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(),
+                Mockito.any())).thenReturn("Test");
+        Mockito.when(userValidationService.checkIfUsersListIsEmpty(Mockito.anyString(), Mockito.any())).thenReturn(true);
+        systemUnderTest.addUser(users.get(0).getName(), users.get(0).getName(),
+                LocalDate.of(2000, 11, 18), 80,
+                1.85, "blau");
+        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Test",
+                "INFO", "Peter");
         Mockito.verify(userRepository).save(Mockito.any());
     }
 
-    private List<User> addTestUser() {
-        List<User> users = new ArrayList<>();
-        users.add(User.builder()
-                .name("Peter")
-                .geburtsdatum(LocalDate.of(1988, 12, 12))
-                .gewicht(90)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
-                .build());
-
-        users.add(User.builder()
-                .name("Florian")
-                .geburtsdatum(LocalDate.of(1988, 12, 12))
-                .gewicht(90)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
-                .build());
-        return users;
+    @Test
+    void testFindUserList() {
+        systemUnderTest.findUserList();
+        Mockito.verify(userRepository).findAll();
     }
 
     @Test
@@ -111,8 +88,152 @@ class UserServiceTest {
     }
 
     @Test
-    void testDeleteUserById() {
-        systemUnderTest.deleteById(1, addTestUser().get(1));
-        Mockito.verify(userRepository).deleteById(1);
+    void testFindUserByName() {
+        userRepository.findUserByName(Mockito.anyString());
+        Mockito.verify(userRepository).findUserByName(Mockito.anyString());
     }
+
+    @Test
+    void testDeleteById() {
+        Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
+        Mockito.when(userRepository.findById(2)).thenReturn(Optional.ofNullable(users.get(1)));
+        Mockito.when(logService.existLogByActorId(users.get(1))).thenReturn(false);
+        systemUnderTest.deleteById(2, users.get(0).getName());
+        Mockito.verify(logService).addLog("User mit der ID 2 wurde gelöscht.",
+                "WARNING", "Peter");
+    }
+
+    @Test
+    void testIfActorIdIsNull() {
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(users.get(0)));
+        UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () ->
+                systemUnderTest.deleteById(2, users.get(0).getName()));
+        Assertions.assertEquals("User Peter konnte nicht identifiziert werden!", ex.getMessage());
+    }
+
+    @Test
+    void testIfIdEqualsActorID() {
+        Mockito.when(userRepository.findUserByName(users.get(0).getName()))
+                .thenReturn(users.get(0));
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.deleteById(users.get(0).getId(), users.get(0).getName()));
+        Assertions.assertEquals("Ein User kann sich nicht selbst löschen!",
+                ex.getMessage());
+    }
+
+    @Test
+    void testIfUserToDeleteListIsEmpty() {
+        Mockito.when(userRepository.findUserByName(users.get(0).getName())).
+                thenReturn(users.get(0));
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.deleteById(users.get(1).getId(), users.get(0).getName()));
+        Assertions.assertEquals("User mit der ID 2 konnte nicht gefunden werden",
+                ex.getMessage());
+    }
+
+    @Test
+    void testIfUserToDeleteIsUsedSomewhereForId() {
+        Mockito.when(userRepository.findUserByName(users.get(0).getName()))
+                .thenReturn(users.get(0));
+        Mockito.when(userRepository.findById(users.get(1).getId()))
+                .thenReturn(Optional.ofNullable(users.get(1)));
+        Mockito.when(logService.existLogByActorId(users.get(1))).thenReturn(true);
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.deleteById(2, "Peter"));
+        Assertions.assertEquals("User Florian kann nicht gelöscht werden, " +
+                "da er in einer anderen Tabelle referenziert wird!", ex.getMessage());
+    }
+
+    @Test
+    void testIfNameToDeleteEqualsActorname() {
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.deleteByName(users.get(0).getName(), users.get(0).getName()));
+        Assertions.assertEquals("Ein User kann sich nicht selbst löschen!",
+                ex.getMessage());
+    }
+
+    @Test
+    void testIfUserToDeleteIsNull() {
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
+                () -> systemUnderTest.deleteByName("Peter", "Florian"));
+        Assertions.assertEquals("User mit dem Namen Peter konnte nicht gefunden werden",
+                ex.getMessage());
+    }
+
+    @Test
+    void testIsUserToDeleteIsUsedSomewhereForName() {
+        Mockito.when(userRepository.findUserByName(users.get(0).getName())).thenReturn(users.get(0));
+        Mockito.when(logService.existLogByActorId(users.get(0))).thenReturn(true);
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
+                () -> systemUnderTest.deleteByName("Peter", "Florian"));
+        Assertions.assertEquals("User Peter kann nicht gelöscht werden, " +
+                "da er in einer anderen Tabelle referenziert wird!", ex.getMessage());
+    }
+
+    @Test
+    void testIfActorNameIsNull() {
+        Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
+                () -> systemUnderTest.deleteByName("Peter", "hallo"));
+        Assertions.assertEquals("User mit dem Namen hallo konnte nicht gefunden werden",
+                ex.getMessage());
+    }
+
+    @Test
+    void testDeleteByName() {
+        Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
+        Mockito.when(userRepository.findUserByName("Florian")).thenReturn(users.get(1));
+        systemUnderTest.deleteByName("Peter", "Florian");
+        Mockito.verify(logService).addLog("User mit dem Namen Peter wurde gelöscht",
+                "WARNING", "Florian");
+    }
+
+    @Test
+    void testDeleteAll() {
+        systemUnderTest.deleteAll();
+        Mockito.verify(userRepository).deleteAll();
+    }
+
+    @Test
+    void testIfLogsExistForDeleteAll() {
+        List<Log> testLogs = new ArrayList<>();
+        testLogs.add(Log
+                .builder()
+                .message("Test")
+                .severity("INFO")
+                .id(1)
+                .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
+                .build());
+        Mockito.when(logRepository.findAll()).thenReturn(testLogs);
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.deleteAll());
+        Assertions.assertEquals("User können nicht gelöscht werden, da sie in einer anderen Tabelle " +
+                "referenziert werden", ex.getMessage());
+    }
+
+    private List<User> addTestUser() {
+        List<User> users = new ArrayList<>();
+        users.add(User.builder()
+                .id(1)
+                .name("Peter")
+                .geburtsdatum(LocalDate.of(2005, 12, 12))
+                .gewicht(90.0)
+                .groesse(1.85)
+                .lieblingsfarbe("gelb")
+                .bmi(26.29)
+                .build());
+
+        users.add(User.builder()
+                .id(2)
+                .name("Florian")
+                .geburtsdatum(LocalDate.of(1988, 12, 12))
+                .gewicht(70.0)
+                .groesse(1.85)
+                .lieblingsfarbe("gelb")
+                .bmi(20.45)
+                .build());
+        return users;
+    }
+
 }
+

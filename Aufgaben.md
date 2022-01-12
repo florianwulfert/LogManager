@@ -64,14 +64,33 @@ Aufgabe 10:
 
 Aufgabe 11:
 - [ ] BMI Rechner erstellen
-* [ ] a) BMI ausrechnen im UserService
-* [ ] b) anhand des Geburtsdatums Alter berechnen und zurückgeben
-* [ ] c) mit switch case: übergewichtig, untergewichtig, normalgewichtig
-* [ ] d) Endpoint erstellen und dokumentieren
-* [ ] c) Tests schreiben
+* [x] a) BMI ausrechnen im UserService
+* [x] b) anhand des Geburtsdatums Alter berechnen und zurückgeben
+* [x] c) mit switch case: übergewichtig, untergewichtig, normalgewichtig
+* [x] d) Endpoint erstellen und dokumentieren
+* [x] c) Tests schreiben
 * Kriterien
   * 3 verschiedene Arten den BMI zu berechnen
     1. Bei addUser Nachricht: der User wurde angelegt + laut BMI ist er unter/normal/übergewichtig
     2. User beim Namen finden und seinen BMI berechnen
     3. Gar kein User, nur Angaben zu Alter, Gewicht und Größe - kein User wird gespeichert, nur der BMI wird berechnet.
   4. Eine Methode im UserService erstellen dafür
+* [x] Entity um bmi erweitern
+* [x] Log Ausgaben auf Deutsch übersetzen
+* [x] In postman user erstellt + bmi
+* [x] bmi wurde berechnet + wert in postman konsole und lognachricht dazu in intellij
+* [x] bmi service erstellen und bmicontroller, bmi service vom bmiController aufrufen
+* [x] Datum in bmiwithmessage anpassen
+* [x] finuserandcalculatebmi anpassen
+* [x] nachrichten wergen gewicht in variable auslagern
+* [ ] Doku schreiben
+* [x] Alle Logs/alle User auf einmal löschen einbauen
+* [x] Logger.info aus userService löschen
+* [x] testIfUserIsNull im LogServiceTest anpassen
+* [x] in LogServiceTest User in eigene Methode auslagern
+* [x] Meldungen erstellen, falls in Postman falsches Format eingegeben wurde 
+(getUserId, deleteLogId, deleteUserId, getLogId, postUser - gewicht, groesse, datum, getUserBmi)
+* [x] Beim Erstellen des Users sollte auch die BodyweightMessage mit übergeben werden
+* [ ] MR erstellen
+* [ ] Integration Tests: webmvc-Tests, SpringBoot-Tests
+* [ ] Swagger aufsetzen

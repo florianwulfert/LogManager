@@ -26,7 +26,7 @@ public class User {
     @Column(name = "id", unique = true, nullable = false)
     Integer id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", unique = true, nullable = false)
     String name;
 
     @Column(name = "geburtsdatum", nullable = false)
@@ -40,6 +40,9 @@ public class User {
 
     @Column(name = "lieblingsfarbe", nullable = false)
     String lieblingsfarbe;
+
+    @Column(name = "bmi")
+    double bmi;
 
 
 }

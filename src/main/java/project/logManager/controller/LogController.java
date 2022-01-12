@@ -1,23 +1,18 @@
 package project.logManager.controller;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.logManager.exception.SeverityNotFoundException;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
-import project.logManager.model.entity.User;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
 import project.logManager.service.model.UserService;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author - EugenFriesen
@@ -49,11 +44,7 @@ public class LogController {
                          @RequestParam final String message,
                          @RequestParam final String nameUser) {
         try {
-            User user = userService.findUserByName(nameUser);
-            if (user == null) {
-                throw new RuntimeException(String.format("User %s nicht gefunden", nameUser));
-            }
-            return logService.addLog(message, severity, user);
+            return logService.addLog(message, severity, nameUser);
         } catch (IllegalArgumentException e) {
             throw new SeverityNotFoundException(severity);
         } catch (RuntimeException e) {
@@ -61,11 +52,11 @@ public class LogController {
         }
     }
 
-    @GetMapping("/logs/id")
-    public List<LogDTO> getLogsByID (@RequestParam final Integer id) {
+    @GetMapping("/logs/{id}")
+    public List<LogDTO> getLogsByID (@PathVariable final Integer id) {
         try {
             Log logs = logService.searchLogsByID(id);
-            List<Log> returnlist=new ArrayList<>();
+            List<Log> returnlist = new ArrayList<>();
             returnlist.add(logs);
             return logDTOMapper.logsToLogDTOs(returnlist);
         } catch (RuntimeException e) {
@@ -74,11 +65,11 @@ public class LogController {
     }
 
     @DeleteMapping("/logs/delete/{id}")
-    public void deleteLogsByID (@PathVariable final Integer id) {
+    public String deleteLogsByID (@PathVariable final Integer id) {
         try {
-            logService.deleteById(id);
+            return logService.deleteById(id);
         } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
+            return e.getMessage();
         }
     }
 
@@ -91,4 +82,12 @@ public class LogController {
         }
     }
 
+    @DeleteMapping("/logs/delete")
+    public String deleteAll() {
+        try {
+            return logService.deleteAll();
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 }

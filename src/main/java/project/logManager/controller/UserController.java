@@ -25,8 +25,9 @@ public class UserController {
                         @RequestParam double groesse,
                         @RequestParam String lieblingsfarbe) {
         try {
-            userService.addUser(actor, name, geburtsdatum, gewicht, groesse, lieblingsfarbe);
-            return String.format("User %s erstellt!", name);
+            return String.format("User %s wurde erstellt. " +
+                    userService.addUser(actor, name, geburtsdatum, gewicht, groesse, lieblingsfarbe),
+                    name);
         } catch (RuntimeException e) {
             return e.getMessage();
         }
@@ -52,11 +53,28 @@ public class UserController {
 
     @DeleteMapping("/user/delete/{id}")
     public String deleteUserByID (@PathVariable final Integer id,
-        @RequestParam final String actor) {
+                                  @RequestParam final String actor) {
         try {
-            User user = userService.findUserByName(actor);
-            User deletedUser = userService.deleteById(id, user);
-            return String.format("User %s wurde gelöscht!", deletedUser.getName());
+            return userService.deleteById(id, actor);
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
+    }
+
+    @DeleteMapping("/user/delete/name/{name}")
+    public String deleteUserByName (@PathVariable final String name,
+                                    @RequestParam final String actor) {
+        try {
+            return userService.deleteByName(name, actor);
+        } catch (RuntimeException e) {
+            return e.getMessage();
+        }
+    }
+
+    @DeleteMapping("/user/delete")
+    public String deleteAll() {
+        try {
+            return userService.deleteAll();
         } catch (RuntimeException e) {
             return e.getMessage();
         }
