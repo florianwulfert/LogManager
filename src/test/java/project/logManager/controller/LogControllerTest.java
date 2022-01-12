@@ -71,6 +71,9 @@ class LogControllerTest {
 
     @Test
     void testGetLogsByIdThrowsException() {
+        Mockito.when(logService.searchLogsByID(Mockito.any())).thenThrow(RuntimeException.class);
+
+        systemUnderTest.getLogsByID(1);
 
     }
 
