@@ -81,8 +81,7 @@ class BmiControllerIT {
     createUser("untergewichtig");
 
     MvcResult result = mockMvc.perform(
-            get("/bmi")
-                .param("user", "Torsten"))
+            get("/bmi/Torsten"))
         .andDo(print())
         .andExpect(status().isOk())
         .andReturn();
@@ -95,13 +94,12 @@ class BmiControllerIT {
     createUser("uebergewichtig");
 
     MvcResult result = mockMvc.perform(
-            get("/bmi")
-                .param("user", "Peter"))
+            get("/bmi/Peter"))
         .andDo(print())
         .andExpect(status().isOk())
         .andReturn();
 
-    Assertions.assertEquals("Der User hat einen BMI von 18.3 und ist somit untergewichtig.", result.getResponse().getContentAsString());
+    Assertions.assertEquals("Der User hat einen BMI von 28.74 und ist somit übergewichtig.", result.getResponse().getContentAsString());
   }
 
   @Test
@@ -109,13 +107,12 @@ class BmiControllerIT {
     createUser("normalgewichtig");
 
     MvcResult result = mockMvc.perform(
-            get("/bmi")
-                .param("user", "Hans"))
+            get("/bmi/Hans"))
         .andDo(print())
         .andExpect(status().isOk())
         .andReturn();
 
-    Assertions.assertEquals("Der User hat einen BMI von 18.3 und ist somit untergewichtig.", result.getResponse().getContentAsString());
+    Assertions.assertEquals("Der User hat einen BMI von 22.11 und ist somit normalgewichtig.", result.getResponse().getContentAsString());
   }
 
   private void createUser(String bewertung) {
