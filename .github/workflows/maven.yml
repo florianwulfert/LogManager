@@ -23,9 +23,9 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Integration tests
-      run: mvn integration-test
   integration-tests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Integration tests
+      run: mvn integration-test
