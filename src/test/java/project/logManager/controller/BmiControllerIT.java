@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
+import project.logManager.model.entity.User;
+import project.logManager.model.repository.UserRepository;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BmiController.class)
@@ -27,6 +30,9 @@ class BmiControllerIT {
 
   @Autowired
   private MockMvc mockMvc;
+
+  @Autowired
+  private UserRepository userRepository;
 
   @Test
   void whenGetBmiThenReturnBmiMessage_Normalgewichtig() throws Exception{
@@ -68,5 +74,92 @@ class BmiControllerIT {
         .andReturn();
 
     Assertions.assertEquals("Der User hat einen BMI von 18.3 und ist somit untergewichtig.", result.getResponse().getContentAsString());
+  }
+
+  @Test
+  void whenfindUserAndCalculateBMIThenReturnBmiMessage_Untergewichtig() throws Exception{
+    createUser("untergewichtig");
+
+    MvcResult result = mockMvc.perform(
+            get("/bmi")
+                .param("user", "Torsten"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andReturn();
+
+    Assertions.assertEquals("Der User hat einen BMI von 18.3 und ist somit untergewichtig.", result.getResponse().getContentAsString());
+  }
+
+  @Test
+  void whenfindUserAndCalculateBMIThenReturnBmiMessage_Uebergewichtig() throws Exception{
+    createUser("uebergewichtig");
+
+    MvcResult result = mockMvc.perform(
+            get("/bmi")
+                .param("user", "Peter"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andReturn();
+
+    Assertions.assertEquals("Der User hat einen BMI von 18.3 und ist somit untergewichtig.", result.getResponse().getContentAsString());
+  }
+
+  @Test
+  void whenfindUserAndCalculateBMIThenReturnBmiMessage_Normalgewichtig() throws Exception{
+    createUser("normalgewichtig");
+
+    MvcResult result = mockMvc.perform(
+            get("/bmi")
+                .param("user", "Hans"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andReturn();
+
+    Assertions.assertEquals("Der User hat einen BMI von 18.3 und ist somit untergewichtig.", result.getResponse().getContentAsString());
+  }
+
+  private void createUser(String bewertung) {
+    switch (bewertung) {
+      case "untergewichtig" :
+        User torsten = User
+            .builder()
+            .name("Torsten")
+            .geburtsdatum(LocalDate.of(1985,12,5))
+            .bmi(18.3)
+            .gewicht(61.3)
+            .groesse(1.83)
+            .id(1)
+            .lieblingsfarbe("Blau")
+            .build();
+        userRepository.save(torsten);
+        break;
+      case "uebergewichtig" :
+        User peter = User
+            .builder()
+            .name("Peter")
+            .geburtsdatum(LocalDate.of(1975,5,30))
+            .bmi(28.74)
+            .gewicht(95.2)
+            .groesse(1.82)
+            .id(2)
+            .lieblingsfarbe("Gelb")
+            .build();
+        userRepository.save(peter);
+        break;
+      case "normalgewichtig" :
+        User hans = User
+            .builder()
+            .name("Hans")
+            .geburtsdatum(LocalDate.of(1993,2,3))
+            .bmi(22.11)
+            .gewicht(75.7)
+            .groesse(1.85)
+            .id(3)
+            .lieblingsfarbe("Rot")
+            .build();
+        userRepository.save(hans);
+        break;
+      default: break;
+    }
   }
 }
