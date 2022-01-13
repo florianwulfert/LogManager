@@ -42,7 +42,19 @@ class LogControllerTest {
     }
 
     @Test
-    void testGetLogsThrowsException() {
+    void testGetLogsThrowsIAException() {
+        LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0 );
+        LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0 );
+        Mockito.when(logService.getLogs(Mockito.anyString(), Mockito.anyString(),
+                Mockito.any(), Mockito.any())).thenThrow(IllegalArgumentException.class);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                systemUnderTest.getLogs("INFO", "Test", startDate, endDate));
+        Mockito.verify(logService).getLogs(Mockito.anyString(), Mockito.anyString(),
+                Mockito.any(), Mockito.any());
+    }
+
+    @Test
+    void testGetLogsThrowsRuntimeException() {
         LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0 );
         LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0 );
         Mockito.when(logService.getLogs(Mockito.anyString(), Mockito.anyString(),

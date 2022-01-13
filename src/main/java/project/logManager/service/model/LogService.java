@@ -33,30 +33,32 @@ public class LogService {
     private final UserRepository userRepository;
 
     public List<Log> getLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate) {
+        if (!logValidationService.validateSeverity(severity)) {
+            LOGGER.error("Die übergebene severity '{}' ist nicht zugelassen!", severity);
+            throw new IllegalArgumentException("Severity falsch!");
+        }
         return logRepository.findLogs(severity, message, startDate, endDate);
     }
 
     public String addLog(String message, String severity, String userName) {
-        if (message != null && severity != null) {
-            if (logValidationService.validateSeverity(severity)) {
-                LogMessageDto logMessage = logValidationService.validateMessage(message);
-                User user = checkActor(userName);
-                saveLog(message, severity, user);
-
-                logMessage.setReturnMessage(logMessage.getReturnMessage() +
-                        String.format("Es wurde die Nachricht \"%s\" als %s abgespeichert!",
-                                logMessage.getMessage(), severity));
-                LOGGER.info(String.format("Es wurde die Nachricht \"%s\" als %s abgespeichert!",
-                        logMessage.getMessage(), severity));
-                return logMessage.getReturnMessage();
-            } else {
-                LOGGER.error("Die übergebene severity '{}' ist nicht zugelassen!", severity);
-                throw new IllegalArgumentException("Severity falsch!");
-            }
-        } else {
+        if (message == null || severity == null) {
             LOGGER.error("Einer der benötigten Parameter wurde nicht übergeben!");
             throw new RuntimeException("Einer der benötigten Parameter wurde nicht übergeben!");
         }
+        if (!logValidationService.validateSeverity(severity)) {
+            LOGGER.error("Die übergebene severity '{}' ist nicht zugelassen!", severity);
+            throw new IllegalArgumentException("Severity falsch!");
+        }
+        LogMessageDto logMessage = logValidationService.validateMessage(message);
+        User user = checkActor(userName);
+        saveLog(message, severity, user);
+
+        logMessage.setReturnMessage(logMessage.getReturnMessage() +
+                String.format("Es wurde die Nachricht \"%s\" als %s abgespeichert!",
+                        logMessage.getMessage(), severity));
+        LOGGER.info(String.format("Es wurde die Nachricht \"%s\" als %s abgespeichert!",
+                logMessage.getMessage(), severity));
+        return logMessage.getReturnMessage();
     }
 
     private void saveLog(String message, String severity, User user) {
@@ -83,8 +85,8 @@ public class LogService {
     }
 
     public String deleteById(Integer id) {
-            logRepository.deleteById(id);
-            return String.format("Eintrag mit der ID %s wurde aus der Datenbank gelöscht", id);
+        logRepository.deleteById(id);
+        return String.format("Eintrag mit der ID %s wurde aus der Datenbank gelöscht", id);
     }
 
     public boolean existLogByActorId(User actor) {
@@ -99,7 +101,6 @@ public class LogService {
         }
 
         StringBuilder sb = new StringBuilder();
-
         String iDs = "";
 
         for (Log log : deletedLogs) {
