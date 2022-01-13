@@ -1,5 +1,8 @@
 package project.logManager.controller;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,10 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.BmiService;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 
@@ -37,8 +36,7 @@ class BmiControllerTest {
         List<User> users = addTestUser();
         Mockito.when(bmiService.getBmiMessage(Mockito.any(),Mockito.any(),
                 Mockito.any())).thenThrow(RuntimeException.class);
-        Assertions.assertThrows(RuntimeException.class, () ->
-                systemUnderTest.getBmi(users.get(0).getGeburtsdatum(), 78.0, 1.8));
+        Assertions.assertNull(systemUnderTest.getBmi(users.get(0).getGeburtsdatum(), 78.0, 1.8));
         Mockito.verify(bmiService).getBmiMessage(Mockito.any(),Mockito.any(),
                 Mockito.any());
     }

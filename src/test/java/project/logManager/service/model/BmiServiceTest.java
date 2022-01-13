@@ -1,5 +1,8 @@
 package project.logManager.service.model;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,10 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 
@@ -65,7 +64,7 @@ class BmiServiceTest {
         RuntimeException ex = Assertions.assertThrows(IllegalStateException.class, () ->
                 systemUnderTest.getBmiMessage(LocalDate.of(2000, 12, 12),
                         -100.0, 1.85));
-        Assertions.assertEquals("Unexpected value", ex.getMessage());
+        Assertions.assertEquals("BMI konnte nicht berechnet werden", ex.getMessage());
     }
 
     @Test
