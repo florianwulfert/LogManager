@@ -1,6 +1,10 @@
 package project.logManager.service.model;
 
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,11 +13,6 @@ import project.logManager.common.utils.DateUtil;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
-
-import javax.transaction.Transactional;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
 
 @Transactional
 @Service
@@ -42,8 +41,8 @@ public class BmiService extends DateUtil {
         } else if (bmi > 25) {
             return String.format(bmiMessage + " übergewichtig.", bmi);
         } else {
-            LOGGER.error("Unexpected value");
-            throw new IllegalStateException("Unexpected value");
+            LOGGER.error("BMI konnte nicht berechnet werden");
+            throw new IllegalStateException("BMI konnte nicht berechnet werden");
         }
     }
 

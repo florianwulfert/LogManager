@@ -1,6 +1,7 @@
 package project.logManager.controller;
 
 
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.service.model.BmiService;
-
-import java.time.LocalDate;
 
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
@@ -27,7 +26,7 @@ public class BmiController {
         try {
             return bmiService.getBmiMessage(geburtsdatum, gewicht, groesse);
         } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
+            return e.getMessage();
         }
     }
 

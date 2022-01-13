@@ -77,6 +77,34 @@ class BmiControllerIT {
   }
 
   @Test
+  void whenGetBmiNullParamsThenCatchRuntimeException() throws Exception{
+    MvcResult result = mockMvc.perform(
+            get("/bmi")
+                .param("geburtsdatum", "01.01.1987")
+                .param("gewicht", "0")
+                .param("groesse", "0"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andReturn();
+
+    Assertions.assertEquals("Infinite or NaN", result.getResponse().getContentAsString());
+  }
+
+  @Test
+  void whenGetBmiWrongParamsThenThrowRuntimeException() throws Exception{
+    MvcResult result = mockMvc.perform(
+            get("/bmi")
+                .param("geburtsdatum", "01.01.1987")
+                .param("gewicht", "-1")
+                .param("groesse", "-1"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andReturn();
+
+    Assertions.assertEquals("BMI konnte nicht berechnet werden", result.getResponse().getContentAsString());
+  }
+
+  @Test
   void whenfindUserAndCalculateBMIThenReturnBmiMessage_Untergewichtig() throws Exception{
     createUser("untergewichtig");
 
