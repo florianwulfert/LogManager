@@ -15,7 +15,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 public class RestExceptionHandler {
     @ResponseBody
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(SeverityNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     String severityNotFoundHandler(SeverityNotFoundException ex) {
         return ex.getMessage();
