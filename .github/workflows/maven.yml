@@ -7,7 +7,6 @@ on:
   push:
     branches: 
     - master
-    - bmi
   pull_request:
     branches: [ master ]
 
@@ -26,3 +25,7 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Integration tests
       run: mvn integration-test
+  integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
