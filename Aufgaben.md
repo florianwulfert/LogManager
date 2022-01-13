@@ -91,6 +91,8 @@ Aufgabe 11:
 * [x] Meldungen erstellen, falls in Postman falsches Format eingegeben wurde 
 (getUserId, deleteLogId, deleteUserId, getLogId, postUser - gewicht, groesse, datum, getUserBmi)
 * [x] Beim Erstellen des Users sollte auch die BodyweightMessage mit übergeben werden
-* [ ] MR erstellen
+* [x] MR erstellen
 * [ ] Integration Tests: webmvc-Tests, SpringBoot-Tests
 * [ ] Swagger aufsetzen
+
+- Im LogService macht die Bedingung message != null im addLog keinen Sinn!

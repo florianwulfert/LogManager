@@ -34,6 +34,8 @@ public class LogController {
         try {
             List<Log> logs = logService.getLogs(severity, message, startDateTime, endDateTime);
             return logDTOMapper.logsToLogDTOs(logs);
+        } catch (IllegalArgumentException e) {
+            throw new SeverityNotFoundException(severity);
         } catch (RuntimeException e) {
             throw new RuntimeException(e.getMessage());
         }

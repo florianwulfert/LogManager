@@ -9,9 +9,11 @@
   * Geforderte Parameter:
     * severity: String (Erlaubt: TRACE, DEBUG, INFO, WARNING, ERROR; FATAL)
     * message: String
+    * nameUser: String
   * Mögliche Fehler:
-    * Ein Parameter wurde nicht mitgegeben
-    * Severity "severity" is not allowed. Please Choose on these ... (siehe oben) 
+    * Severity ist nicht zugelassen. Bitte wählen Sie eins der folgenden severities aus: 
+    TRACE, DEBUG, INFO, WARNING, ERROR, FATAL
+    * User nicht gefunden 
 * GET: /logs
   * Es können Logs gefiltert abgerufen werden.
   * Die Felder startDateTime und endDateTime können unabhängig voneinander verwendet werden.
@@ -21,7 +23,9 @@
     * startDateTime: LocalDateTime (Format: dd.MM.yyyy HH:mm:ss)
     * endDateTime: LocalDateTime (Format: dd.MM.yyyy HH:mm:ss)
   * Mögliche Fehler:
-    * Bad Request (Format des Datums war falsch)
+    * Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDateTime'
+    * Severity  ist nicht zugelassen. Bitte wählen Sie eins der folgenden severities aus: 
+    TRACE, DEBUG, INFO, WARNING, ERROR, FATAL
 * GET: /logs/{severity}
   * Filtern nach Severity
   * Geforderte Parameter: 

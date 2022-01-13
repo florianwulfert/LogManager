@@ -56,14 +56,23 @@ class LogServiceTest {
     void testGetLogs() {
         LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0);
         List<Log> logs = new ArrayList<>();
-        Log log = createNewLog(1, "INFO", "Das ist ein Test", timestamp);
+        Log log = createNewLog(1, "WARNING", "Das ist ein Test", timestamp);
         logs.add(log);
+        Mockito.when(logValidationService.validateSeverity(Mockito.anyString())).thenReturn(true);
         Mockito.when(logRepository.findLogs(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(logs);
         LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
-        systemUnderTest.getLogs("INFO", "Test", startDate, endDate);
+        systemUnderTest.getLogs("WARNING", "Test", startDate, endDate);
         Mockito.verify(logRepository, Mockito.times(1))
                 .findLogs(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
+    }
+
+    @Test
+    void testSeverityIsFalseAtGetLogs() {
+        LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                systemUnderTest.getLogs("Hallo", "Test", startDate, endDate));
     }
 
     @Test
@@ -88,7 +97,7 @@ class LogServiceTest {
     @Test
     void testAddLogNullParameter() {
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
-                systemUnderTest.addLog(null, "KATZE", "Peter"));
+                systemUnderTest.addLog(null, "INFO", "Peter"));
         Assertions.assertEquals("Einer der benötigten Parameter wurde nicht übergeben!",
                 ex.getMessage());
     }
