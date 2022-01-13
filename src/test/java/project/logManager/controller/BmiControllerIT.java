@@ -1,10 +1,5 @@
 package project.logManager.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +13,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
+
+import java.time.LocalDate;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BmiController.class)
@@ -36,8 +37,7 @@ class BmiControllerIT {
 
   @Test
   void whenGetBmiThenReturnBmiMessage_Normalgewichtig() throws Exception{
-    MvcResult result = mockMvc.perform(
-            get("/bmi")
+    MvcResult result = mockMvc.perform(get("/bmi")
                 .param("geburtsdatum", "01.01.2003")
                 .param("gewicht", "75.7")
                 .param("groesse", "1.85"))
@@ -50,8 +50,7 @@ class BmiControllerIT {
 
   @Test
   void whenGetBmiThenReturnBmiMessage_Uebergewichtig() throws Exception{
-    MvcResult result = mockMvc.perform(
-            get("/bmi")
+    MvcResult result = mockMvc.perform(get("/bmi")
                 .param("geburtsdatum", "01.01.1987")
                 .param("gewicht", "95.2")
                 .param("groesse", "1.82"))
@@ -64,8 +63,7 @@ class BmiControllerIT {
 
   @Test
   void whenGetBmiThenReturnBmiMessage_Untergewichtig() throws Exception{
-    MvcResult result = mockMvc.perform(
-            get("/bmi")
+    MvcResult result = mockMvc.perform(get("/bmi")
                 .param("geburtsdatum", "01.01.2003")
                 .param("gewicht", "61.3")
                 .param("groesse", "1.83"))
@@ -77,14 +75,13 @@ class BmiControllerIT {
   }
 
   @Test
-  void whenGetBmiNullParamsThenCatchRuntimeException() throws Exception{
-    MvcResult result = mockMvc.perform(
-            get("/bmi")
+  void whenGetBmiParamsEqualZeroThenCatchRuntimeException() throws Exception{
+    MvcResult result = mockMvc.perform(get("/bmi")
                 .param("geburtsdatum", "01.01.1987")
                 .param("gewicht", "0")
                 .param("groesse", "0"))
         .andDo(print())
-        .andExpect(status().isOk())
+        .andExpect(status().isInternalServerError())
         .andReturn();
 
     Assertions.assertEquals("Infinite or NaN", result.getResponse().getContentAsString());
@@ -92,24 +89,22 @@ class BmiControllerIT {
 
   @Test
   void whenGetBmiWrongParamsThenThrowRuntimeException() throws Exception{
-    MvcResult result = mockMvc.perform(
-            get("/bmi")
+    MvcResult result = mockMvc.perform(get("/bmi")
                 .param("geburtsdatum", "01.01.1987")
                 .param("gewicht", "-1")
                 .param("groesse", "-1"))
         .andDo(print())
-        .andExpect(status().isOk())
+        .andExpect(status().isInternalServerError())
         .andReturn();
 
     Assertions.assertEquals("BMI konnte nicht berechnet werden", result.getResponse().getContentAsString());
   }
 
   @Test
-  void whenfindUserAndCalculateBMIThenReturnBmiMessage_Untergewichtig() throws Exception{
+  void whenfindUserAndCalculateBMIThenReturnBmiMessage_Untergewichtig() throws Exception {
     createUser("untergewichtig");
 
-    MvcResult result = mockMvc.perform(
-            get("/bmi/Torsten"))
+    MvcResult result = mockMvc.perform(get("/bmi/Torsten"))
         .andDo(print())
         .andExpect(status().isOk())
         .andReturn();
@@ -118,11 +113,10 @@ class BmiControllerIT {
   }
 
   @Test
-  void whenfindUserAndCalculateBMIThenReturnBmiMessage_Uebergewichtig() throws Exception{
+  void whenfindUserAndCalculateBMIThenReturnBmiMessage_Uebergewichtig() throws Exception {
     createUser("uebergewichtig");
 
-    MvcResult result = mockMvc.perform(
-            get("/bmi/Peter"))
+    MvcResult result = mockMvc.perform(get("/bmi/Peter"))
         .andDo(print())
         .andExpect(status().isOk())
         .andReturn();
@@ -131,16 +125,25 @@ class BmiControllerIT {
   }
 
   @Test
-  void whenfindUserAndCalculateBMIThenReturnBmiMessage_Normalgewichtig() throws Exception{
+  void whenfindUserAndCalculateBMIThenReturnBmiMessage_Normalgewichtig() throws Exception {
     createUser("normalgewichtig");
 
-    MvcResult result = mockMvc.perform(
-            get("/bmi/Hans"))
+    MvcResult result = mockMvc.perform(get("/bmi/Hans"))
         .andDo(print())
         .andExpect(status().isOk())
         .andReturn();
 
     Assertions.assertEquals("Der User hat einen BMI von 22.11 und ist somit normalgewichtig.", result.getResponse().getContentAsString());
+  }
+
+  @Test
+  void whenFindUserAndCalculateBMIThenThrowException() throws Exception{
+    MvcResult result = mockMvc.perform(get("/bmi/Paul"))
+            .andDo(print())
+            .andExpect(status().isInternalServerError())
+            .andReturn();
+
+    Assertions.assertEquals("User Paul konnte nicht identifiziert werden!", result.getResponse().getContentAsString());
   }
 
   private void createUser(String bewertung) {

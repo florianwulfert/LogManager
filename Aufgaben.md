@@ -93,6 +93,9 @@ Aufgabe 11:
 * [x] Beim Erstellen des Users sollte auch die BodyweightMessage mit übergeben werden
 * [x] MR erstellen
 * [ ] Integration Tests: webmvc-Tests, SpringBoot-Tests
+* [x] findUserAndCalculateBMIException fehlt
 * [ ] Swagger aufsetzen
+* [x] Exceptions anpassen (mit RestExceptionHandler)
+* [ ] Alle Methoden/Meldungen usw. auf Englisch übersetzten
+* [ ] Beim BmiControllerTestIT auf BadRequests testen
 
-- Im LogService macht die Bedingung message != null im addLog keinen Sinn!

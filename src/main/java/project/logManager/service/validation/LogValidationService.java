@@ -18,6 +18,9 @@ public class LogValidationService {
     private static final Logger LOGGER = LogManager.getLogger(LogValidationService.class);
 
     public boolean validateSeverity(String severity) {
+        if (severity == null) {
+            return true;
+        }
         for (SeverityEnum severityEnum : SeverityEnum.values()) {
             if (severity.equals(severityEnum.name())) {
                 return true;

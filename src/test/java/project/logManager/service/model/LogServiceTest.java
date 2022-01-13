@@ -95,14 +95,6 @@ class LogServiceTest {
     }
 
     @Test
-    void testAddLogNullParameter() {
-        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
-                systemUnderTest.addLog(null, "INFO", "Peter"));
-        Assertions.assertEquals("Einer der benötigten Parameter wurde nicht übergeben!",
-                ex.getMessage());
-    }
-
-    @Test
     void testKatzeReturnMessage() {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
         Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));

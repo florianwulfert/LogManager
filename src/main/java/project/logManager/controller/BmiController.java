@@ -1,7 +1,6 @@
 package project.logManager.controller;
 
 
-import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,8 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import project.logManager.exception.UserNotFoundException;
 import project.logManager.service.model.BmiService;
+
+import java.time.LocalDate;
 
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
@@ -23,20 +23,11 @@ public class BmiController {
             @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate geburtsdatum,
             @RequestParam double gewicht,
             @RequestParam double groesse) {
-        try {
-            return bmiService.getBmiMessage(geburtsdatum, gewicht, groesse);
-        } catch (RuntimeException e) {
-            return e.getMessage();
-        }
+        return bmiService.getBmiMessage(geburtsdatum, gewicht, groesse);
     }
 
     @GetMapping("/bmi/{user}")
-    public String findUserAndCalculateBMI (@PathVariable final String user) {
-        try {
-            return bmiService.findUserAndCalculateBMI(user);
-        } catch (UserNotFoundException e) {
-            return e.getMessage();
-        }
+    public String findUserAndCalculateBMI(@PathVariable final String user) {
+        return bmiService.findUserAndCalculateBMI(user);
     }
-
 }

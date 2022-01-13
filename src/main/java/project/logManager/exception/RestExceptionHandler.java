@@ -1,11 +1,11 @@
 package project.logManager.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
  * @author - EugenFriesen
@@ -14,17 +14,18 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @RestControllerAdvice
 public class RestExceptionHandler {
+
     @ResponseBody
-    @ExceptionHandler(SeverityNotFoundException.class)
+    @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String severityNotFoundHandler(SeverityNotFoundException ex) {
+    String parameterIsMissingHandler(MissingServletRequestParameterException ex) {
         return ex.getMessage();
     }
 
     @ResponseBody
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String numberFormatHandler(MethodArgumentTypeMismatchException ex) {
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    String runtimeExceptionHandler(RuntimeException ex) {
         return ex.getMessage();
     }
 }

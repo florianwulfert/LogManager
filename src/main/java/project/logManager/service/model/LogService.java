@@ -41,17 +41,13 @@ public class LogService {
     }
 
     public String addLog(String message, String severity, String userName) {
-        if (message == null || severity == null) {
-            LOGGER.error("Einer der benötigten Parameter wurde nicht übergeben!");
-            throw new RuntimeException("Einer der benötigten Parameter wurde nicht übergeben!");
-        }
         if (!logValidationService.validateSeverity(severity)) {
             LOGGER.error("Die übergebene severity '{}' ist nicht zugelassen!", severity);
             throw new IllegalArgumentException("Severity falsch!");
         }
         LogMessageDto logMessage = logValidationService.validateMessage(message);
         User user = checkActor(userName);
-        saveLog(message, severity, user);
+        saveLog(logMessage.getMessage(), severity, user);
 
         logMessage.setReturnMessage(logMessage.getReturnMessage() +
                 String.format("Es wurde die Nachricht \"%s\" als %s abgespeichert!",
