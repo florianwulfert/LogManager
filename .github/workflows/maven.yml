@@ -7,6 +7,7 @@ on:
   push:
     branches: 
     - master
+    - bmi
   pull_request:
     branches: [ master ]
 
@@ -21,11 +22,17 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: maven
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: build
+      run: mvn clean install -DskipTests
   unit-tests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build with Maven
+    - name: Unit Tests with Mockito
       run: mvn test
   integration-tests:
     runs-on: ubuntu-latest
