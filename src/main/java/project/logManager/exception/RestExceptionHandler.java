@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
  * @author - EugenFriesen
@@ -20,6 +21,13 @@ public class RestExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     String parameterIsMissingHandler(MissingServletRequestParameterException ex) {
         return ex.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String pathVariableIsMissingHandler(MethodArgumentTypeMismatchException ex) {
+        return "Required path variable was not found!";
     }
 
     @ResponseBody

@@ -36,11 +36,54 @@ class UserControllerIT {
 
     @Test
     void testFindUsers() throws Exception {
+        createUser("Hans");
         mockMvc.perform(get("/users"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
     }
+
+    @Test
+    void testFindUserById() throws Exception {
+        createUser("Petra");
+        MvcResult result = mockMvc.perform(get("/user/id")
+                .param("id", "1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    @Test
+    void whenIdToFindIsNullThenReturnBadRequest() throws Exception {
+        MvcResult result = mockMvc.perform(get("/user/id"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        Assertions.assertEquals("Required Integer parameter 'id' is not present",
+                result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void whenIdToFindNotFoundThenReturnNull() throws Exception {
+        MvcResult result = mockMvc.perform(get("/user/id")
+                .param("id", "50"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        Assertions.assertEquals("null", result.getResponse().getContentAsString());
+    }
+
+    /*@Test
+    void testDeleteUserById() throws Exception {
+        createUser("Hans");
+        createUser("Petra");
+        MvcResult result = mockMvc.perform(delete("/user/delete/1")
+                .param("actor", "Hans"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+    }*/
 
     @Test
     void whenActorForDeleteByIdIsNullThenReturnBadRequest() throws Exception {
@@ -93,7 +136,20 @@ class UserControllerIT {
     }
 
     @Test
-    void whenUserNameToDeleteIsFalseThenThrowRuntimeException() throws Exception {
+    void whenActorForDeleteByNameNotFoundThenReturnBadRequest() throws Exception {
+        createUser("Petra");
+        MvcResult result = mockMvc.perform(delete("/user/delete/name/Petra")
+                        .param("actor", "Peter"))
+                .andDo(print())
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+
+        Assertions.assertEquals("User mit dem Namen Peter konnte nicht gefunden werden",
+                result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void whenUserNameToDeleteNotFoundThenThrowRuntimeException() throws Exception {
         createUser("Torsten");
         MvcResult result = mockMvc.perform(delete("/user/delete/name/Petra")
                         .param("actor", "Torsten"))
@@ -102,6 +158,19 @@ class UserControllerIT {
                 .andReturn();
 
         Assertions.assertEquals("User mit dem Namen Petra konnte nicht gefunden werden",
+                result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void whenUserNameToDeleteIsNullThenThrowRuntimeException() throws Exception {
+        createUser("Torsten");
+        MvcResult result = mockMvc.perform(delete("/user/delete/name/")
+                        .param("actor", "Torsten"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andReturn();
+
+        Assertions.assertEquals("Required path variable was not found!",
                 result.getResponse().getContentAsString());
     }
 
@@ -122,12 +191,13 @@ class UserControllerIT {
             case "Petra":
                 User petra = User
                         .builder()
+                        .id(1)
                         .name("Petra")
                         .geburtsdatum(LocalDate.of(1999, 12, 13))
                         .bmi(25.39)
                         .gewicht(65)
                         .groesse(1.60)
-                        .id(1)
+
                         .lieblingsfarbe("Rot")
                         .build();
                 userRepository.save(petra);
