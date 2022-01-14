@@ -97,5 +97,5 @@ Aufgabe 11:
 * [ ] Swagger aufsetzen
 * [x] Exceptions anpassen (mit RestExceptionHandler)
 * [ ] Alle Methoden/Meldungen usw. auf Englisch übersetzten
-* [ ] Beim BmiControllerTestIT auf BadRequests testen
+* [x] Beim BmiControllerTestIT auf BadRequests testen
 

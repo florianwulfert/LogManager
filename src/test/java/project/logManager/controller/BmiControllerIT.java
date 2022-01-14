@@ -36,7 +36,7 @@ class BmiControllerIT {
   private UserRepository userRepository;
 
   @Test
-  void whenGetBmiThenReturnBmiMessage_Normalgewichtig() throws Exception{
+  void whenGetBmiThenReturnBmiMessage_Normalgewichtig() throws Exception {
     MvcResult result = mockMvc.perform(get("/bmi")
                 .param("geburtsdatum", "01.01.2003")
                 .param("gewicht", "75.7")
@@ -49,7 +49,7 @@ class BmiControllerIT {
   }
 
   @Test
-  void whenGetBmiThenReturnBmiMessage_Uebergewichtig() throws Exception{
+  void whenGetBmiThenReturnBmiMessage_Uebergewichtig() throws Exception {
     MvcResult result = mockMvc.perform(get("/bmi")
                 .param("geburtsdatum", "01.01.1987")
                 .param("gewicht", "95.2")
@@ -62,7 +62,7 @@ class BmiControllerIT {
   }
 
   @Test
-  void whenGetBmiThenReturnBmiMessage_Untergewichtig() throws Exception{
+  void whenGetBmiThenReturnBmiMessage_Untergewichtig() throws Exception {
     MvcResult result = mockMvc.perform(get("/bmi")
                 .param("geburtsdatum", "01.01.2003")
                 .param("gewicht", "61.3")
@@ -75,7 +75,7 @@ class BmiControllerIT {
   }
 
   @Test
-  void whenGetBmiParamsEqualZeroThenCatchRuntimeException() throws Exception{
+  void whenGetBmiParamsEqualZeroThenCatchRuntimeException() throws Exception {
     MvcResult result = mockMvc.perform(get("/bmi")
                 .param("geburtsdatum", "01.01.1987")
                 .param("gewicht", "0")
@@ -88,7 +88,7 @@ class BmiControllerIT {
   }
 
   @Test
-  void whenGetBmiWrongParamsThenThrowRuntimeException() throws Exception{
+  void whenGetBmiWrongParamsThenThrowRuntimeException() throws Exception {
     MvcResult result = mockMvc.perform(get("/bmi")
                 .param("geburtsdatum", "01.01.1987")
                 .param("gewicht", "-1")
@@ -98,6 +98,19 @@ class BmiControllerIT {
         .andReturn();
 
     Assertions.assertEquals("BMI konnte nicht berechnet werden", result.getResponse().getContentAsString());
+  }
+
+  @Test
+  void whenGetBmiIsMissingParameterReturnBadRequest() throws Exception {
+    MvcResult result = mockMvc.perform(get("/bmi")
+            .param("geburtsdatum", "01.01.2000")
+            .param("gewicht", "75.0"))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andReturn();
+
+    Assertions.assertEquals("Required double parameter 'groesse' is not present",
+            result.getResponse().getContentAsString());
   }
 
   @Test
@@ -137,7 +150,7 @@ class BmiControllerIT {
   }
 
   @Test
-  void whenFindUserAndCalculateBMIThenThrowException() throws Exception{
+  void whenFindUserAndCalculateBMIThenThrowException() throws Exception {
     MvcResult result = mockMvc.perform(get("/bmi/Paul"))
             .andDo(print())
             .andExpect(status().isInternalServerError())
