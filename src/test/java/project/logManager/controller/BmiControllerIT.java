@@ -1,11 +1,5 @@
 package project.logManager.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDate;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,12 +19,17 @@ import org.springframework.transaction.annotation.Transactional;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 
+import java.time.LocalDate;
+import java.util.stream.Stream;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BmiController.class)
 @AutoConfigureDataJpa
-@ComponentScan(basePackages = {
-        "project.logManager"
-})
+@ComponentScan(basePackages = {"project.logManager"})
 @Transactional
 @TestPropertySource("/application-test.properties")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
