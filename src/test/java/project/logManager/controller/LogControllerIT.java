@@ -43,14 +43,22 @@ class LogControllerIT {
     private LogRepository logRepository;
 
     private static Stream<Arguments> getLogsArgument() {
-        LocalDateTime dateTime;
+        LocalDateTime dateTime1 = LocalDateTime.of(2010, 12,16,15,12,16);
+        LocalDateTime dateTime2 = LocalDateTime.of(2000,12,12,12,12,12);
+        LocalDateTime dateTime3 = LocalDateTime.of(1999, 12,16,15,12,16);
+        LocalDateTime dateTime4 = LocalDateTime.of(1974,12,12,12,12,12);
+        LocalDateTime dateTime5 = LocalDateTime.of(1985,12,12,12,12,12);
+        LocalDateTime dateTime6 = LocalDateTime.of(1977,12,12,12,12,12);
+        LocalDateTime dateTime7 = LocalDateTime.of(1968, 12,16,15,12,16);
+        LocalDateTime dateTime8 = LocalDateTime.of(1985,12,12,12,12,12);
+        LocalDateTime dateTime9 = LocalDateTime.of(1995, 12,16,15,12,16);
+
         return Stream.of(
                 Arguments.of("AllLogs", null, null, null, null, status().isOk(), 10),
                 Arguments.of("FilterLogsBySeverity", "WARNING", null, null, null, status().isOk(), 2),
                 Arguments.of("WARN", "Achtung", null, null, status().isOk(), 2),
-                Arguments.of("WARN", "Achtung", null, null, status().isOk(), 2),
-                Arguments.of("WARN", null, null, null, status().isOk(), 2),
-                Arguments.of("WARN", null, null, null, status().isOk(), 2)
+                Arguments.of("WARN", "Achtung", dateTime3, null, status().isOk(), 2),
+                Arguments.of("WARN", "Achtung", dateTime3, dateTime2, status().isOk(), 2)
 
                 );
     }
