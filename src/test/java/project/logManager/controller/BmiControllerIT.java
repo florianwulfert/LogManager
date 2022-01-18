@@ -2,11 +2,13 @@ package project.logManager.controller;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,6 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     "project.logManager"
 })
 @Transactional
+@TestPropertySource("/application-test.properties")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BmiControllerIT {
 
   @Autowired
@@ -126,7 +130,7 @@ class BmiControllerIT {
   }
 
   @Test
-  void whenfindUserAndCalculateBMIThenReturnBmiMessage_Uebergewichtig() throws Exception {
+  void whenFindUserAndCalculateBMIThenReturnBmiMessage_Uebergewichtig() throws Exception {
     createUser("uebergewichtig");
 
     MvcResult result = mockMvc.perform(get("/bmi/Peter"))

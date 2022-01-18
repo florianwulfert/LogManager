@@ -95,5 +95,5 @@ class UserControllerTest {
                 .build());
         return users;
     }
-
 }
+
