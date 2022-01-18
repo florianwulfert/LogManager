@@ -1,5 +1,11 @@
 package project.logManager.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDate;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,13 +24,6 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.transaction.annotation.Transactional;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
-
-import java.time.LocalDate;
-import java.util.stream.Stream;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BmiController.class)
@@ -90,12 +89,12 @@ class BmiControllerIT {
                         "Der User hat einen BMI von 28.74 und ist somit übergewichtig."),
                 Arguments.of("normalgewichtig", "/bmi/Hans", status().isOk(),
                         "Der User hat einen BMI von 22.11 und ist somit normalgewichtig."),
-                Arguments.of("userNichtBekannt", "/bmi/Paul", status().isInternalServerError(),
-                        "User Paul konnte nicht identifiziert werden!")
+                Arguments.of("userNichtBekannt", "/bmi/ActorNichtVorhanden", status().isInternalServerError(),
+                        "User ActorNichtVorhanden konnte nicht identifiziert werden!")
         );
     }
 
-    @ParameterizedTest(name = "{0}")
+    @ParameterizedTest(name = "{3}")
     @MethodSource("findUserAndCalculateBmiArguments")
     void testFindUserAndCalculateBmi(
             String weightStatus, String url, ResultMatcher status, String message
