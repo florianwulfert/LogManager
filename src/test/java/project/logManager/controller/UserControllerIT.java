@@ -1,8 +1,19 @@
 package project.logManager.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
@@ -17,20 +28,13 @@ import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 
-import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
 @AutoConfigureDataJpa
 @ComponentScan(basePackages = {"project.logManager"})
 @Transactional
 @TestPropertySource("/application-test.properties")
+@TestInstance(Lifecycle.PER_CLASS)
 class UserControllerIT {
 
     @Autowired
@@ -47,7 +51,7 @@ class UserControllerIT {
     User hans;
 
     @BeforeAll
-    void setup() {
+    public void setup() {
         petra = createUser("Petra");
         torsten = createUser("Torsten");
         hans = createUser("Hans");
@@ -74,6 +78,7 @@ class UserControllerIT {
 
     @Test
     void testActorIsMissingAtAddUser() throws Exception {
+        userRepository.delete(petra);
         MvcResult result = mockMvc.perform(post("/user")
                         .param("actor", "Petra")
                         .param("name", "Hugo")
@@ -315,6 +320,7 @@ class UserControllerIT {
 
     @Test
     void whenUserNameToDeleteNotFoundThenThrowRuntimeException() throws Exception {
+        userRepository.delete(petra);
         MvcResult result = mockMvc.perform(delete("/user/delete/name/Petra")
                         .param("actor", "Torsten"))
                 .andDo(print())
