@@ -63,189 +63,72 @@ class UserControllerIT {
         hans = createUser("Hans");
     }
 
-    @Nested
-    class AddUserTests {
-        @Test
-        void testAddUser() throws Exception {
-            MvcResult result = mockMvc.perform(post("/user")
-                            .param("actor", "Petra")
-                            .param("name", "Hugo")
-                            .param("geburtsdatum", "05.11.1995")
-                            .param("gewicht", "78")
-                            .param("groesse", "1.80")
-                            .param("lieblingsfarbe", "blau"))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andReturn();
+    private static Stream<Arguments> gedAddUserArguments() {
+        return Stream.of(
+            Arguments.of("User erstellt", false, "Petra", "Hugo", "05.11.1995", "78", "1.80", "blau",
+                status().isOk(),
+                "User Hugo wurde erstellt. Der User hat einen BMI von 24.07 und ist somit normalgewichtig."),
+            Arguments.of("Erster User muss sich selbst anlegen", true, "Torsten", "Hugo", "05.11.1995", "78", "1.80", "blau",
+                status().isInternalServerError(),
+                "User kann nicht angelegt werden, da noch keine User in der Datenbank " +
+                    "angelegt sind. Erster User muss sich selbst anlegen! Hugo ungleich Torsten"),
+            Arguments.of("Erster User hat sich selbst angelegt", true, "Petra", "Petra", "05.11.1995", "78", "1.80", "blau",
+                status().isOk(),
+                "User Petra wurde erstellt. Der User hat einen BMI von 24.07 und ist somit normalgewichtig."),
+            Arguments.of("Actor nicht bekannt", false, "ActorName", "Hugo", "05.11.1995", "78", "1.80", "blau",
+                status().isInternalServerError(),
+                "User ActorName nicht gefunden"),
+            Arguments.of("Actor nicht angegeben", false, null, "Hugo", "05.11.1995", "78", "1.80", "blau",
+                status().isBadRequest(),
+                "Required String parameter 'actor' is not present"),
+            Arguments.of("Farbe nicht erlaubt", false, "Petra", "Hugo", "05.11.1995", "78", "1.80", "braun",
+                status().isInternalServerError(),
+                "Farbe falsch! Wählen Sie eine der folgenden Farben: blau, rot, orange, gelb, schwarz"),
+            Arguments.of("Datum mit falschem Format angegeben", false, "Petra", "Hugo", "hallo", "78", "1.80", "blau",
+                status().isBadRequest(),
+                "Required path variable was not found or request param has wrong format! " +
+                "Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'; " +
+                "nested exception is org.springframework.core.convert.ConversionFailedException: " +
+                "Failed to convert from type [java.lang.String] to type " +
+                "[@org.springframework.web.bind.annotation.RequestParam @org.springframework.format." +
+                "annotation.DateTimeFormat java.time.LocalDate] for value 'hallo'; " +
+                "nested exception is java.lang.IllegalArgumentException: Parse attempt failed for value [hallo]"),
+            Arguments.of("Gewicht mit falschem Format angegeben", false, "Petra", "Hugo", "05.11.1995", "hi", "1.80", "blau",
+                status().isBadRequest(),
+                "Required path variable was not found or request param has wrong format! " +
+                "Failed to convert value of type 'java.lang.String' to required type 'double'; " +
+                "nested exception is java.lang.NumberFormatException: For input string: \"hi\""),
+            Arguments.of("Groesse mit falschem Format angegeben", false, "Petra", "Hugo", "05.11.1995", "78", "hi", "blau",
+                status().isBadRequest(),
+                "Required path variable was not found or request param has wrong format! " +
+                "Failed to convert value of type 'java.lang.String' to required type 'double'; " +
+                "nested exception is java.lang.NumberFormatException: For input string: \"hi\""),
+            Arguments.of("Zu erzeugender User ist bereits vorhanden", false, "Petra", "Torsten", "05.11.1995", "78", "1.80", "blau",
+                status().isInternalServerError(),
+                "User Torsten bereits vorhanden")
+        );
+    }
 
-            Assertions.assertEquals("User Hugo wurde erstellt. Der User hat einen BMI von 24.07 " +
-                    "und ist somit normalgewichtig.", result.getResponse().getContentAsString());
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("gedAddUserArguments")
+    void testAddUser(String testName, Boolean isEmptyUserList, String actor, String userToAdd, String birthdate,
+        String weight, String height, String lieblingsfarbe, ResultMatcher status, String message) throws Exception {
+        if (isEmptyUserList) {
+          userRepository.deleteAll();
         }
 
-        @Test
-        void testAddUserWhenNoUserExistsAndActorUnequalUser() throws Exception {
-            userRepository.deleteAll();
-            MvcResult result = mockMvc.perform(post("/user")
-                            .param("actor", "Torsten")
-                            .param("name", "Hugo")
-                            .param("geburtsdatum", "05.11.1995")
-                            .param("gewicht", "78")
-                            .param("groesse", "1.80")
-                            .param("lieblingsfarbe", "blau"))
-                    .andDo(print())
-                    .andExpect(status().isInternalServerError())
-                    .andReturn();
+        MvcResult result = mockMvc.perform(post("/user")
+              .param("actor", actor)
+              .param("name", userToAdd)
+              .param("geburtsdatum", birthdate)
+              .param("gewicht", weight)
+              .param("groesse", height)
+              .param("lieblingsfarbe", lieblingsfarbe))
+          .andDo(print())
+          .andExpect(status)
+          .andReturn();
 
-            Assertions.assertEquals("User kann nicht angelegt werden, da noch keine User in der Datenbank " +
-                            "angelegt sind. Erster User muss sich selbst anlegen! Hugo ungleich Torsten",
-                    result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void testAddUserWhenNoUserExists() throws Exception {
-            userRepository.deleteAll();
-            MvcResult result = mockMvc.perform(post("/user")
-                            .param("actor", "Petra")
-                            .param("name", "Petra")
-                            .param("geburtsdatum", "05.11.1995")
-                            .param("gewicht", "78")
-                            .param("groesse", "1.80")
-                            .param("lieblingsfarbe", "blau"))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andReturn();
-
-            Assertions.assertEquals("User Petra wurde erstellt. Der User hat einen BMI von 24.07 " +
-                    "und ist somit normalgewichtig.", result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void testActorIsMissingAtAddUser() throws Exception {
-            userRepository.delete(petra);
-            MvcResult result = mockMvc.perform(post("/user")
-                            .param("actor", "Petra")
-                            .param("name", "Hugo")
-                            .param("geburtsdatum", "05.11.1995")
-                            .param("gewicht", "78")
-                            .param("groesse", "1.80")
-                            .param("lieblingsfarbe", "blau"))
-                    .andDo(print())
-                    .andExpect(status().isInternalServerError())
-                    .andReturn();
-
-            Assertions.assertEquals("User Petra nicht gefunden", result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void testParameterIsMissingAtAddUser() throws Exception {
-            MvcResult result = mockMvc.perform(post("/user")
-                            .param("name", "Hugo")
-                            .param("geburtsdatum", "05.11.1995")
-                            .param("gewicht", "78")
-                            .param("groesse", "1.80")
-                            .param("lieblingsfarbe", "blau"))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andReturn();
-
-            Assertions.assertEquals("Required String parameter 'actor' is not present",
-                    result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void testColorIsBadAtAddUser() throws Exception {
-            MvcResult result = mockMvc.perform(post("/user")
-                            .param("actor", "Petra")
-                            .param("name", "Hugo")
-                            .param("geburtsdatum", "05.11.1995")
-                            .param("gewicht", "78")
-                            .param("groesse", "1.80")
-                            .param("lieblingsfarbe", "braun"))
-                    .andDo(print())
-                    .andExpect(status().isInternalServerError())
-                    .andReturn();
-
-            Assertions.assertEquals("Farbe falsch! Wählen Sie eine der folgenden Farben: blau, rot, " +
-                    "orange, gelb, schwarz", result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void testWrongDateFormat() throws Exception {
-            MvcResult result = mockMvc.perform(post("/user")
-                            .param("actor", "Petra")
-                            .param("name", "Hugo")
-                            .param("geburtsdatum", "hallo")
-                            .param("gewicht", "78")
-                            .param("groesse", "1.80")
-                            .param("lieblingsfarbe", "braun"))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andReturn();
-
-            Assertions.assertEquals("Required path variable was not found or request param has wrong format! " +
-                            "Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'; " +
-                            "nested exception is org.springframework.core.convert.ConversionFailedException: " +
-                            "Failed to convert from type [java.lang.String] to type " +
-                            "[@org.springframework.web.bind.annotation.RequestParam @org.springframework.format." +
-                            "annotation.DateTimeFormat java.time.LocalDate] for value 'hallo'; " +
-                            "nested exception is java.lang.IllegalArgumentException: Parse attempt failed for value [hallo]",
-                    result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void testWrongWeightFormat() throws Exception {
-            MvcResult result = mockMvc.perform(post("/user")
-                            .param("actor", "Petra")
-                            .param("name", "Hugo")
-                            .param("geburtsdatum", "08.03.2002")
-                            .param("gewicht", "hi")
-                            .param("groesse", "1.80")
-                            .param("lieblingsfarbe", "braun"))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andReturn();
-
-            Assertions.assertEquals("Required path variable was not found or request param has wrong format! " +
-                            "Failed to convert value of type 'java.lang.String' to required type 'double'; " +
-                            "nested exception is java.lang.NumberFormatException: For input string: \"hi\"",
-                    result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void testWrongHeightFormat() throws Exception {
-            MvcResult result = mockMvc.perform(post("/user")
-                            .param("actor", "Petra")
-                            .param("name", "Hugo")
-                            .param("geburtsdatum", "08.03.2002")
-                            .param("gewicht", "78")
-                            .param("groesse", "hi")
-                            .param("lieblingsfarbe", "braun"))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andReturn();
-
-            Assertions.assertEquals("Required path variable was not found or request param has wrong format! " +
-                            "Failed to convert value of type 'java.lang.String' to required type 'double'; " +
-                            "nested exception is java.lang.NumberFormatException: For input string: \"hi\"",
-                    result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void testUserIsAlreadyDefined() throws Exception {
-            MvcResult result = mockMvc.perform(post("/user")
-                            .param("actor", "Petra")
-                            .param("name", "Petra")
-                            .param("geburtsdatum", "05.11.1995")
-                            .param("gewicht", "78")
-                            .param("groesse", "1.80")
-                            .param("lieblingsfarbe", "blau"))
-                    .andDo(print())
-                    .andExpect(status().isInternalServerError())
-                    .andReturn();
-
-            Assertions.assertEquals("User Petra bereits vorhanden",
-                    result.getResponse().getContentAsString());
-        }
+        Assertions.assertEquals(message, result.getResponse().getContentAsString());
     }
 
     @Test
