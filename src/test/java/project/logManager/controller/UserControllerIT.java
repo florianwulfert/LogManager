@@ -212,96 +212,42 @@ class UserControllerIT {
         Assertions.assertEquals(message, result.getResponse().getContentAsString());
     }
 
-    @Nested
-    class DeleteUserByNameTests {
-        @Test
-        void testDeleteUserByName() throws Exception {
-            MvcResult result = mockMvc.perform(delete("/user/delete/name/Petra")
-                            .param("actor", "Torsten"))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andReturn();
-
-            Assertions.assertEquals("User Petra wurde gelöscht!",
-                    result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void testActorIsTryingToDeleteHimselfName() throws Exception {
-            MvcResult result = mockMvc.perform(delete("/user/delete/name/Torsten")
-                            .param("actor", "Torsten"))
-                    .andDo(print())
-                    .andExpect(status().isInternalServerError())
-                    .andReturn();
-
-            Assertions.assertEquals("Ein User kann sich nicht selbst löschen!",
-                    result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void whenActorForDeleteByNameIsNullThenReturnBadRequest() throws Exception {
-            MvcResult result = mockMvc.perform(delete("/user/delete/name/Petra"))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andReturn();
-
-            Assertions.assertEquals("Required String parameter 'actor' is not present",
-                    result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void whenActorForDeleteByNameNotFoundThenReturnBadRequest() throws Exception {
-            MvcResult result = mockMvc.perform(delete("/user/delete/name/Petra")
-                            .param("actor", "Florian"))
-                    .andDo(print())
-                    .andExpect(status().isInternalServerError())
-                    .andReturn();
-
-            Assertions.assertEquals("User mit dem Namen Florian konnte nicht gefunden werden",
-                    result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void whenUserNameToDeleteNotFoundThenThrowRuntimeException() throws Exception {
-            userRepository.delete(petra);
-            MvcResult result = mockMvc.perform(delete("/user/delete/name/Petra")
-                            .param("actor", "Torsten"))
-                    .andDo(print())
-                    .andExpect(status().isInternalServerError())
-                    .andReturn();
-
-            Assertions.assertEquals("User mit dem Namen Petra konnte nicht gefunden werden",
-                    result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void whenUserNameToDeleteIsNullThenThrowRuntimeException() throws Exception {
-            MvcResult result = mockMvc.perform(delete("/user/delete/name/")
-                            .param("actor", "Torsten"))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andReturn();
-
-            Assertions.assertEquals("Required path variable was not found or request param has wrong format! " +
-                            "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; " +
-                            "nested exception is java.lang.NumberFormatException: For input string: \"name\"",
-                    result.getResponse().getContentAsString());
-        }
-
-        @Test
-        void whenUserNameIsUsedSomewhereThenReturnCouldNotDelete() throws Exception {
-            logRepository.save(Log.builder().id(1).user(petra).message("Test").severity("INFO")
-                    .timestamp(LocalDateTime.of(2000,12,12,12,12,12)).build());
-            MvcResult result = mockMvc.perform(delete("/user/delete/name/Petra")
-                            .param("actor", "Torsten"))
-                    .andDo(print())
-                    .andExpect(status().isInternalServerError())
-                    .andReturn();
-
-            Assertions.assertEquals("User Petra kann nicht gelöscht werden, da er in einer anderen Tabelle " +
-                    "referenziert wird!", result.getResponse().getContentAsString());
-        }
+    private static Stream<Arguments> getDeleteUserByNameArguments() {
+        return Stream.of(
+            Arguments.of("User successfully deleted by name", false, "/user/delete/name/Petra", "Torsten", status().isOk(), "User Petra wurde gelöscht!"),
+            Arguments.of("Actor wants to delete himself", false, "/user/delete/name/Torsten", "Torsten", status().isInternalServerError(),
+                "Ein User kann sich nicht selbst löschen!"),
+            Arguments.of("Actor not present", false, "/user/delete/name/Petra", null, status().isBadRequest(),
+                "Required String parameter 'actor' is not present"),
+            Arguments.of("Actor not in database", false, "/user/delete/name/Petra", "ActorNichtBekannt", status().isInternalServerError(),
+                "User mit dem Namen ActorNichtBekannt konnte nicht gefunden werden"),
+            Arguments.of("User to delete not in database ", false, "/user/delete/name/UserToDeleteNichtBekannt", "Torsten", status().isInternalServerError(),
+                "User mit dem Namen UserToDeleteNichtBekannt konnte nicht gefunden werden"),
+            Arguments.of("User to delete not present", false, "/user/delete/name/", "Torsten", status().isBadRequest(),
+                "Required path variable was not found or request param has wrong format! "
+                    + "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; "
+                    + "nested exception is java.lang.NumberFormatException: For input string: \"name\""),
+            Arguments.of("User is referenced in another table", true, "/user/delete/name/Petra", "Torsten", status().isInternalServerError(),
+                "User Petra kann nicht gelöscht werden, da er in einer anderen Tabelle referenziert wird!")
+        );
     }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("getDeleteUserByNameArguments")
+    void testDeleteUserByName(String testname, Boolean createLog, String url, String actor, ResultMatcher status, String message)
+        throws Exception {
+        if (createLog) {
+            logRepository.save(Log.builder().id(1).user(petra).message("Test").severity("INFO")
+               .timestamp(LocalDateTime.of(2000,12,12,12,12,12)).build());
+        }
+            MvcResult result = mockMvc.perform(delete(url)
+                    .param("actor", actor))
+                .andDo(print())
+                .andExpect(status)
+                .andReturn();
+
+            Assertions.assertEquals(message, result.getResponse().getContentAsString());
+      }
 
     @Nested
     class DeleteAllTests {
