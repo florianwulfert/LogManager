@@ -1,5 +1,8 @@
 package project.logManager.controller;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,10 +13,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
@@ -63,7 +62,7 @@ class UserControllerTest {
     @Test
     void testDeleteUserByName() {
         systemUnderTest.deleteUserByName("Peter", "Hans");
-        Mockito.verify(userService).deleteByName("Peter", "Hans");
+        Mockito.verify(userService).deleteByName("Peter", "Test");
     }
 
     @Test
