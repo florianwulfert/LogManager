@@ -62,7 +62,7 @@ class UserControllerTest {
     @Test
     void testDeleteUserByName() {
         systemUnderTest.deleteUserByName("Peter", "Hans");
-        Mockito.verify(userService).deleteByName("Peter", "Test");
+        Mockito.verify(userService).deleteByName("Peter", "Hans");
     }
 
     @Test
