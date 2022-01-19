@@ -1,5 +1,8 @@
 package project.logManager.controller;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,14 +18,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import project.logManager.model.entity.Log;
+import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
+import project.logManager.model.repository.UserRepository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,7 +48,15 @@ class LogControllerIT {
     @Autowired
     private LogRepository logRepository;
 
-    private static Stream<Arguments> getLogsArgument() {
+    @Autowired
+    private UserRepository userRepository;
+
+    @BeforeAll
+    void setup() {
+        createLogs();
+    }
+
+    private Stream<Arguments> getLogsArgument() {
         String jahr1999 = "12.12.1999 12:12:12";
         String jahr2005 = "14.01.2005 12:10:10";
         String jahr2004 = "15.02.2004 15:12:14";
@@ -72,10 +86,9 @@ class LogControllerIT {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("getLogsArgument")
-    void testGetLogs(String testName, String severity, String message, String startDateTime, String endDateTime,
-            ResultMatcher status, Integer logNumber) throws Exception {
-        createLogs();
-        MvcResult result = mockMvc.perform(get("/logs")
+    void testFilterLogs(String testName, String severity, String message, String startDateTime, String endDateTime,
+                        ResultMatcher status, Integer logNumber) throws Exception {
+        mockMvc.perform(get("/logs")
                         .param("severity", severity)
                         .param("message", message)
                         .param("startDateTime", startDateTime)
@@ -86,6 +99,125 @@ class LogControllerIT {
                 .andReturn();
     }
 
+    @Test
+    void testSeverityIsFalseAtGetLogs() throws Exception {
+        MvcResult result = mockMvc.perform(get("/logs")
+                        .param("severity", "hi"))
+                .andDo(print())
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+
+        Assertions.assertEquals("Severity falsch!", result.getResponse().getContentAsString());
+    }
+
+
+    private static Stream<Arguments> addLogArguments() {
+        return Stream.of(
+                Arguments.of("PostLog", "INFO", "Test", "Petra", status().isOk(), "Es wurde die Nachricht \"Test\" als INFO abgespeichert!"),
+                Arguments.of("MessageIsMissing", "DEBUG", null, "Petra", status().isBadRequest(), "Required String parameter 'message' is not present"),
+                Arguments.of("SeverityIsMissing", null, "Severity fehlt", "Petra", status().isBadRequest(), "Required String parameter 'severity' is not present"),
+                Arguments.of("UserIsMissing", "INFO", "Test", null, status().isBadRequest(), "Required String parameter 'nameUser' is not present"),
+                Arguments.of("SeverityIsFalse", "hi", "Test", "Petra", status().isInternalServerError(), "Severity falsch!"),
+                Arguments.of("UserIsFalse", "INFO", "Test", "Hans", status().isInternalServerError(), "User Hans nicht gefunden"),
+                Arguments.of("KatzeInHund", "INFO", "Katze", "Petra", status().isOk(), "Katze wurde in Hund übersetzt!\nEs wurde die Nachricht \"Hund\" als INFO abgespeichert!")
+        );
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("addLogArguments")
+    void testAddLog(String testName, String severity, String message, String nameUser, ResultMatcher status,
+                    String returnMessage) throws Exception {
+        createUser("Petra");
+        MvcResult result = mockMvc.perform(post("/log")
+                        .param("severity", severity)
+                        .param("message", message)
+                        .param("nameUser", nameUser))
+                .andDo(print())
+                .andExpect(status)
+                .andReturn();
+
+        Assertions.assertEquals(returnMessage, result.getResponse().getContentAsString());
+    }
+
+
+    @Test
+    void testGetLogsById() throws Exception {
+        MvcResult result = mockMvc.perform(get("/logs/1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Assertions.assertEquals("[{\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\"}]",
+                result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void testIdForGetLogsNotFound() throws Exception {
+        MvcResult result = mockMvc.perform(get("/logs/50"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Assertions.assertEquals("[null]", result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void testDeleteLogsById() throws Exception {
+        MvcResult result = mockMvc.perform(delete("/logs/delete/2"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Assertions.assertEquals("Eintrag mit der ID 2 wurde aus der Datenbank gelöscht",
+                result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void testIdForDeleteLogsNotFound() throws Exception {
+        MvcResult result = mockMvc.perform(delete("/logs/delete/20"))
+                .andDo(print())
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+
+        Assertions.assertEquals("No class project.logManager.model.entity.Log entity with id 20 exists!",
+                result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void testDeleteLogsBySeverity() throws Exception {
+        MvcResult result = mockMvc.perform(delete("/logs/delete/severity")
+                .param("severity", "INFO"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Assertions.assertEquals("Es wurden die Einträge mit den IDs 1, 2 aus der Datenbank gelöscht",
+                result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void testWrongSeverityForDelete() throws Exception {
+        MvcResult result = mockMvc.perform(delete("/logs/delete/severity")
+                        .param("severity", "hi"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Assertions.assertEquals("Keine Einträge gefunden!", result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void testDeleteAll() throws Exception {
+        MvcResult result = mockMvc.perform(delete("/logs/delete"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Assertions.assertEquals("Alle Logs wurden aus der Datenbank gelöscht!",
+                result.getResponse().getContentAsString());
+    }
+
+
     private void createLog(Integer id, String severity, String message, LocalDateTime timestamp) {
         logRepository.save(Log.builder()
                 .id(id)
@@ -93,6 +225,52 @@ class LogControllerIT {
                 .message(message)
                 .timestamp(timestamp)
                 .build());
+    }
+
+    private void createUser(String user) {
+        switch (user) {
+            case "Petra":
+                User petra = User
+                        .builder()
+                        .id(1)
+                        .name("Petra")
+                        .geburtsdatum(LocalDate.of(1999, 12, 13))
+                        .bmi(25.39)
+                        .gewicht(65)
+                        .groesse(1.60)
+                        .lieblingsfarbe("Rot")
+                        .build();
+                userRepository.save(petra);
+                break;
+            case "Torsten":
+                User torsten = User
+                        .builder()
+                        .name("Torsten")
+                        .geburtsdatum(LocalDate.of(1985, 12, 5))
+                        .bmi(18.3)
+                        .gewicht(61.3)
+                        .groesse(1.83)
+                        .id(2)
+                        .lieblingsfarbe("Blau")
+                        .build();
+                userRepository.save(torsten);
+                break;
+            case "Hans":
+                User hans = User
+                        .builder()
+                        .name("Hans")
+                        .geburtsdatum(LocalDate.of(1993, 2, 3))
+                        .bmi(22.11)
+                        .gewicht(75.7)
+                        .groesse(1.85)
+                        .id(3)
+                        .lieblingsfarbe("Rot")
+                        .build();
+                userRepository.save(hans);
+                break;
+            default:
+                break;
+        }
     }
 
     private void createLogs() {

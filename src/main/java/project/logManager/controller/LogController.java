@@ -55,7 +55,7 @@ public class LogController {
     }
 
     @DeleteMapping("/logs/delete/severity")
-    public String deleteBySeverity(@RequestParam final String severity) {
+    public String deleteLogsBySeverity(@RequestParam final String severity) {
         return logService.deleteBySeverity(severity);
     }
 
