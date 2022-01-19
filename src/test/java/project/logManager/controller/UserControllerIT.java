@@ -198,7 +198,7 @@ class UserControllerIT {
 
     @ParameterizedTest(name = "{4}")
     @MethodSource("getDeleteUserByIdArguments")
-    void testGetDeleteUserById(Boolean userIsReferenced, String url, String actor, ResultMatcher status, String message) throws Exception {
+    void testDeleteUserById(Boolean userIsReferenced, String url, String actor, ResultMatcher status, String message) throws Exception {
         if (userIsReferenced) {
             logRepository.save(Log.builder().id(1).user(petra).message("Test").severity("INFO")
                 .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12)).build());
