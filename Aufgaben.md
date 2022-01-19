@@ -63,7 +63,7 @@ Aufgabe 10:
 * [x] f) Enum Farben erstellen (User darf nur diese Farben benutzen)
 
 Aufgabe 11:
-- [ ] BMI Rechner erstellen
+- [x] BMI Rechner erstellen
 * [x] a) BMI ausrechnen im UserService
 * [x] b) anhand des Geburtsdatums Alter berechnen und zurückgeben
 * [x] c) mit switch case: übergewichtig, untergewichtig, normalgewichtig
@@ -92,10 +92,36 @@ Aufgabe 11:
 (getUserId, deleteLogId, deleteUserId, getLogId, postUser - gewicht, groesse, datum, getUserBmi)
 * [x] Beim Erstellen des Users sollte auch die BodyweightMessage mit übergeben werden
 * [x] MR erstellen
-* [ ] Integration Tests: webmvc-Tests, SpringBoot-Tests
+* [x] Integration Tests: webmvc-Tests, SpringBoot-Tests
 * [x] findUserAndCalculateBMIException fehlt
-* [ ] Swagger aufsetzen
 * [x] Exceptions anpassen (mit RestExceptionHandler)
 * [ ] Alle Methoden/Meldungen usw. auf Englisch übersetzten
 * [x] Beim BmiControllerTestIT auf BadRequests testen
+
+Präsi
+- nicht viel Text
+- übersichtlich
+- Bilder benutzen
+- Rote Linie verfolgen
+  - Grober Überblick
+    - Thema sagen
+    - Hauptfunktionen erläutern (Fachlichkeit) - was ist alles möglich, aber Fokus auf Bmi-Rechner
+  - Technischer Aufbau
+    - Strukturierung des Projekts
+    - Unit/-IT Tests
+    - Objektorientierung (von Klasse zu Klassen o. Methoden zu Methoden)
+      - wohin komme ich von wo - Architektur - Wege erläutern (technisch)
+      - Über Controller zu Service, da ist die Fachlichkeit implementiert
+    - Besonderheiten 
+      - Pipeline
+      - Implementierung in ITs
+      - Nested Tests
+      - Exception handling
+  - Beispiele
+    - Zum Bmi-Rechner - Live-Demo
+  - Lessons learned 
+    - Von Katze/Hund zu IntegrationsTests
+      - zuerst fast nichts verstanden, im Nachhinein "easy"
+    - Unit-Tests - im Oktober fast unmöglich, jetzt denkbar
+- Raum für Fragen geben
 

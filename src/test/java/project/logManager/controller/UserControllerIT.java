@@ -1,20 +1,6 @@
 package project.logManager.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.stream.Stream;
-import javax.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,6 +19,15 @@ import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
+
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.stream.Stream;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
@@ -290,7 +285,7 @@ class UserControllerIT {
                         .groesse(1.60)
                         .lieblingsfarbe("Rot")
                         .build();
-                userRepository.save(petra);
+                userRepository.saveAndFlush(petra);
                 return petra;
             case "Torsten":
                 User torsten = User
@@ -303,7 +298,7 @@ class UserControllerIT {
                         .id(2)
                         .lieblingsfarbe("Blau")
                         .build();
-                userRepository.save(torsten);
+                userRepository.saveAndFlush(torsten);
                 return torsten;
             case "Hans":
                 User hans = User
@@ -316,7 +311,7 @@ class UserControllerIT {
                         .id(3)
                         .lieblingsfarbe("Rot")
                         .build();
-                userRepository.save(hans);
+                userRepository.saveAndFlush(hans);
                 return hans;
             default:
                 break;
