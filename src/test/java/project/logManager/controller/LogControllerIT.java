@@ -1,9 +1,6 @@
 package project.logManager.controller;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -99,17 +96,53 @@ class LogControllerIT {
                 .andReturn();
     }
 
-    @Test
-    void testSeverityIsFalseAtGetLogs() throws Exception {
-        MvcResult result = mockMvc.perform(get("/logs")
-                        .param("severity", "hi"))
-                .andDo(print())
-                .andExpect(status().isInternalServerError())
-                .andReturn();
+    @Nested
+    class testFailsAtGetLogs {
+        @Test
+        void testSeverityIsFalseAtGetLogs() throws Exception {
+            MvcResult result = mockMvc.perform(get("/logs")
+                            .param("severity", "hi"))
+                    .andDo(print())
+                    .andExpect(status().isInternalServerError())
+                    .andReturn();
 
-        Assertions.assertEquals("Severity falsch!", result.getResponse().getContentAsString());
+            Assertions.assertEquals("Severity falsch!", result.getResponse().getContentAsString());
+        }
+
+        @Test
+        void testStartDateTimeHasWrongFormat() throws Exception {
+            MvcResult result = mockMvc.perform(get("/logs")
+                            .param("startDateTime", "hallo"))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            Assertions.assertEquals("Required path variable was not found or request param has wrong format! " +
+                    "Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDateTime'; " +
+                    "nested exception is org.springframework.core.convert.ConversionFailedException: " +
+                    "Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation" +
+                    ".RequestParam @org.springframework.format.annotation.DateTimeFormat java.time.LocalDateTime] " +
+                    "for value 'hallo'; nested exception is java.lang.IllegalArgumentException: " +
+                    "Parse attempt failed for value [hallo]",result.getResponse().getContentAsString());
+        }
+
+        @Test
+        void testEndDateTimeHasWrongFormat() throws Exception {
+            MvcResult result = mockMvc.perform(get("/logs")
+                            .param("endDateTime", "hallo"))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            Assertions.assertEquals("Required path variable was not found or request param has wrong format! " +
+                    "Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDateTime'; " +
+                    "nested exception is org.springframework.core.convert.ConversionFailedException: " +
+                    "Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation" +
+                    ".RequestParam @org.springframework.format.annotation.DateTimeFormat java.time.LocalDateTime] " +
+                    "for value 'hallo'; nested exception is java.lang.IllegalArgumentException: " +
+                    "Parse attempt failed for value [hallo]",result.getResponse().getContentAsString());
+        }
     }
-
 
     private static Stream<Arguments> addLogArguments() {
         return Stream.of(
@@ -140,83 +173,115 @@ class LogControllerIT {
     }
 
 
-    @Test
-    void testGetLogsById() throws Exception {
-        MvcResult result = mockMvc.perform(get("/logs/1"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
+    @Nested
+    class testSearchLogsById {
+        @Test
+        void testGetLogsById() throws Exception {
+            MvcResult result = mockMvc.perform(get("/logs/1"))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn();
 
-        Assertions.assertEquals("[{\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\"}]",
-                result.getResponse().getContentAsString());
+            Assertions.assertEquals("[{\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\"}]",
+                    result.getResponse().getContentAsString());
+        }
+
+        @Test
+        void testIdForGetLogsNotFound() throws Exception {
+            MvcResult result = mockMvc.perform(get("/logs/50"))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            Assertions.assertEquals("[null]", result.getResponse().getContentAsString());
+        }
+
+        @Test
+        void testIdForGetLogsHasWrongFormat() throws Exception {
+            MvcResult result = mockMvc.perform(get("/logs/hallo"))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            Assertions.assertEquals("Required path variable was not found or request param has wrong format! " +
+                    "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; " +
+                    "nested exception is java.lang.NumberFormatException: For input string: \"hallo\"",
+                    result.getResponse().getContentAsString());
+        }
     }
 
-    @Test
-    void testIdForGetLogsNotFound() throws Exception {
-        MvcResult result = mockMvc.perform(get("/logs/50"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
 
-        Assertions.assertEquals("[null]", result.getResponse().getContentAsString());
+    @Nested
+    class testDeleteLogs {
+        @Test
+        void testDeleteLogsById() throws Exception {
+            MvcResult result = mockMvc.perform(delete("/logs/delete/2"))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            Assertions.assertEquals("Eintrag mit der ID 2 wurde aus der Datenbank gelöscht",
+                    result.getResponse().getContentAsString());
+        }
+
+        @Test
+        void testIdForDeleteLogsNotFound() throws Exception {
+            MvcResult result = mockMvc.perform(delete("/logs/delete/20"))
+                    .andDo(print())
+                    .andExpect(status().isInternalServerError())
+                    .andReturn();
+
+            Assertions.assertEquals("No class project.logManager.model.entity.Log entity with id 20 exists!",
+                    result.getResponse().getContentAsString());
+        }
+
+        @Test
+        void testIdForDeleteLogsHasWrongFormat() throws Exception {
+            MvcResult result = mockMvc.perform(delete("/logs/delete/hallo"))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            Assertions.assertEquals("Required path variable was not found or request param has wrong format! " +
+                            "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; " +
+                            "nested exception is java.lang.NumberFormatException: For input string: \"hallo\"",
+                    result.getResponse().getContentAsString());
+        }
+
+        @Test
+        void testDeleteLogsBySeverity() throws Exception {
+            MvcResult result = mockMvc.perform(delete("/logs/delete/severity")
+                            .param("severity", "INFO"))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            Assertions.assertEquals("Es wurden die Einträge mit den IDs 1, 2 aus der Datenbank gelöscht",
+                    result.getResponse().getContentAsString());
+        }
+
+        @Test
+        void testWrongSeverityForDelete() throws Exception {
+            MvcResult result = mockMvc.perform(delete("/logs/delete/severity")
+                            .param("severity", "hi"))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            Assertions.assertEquals("Keine Einträge gefunden!", result.getResponse().getContentAsString());
+        }
+
+        @Test
+        void testDeleteAll() throws Exception {
+            MvcResult result = mockMvc.perform(delete("/logs/delete"))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            Assertions.assertEquals("Alle Logs wurden aus der Datenbank gelöscht!",
+                    result.getResponse().getContentAsString());
+        }
     }
-
-    @Test
-    void testDeleteLogsById() throws Exception {
-        MvcResult result = mockMvc.perform(delete("/logs/delete/2"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        Assertions.assertEquals("Eintrag mit der ID 2 wurde aus der Datenbank gelöscht",
-                result.getResponse().getContentAsString());
-    }
-
-    @Test
-    void testIdForDeleteLogsNotFound() throws Exception {
-        MvcResult result = mockMvc.perform(delete("/logs/delete/20"))
-                .andDo(print())
-                .andExpect(status().isInternalServerError())
-                .andReturn();
-
-        Assertions.assertEquals("No class project.logManager.model.entity.Log entity with id 20 exists!",
-                result.getResponse().getContentAsString());
-    }
-
-    @Test
-    void testDeleteLogsBySeverity() throws Exception {
-        MvcResult result = mockMvc.perform(delete("/logs/delete/severity")
-                .param("severity", "INFO"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        Assertions.assertEquals("Es wurden die Einträge mit den IDs 1, 2 aus der Datenbank gelöscht",
-                result.getResponse().getContentAsString());
-    }
-
-    @Test
-    void testWrongSeverityForDelete() throws Exception {
-        MvcResult result = mockMvc.perform(delete("/logs/delete/severity")
-                        .param("severity", "hi"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        Assertions.assertEquals("Keine Einträge gefunden!", result.getResponse().getContentAsString());
-    }
-
-    @Test
-    void testDeleteAll() throws Exception {
-        MvcResult result = mockMvc.perform(delete("/logs/delete"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        Assertions.assertEquals("Alle Logs wurden aus der Datenbank gelöscht!",
-                result.getResponse().getContentAsString());
-    }
-
 
     private void createLog(Integer id, String severity, String message, LocalDateTime timestamp) {
         logRepository.save(Log.builder()
