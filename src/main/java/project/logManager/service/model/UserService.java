@@ -27,19 +27,19 @@ public class UserService {
 
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
-    public String addUser(String actor, String name, LocalDate geburtsdatum, double gewicht,
-                          double groesse, String lieblingsFarbe) {
+    public String addUser(String actor, String name, LocalDate birthdate, double weight,
+                          double height, String favouriteColor) {
 
         User user = User.builder()
                 .name(name)
-                .geburtsdatum(geburtsdatum)
-                .gewicht(gewicht)
-                .groesse(groesse)
-                .lieblingsfarbe(lieblingsFarbe.toLowerCase())
-                .bmi(bmiService.berechneBMI(gewicht, groesse))
+                .birthdate(birthdate)
+                .weight(weight)
+                .height(height)
+                .favouriteColor(favouriteColor.toLowerCase())
+                .bmi(bmiService.calculateBMI(weight, height))
                 .build();
 
-        userValidationService.validateFarbenEnum(lieblingsFarbe.toLowerCase());
+        userValidationService.validateFarbenEnum(favouriteColor.toLowerCase());
         userValidationService.checkIfUserToPostExists(name);
         if (userValidationService.checkIfUsersListIsEmpty(actor, user)) {
             saveUser(user, actor);
@@ -47,7 +47,7 @@ public class UserService {
             User activeUser = userValidationService.checkIfActorExists(actor);
             saveUser(user, activeUser.getName());
         }
-        return bmiService.getBmiMessage(geburtsdatum, gewicht, groesse);
+        return bmiService.getBmiMessage(birthdate, weight, height);
     }
 
     public List<User> findUserList() {
@@ -65,74 +65,73 @@ public class UserService {
             throw new UserNotFoundException(actorName);
         }
         if (id.equals(actor.getId())) {
-            LOGGER.error("Ein User kann sich nicht selbst löschen!");
-            throw new RuntimeException("Ein User kann sich nicht selbst löschen!");
+            LOGGER.error("User cannot delete himself!");
+            throw new RuntimeException("User cannot delete himself!");
         }
         if (user.isEmpty()) {
-            LOGGER.error(String.format("User mit der ID %s konnte nicht gefunden werden", id));
-            throw new RuntimeException(String.format("User mit der ID %s konnte nicht gefunden werden", id));
+            LOGGER.error(String.format("User with the ID %s not found.", id));
+            throw new RuntimeException(String.format("User with the ID %s not found.", id));
         } else {
             if (logService.existLogByActorId(user.get())) {
-                LOGGER.error(String.format("User %s kann nicht gelöscht werden, " +
-                        "da er in einer anderen Tabelle referenziert wird!", user.get().getName()));
-                throw new RuntimeException(String.format("User %s kann nicht gelöscht werden, " +
-                        "da er in einer anderen Tabelle referenziert wird!", user.get().getName()));
+                LOGGER.error(String.format("User %s cannot be deleted because he is referenced in another table!",
+                        user.get().getName()));
+                throw new RuntimeException(String.format("User %s cannot be deleted because he is " +
+                        "referenced in another table!", user.get().getName()));
             }
         }
 
+        String deleteMessage = "User with the ID %s was deleted.";
         userRepository.deleteById(id);
-        logService.addLog(String.format("User mit der ID %s wurde gelöscht.", id), "WARNING", actorName);
-        LOGGER.info(String.format("User mit der ID %s wurde gelöscht.", id));
-        return String.format("User mit der ID %s wurde gelöscht!", id);
+        logService.addLog(String.format(deleteMessage, id), "WARNING", actorName);
+        LOGGER.info(String.format(deleteMessage, id));
+        return String.format(deleteMessage, id);
     }
 
     public String deleteByName(String name, String actorName) {
         if (name.equals(actorName)) {
-            LOGGER.error("Ein User kann sich nicht selbst löschen!");
-            throw new RuntimeException("Ein User kann sich nicht selbst löschen!");
+            LOGGER.error("User cannot delete himself!");
+            throw new RuntimeException("User cannot delete himself!");
         }
         User userToDelete = userRepository.findUserByName(name);
         User actor = userRepository.findUserByName(actorName);
         if (userToDelete == null) {
-            LOGGER.error(String.format("User mit dem Namen %s konnte nicht gefunden werden", name));
-            throw new RuntimeException(String.format("User mit dem Namen %s konnte nicht gefunden werden", name));
+            LOGGER.error(String.format("User named %s not found!", name));
+            throw new RuntimeException(String.format("User named %s not found!", name));
         }
         if (logService.existLogByActorId(userToDelete)) {
-            LOGGER.error(String.format("User %s kann nicht gelöscht werden, " +
-                    "da er in einer anderen Tabelle referenziert wird!", name));
-            throw new RuntimeException(String.format("User %s kann nicht gelöscht werden, " +
-                    "da er in einer anderen Tabelle referenziert wird!", userToDelete.getName()));
+            LOGGER.error(String.format("User %s cannot be deleted because he is referenced in another table!", name));
+            throw new RuntimeException(String.format("User %s cannot be deleted because he is " +
+                    "referenced in another table!", userToDelete.getName()));
         }
         if (actor == null) {
-            LOGGER.error(String.format("User mit dem Namen %s konnte nicht gefunden werden", actorName));
-            throw new RuntimeException(String.format("User mit dem Namen %s konnte nicht gefunden werden", actorName));
+            LOGGER.error(String.format("User named %s not found!", actorName));
+            throw new RuntimeException(String.format("User named %s not found!", actorName));
         }
 
+        String deleteMessage = "User named %s was deleted";
         userRepository.deleteById(userToDelete.getId());
-        logService.addLog(String.format("User mit dem Namen %s wurde gelöscht", name), "WARNING", actorName);
-        LOGGER.info(String.format("User mit dem Namen %s wurde gelöscht", name));
-        return String.format("User %s wurde gelöscht!", name);
+        logService.addLog(String.format(deleteMessage, name), "WARNING", actorName);
+        LOGGER.info(String.format(deleteMessage, name));
+        return String.format(deleteMessage, name);
     }
 
     public String deleteAll() {
         if (!logRepository.findAll().isEmpty()) {
-            LOGGER.warn("User können nicht gelöscht werden, da sie in einer anderen Tabelle " +
-                    "referenziert werden");
-            throw new RuntimeException("User können nicht gelöscht werden, da sie in einer anderen Tabelle " +
-                    "referenziert werden");
+            LOGGER.warn("User %s cannot be deleted because he is referenced in another table!");
+            throw new RuntimeException("User %s cannot be deleted because he is referenced in another table!");
         }
         userRepository.deleteAll();
-        LOGGER.info("Alle User wurden aus der Datenbank gelöscht!");
-        return "Alle User wurden aus der Datenbank gelöscht";
+        LOGGER.info("All users were deleted from database!");
+        return "All users were deleted from database!";
     }
 
     public void saveUser(User user, String actor) {
         userRepository.save(user);
-        String bmi = bmiService.getBmiMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse());
-        logService.addLog(String.format("Der User %s wurde angelegt. %s", user.getName(), bmi),
+        String bmi = bmiService.getBmiMessage(user.getBirthdate(), user.getWeight(), user.getHeight());
+        logService.addLog(String.format("User %s was created. %s", user.getName(), bmi),
                 "INFO", actor);
-        LOGGER.info(String.format("Der User %s wurde angelegt. " +
-                        bmiService.getBmiMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse()),
+        LOGGER.info(String.format("User %s was created. " +
+                        bmiService.getBmiMessage(user.getBirthdate(), user.getWeight(), user.getHeight()),
                 user.getName()));
     }
 }

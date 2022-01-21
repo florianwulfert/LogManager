@@ -31,10 +31,10 @@ public class LogValidationService {
 
     public LogMessageDto validateMessage(String message) {
         if (message.equals("Katze")) {
-            LOGGER.info("Katze wurde in Hund übersetzt!");
+            LOGGER.info("Katze was translated to Hund!");
             return LogMessageDto.builder()
                     .message("Hund")
-                    .returnMessage("Katze wurde in Hund übersetzt!\n")
+                    .returnMessage("Katze was translated to Hund!\n")
                     .build();
         } return LogMessageDto.builder()
                 .message(message)

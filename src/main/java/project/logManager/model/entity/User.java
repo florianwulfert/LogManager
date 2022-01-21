@@ -29,17 +29,17 @@ public class User {
     @Column(name = "name", unique = true, nullable = false)
     String name;
 
-    @Column(name = "geburtsdatum", nullable = false)
-    LocalDate geburtsdatum;
+    @Column(name = "birthdate", nullable = false)
+    LocalDate birthdate;
 
-    @Column(name = "gewicht", nullable = false)
-    double gewicht;
+    @Column(name = "weight", nullable = false)
+    double weight;
 
-    @Column(name = "groesse", nullable = false)
-    double groesse;
+    @Column(name = "height", nullable = false)
+    double height;
 
-    @Column(name = "lieblingsfarbe", nullable = false)
-    String lieblingsfarbe;
+    @Column(name = "favouriteColor", nullable = false)
+    String favouriteColor;
 
     @Column(name = "bmi")
     double bmi;

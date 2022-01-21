@@ -34,25 +34,25 @@ public class LogService {
 
     public List<Log> getLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate) {
         if (!logValidationService.validateSeverity(severity)) {
-            LOGGER.error("Die übergebene severity '{}' ist nicht zugelassen!", severity);
-            throw new IllegalArgumentException("Severity falsch!");
+            LOGGER.error("Given severity '{}' is not registered!", severity);
+            throw new IllegalArgumentException("Severity wrong!");
         }
         return logRepository.findLogs(severity, message, startDate, endDate);
     }
 
     public String addLog(String message, String severity, String userName) {
         if (!logValidationService.validateSeverity(severity)) {
-            LOGGER.error("Die übergebene severity '{}' ist nicht zugelassen!", severity);
-            throw new IllegalArgumentException("Severity falsch!");
+            LOGGER.error("Given severity '{}' is not registered!", severity);
+            throw new IllegalArgumentException("Severity wrong!");
         }
         LogMessageDto logMessage = logValidationService.validateMessage(message);
         User user = checkActor(userName);
         saveLog(logMessage.getMessage(), severity, user);
 
         logMessage.setReturnMessage(logMessage.getReturnMessage() +
-                String.format("Es wurde die Nachricht \"%s\" als %s abgespeichert!",
+                String.format("Message \"%s\" has been saved as %s!",
                         logMessage.getMessage(), severity));
-        LOGGER.info(String.format("Es wurde die Nachricht \"%s\" als %s abgespeichert!",
+        LOGGER.info(String.format("Message \"%s\" has been saved as %s!",
                 logMessage.getMessage(), severity));
         return logMessage.getReturnMessage();
     }
@@ -70,8 +70,8 @@ public class LogService {
     private User checkActor(String userName) {
         User user = userRepository.findUserByName(userName);
         if (user == null) {
-            LOGGER.error(String.format("User %s nicht gefunden", userName));
-            throw new RuntimeException(String.format("User %s nicht gefunden", userName));
+            LOGGER.error(String.format("User %s not found.", userName));
+            throw new RuntimeException(String.format("User %s not found.", userName));
         }
         return user;
     }
@@ -82,7 +82,7 @@ public class LogService {
 
     public String deleteById(Integer id) {
         logRepository.deleteById(id);
-        return String.format("Eintrag mit der ID %s wurde aus der Datenbank gelöscht", id);
+        return String.format("Entry with the ID %s was deleted from the database.", id);
     }
 
     public boolean existLogByActorId(User actor) {
@@ -93,7 +93,7 @@ public class LogService {
     public String deleteBySeverity(String severity) {
         List<Log> deletedLogs = logRepository.deleteBySeverity(severity);
         if (deletedLogs.isEmpty()) {
-            return "Keine Einträge gefunden!";
+            return "No entries found!";
         }
 
         StringBuilder sb = new StringBuilder();
@@ -106,13 +106,13 @@ public class LogService {
             }
         }
 
-        sb.append("Es wurden die Einträge mit den IDs ").append(iDs).append(" aus der Datenbank gelöscht");
+        sb.append("Entries with the IDs ").append(iDs).append(" were deleted from database.");
         return sb.toString();
     }
 
     public String deleteAll() {
         logRepository.deleteAll();
-        LOGGER.info("Alle Logs wurden aus der Datenbank gelöscht!");
-        return "Alle Logs wurden aus der Datenbank gelöscht!";
+        LOGGER.info("All logs were deleted from database!");
+        return "All logs were deleted from database!";
     }
 }

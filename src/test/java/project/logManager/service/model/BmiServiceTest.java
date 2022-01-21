@@ -1,8 +1,5 @@
 package project.logManager.service.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +11,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 
@@ -35,26 +36,26 @@ class BmiServiceTest {
     @Test
     void testBerechneBMIWhenUserTooYoung() {
         Assertions.assertEquals("Der User ist zu jung für eine genaue Bestimmung des BMI.",
-                systemUnderTest.getBmiMessage(users.get(0).getGeburtsdatum(),
-                        users.get(0).getGewicht(),
-                        users.get(0).getGroesse()));
+                systemUnderTest.getBmiMessage(users.get(0).getBirthdate(),
+                        users.get(0).getWeight(),
+                        users.get(0).getHeight()));
     }
 
     @Test
     void testBerechneBMIWithNormalWeight() {
-        Assertions.assertEquals("Der User hat einen BMI von 23.14 und ist somit normalgewichtig.",
+        Assertions.assertEquals("Der User hat einen BMI von 23.14 und ist somit normalweightig.",
                 systemUnderTest.getBmiMessage(LocalDate.of(1988, 12, 12),
                         75.0, 1.80));
     }
     @Test
     void testBerechneBMIWithUnderweight() {
-        Assertions.assertEquals("Der User hat einen BMI von 16.97 und ist somit untergewichtig.",
+        Assertions.assertEquals("Der User hat einen BMI von 16.97 und ist somit unterweightig.",
                 systemUnderTest.getBmiMessage(LocalDate.of(1988, 12, 12),
                         55.0, 1.80));
     }
     @Test
     void testBerechneBMIWithOverweight() {
-        Assertions.assertEquals("Der User hat einen BMI von 44.44 und ist somit übergewichtig.",
+        Assertions.assertEquals("Der User hat einen BMI von 44.44 und ist somit überweightig.",
                 systemUnderTest.getBmiMessage(LocalDate.of(2000, 12,12),
                         100.0, 1.50));
     }
@@ -70,7 +71,7 @@ class BmiServiceTest {
     @Test
     void testBerechneBMI() {
         Assertions.assertEquals(30.86,
-                systemUnderTest.berechneBMI(100.0, 1.8));
+                systemUnderTest.calculateBMI(100.0, 1.8));
     }
 
     @Test
@@ -91,20 +92,20 @@ class BmiServiceTest {
         users.add(User.builder()
                 .id(1)
                 .name("Peter")
-                .geburtsdatum(LocalDate.of(2005, 12, 12))
-                .gewicht(90.0)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
+                .birthdate(LocalDate.of(2005, 12, 12))
+                .weight(90.0)
+                .height(1.85)
+                .favouriteColor("gelb")
                 .bmi(26.29)
                 .build());
 
         users.add(User.builder()
                 .id(2)
                 .name("Florian")
-                .geburtsdatum(LocalDate.of(1988, 12, 12))
-                .gewicht(70.0)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
+                .birthdate(LocalDate.of(1988, 12, 12))
+                .weight(70.0)
+                .height(1.85)
+                .favouriteColor("gelb")
                 .bmi(20.45)
                 .build());
         return users;

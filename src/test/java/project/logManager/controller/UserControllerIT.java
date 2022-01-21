@@ -1,14 +1,5 @@
 package project.logManager.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,6 +18,14 @@ import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
+
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
@@ -63,15 +62,15 @@ class UserControllerIT {
                         .param("actor", "Petra")
                         .param("name", "Hugo")
                         .param("geburtsdatum", "05.11.1995")
-                        .param("gewicht", "78")
-                        .param("groesse", "1.80")
-                        .param("lieblingsfarbe", "blau"))
+                        .param("weight", "78")
+                        .param("height", "1.80")
+                        .param("favouriteColor", "blau"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
 
         Assertions.assertEquals("User Hugo wurde erstellt. Der User hat einen BMI von 24.07 " +
-                "und ist somit normalgewichtig.", result.getResponse().getContentAsString());
+                "und ist somit normalweightig.", result.getResponse().getContentAsString());
     }
 
     // TODO : User kann nicht angelegt werden, da noch keine User in der Datenbank...
@@ -83,9 +82,9 @@ class UserControllerIT {
                         .param("actor", "Petra")
                         .param("name", "Hugo")
                         .param("geburtsdatum", "05.11.1995")
-                        .param("gewicht", "78")
-                        .param("groesse", "1.80")
-                        .param("lieblingsfarbe", "blau"))
+                        .param("weight", "78")
+                        .param("height", "1.80")
+                        .param("favouriteColor", "blau"))
                 .andDo(print())
                 .andExpect(status().isInternalServerError())
                 .andReturn();
@@ -98,9 +97,9 @@ class UserControllerIT {
         MvcResult result = mockMvc.perform(post("/user")
                         .param("name", "Hugo")
                         .param("geburtsdatum", "05.11.1995")
-                        .param("gewicht", "78")
-                        .param("groesse", "1.80")
-                        .param("lieblingsfarbe", "blau"))
+                        .param("weight", "78")
+                        .param("height", "1.80")
+                        .param("favouriteColor", "blau"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andReturn();
@@ -115,9 +114,9 @@ class UserControllerIT {
                         .param("actor", "Petra")
                         .param("name", "Hugo")
                         .param("geburtsdatum", "05.11.1995")
-                        .param("gewicht", "78")
-                        .param("groesse", "1.80")
-                        .param("lieblingsfarbe", "braun"))
+                        .param("weight", "78")
+                        .param("height", "1.80")
+                        .param("favouriteColor", "braun"))
                 .andDo(print())
                 .andExpect(status().isInternalServerError())
                 .andReturn();
@@ -133,9 +132,9 @@ class UserControllerIT {
                         .param("actor", "Petra")
                         .param("name", "Hugo")
                         .param("geburtsdatum", "hallo")
-                        .param("gewicht", "78")
-                        .param("groesse", "1.80")
-                        .param("lieblingsfarbe", "braun"))
+                        .param("weight", "78")
+                        .param("height", "1.80")
+                        .param("favouriteColor", "braun"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andReturn();
@@ -147,9 +146,9 @@ class UserControllerIT {
                         .param("actor", "Petra")
                         .param("name", "Hugo")
                         .param("geburtsdatum", "08.03.2002")
-                        .param("gewicht", "hi")
-                        .param("groesse", "1.80")
-                        .param("lieblingsfarbe", "braun"))
+                        .param("weight", "hi")
+                        .param("height", "1.80")
+                        .param("favouriteColor", "braun"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andReturn();
@@ -161,9 +160,9 @@ class UserControllerIT {
                         .param("actor", "Petra")
                         .param("name", "Hugo")
                         .param("geburtsdatum", "hallo")
-                        .param("gewicht", "78")
-                        .param("groesse", "hi")
-                        .param("lieblingsfarbe", "braun"))
+                        .param("weight", "78")
+                        .param("height", "hi")
+                        .param("favouriteColor", "braun"))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andReturn();
@@ -175,9 +174,9 @@ class UserControllerIT {
                         .param("actor", "Petra")
                         .param("name", "Petra")
                         .param("geburtsdatum", "05.11.1995")
-                        .param("gewicht", "78")
-                        .param("groesse", "1.80")
-                        .param("lieblingsfarbe", "blau"))
+                        .param("weight", "78")
+                        .param("height", "1.80")
+                        .param("favouriteColor", "blau"))
                 .andDo(print())
                 .andExpect(status().isInternalServerError())
                 .andReturn();
@@ -200,7 +199,7 @@ class UserControllerIT {
                 .andReturn();
 
         Assertions.assertEquals("{\"id\":1,\"name\":\"Petra\",\"geburtsdatum\":\"1999-12-13\"," +
-                        "\"gewicht\":65.0,\"groesse\":1.6,\"lieblingsfarbe\":\"Rot\",\"bmi\":25.39}",
+                        "\"weight\":65.0,\"height\":1.6,\"favouriteColor\":\"Rot\",\"bmi\":25.39}",
                 result.getResponse().getContentAsString());
     }
 
@@ -305,7 +304,6 @@ class UserControllerIT {
                 result.getResponse().getContentAsString());
     }
 
-    //
     @Test
     void whenActorForDeleteByNameNotFoundThenReturnBadRequest() throws Exception {
         MvcResult result = mockMvc.perform(delete("/user/delete/name/Petra")
@@ -377,11 +375,11 @@ class UserControllerIT {
                         .builder()
                         .id(1)
                         .name("Petra")
-                        .geburtsdatum(LocalDate.of(1999, 12, 13))
+                        .birthdate(LocalDate.of(1999, 12, 13))
                         .bmi(25.39)
-                        .gewicht(65)
-                        .groesse(1.60)
-                        .lieblingsfarbe("Rot")
+                        .weight(65)
+                        .height(1.60)
+                        .favouriteColor("Red")
                         .build();
                 userRepository.save(petra);
                 return petra;
@@ -389,12 +387,12 @@ class UserControllerIT {
                 User torsten = User
                         .builder()
                         .name("Torsten")
-                        .geburtsdatum(LocalDate.of(1985, 12, 5))
+                        .birthdate(LocalDate.of(1985, 12, 5))
                         .bmi(18.3)
-                        .gewicht(61.3)
-                        .groesse(1.83)
+                        .weight(61.3)
+                        .height(1.83)
                         .id(2)
-                        .lieblingsfarbe("Blau")
+                        .favouriteColor("Blue")
                         .build();
                 userRepository.save(torsten);
                 return torsten;
@@ -402,12 +400,12 @@ class UserControllerIT {
                 User hans = User
                         .builder()
                         .name("Hans")
-                        .geburtsdatum(LocalDate.of(1993, 2, 3))
+                        .birthdate(LocalDate.of(1993, 2, 3))
                         .bmi(22.11)
-                        .gewicht(75.7)
-                        .groesse(1.85)
+                        .weight(75.7)
+                        .height(1.85)
                         .id(3)
-                        .lieblingsfarbe("Rot")
+                        .favouriteColor("Red")
                         .build();
                 userRepository.save(hans);
                 return hans;

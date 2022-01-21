@@ -1,10 +1,6 @@
 package project.logManager.service.model;
 
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +9,11 @@ import project.logManager.common.utils.DateUtil;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
+
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 
 @Transactional
 @Service
@@ -23,30 +24,30 @@ public class BmiService extends DateUtil {
 
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
-    public String getBmiMessage(LocalDate geburtsDatum, Double gewicht, Double groesse) {
-        Double bmi = berechneBMI(gewicht, groesse);
-        int alterUser = getAgeFromBirthDate(geburtsDatum);
+    public String getBmiMessage(LocalDate birthdate, Double weight, Double height) {
+        Double bmi = calculateBMI(weight, height);
+        int ageUser = getAgeFromBirthDate(birthdate);
 
-        if (alterUser < 18) {
-            LOGGER.warn("Der User ist zu jung für eine genaue Bestimmung des BMI.");
-            return "Der User ist zu jung für eine genaue Bestimmung des BMI.";
+        if (ageUser < 18) {
+            LOGGER.warn("User is too young for an exact definition of the BMI.");
+            return "User is too young for an exact definition of the BMI.";
         }
 
-        String bmiMessage = "Der User hat einen BMI von %s und ist somit";
+        String bmiMessage = "User has a BMI of %s and therewith he has";
 
         if (bmi > 18.5 && bmi <= 25) {
-            return String.format(bmiMessage + " normalgewichtig.", bmi);
+            return String.format(bmiMessage + " normal weight.", bmi);
         } else if (bmi <= 18.5 && bmi > 0) {
-            return String.format(bmiMessage + " untergewichtig.", bmi);
+            return String.format(bmiMessage + " underweight.", bmi);
         } else if (bmi > 25) {
-            return String.format(bmiMessage + " übergewichtig.", bmi);
+            return String.format(bmiMessage + " overweight.", bmi);
         } else {
-            LOGGER.error("BMI konnte nicht berechnet werden");
-            throw new IllegalStateException("BMI konnte nicht berechnet werden");
+            LOGGER.error("BMI could not be calculated.");
+            throw new IllegalStateException("BMI could not be calculated.");
         }
     }
 
-    public Double berechneBMI(Double gewicht, Double groesse) {
+    public Double calculateBMI(Double gewicht, Double groesse) {
         BigDecimal bigDecimal = new BigDecimal(gewicht / (groesse * groesse)).
                 setScale(2, RoundingMode.DOWN);
         return bigDecimal.doubleValue();
@@ -57,6 +58,6 @@ public class BmiService extends DateUtil {
         if (user == null) {
             throw new UserNotFoundException(userName);
         }
-        return getBmiMessage(user.getGeburtsdatum(), user.getGewicht(), user.getGroesse());
+        return getBmiMessage(user.getBirthdate(), user.getWeight(), user.getHeight());
     }
 }

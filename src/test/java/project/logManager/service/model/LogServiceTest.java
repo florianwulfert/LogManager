@@ -184,10 +184,10 @@ class LogServiceTest {
         users.add(User.builder()
                 .name("Peter")
                 .id(1)
-                .geburtsdatum(LocalDate.of(2000, 12, 12))
-                .gewicht(85.0)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
+                .birthdate(LocalDate.of(2000, 12, 12))
+                .weight(85.0)
+                .height(1.85)
+                .favouriteColor("gelb")
                 .build());
         return users;
     }

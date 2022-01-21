@@ -20,12 +20,12 @@ public class UserController {
     @PostMapping("/user")
     public String addUser(@RequestParam String actor,
                           @RequestParam String name,
-                          @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate geburtsdatum,
-                          @RequestParam double gewicht,
-                          @RequestParam double groesse,
-                          @RequestParam String lieblingsfarbe) {
+                          @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate birthdate,
+                          @RequestParam double weight,
+                          @RequestParam double height,
+                          @RequestParam String favouriteColor) {
         return String.format("User %s wurde erstellt. " +
-                        userService.addUser(actor, name, geburtsdatum, gewicht, groesse, lieblingsfarbe), name);
+                        userService.addUser(actor, name, birthdate, weight, height, favouriteColor), name);
     }
 
     @GetMapping("/users")
