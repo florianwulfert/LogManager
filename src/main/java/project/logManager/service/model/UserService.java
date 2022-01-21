@@ -108,7 +108,7 @@ public class UserService {
             throw new RuntimeException(String.format("User named %s not found!", actorName));
         }
 
-        String deleteMessage = "User named %s was deleted";
+        String deleteMessage = "User named %s was deleted.";
         userRepository.deleteById(userToDelete.getId());
         logService.addLog(String.format(deleteMessage, name), "WARNING", actorName);
         LOGGER.info(String.format(deleteMessage, name));
@@ -117,8 +117,8 @@ public class UserService {
 
     public String deleteAll() {
         if (!logRepository.findAll().isEmpty()) {
-            LOGGER.warn("User %s cannot be deleted because he is referenced in another table!");
-            throw new RuntimeException("User %s cannot be deleted because he is referenced in another table!");
+            LOGGER.warn("Users cannot be deleted because they are referenced in another table!");
+            throw new RuntimeException("User cannot be deleted because they are referenced in another table!");
         }
         userRepository.deleteAll();
         LOGGER.info("All users were deleted from database!");

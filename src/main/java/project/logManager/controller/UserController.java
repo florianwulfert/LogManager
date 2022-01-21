@@ -24,7 +24,7 @@ public class UserController {
                           @RequestParam double weight,
                           @RequestParam double height,
                           @RequestParam String favouriteColor) {
-        return String.format("User %s wurde erstellt. " +
+        return String.format("User %s was created. " +
                         userService.addUser(actor, name, birthdate, weight, height, favouriteColor), name);
     }
 

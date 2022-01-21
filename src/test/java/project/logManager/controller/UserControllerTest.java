@@ -35,7 +35,7 @@ class UserControllerTest {
     void testAddUser() {
         Mockito.when(userService.addUser(users.get(1).getName(), users.get(0).getName(), users.get(0).getBirthdate(),
                 90.0, 1.85, users.get(0).getFavouriteColor())).thenReturn("Test");
-        Assertions.assertEquals("User Peter wurde erstellt. Test",
+        Assertions.assertEquals("User Peter was created. Test",
                 systemUnderTest.addUser(users.get(1).getName(), users.get(0).getName(), users.get(0).getBirthdate(),
                         90.0, 1.85, users.get(0).getFavouriteColor()));
         Mockito.verify(userService).addUser(users.get(1).getName(), users.get(0).getName(), users.get(0).getBirthdate(),
@@ -80,7 +80,7 @@ class UserControllerTest {
                 .birthdate(LocalDate.of(1988, 12, 12))
                 .weight(90.0)
                 .height(1.85)
-                .favouriteColor("gelb")
+                .favouriteColor("yellow")
                 .bmi(26.29)
                 .build());
 
@@ -90,7 +90,7 @@ class UserControllerTest {
                 .birthdate(LocalDate.of(1988, 12, 12))
                 .weight(70.0)
                 .height(1.85)
-                .favouriteColor("gelb")
+                .favouriteColor("yellow")
                 .bmi(20.45)
                 .build());
         return users;
