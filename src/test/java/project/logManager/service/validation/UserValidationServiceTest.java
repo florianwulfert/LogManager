@@ -44,8 +44,8 @@ class UserValidationServiceTest {
     void testIfColorIsNotCorrect() {
         RuntimeException ex = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 systemUnderTest.validateFarbenEnum("gold"));
-        Assertions.assertEquals("Farbe falsch! Wählen Sie eine der folgenden Farben: " +
-                "blau, rot, orange, gelb, schwarz", ex.getMessage());
+        Assertions.assertEquals("Color illegal! Choose from the following options: " +
+                "blue, red, orange, yellow, black", ex.getMessage());
     }
 
     @Test
@@ -60,9 +60,8 @@ class UserValidationServiceTest {
                 .thenThrow(RuntimeException.class);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.checkIfUsersListIsEmpty(users.get(1).getName(), users.get(0)));
-        Assertions.assertEquals("User kann nicht angelegt werden, da noch keine User in der " +
-                "Datenbank angelegt sind. Erster User muss sich selbst anlegen!" +
-                " Peter ungleich Florian", ex.getMessage());
+        Assertions.assertEquals("User cannot be created because there are no user in the database yet. " +
+                "First user has to create himself! Peter unequal Florian", ex.getMessage());
     }
 
     //Der Fall trifft aktuell nicht ein, wird aber aus Testcoverage-Gründen getestet
@@ -82,7 +81,7 @@ class UserValidationServiceTest {
     void testIfActorIsNull() {
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.checkIfActorExists(users.get(1).getName()));
-        Assertions.assertEquals("User Florian nicht gefunden", ex.getMessage());
+        Assertions.assertEquals("User Florian not found.", ex.getMessage());
     }
 
     @Test
@@ -90,7 +89,7 @@ class UserValidationServiceTest {
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.checkIfUserToPostExists(users.get(0).getName()));
-        Assertions.assertEquals("User Peter bereits vorhanden", ex.getMessage());
+        Assertions.assertEquals("User Peter already exists.", ex.getMessage());
     }
 
     @Test
@@ -103,20 +102,20 @@ class UserValidationServiceTest {
         users.add(User.builder()
                 .id(1)
                 .name("Peter")
-                .geburtsdatum(LocalDate.of(2005, 12, 12))
-                .gewicht(90.0)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
+                .birthdate(LocalDate.of(2005, 12, 12))
+                .weight(90.0)
+                .height(1.85)
+                .favouriteColor("yellow")
                 .bmi(26.29)
                 .build());
 
         users.add(User.builder()
                 .id(2)
                 .name("Florian")
-                .geburtsdatum(LocalDate.of(1988, 12, 12))
-                .gewicht(70.0)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
+                .birthdate(LocalDate.of(1988, 12, 12))
+                .weight(70.0)
+                .height(1.85)
+                .favouriteColor("yellow")
                 .bmi(20.45)
                 .build());
         return users;

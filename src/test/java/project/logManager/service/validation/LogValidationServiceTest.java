@@ -35,7 +35,7 @@ class LogValidationServiceTest {
     void validateMessageIsKatze() {
         LogMessageDto customLogMessageDto = LogMessageDto.builder()
                 .message("Hund")
-                .returnMessage("Katze wurde in Hund übersetzt!\n")
+                .returnMessage("Katze was translated to Hund!\n")
                 .build();
         Assertions.assertEquals(customLogMessageDto, systemUnderTest.validateMessage("Katze"));
     }

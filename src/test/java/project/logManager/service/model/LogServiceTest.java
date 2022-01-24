@@ -1,12 +1,5 @@
 package project.logManager.service.model;
 
-import static org.mockito.ArgumentMatchers.anyString;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +14,14 @@ import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.LogValidationService;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.anyString;
 
 /**
  * @author - EugenFriesen
@@ -80,7 +81,7 @@ class LogServiceTest {
         Mockito.when(logValidationService.validateMessage(Mockito.anyString()))
                 .thenReturn(customLogMessageDto.get(1));
         Mockito.when(userRepository.findUserByName("Paul")).thenReturn(users.get(0));
-        Assertions.assertEquals("Es wurde die Nachricht \"Banane\" als INFO abgespeichert!",
+        Assertions.assertEquals("Message \"Banane\" saved as INFO!",
         systemUnderTest.addLog("Banane", "INFO", "Paul"));
         Mockito.verify(logRepository, Mockito.times(1)).save(Mockito.any());
     }
@@ -90,9 +91,8 @@ class LogServiceTest {
         Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(false);
         RuntimeException ex = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 systemUnderTest.addLog("Ein Test", "KATZE", "Peter"));
-        Assertions.assertEquals("Severity KATZE ist nicht zugelassen. "
-            + "Bitte wählen Sie eins der folgenden severities aus: "
-            + "TRACE, DEBUG, INFO, WARNING, ERROR, FATAL", ex.getMessage());
+        Assertions.assertEquals("Severity KATZE not registered. Please choose one of the following options: " +
+                "TRACE, DEBUG, INFO, WARNING, ERROR, FATAL", ex.getMessage());
     }
 
     @Test
@@ -102,7 +102,7 @@ class LogServiceTest {
         Mockito.when(logValidationService.validateMessage(Mockito.anyString()))
                 .thenReturn(customLogMessageDto.get(0));
         Assertions.assertEquals(customLogMessageDto.get(0).getReturnMessage() +
-                        "Es wurde die Nachricht \"Hund\" als INFO abgespeichert!",
+                        "Message \"Hund\" saved as INFO!",
                 systemUnderTest.addLog("Katze", "INFO", "Peter"));
     }
 
@@ -112,7 +112,7 @@ class LogServiceTest {
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(Mockito.any());
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
                 () -> systemUnderTest.addLog("Hallo", "INFO", "Peter"));
-        Assertions.assertEquals("User Peter nicht gefunden", ex.getMessage());
+        Assertions.assertEquals("User Peter not found.", ex.getMessage());
     }
 
     @Test
@@ -124,7 +124,7 @@ class LogServiceTest {
 
     @Test
     void testDeleteById() {
-        Assertions.assertEquals("Eintrag mit der ID 1 wurde aus der Datenbank gelöscht",
+        Assertions.assertEquals("Entry with the ID 1 was deleted from database.",
                 systemUnderTest.deleteById(1));
         Mockito.verify(logRepository)
                 .deleteById(1);
@@ -154,14 +154,14 @@ class LogServiceTest {
                 .build());
 
         Mockito.when(logRepository.deleteBySeverity(Mockito.anyString())).thenReturn(logs);
-        Assertions.assertEquals("Es wurden die Einträge mit den IDs 1, 8 aus der Datenbank gelöscht",
+        Assertions.assertEquals("Entries with the ID(s) 1, 8 were deleted from database.",
                 systemUnderTest.deleteBySeverity("INFO"));
         Mockito.verify(logRepository).deleteBySeverity("INFO");
     }
 
     @Test
     void testNoEntriesFound() {
-        Assertions.assertEquals("Keine Einträge gefunden!", systemUnderTest.deleteBySeverity("INFO"));
+        Assertions.assertEquals("No entries found!", systemUnderTest.deleteBySeverity("INFO"));
         Mockito.verify(logRepository).deleteBySeverity("INFO");
     }
 
@@ -183,12 +183,13 @@ class LogServiceTest {
     private List<User> addTestUser() {
         List<User> users = new ArrayList<>();
         users.add(User.builder()
-                .name("Peter")
                 .id(1)
-                .geburtsdatum(LocalDate.of(2000, 12, 12))
-                .gewicht(85.0)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
+                .name("Peter")
+                .birthdate(LocalDate.of(1999, 12, 13))
+                .bmi(25.39)
+                .weight(65)
+                .height(1.60)
+                .favouriteColor("Red")
                 .build());
         return users;
     }

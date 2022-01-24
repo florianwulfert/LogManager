@@ -81,9 +81,9 @@ Aufgabe 11:
 * [x] bmi wurde berechnet + wert in postman konsole und lognachricht dazu in intellij
 * [x] bmi service erstellen und bmicontroller, bmi service vom bmiController aufrufen
 * [x] Datum in bmiwithmessage anpassen
-* [x] finuserandcalculatebmi anpassen
+* [x] finduserandcalculatebmi anpassen
 * [x] nachrichten wergen gewicht in variable auslagern
-* [ ] Doku schreiben
+* [x] Doku schreiben
 * [x] Alle Logs/alle User auf einmal löschen einbauen
 * [x] Logger.info aus userService löschen
 * [x] testIfUserIsNull im LogServiceTest anpassen
@@ -95,7 +95,7 @@ Aufgabe 11:
 * [x] Integration Tests: webmvc-Tests, SpringBoot-Tests
 * [x] findUserAndCalculateBMIException fehlt
 * [x] Exceptions anpassen (mit RestExceptionHandler)
-* [ ] Alle Methoden/Meldungen usw. auf Englisch übersetzten
+* [x] Alle Methoden/Meldungen usw. auf Englisch übersetzten
 * [x] Beim BmiControllerTestIT auf BadRequests testen
 
 Präsi

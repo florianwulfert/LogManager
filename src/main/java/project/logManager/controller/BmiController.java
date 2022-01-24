@@ -20,10 +20,10 @@ public class BmiController {
 
     @GetMapping("/bmi")
     public String getBmi(
-            @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate geburtsdatum,
-            @RequestParam double gewicht,
-            @RequestParam double groesse) {
-        return bmiService.getBmiMessage(geburtsdatum, gewicht, groesse);
+            @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate birthdate,
+            @RequestParam double weight,
+            @RequestParam double height) {
+        return bmiService.getBmiMessage(birthdate, weight, height);
     }
 
     @GetMapping("/bmi/{user}")

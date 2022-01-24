@@ -57,7 +57,7 @@ class UserServiceTest {
         systemUnderTest.addUser(users.get(1).getName(), "Peter", LocalDate.of
                         (1988, 12, 12), 90.0,
                 1.85, "GELB");
-        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Test",
+        Mockito.verify(logService).addLog("User Peter was created. Test",
                 "INFO", "Florian");
         Mockito.verify(userRepository).save(Mockito.any());
     }
@@ -70,7 +70,7 @@ class UserServiceTest {
         systemUnderTest.addUser(users.get(0).getName(), users.get(0).getName(),
                 LocalDate.of(2000, 11, 18), 80,
                 1.85, "blau");
-        Mockito.verify(logService).addLog("Der User Peter wurde angelegt. Test",
+        Mockito.verify(logService).addLog("User Peter was created. Test",
                 "INFO", "Peter");
         Mockito.verify(userRepository).save(Mockito.any());
     }
@@ -99,7 +99,7 @@ class UserServiceTest {
         Mockito.when(userRepository.findById(2)).thenReturn(Optional.ofNullable(users.get(1)));
         Mockito.when(logService.existLogByActorId(users.get(1))).thenReturn(false);
         systemUnderTest.deleteById(2, users.get(0).getName());
-        Mockito.verify(logService).addLog("User mit der ID 2 wurde gelöscht.",
+        Mockito.verify(logService).addLog("User with the ID 2 was deleted.",
                 "WARNING", "Peter");
     }
 
@@ -108,7 +108,7 @@ class UserServiceTest {
         Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(users.get(0)));
         UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () ->
                 systemUnderTest.deleteById(2, users.get(0).getName()));
-        Assertions.assertEquals("User Peter konnte nicht identifiziert werden!", ex.getMessage());
+        Assertions.assertEquals("User Peter not identified!", ex.getMessage());
     }
 
     @Test
@@ -117,7 +117,7 @@ class UserServiceTest {
                 .thenReturn(users.get(0));
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.deleteById(users.get(0).getId(), users.get(0).getName()));
-        Assertions.assertEquals("Ein User kann sich nicht selbst löschen!",
+        Assertions.assertEquals("User cannot delete himself!",
                 ex.getMessage());
     }
 
@@ -127,7 +127,7 @@ class UserServiceTest {
                 thenReturn(users.get(0));
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.deleteById(users.get(1).getId(), users.get(0).getName()));
-        Assertions.assertEquals("User mit der ID 2 konnte nicht gefunden werden",
+        Assertions.assertEquals("User with the ID 2 not found.",
                 ex.getMessage());
     }
 
@@ -140,15 +140,15 @@ class UserServiceTest {
         Mockito.when(logService.existLogByActorId(users.get(1))).thenReturn(true);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.deleteById(2, "Peter"));
-        Assertions.assertEquals("User Florian kann nicht gelöscht werden, " +
-                "da er in einer anderen Tabelle referenziert wird!", ex.getMessage());
+        Assertions.assertEquals("User Florian cannot be deleted because he is referenced in another table!",
+                ex.getMessage());
     }
 
     @Test
     void testIfNameToDeleteEqualsActorname() {
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.deleteByName(users.get(0).getName(), users.get(0).getName()));
-        Assertions.assertEquals("Ein User kann sich nicht selbst löschen!",
+        Assertions.assertEquals("User cannot delete himself!",
                 ex.getMessage());
     }
 
@@ -156,7 +156,7 @@ class UserServiceTest {
     void testIfUserToDeleteIsNull() {
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
                 () -> systemUnderTest.deleteByName("Peter", "Florian"));
-        Assertions.assertEquals("User mit dem Namen Peter konnte nicht gefunden werden",
+        Assertions.assertEquals("User named Peter not found!",
                 ex.getMessage());
     }
 
@@ -166,8 +166,8 @@ class UserServiceTest {
         Mockito.when(logService.existLogByActorId(users.get(0))).thenReturn(true);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
                 () -> systemUnderTest.deleteByName("Peter", "Florian"));
-        Assertions.assertEquals("User Peter kann nicht gelöscht werden, " +
-                "da er in einer anderen Tabelle referenziert wird!", ex.getMessage());
+        Assertions.assertEquals("User Peter cannot be deleted because he is referenced in another table!",
+                ex.getMessage());
     }
 
     @Test
@@ -175,7 +175,7 @@ class UserServiceTest {
         Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
                 () -> systemUnderTest.deleteByName("Peter", "hallo"));
-        Assertions.assertEquals("User mit dem Namen hallo konnte nicht gefunden werden",
+        Assertions.assertEquals("User named hallo not found!",
                 ex.getMessage());
     }
 
@@ -184,7 +184,7 @@ class UserServiceTest {
         Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
         Mockito.when(userRepository.findUserByName("Florian")).thenReturn(users.get(1));
         systemUnderTest.deleteByName("Peter", "Florian");
-        Mockito.verify(logService).addLog("User mit dem Namen Peter wurde gelöscht",
+        Mockito.verify(logService).addLog("User named Peter was deleted.",
                 "WARNING", "Florian");
     }
 
@@ -207,8 +207,8 @@ class UserServiceTest {
         Mockito.when(logRepository.findAll()).thenReturn(testLogs);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.deleteAll());
-        Assertions.assertEquals("User können nicht gelöscht werden, da sie in einer anderen Tabelle " +
-                "referenziert werden", ex.getMessage());
+        Assertions.assertEquals("Users cannot be deleted because they are referenced in another table!",
+                ex.getMessage());
     }
 
     private List<User> addTestUser() {
@@ -216,20 +216,20 @@ class UserServiceTest {
         users.add(User.builder()
                 .id(1)
                 .name("Peter")
-                .geburtsdatum(LocalDate.of(2005, 12, 12))
-                .gewicht(90.0)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
+                .birthdate(LocalDate.of(2005, 12, 12))
+                .weight(90.0)
+                .height(1.85)
+                .favouriteColor("yellow")
                 .bmi(26.29)
                 .build());
 
         users.add(User.builder()
                 .id(2)
                 .name("Florian")
-                .geburtsdatum(LocalDate.of(1988, 12, 12))
-                .gewicht(70.0)
-                .groesse(1.85)
-                .lieblingsfarbe("gelb")
+                .birthdate(LocalDate.of(1988, 12, 12))
+                .weight(70.0)
+                .height(1.85)
+                .favouriteColor("yellow")
                 .bmi(20.45)
                 .build());
         return users;
