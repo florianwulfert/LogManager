@@ -1,5 +1,7 @@
 package project.logManager.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureDataJpa
 @ComponentScan(basePackages = {"project.logManager"})
 @Transactional
-@TestPropertySource("/application-test.properties")
+@TestPropertySource("/application-user-test.properties")
 @TestInstance(Lifecycle.PER_CLASS)
 class UserControllerIT {
 
@@ -47,16 +49,12 @@ class UserControllerIT {
     @Autowired
     private LogRepository logRepository;
 
-    User petra;
-    User torsten;
-    User hans;
+  List<User> userList = new ArrayList<>();
 
-    @BeforeAll
-    public void setup() {
-        petra = createUser("Petra");
-        torsten = createUser("Torsten");
-        hans = createUser("Hans");
-    }
+  @BeforeAll
+  public void setup() {
+    userList = createUser();
+  }
 
     private static Stream<Arguments> getAddUserArguments() {
         return Stream.of(
@@ -200,18 +198,18 @@ class UserControllerIT {
         );
     }
 
-    @ParameterizedTest(name = "{4}")
-    @MethodSource("getDeleteUserByIdArguments")
-    void testDeleteUserById(Boolean userIsReferenced, String url, String actor, ResultMatcher status, String message) throws Exception {
-        if (userIsReferenced) {
-            logRepository.save(Log.builder().id(1).user(petra).message("Test").severity("INFO")
-                    .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12)).build());
-        }
-        MvcResult result = mockMvc.perform(delete(url)
-                        .param("actor", actor))
-                .andDo(print())
-                .andExpect(status)
-                .andReturn();
+  @ParameterizedTest(name = "{4}")
+  @MethodSource("getDeleteUserByIdArguments")
+  void testDeleteUserById(Boolean userIsReferenced, String url, String actor, ResultMatcher status, String message) throws Exception {
+    if (userIsReferenced) {
+      logRepository.save(Log.builder().id(1).user(userList.get(0)).message("Test").severity("INFO")
+          .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12)).build());
+    }
+    MvcResult result = mockMvc.perform(delete(url)
+            .param("actor", actor))
+        .andDo(print())
+        .andExpect(status)
+        .andReturn();
 
         Assertions.assertEquals(message, result.getResponse().getContentAsString());
     }
@@ -236,19 +234,19 @@ class UserControllerIT {
         );
     }
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("getDeleteUserByNameArguments")
-    void testDeleteUserByName(String testname, Boolean createLog, String url, String actor, ResultMatcher status, String message)
-            throws Exception {
-        if (createLog) {
-            logRepository.save(Log.builder().id(1).user(petra).message("Test").severity("INFO")
-                    .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12)).build());
-        }
-        MvcResult result = mockMvc.perform(delete(url)
-                        .param("actor", actor))
-                .andDo(print())
-                .andExpect(status)
-                .andReturn();
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("getDeleteUserByNameArguments")
+  void testDeleteUserByName(String testname, Boolean createLog, String url, String actor, ResultMatcher status, String message)
+      throws Exception {
+    if (createLog) {
+      logRepository.save(Log.builder().id(1).user(userList.get(0)).message("Test").severity("INFO")
+          .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12)).build());
+    }
+    MvcResult result = mockMvc.perform(delete(url)
+            .param("actor", actor))
+        .andDo(print())
+        .andExpect(status)
+        .andReturn();
 
         Assertions.assertEquals(message, result.getResponse().getContentAsString());
     }
@@ -267,23 +265,22 @@ class UserControllerIT {
                     result.getResponse().getContentAsString());
         }
 
-        @Test
-        void whenUserIsUsedSomewhereThenReturnCouldNotDelete() throws Exception {
-            logRepository.save(Log.builder().id(1).user(petra).message("Test").severity("INFO")
-                    .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12)).build());
-            MvcResult result = mockMvc.perform(delete("/user/delete"))
-                    .andDo(print())
-                    .andExpect(status().isInternalServerError())
-                    .andReturn();
+    @Test
+    void whenUserIsUsedSomewhereThenReturnCouldNotDelete() throws Exception {
+      logRepository.save(Log.builder().id(1).user(userList.get(0)).message("Test").severity("INFO")
+          .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12)).build());
+      MvcResult result = mockMvc.perform(delete("/user/delete"))
+          .andDo(print())
+          .andExpect(status().isInternalServerError())
+          .andReturn();
 
             Assertions.assertEquals("Users cannot be deleted because they are referenced in another table!", result.getResponse().getContentAsString());
         }
     }
 
-    private User createUser(String user) {
-        switch (user) {
-            case "Petra":
-                User petra = User
+    private List<User> createUser(String user) {
+      List<User> userList = new ArrayList<>();
+      User petra = User
                         .builder()
                         .id(1)
                         .name("Petra")
@@ -294,8 +291,6 @@ class UserControllerIT {
                         .favouriteColor("Red")
                         .build();
                 userRepository.saveAndFlush(petra);
-                return petra;
-            case "Torsten":
                 User torsten = User
                         .builder()
                         .name("Torsten")
@@ -307,8 +302,6 @@ class UserControllerIT {
                         .favouriteColor("Blue")
                         .build();
                 userRepository.saveAndFlush(torsten);
-                return torsten;
-            case "Hans":
                 User hans = User
                         .builder()
                         .name("Hans")
@@ -319,11 +312,12 @@ class UserControllerIT {
                         .id(3)
                         .favouriteColor("Red")
                         .build();
-                userRepository.saveAndFlush(hans);
-                return hans;
-            default:
-                break;
-        }
-        return null;
+      userList.add(petra);
+      userList.add(torsten);
+      userList.add(hans);
+      userRepository.save(petra);
+      userRepository.save(torsten);
+      userRepository.save(hans);
+      return userList;
     }
 }
