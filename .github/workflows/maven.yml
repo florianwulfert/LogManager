@@ -7,7 +7,7 @@ on:
   push:
     branches: 
     - master
-    - feature/integration-tests
+    - feature/translation
   pull_request:
     branches: [ master ]
 
