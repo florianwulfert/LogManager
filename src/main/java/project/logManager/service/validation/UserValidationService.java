@@ -43,8 +43,8 @@ public class UserValidationService {
                             user.getName() + " ungleich " + actor);
                     throw new ErsterUserUngleichActorException(actor, user.getName());
                 }
-            }
-            return true;
+                return true;
+            } return false;
         } catch (ErsterUserUngleichActorException ex) {
             handleErsterUserUngleichActor(actor, ex);
             return false;

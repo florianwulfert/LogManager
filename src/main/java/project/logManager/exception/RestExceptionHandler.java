@@ -27,7 +27,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     String pathVariableIsMissingHandler(MethodArgumentTypeMismatchException ex) {
-        return "Required path variable was not found!";
+        return "Required path variable was not found or request param has wrong format! " + ex.getMessage();
     }
 
     @ResponseBody

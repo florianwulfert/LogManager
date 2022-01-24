@@ -7,7 +7,7 @@ on:
   push:
     branches: 
     - master
-    - bmi
+    - feature/integration-tests
   pull_request:
     branches: [ master ]
 
@@ -29,4 +29,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Integration tests
-      run: mvn integration-test
+      run: mvn verify

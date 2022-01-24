@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.logManager.common.dto.LogMessageDto;
+import project.logManager.exception.SeverityNotFoundException;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -35,7 +36,7 @@ public class LogService {
     public List<Log> getLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate) {
         if (!logValidationService.validateSeverity(severity)) {
             LOGGER.error("Die übergebene severity '{}' ist nicht zugelassen!", severity);
-            throw new IllegalArgumentException("Severity falsch!");
+            throw new SeverityNotFoundException(severity);
         }
         return logRepository.findLogs(severity, message, startDate, endDate);
     }
@@ -43,7 +44,7 @@ public class LogService {
     public String addLog(String message, String severity, String userName) {
         if (!logValidationService.validateSeverity(severity)) {
             LOGGER.error("Die übergebene severity '{}' ist nicht zugelassen!", severity);
-            throw new IllegalArgumentException("Severity falsch!");
+            throw new SeverityNotFoundException(severity);
         }
         LogMessageDto logMessage = logValidationService.validateMessage(message);
         User user = checkActor(userName);
