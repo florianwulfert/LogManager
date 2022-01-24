@@ -98,3 +98,30 @@ Aufgabe 11:
 * [ ] Alle Methoden/Meldungen usw. auf Englisch übersetzten
 * [x] Beim BmiControllerTestIT auf BadRequests testen
 
+Präsi
+- nicht viel Text
+- übersichtlich
+- Bilder benutzen
+- Rote Linie verfolgen
+  - Grober Überblick
+    - Thema sagen
+    - Hauptfunktionen erläutern (Fachlichkeit) - was ist alles möglich, aber Fokus auf Bmi-Rechner
+  - Technischer Aufbau
+    - Strukturierung des Projekts
+    - Unit/-IT Tests
+    - Objektorientierung (von Klasse zu Klassen o. Methoden zu Methoden)
+      - wohin komme ich von wo - Architektur - Wege erläutern (technisch)
+      - Über Controller zu Service, da ist die Fachlichkeit implementiert
+    - Besonderheiten 
+      - Pipeline
+      - Implementierung in ITs
+      - Nested Tests
+      - Exception handling
+  - Beispiele
+    - Zum Bmi-Rechner - Live-Demo
+  - Lessons learned 
+    - Von Katze/Hund zu IntegrationsTests
+      - zuerst fast nichts verstanden, im Nachhinein "easy"
+    - Unit-Tests - im Oktober fast unmöglich, jetzt denkbar
+- Raum für Fragen geben
+

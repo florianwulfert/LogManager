@@ -62,6 +62,7 @@ public class UserService {
         Optional<User> user = findUserById(id);
         User actor = userRepository.findUserByName(actorName);
         if (actor == null) {
+            LOGGER.warn(String.format("User %s konnte nicht identifiziert werden!", actorName));
             throw new UserNotFoundException(actorName);
         }
         if (id.equals(actor.getId())) {
@@ -125,7 +126,7 @@ public class UserService {
         return "All users were deleted from database!";
     }
 
-    public void saveUser(User user, String actor) {
+    private void saveUser(User user, String actor) {
         userRepository.save(user);
         String bmi = bmiService.getBmiMessage(user.getBirthdate(), user.getWeight(), user.getHeight());
         logService.addLog(String.format("User %s was created. %s", user.getName(), bmi),

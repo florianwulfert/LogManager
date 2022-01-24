@@ -234,6 +234,5 @@ class UserServiceTest {
                 .build());
         return users;
     }
-
 }
 

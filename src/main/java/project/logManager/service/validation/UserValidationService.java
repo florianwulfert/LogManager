@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
-import project.logManager.common.enums.UserColorEnum;
-import project.logManager.exception.FirstUserUnequalActorException;
+import project.logManager.common.enums.UserFarbenEnum;
+import project.logManager.exception.ErsterUserUngleichActorException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.model.LogService;
@@ -23,8 +23,8 @@ public class UserValidationService {
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
     public void validateFarbenEnum(String userFarben) {
-        for (UserColorEnum farbenEnum : UserColorEnum.values()) {
-            if (userFarben.equals(farbenEnum.getColor())) {
+        for (UserFarbenEnum farbenEnum : UserFarbenEnum.values()) {
+            if (userFarben.equals(farbenEnum.getFarbe())) {
                 return;
             }
         }
@@ -41,17 +41,17 @@ public class UserValidationService {
                     LOGGER.warn("User kann nicht angelegt werden, da noch keine User in der " +
                             "Datenbank angelegt sind. Erster User muss sich selbst anlegen! " +
                             user.getName() + " ungleich " + actor);
-                    throw new FirstUserUnequalActorException(actor, user.getName());
+                    throw new ErsterUserUngleichActorException(actor, user.getName());
                 }
-            }
-            return true;
-        } catch (FirstUserUnequalActorException ex) {
+                return true;
+            } return false;
+        } catch (ErsterUserUngleichActorException ex) {
             handleErsterUserUngleichActor(actor, ex);
             return false;
         }
     }
 
-    private void handleErsterUserUngleichActor(String actor, FirstUserUnequalActorException er) {
+    private void handleErsterUserUngleichActor(String actor, ErsterUserUngleichActorException er) {
         try {
             logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
         } catch (RuntimeException rex) {
@@ -63,26 +63,26 @@ public class UserValidationService {
         try {
             User activeUser = userRepository.findUserByName(actor);
             if (activeUser == null) {
-                LOGGER.error("Actor is null!");
-                throw new RuntimeException(String.format("User %s not found.", actor));
+                LOGGER.error("Actor ist null!");
+                throw new RuntimeException(String.format("User %s nicht gefunden", actor));
             }
             return activeUser;
         } catch (RuntimeException rex) {
-            throw new RuntimeException(handleUserCouldNotBeCreated(actor, rex));
+            throw new RuntimeException(handleUserKonnteNichtAngelegtWerden(actor, rex));
         }
     }
 
-    private String handleUserCouldNotBeCreated(String actor, RuntimeException ex) {
-        LOGGER.error("User could not be created.");
-        logService.addLog("User could not be created.", "ERROR", actor);
+    private String handleUserKonnteNichtAngelegtWerden(String actor, RuntimeException ex) {
+        LOGGER.error("Der User konnte nicht angelegt werden");
+        logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
         return ex.getMessage();
     }
 
     public void checkIfUserToPostExists(String name) {
         try {
             if (userRepository.findUserByName(name) != null) {
-                LOGGER.warn(String.format("User %s already exists.", name));
-                throw new RuntimeException(String.format("User %s already exists.", name));
+                LOGGER.warn(String.format("User %s bereits vorhanden", name));
+                throw new RuntimeException(String.format("User %s bereits vorhanden", name));
             }
         } catch (RuntimeException rex) {
             throw new RuntimeException(rex.getMessage());

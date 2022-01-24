@@ -60,5 +60,4 @@ class BmiControllerTest {
                 .build());
         return users;
     }
-
 }
