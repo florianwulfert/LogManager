@@ -81,7 +81,7 @@ Aufgabe 11:
 * [x] bmi wurde berechnet + wert in postman konsole und lognachricht dazu in intellij
 * [x] bmi service erstellen und bmicontroller, bmi service vom bmiController aufrufen
 * [x] Datum in bmiwithmessage anpassen
-* [x] finuserandcalculatebmi anpassen
+* [x] finduserandcalculatebmi anpassen
 * [x] nachrichten wergen gewicht in variable auslagern
 * [x] Doku schreiben
 * [x] Alle Logs/alle User auf einmal löschen einbauen
