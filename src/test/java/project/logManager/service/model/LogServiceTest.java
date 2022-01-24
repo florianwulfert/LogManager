@@ -1,5 +1,12 @@
 package project.logManager.service.model;
 
+import static org.mockito.ArgumentMatchers.anyString;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,14 +21,6 @@ import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.LogValidationService;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.anyString;
 
 /**
  * @author - EugenFriesen
@@ -91,7 +90,9 @@ class LogServiceTest {
         Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(false);
         RuntimeException ex = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 systemUnderTest.addLog("Ein Test", "KATZE", "Peter"));
-        Assertions.assertEquals("Severity falsch!", ex.getMessage());
+        Assertions.assertEquals("Severity KATZE ist nicht zugelassen. "
+            + "Bitte wählen Sie eins der folgenden severities aus: "
+            + "TRACE, DEBUG, INFO, WARNING, ERROR, FATAL", ex.getMessage());
     }
 
     @Test
