@@ -106,7 +106,7 @@ class LogControllerIT {
                     .andExpect(status().isInternalServerError())
                     .andReturn();
 
-            Assertions.assertEquals("Severity falsch!", result.getResponse().getContentAsString());
+            Assertions.assertEquals("Severity hi ist nicht zugelassen. Bitte wählen Sie eins der folgenden severities aus: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL", result.getResponse().getContentAsString());
         }
 
         @Test
@@ -150,7 +150,7 @@ class LogControllerIT {
                 Arguments.of("MessageIsMissing", "DEBUG", null, "Petra", status().isBadRequest(), "Required String parameter 'message' is not present"),
                 Arguments.of("SeverityIsMissing", null, "Severity fehlt", "Petra", status().isBadRequest(), "Required String parameter 'severity' is not present"),
                 Arguments.of("UserIsMissing", "INFO", "Test", null, status().isBadRequest(), "Required String parameter 'nameUser' is not present"),
-                Arguments.of("SeverityIsFalse", "hi", "Test", "Petra", status().isInternalServerError(), "Severity falsch!"),
+                Arguments.of("SeverityIsFalse", "hi", "Test", "Petra", status().isInternalServerError(), "Severity hi ist nicht zugelassen. Bitte wählen Sie eins der folgenden severities aus: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL"),
                 Arguments.of("UserIsFalse", "INFO", "Test", "Hans", status().isInternalServerError(), "User Hans nicht gefunden"),
                 Arguments.of("KatzeInHund", "INFO", "Katze", "Petra", status().isOk(), "Katze wurde in Hund übersetzt!\nEs wurde die Nachricht \"Hund\" als INFO abgespeichert!")
         );
