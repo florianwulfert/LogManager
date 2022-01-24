@@ -62,7 +62,7 @@ public class UserService {
         Optional<User> user = findUserById(id);
         User actor = userRepository.findUserByName(actorName);
         if (actor == null) {
-            LOGGER.warn(String.format("User %s konnte nicht identifiziert werden!", actorName));
+            LOGGER.warn(String.format("User %s not identified!", actorName));
             throw new UserNotFoundException(actorName);
         }
         if (id.equals(actor.getId())) {
@@ -119,7 +119,7 @@ public class UserService {
     public String deleteAll() {
         if (!logRepository.findAll().isEmpty()) {
             LOGGER.warn("Users cannot be deleted because they are referenced in another table!");
-            throw new RuntimeException("User cannot be deleted because they are referenced in another table!");
+            throw new RuntimeException("Users cannot be deleted because they are referenced in another table!");
         }
         userRepository.deleteAll();
         LOGGER.info("All users were deleted from database!");

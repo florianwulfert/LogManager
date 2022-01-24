@@ -95,7 +95,7 @@ Aufgabe 11:
 * [x] Integration Tests: webmvc-Tests, SpringBoot-Tests
 * [x] findUserAndCalculateBMIException fehlt
 * [x] Exceptions anpassen (mit RestExceptionHandler)
-* [ ] Alle Methoden/Meldungen usw. auf Englisch übersetzten
+* [x] Alle Methoden/Meldungen usw. auf Englisch übersetzten
 * [x] Beim BmiControllerTestIT auf BadRequests testen
 
 Präsi

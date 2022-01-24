@@ -60,26 +60,25 @@ class UserControllerIT {
 
     private static Stream<Arguments> getAddUserArguments() {
         return Stream.of(
-                Arguments.of("User erstellt", false, "Petra", "Hugo", "05.11.1995", "78", "1.80", "blau",
+                Arguments.of("User created", false, "Petra", "Hugo", "05.11.1995", "78", "1.80", "blue",
                         status().isOk(),
-                        "User Hugo wurde erstellt. Der User hat einen BMI von 24.07 und ist somit normalgewichtig."),
-                Arguments.of("Erster User muss sich selbst anlegen", true, "Torsten", "Hugo", "05.11.1995", "78", "1.80", "blau",
+                        "User Hugo was created. User has a BMI of 24.07 and therewith he has normal weight."),
+                Arguments.of("First user has to create himself", true, "Torsten", "Hugo", "05.11.1995", "78", "1.80", "blue",
                         status().isInternalServerError(),
-                        "User kann nicht angelegt werden, da noch keine User in der Datenbank " +
-                                "angelegt sind. Erster User muss sich selbst anlegen! Hugo ungleich Torsten"),
-                Arguments.of("Erster User hat sich selbst angelegt", true, "Petra", "Petra", "05.11.1995", "78", "1.80", "blau",
+                        "User cannot be created because there are no user in the database yet. First user has to create himself! Hugo unequal Torsten"),
+                Arguments.of("First user created himself", true, "Petra", "Petra", "05.11.1995", "78", "1.80", "blue",
                         status().isOk(),
-                        "User Petra wurde erstellt. Der User hat einen BMI von 24.07 und ist somit normalgewichtig."),
-                Arguments.of("Actor nicht bekannt", false, "ActorName", "Hugo", "05.11.1995", "78", "1.80", "blau",
+                        "User Petra was created. User has a BMI of 24.07 and therewith he has normal weight."),
+                Arguments.of("Actor not known", false, "ActorName", "Hugo", "05.11.1995", "78", "1.80", "blue",
                         status().isInternalServerError(),
-                        "User ActorName nicht gefunden"),
-                Arguments.of("Actor nicht angegeben", false, null, "Hugo", "05.11.1995", "78", "1.80", "blau",
+                        "User ActorName not found."),
+                Arguments.of("Actor not given", false, null, "Hugo", "05.11.1995", "78", "1.80", "blue",
                         status().isBadRequest(),
                         "Required String parameter 'actor' is not present"),
-                Arguments.of("Farbe nicht erlaubt", false, "Petra", "Hugo", "05.11.1995", "78", "1.80", "braun",
+                Arguments.of("Color illegal", false, "Petra", "Hugo", "05.11.1995", "78", "1.80", "braun",
                         status().isInternalServerError(),
-                        "Farbe falsch! Wählen Sie eine der folgenden Farben: blau, rot, orange, gelb, schwarz"),
-                Arguments.of("Datum mit falschem Format angegeben", false, "Petra", "Hugo", "hallo", "78", "1.80", "blau",
+                        "Color illegal! Choose from the following options: blue, red, orange, yellow, black"),
+                Arguments.of("Datum mit falschem Format angegeben", false, "Petra", "Hugo", "hallo", "78", "1.80", "blue",
                         status().isBadRequest(),
                         "Required path variable was not found or request param has wrong format! " +
                                 "Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'; " +
@@ -88,36 +87,36 @@ class UserControllerIT {
                                 "[@org.springframework.web.bind.annotation.RequestParam @org.springframework.format." +
                                 "annotation.DateTimeFormat java.time.LocalDate] for value 'hallo'; " +
                                 "nested exception is java.lang.IllegalArgumentException: Parse attempt failed for value [hallo]"),
-                Arguments.of("Gewicht mit falschem Format angegeben", false, "Petra", "Hugo", "05.11.1995", "hi", "1.80", "blau",
+                Arguments.of("weight mit falschem Format angegeben", false, "Petra", "Hugo", "05.11.1995", "hi", "1.80", "blue",
                         status().isBadRequest(),
                         "Required path variable was not found or request param has wrong format! " +
                                 "Failed to convert value of type 'java.lang.String' to required type 'double'; " +
                                 "nested exception is java.lang.NumberFormatException: For input string: \"hi\""),
-                Arguments.of("Groesse mit falschem Format angegeben", false, "Petra", "Hugo", "05.11.1995", "78", "hi", "blau",
+                Arguments.of("height mit falschem Format angegeben", false, "Petra", "Hugo", "05.11.1995", "78", "hi", "blue",
                         status().isBadRequest(),
                         "Required path variable was not found or request param has wrong format! " +
                                 "Failed to convert value of type 'java.lang.String' to required type 'double'; " +
                                 "nested exception is java.lang.NumberFormatException: For input string: \"hi\""),
-                Arguments.of("Zu erzeugender User ist bereits vorhanden", false, "Petra", "Torsten", "05.11.1995", "78", "1.80", "blau",
+                Arguments.of("User to create already exists", false, "Petra", "Torsten", "05.11.1995", "78", "1.80", "blue",
                         status().isInternalServerError(),
-                        "User Torsten bereits vorhanden"),
-                Arguments.of("UserNameNull", false, "Petra", null, "05.11.1995", "78", "1.80", "blau",
+                        "User Torsten already exists."),
+                Arguments.of("UserNameNull", false, "Petra", null, "05.11.1995", "78", "1.80", "blue",
                         status().isBadRequest(), "Required String parameter 'name' is not present"),
-                Arguments.of("GeburtsdatumIsNull", false, "Petra", "Albert", null, "78", "1.80", "blau",
-                        status().isBadRequest(), "Required LocalDate parameter 'geburtsdatum' is not present"),
-                Arguments.of("GewichtIsNull", false, "Petra", "Albert", "05.11.1995", null, "1.80", "blau",
-                        status().isBadRequest(), "Required double parameter 'gewicht' is not present"),
-                Arguments.of("GroesseIsNull", false, "Petra", "Albert", "05.11.1995", "78", null, "blau",
-                        status().isBadRequest(), "Required double parameter 'groesse' is not present"),
-                Arguments.of("LieblingsfarbeIsNull", false, "Petra", "Albert", "05.11.1995", "78", "1.80", null,
-                        status().isBadRequest(), "Required String parameter 'lieblingsfarbe' is not present")
+                Arguments.of("birthdateIsNull", false, "Petra", "Albert", null, "78", "1.80", "blue",
+                        status().isBadRequest(), "Required LocalDate parameter 'birthdate' is not present"),
+                Arguments.of("weightIsNull", false, "Petra", "Albert", "05.11.1995", null, "1.80", "blue",
+                        status().isBadRequest(), "Required double parameter 'weight' is not present"),
+                Arguments.of("heightIsNull", false, "Petra", "Albert", "05.11.1995", "78", null, "blue",
+                        status().isBadRequest(), "Required double parameter 'height' is not present"),
+                Arguments.of("favouriteColorIsNull", false, "Petra", "Albert", "05.11.1995", "78", "1.80", null,
+                        status().isBadRequest(), "Required String parameter 'favouriteColor' is not present")
         );
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("getAddUserArguments")
     void testAddUser(String testName, Boolean isEmptyUserList, String actor, String userToAdd, String birthdate,
-                     String weight, String height, String lieblingsfarbe, ResultMatcher status, String message) throws Exception {
+                     String weight, String height, String favouriteColor, ResultMatcher status, String message) throws Exception {
         if (isEmptyUserList) {
             userRepository.deleteAll();
         }
@@ -125,10 +124,10 @@ class UserControllerIT {
         MvcResult result = mockMvc.perform(post("/user")
                         .param("actor", actor)
                         .param("name", userToAdd)
-                        .param("geburtsdatum", birthdate)
-                        .param("gewicht", weight)
-                        .param("groesse", height)
-                        .param("lieblingsfarbe", lieblingsfarbe))
+                        .param("birthdate", birthdate)
+                        .param("weight", weight)
+                        .param("height", height)
+                        .param("favouriteColor", favouriteColor))
                 .andDo(print())
                 .andExpect(status)
                 .andReturn();
@@ -143,12 +142,12 @@ class UserControllerIT {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Assertions.assertEquals("[{\"id\":1,\"name\":\"Petra\",\"geburtsdatum\":\"1999-12-13\"," +
-                "\"gewicht\":65.0,\"groesse\":1.6,\"lieblingsfarbe\":\"Rot\",\"bmi\":25.39}" +
-                ",{\"id\":2,\"name\":\"Torsten\",\"geburtsdatum\":\"1985-12-05\",\"gewicht\":61.3,\"groesse\":1.83," +
-                "\"lieblingsfarbe\":\"Blau\",\"bmi\":18.3}," +
-                "{\"id\":3,\"name\":\"Hans\",\"geburtsdatum\":\"1993-02-03\",\"gewicht\":75.7,\"groesse\":1.85," +
-                "\"lieblingsfarbe\":\"Rot\",\"bmi\":22.11}]", result.getResponse().getContentAsString());
+        Assertions.assertEquals("[{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\"," +
+                "\"weight\":65.0,\"height\":1.6,\"favouriteColor\":\"Red\",\"bmi\":25.39}" +
+                ",{\"id\":2,\"name\":\"Torsten\",\"birthdate\":\"1985-12-05\",\"weight\":61.3,\"height\":1.83," +
+                "\"favouriteColor\":\"Blue\",\"bmi\":18.3}," +
+                "{\"id\":3,\"name\":\"Hans\",\"birthdate\":\"1993-02-03\",\"weight\":75.7,\"height\":1.85," +
+                "\"favouriteColor\":\"Red\",\"bmi\":22.11}]", result.getResponse().getContentAsString());
     }
 
     @Nested
@@ -161,8 +160,8 @@ class UserControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals("{\"id\":1,\"name\":\"Petra\",\"geburtsdatum\":\"1999-12-13\"," +
-                            "\"gewicht\":65.0,\"groesse\":1.6,\"lieblingsfarbe\":\"Rot\",\"bmi\":25.39}",
+            Assertions.assertEquals("{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\"," +
+                            "\"weight\":65.0,\"height\":1.6,\"favouriteColor\":\"Red\",\"bmi\":25.39}",
                     result.getResponse().getContentAsString());
         }
 
@@ -191,13 +190,13 @@ class UserControllerIT {
 
     private static Stream<Arguments> getDeleteUserByIdArguments() {
         return Stream.of(
-                Arguments.of(false, "/user/delete/1", "Hans", status().isOk(), "User mit der ID 1 wurde gelöscht!"),
-                Arguments.of(false, "/user/delete/1", "Paul", status().isInternalServerError(), "User Paul konnte nicht identifiziert werden!"),
+                Arguments.of(false, "/user/delete/1", "Hans", status().isOk(), "User with the ID 1 was deleted."),
+                Arguments.of(false, "/user/delete/1", "Paul", status().isInternalServerError(), "User Paul not identified!"),
                 Arguments.of(false, "/user/delete/1", null, status().isBadRequest(), "Required String parameter 'actor' is not present"),
-                Arguments.of(false, "/user/delete/8", "Torsten", status().isInternalServerError(), "User mit der ID 8 konnte nicht gefunden werden"),
-                Arguments.of(false, "/user/delete/2", "Torsten", status().isInternalServerError(), "Ein User kann sich nicht selbst löschen!"),
+                Arguments.of(false, "/user/delete/8", "Torsten", status().isInternalServerError(), "User with the ID 8 not found."),
+                Arguments.of(false, "/user/delete/2", "Torsten", status().isInternalServerError(), "User cannot delete himself!"),
                 Arguments.of(true, "/user/delete/1", "Torsten", status().isInternalServerError(),
-                        "User Petra kann nicht gelöscht werden, da er in einer anderen Tabelle referenziert wird!")
+                        "User Petra cannot be deleted because he is referenced in another table!")
         );
     }
 
@@ -219,21 +218,21 @@ class UserControllerIT {
 
     private static Stream<Arguments> getDeleteUserByNameArguments() {
         return Stream.of(
-                Arguments.of("User successfully deleted by name", false, "/user/delete/name/Petra", "Torsten", status().isOk(), "User Petra wurde gelöscht!"),
+                Arguments.of("User successfully deleted by name", false, "/user/delete/name/Petra", "Torsten", status().isOk(), "User named Petra was deleted."),
                 Arguments.of("Actor wants to delete himself", false, "/user/delete/name/Torsten", "Torsten", status().isInternalServerError(),
-                        "Ein User kann sich nicht selbst löschen!"),
+                        "User cannot delete himself!"),
                 Arguments.of("Actor not present", false, "/user/delete/name/Petra", null, status().isBadRequest(),
                         "Required String parameter 'actor' is not present"),
                 Arguments.of("Actor not in database", false, "/user/delete/name/Petra", "ActorNichtBekannt", status().isInternalServerError(),
-                        "User mit dem Namen ActorNichtBekannt konnte nicht gefunden werden"),
+                        "User named ActorNichtBekannt not found!"),
                 Arguments.of("User to delete not in database ", false, "/user/delete/name/UserToDeleteNichtBekannt", "Torsten", status().isInternalServerError(),
-                        "User mit dem Namen UserToDeleteNichtBekannt konnte nicht gefunden werden"),
+                        "User named UserToDeleteNichtBekannt not found!"),
                 Arguments.of("User to delete not present", false, "/user/delete/name/", "Torsten", status().isBadRequest(),
                         "Required path variable was not found or request param has wrong format! "
                                 + "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; "
                                 + "nested exception is java.lang.NumberFormatException: For input string: \"name\""),
                 Arguments.of("User is referenced in another table", true, "/user/delete/name/Petra", "Torsten", status().isInternalServerError(),
-                        "User Petra kann nicht gelöscht werden, da er in einer anderen Tabelle referenziert wird!")
+                        "User Petra cannot be deleted because he is referenced in another table!")
         );
     }
 
@@ -264,7 +263,7 @@ class UserControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals("Alle User wurden aus der Datenbank gelöscht",
+            Assertions.assertEquals("All users were deleted from database!",
                     result.getResponse().getContentAsString());
         }
 
@@ -277,8 +276,7 @@ class UserControllerIT {
                     .andExpect(status().isInternalServerError())
                     .andReturn();
 
-            Assertions.assertEquals("User können nicht gelöscht werden, da sie in einer anderen Tabelle " +
-                    "referenziert werden", result.getResponse().getContentAsString());
+            Assertions.assertEquals("Users cannot be deleted because they are referenced in another table!", result.getResponse().getContentAsString());
         }
     }
 
@@ -289,11 +287,11 @@ class UserControllerIT {
                         .builder()
                         .id(1)
                         .name("Petra")
-                        .geburtsdatum(LocalDate.of(1999, 12, 13))
+                        .birthdate(LocalDate.of(1999, 12, 13))
                         .bmi(25.39)
-                        .gewicht(65)
-                        .groesse(1.60)
-                        .lieblingsfarbe("Rot")
+                        .weight(65)
+                        .height(1.60)
+                        .favouriteColor("Red")
                         .build();
                 userRepository.saveAndFlush(petra);
                 return petra;
@@ -301,12 +299,12 @@ class UserControllerIT {
                 User torsten = User
                         .builder()
                         .name("Torsten")
-                        .geburtsdatum(LocalDate.of(1985, 12, 5))
+                        .birthdate(LocalDate.of(1985, 12, 5))
                         .bmi(18.3)
-                        .gewicht(61.3)
-                        .groesse(1.83)
+                        .weight(61.3)
+                        .height(1.83)
                         .id(2)
-                        .lieblingsfarbe("Blau")
+                        .favouriteColor("Blue")
                         .build();
                 userRepository.saveAndFlush(torsten);
                 return torsten;
@@ -314,12 +312,12 @@ class UserControllerIT {
                 User hans = User
                         .builder()
                         .name("Hans")
-                        .geburtsdatum(LocalDate.of(1993, 2, 3))
+                        .birthdate(LocalDate.of(1993, 2, 3))
                         .bmi(22.11)
-                        .gewicht(75.7)
-                        .groesse(1.85)
+                        .weight(75.7)
+                        .height(1.85)
                         .id(3)
-                        .lieblingsfarbe("Rot")
+                        .favouriteColor("Red")
                         .build();
                 userRepository.saveAndFlush(hans);
                 return hans;

@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
-import project.logManager.common.enums.UserFarbenEnum;
-import project.logManager.exception.ErsterUserUngleichActorException;
+import project.logManager.common.enums.UserColorEnum;
+import project.logManager.exception.FirstUserUnequalActorException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.model.LogService;
@@ -23,14 +23,14 @@ public class UserValidationService {
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
     public void validateFarbenEnum(String userFarben) {
-        for (UserFarbenEnum farbenEnum : UserFarbenEnum.values()) {
-            if (userFarben.equals(farbenEnum.getFarbe())) {
+        for (UserColorEnum farbenEnum : UserColorEnum.values()) {
+            if (userFarben.equals(farbenEnum.getColor())) {
                 return;
             }
         }
-        LOGGER.error("Die übergebene Farbe '{}' ist nicht zugelassen!", userFarben);
-        throw new IllegalArgumentException("Farbe falsch! Wählen Sie eine der folgenden Farben: " +
-                "blau, rot, orange, gelb, schwarz");
+        LOGGER.error("Given color {} is illegal!", userFarben);
+        throw new IllegalArgumentException("Color illegal! Choose from the following options: " +
+                "blue, red, orange, yellow, black");
     }
 
     public boolean checkIfUsersListIsEmpty(String actor, User user) {
@@ -38,22 +38,22 @@ public class UserValidationService {
             List<User> users = userRepository.findAll();
             if (users.isEmpty()) {
                 if (!user.getName().equals(actor)) {
-                    LOGGER.warn("User kann nicht angelegt werden, da noch keine User in der " +
-                            "Datenbank angelegt sind. Erster User muss sich selbst anlegen! " +
+                    LOGGER.warn("User cannot be created because there are no user in the database yet. " +
+                            "First user has to create himself! " +
                             user.getName() + " ungleich " + actor);
-                    throw new ErsterUserUngleichActorException(actor, user.getName());
+                    throw new FirstUserUnequalActorException(actor, user.getName());
                 }
                 return true;
             } return false;
-        } catch (ErsterUserUngleichActorException ex) {
+        } catch (FirstUserUnequalActorException ex) {
             handleErsterUserUngleichActor(actor, ex);
             return false;
         }
     }
 
-    private void handleErsterUserUngleichActor(String actor, ErsterUserUngleichActorException er) {
+    private void handleErsterUserUngleichActor(String actor, FirstUserUnequalActorException er) {
         try {
-            logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
+            logService.addLog("User could not be created.", "ERROR", actor);
         } catch (RuntimeException rex) {
             throw new RuntimeException(er.getMessage());
         }
@@ -63,8 +63,8 @@ public class UserValidationService {
         try {
             User activeUser = userRepository.findUserByName(actor);
             if (activeUser == null) {
-                LOGGER.error("Actor ist null!");
-                throw new RuntimeException(String.format("User %s nicht gefunden", actor));
+                LOGGER.error("Actor is null!");
+                throw new RuntimeException(String.format("User %s not found.", actor));
             }
             return activeUser;
         } catch (RuntimeException rex) {
@@ -73,16 +73,16 @@ public class UserValidationService {
     }
 
     private String handleUserKonnteNichtAngelegtWerden(String actor, RuntimeException ex) {
-        LOGGER.error("Der User konnte nicht angelegt werden");
-        logService.addLog("Der User konnte nicht angelegt werden", "ERROR", actor);
+        LOGGER.error("User could not be created.");
+        logService.addLog("User could not be created.", "ERROR", actor);
         return ex.getMessage();
     }
 
     public void checkIfUserToPostExists(String name) {
         try {
             if (userRepository.findUserByName(name) != null) {
-                LOGGER.warn(String.format("User %s bereits vorhanden", name));
-                throw new RuntimeException(String.format("User %s bereits vorhanden", name));
+                LOGGER.warn(String.format("User %s already exists.", name));
+                throw new RuntimeException(String.format("User %s already exists.", name));
             }
         } catch (RuntimeException rex) {
             throw new RuntimeException(rex.getMessage());

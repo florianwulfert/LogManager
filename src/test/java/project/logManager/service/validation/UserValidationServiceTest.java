@@ -44,8 +44,8 @@ class UserValidationServiceTest {
     void testIfColorIsNotCorrect() {
         RuntimeException ex = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 systemUnderTest.validateFarbenEnum("gold"));
-        Assertions.assertEquals("Farbe falsch! Wählen Sie eine der folgenden Farben: " +
-                "blau, rot, orange, gelb, schwarz", ex.getMessage());
+        Assertions.assertEquals("Color illegal! Choose from the following options: " +
+                "blue, red, orange, yellow, black", ex.getMessage());
     }
 
     @Test

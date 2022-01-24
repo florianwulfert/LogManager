@@ -106,7 +106,7 @@ class LogControllerIT {
                     .andExpect(status().isInternalServerError())
                     .andReturn();
 
-            Assertions.assertEquals("Severity hi ist nicht zugelassen. Bitte wählen Sie eins der folgenden severities aus: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL", result.getResponse().getContentAsString());
+            Assertions.assertEquals("Severity hi not registered. Please choose one of the following options: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL", result.getResponse().getContentAsString());
         }
 
         @Test
@@ -146,13 +146,13 @@ class LogControllerIT {
 
     private static Stream<Arguments> addLogArguments() {
         return Stream.of(
-                Arguments.of("PostLog", "INFO", "Test", "Petra", status().isOk(), "Es wurde die Nachricht \"Test\" als INFO abgespeichert!"),
+                Arguments.of("PostLog", "INFO", "Test", "Petra", status().isOk(), "Message \"Test\" saved as INFO!"),
                 Arguments.of("MessageIsMissing", "DEBUG", null, "Petra", status().isBadRequest(), "Required String parameter 'message' is not present"),
                 Arguments.of("SeverityIsMissing", null, "Severity fehlt", "Petra", status().isBadRequest(), "Required String parameter 'severity' is not present"),
                 Arguments.of("UserIsMissing", "INFO", "Test", null, status().isBadRequest(), "Required String parameter 'nameUser' is not present"),
-                Arguments.of("SeverityIsFalse", "hi", "Test", "Petra", status().isInternalServerError(), "Severity hi ist nicht zugelassen. Bitte wählen Sie eins der folgenden severities aus: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL"),
-                Arguments.of("UserIsFalse", "INFO", "Test", "Hans", status().isInternalServerError(), "User Hans nicht gefunden"),
-                Arguments.of("KatzeInHund", "INFO", "Katze", "Petra", status().isOk(), "Katze wurde in Hund übersetzt!\nEs wurde die Nachricht \"Hund\" als INFO abgespeichert!")
+                Arguments.of("SeverityIsFalse", "hi", "Test", "Petra", status().isInternalServerError(), "Severity hi not registered. Please choose one of the following options: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL"),
+                Arguments.of("UserIsFalse", "INFO", "Test", "Hans", status().isInternalServerError(), "User Hans not found."),
+                Arguments.of("KatzeToHund", "INFO", "Katze", "Petra", status().isOk(), "Katze was translated to Hund!\nMessage \"Hund\" saved as INFO!")
         );
     }
 
@@ -220,7 +220,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals("Eintrag mit der ID 2 wurde aus der Datenbank gelöscht",
+            Assertions.assertEquals("Entry with the ID 2 was deleted from database.",
                     result.getResponse().getContentAsString());
         }
 
@@ -256,7 +256,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals("Es wurden die Einträge mit den IDs 1, 2 aus der Datenbank gelöscht",
+            Assertions.assertEquals("Entries with the ID(s) 1, 2 were deleted from database.",
                     result.getResponse().getContentAsString());
         }
 
@@ -268,7 +268,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals("Keine Einträge gefunden!", result.getResponse().getContentAsString());
+            Assertions.assertEquals("No entries found!", result.getResponse().getContentAsString());
         }
 
         @Test
@@ -278,7 +278,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals("Alle Logs wurden aus der Datenbank gelöscht!",
+            Assertions.assertEquals("All logs were deleted from database!",
                     result.getResponse().getContentAsString());
         }
     }
@@ -299,11 +299,11 @@ class LogControllerIT {
                         .builder()
                         .id(1)
                         .name("Petra")
-                        .geburtsdatum(LocalDate.of(1999, 12, 13))
+                        .birthdate(LocalDate.of(1999, 12, 13))
                         .bmi(25.39)
-                        .gewicht(65)
-                        .groesse(1.60)
-                        .lieblingsfarbe("Rot")
+                        .weight(65)
+                        .height(1.60)
+                        .favouriteColor("Red")
                         .build();
                 userRepository.save(petra);
                 break;
@@ -311,12 +311,12 @@ class LogControllerIT {
                 User torsten = User
                         .builder()
                         .name("Torsten")
-                        .geburtsdatum(LocalDate.of(1985, 12, 5))
+                        .birthdate(LocalDate.of(1985, 12, 5))
                         .bmi(18.3)
-                        .gewicht(61.3)
-                        .groesse(1.83)
+                        .weight(61.3)
+                        .height(1.83)
                         .id(2)
-                        .lieblingsfarbe("Blau")
+                        .favouriteColor("Blue")
                         .build();
                 userRepository.save(torsten);
                 break;
@@ -324,12 +324,12 @@ class LogControllerIT {
                 User hans = User
                         .builder()
                         .name("Hans")
-                        .geburtsdatum(LocalDate.of(1993, 2, 3))
+                        .birthdate(LocalDate.of(1993, 2, 3))
                         .bmi(22.11)
-                        .gewicht(75.7)
-                        .groesse(1.85)
+                        .weight(75.7)
+                        .height(1.85)
                         .id(3)
-                        .lieblingsfarbe("Rot")
+                        .favouriteColor("Red")
                         .build();
                 userRepository.save(hans);
                 break;

@@ -207,7 +207,7 @@ class UserServiceTest {
         Mockito.when(logRepository.findAll()).thenReturn(testLogs);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.deleteAll());
-        Assertions.assertEquals("User cannot be deleted because they are referenced in another table!",
+        Assertions.assertEquals("Users cannot be deleted because they are referenced in another table!",
                 ex.getMessage());
     }
 
