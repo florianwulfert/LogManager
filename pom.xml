@@ -17,6 +17,7 @@
 		<java.version>11</java.version>
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
     <verstion.lombok-mapstruct-binding>0.2.0</verstion.lombok-mapstruct-binding>
+    <junit.version>1.8.0-M1</junit.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -38,7 +39,7 @@
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-engine</artifactId>
-			<version>1.8.0-M1</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
