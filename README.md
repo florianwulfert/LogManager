@@ -59,10 +59,10 @@
   * Geforderte Parameter:
       * actor: String
       * name: String
-      * geburtsdatum: LocalDate
-      * gewicht: double
-      * groesse: double
-      * lieblingsfarbe: Farbe
+      * birthdate: LocalDate
+      * weight: double
+      * height: double
+      * favouriteColor: Farbe
   * Mögliche Fehler:
     * User kann nicht angelegt werden, da noch keine User in der Datenbank angelegt sind. Erster User muss sich selbst anlegen!
     * User (actor) nicht gefunden.
@@ -113,9 +113,9 @@
 * GET: /bmi
   * Der BMI wird berechnet, ohne das ein User gespeichert wird und eine entsprechende Nachricht wird ausgegeben
   * Geforderte Parameter:
-    * geburtsdatum: LocalDate
-    * groesse: Double
-    * gewicht: Double
+    * birthdate: LocalDate
+    * height: Double
+    * weight: Double
   * Besonderheiten:
     * Angaben zu Usern unter 18 Jahren können nicht verarbeitet werden
   * Mögliche Fehler:

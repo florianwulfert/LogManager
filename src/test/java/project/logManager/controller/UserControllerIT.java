@@ -1,22 +1,6 @@
 package project.logManager.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-import javax.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,6 +20,17 @@ import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
 @AutoConfigureDataJpa
@@ -54,12 +49,12 @@ class UserControllerIT {
     @Autowired
     private LogRepository logRepository;
 
-  List<User> userList = new ArrayList<>();
+    List<User> userList = new ArrayList<>();
 
-  @BeforeAll
-  public void setup() {
-    userList = createUser();
-  }
+    @BeforeAll
+    public void setup() {
+        userList = createUser();
+    }
 
     private static Stream<Arguments> getAddUserArguments() {
         return Stream.of(
@@ -203,18 +198,18 @@ class UserControllerIT {
         );
     }
 
-  @ParameterizedTest(name = "{4}")
-  @MethodSource("getDeleteUserByIdArguments")
-  void testDeleteUserById(Boolean userIsReferenced, String url, String actor, ResultMatcher status, String message) throws Exception {
-    if (userIsReferenced) {
-      logRepository.save(Log.builder().id(1).user(userList.get(0)).message("Test").severity("INFO")
-          .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12)).build());
-    }
-    MvcResult result = mockMvc.perform(delete(url)
-            .param("actor", actor))
-        .andDo(print())
-        .andExpect(status)
-        .andReturn();
+    @ParameterizedTest(name = "{4}")
+    @MethodSource("getDeleteUserByIdArguments")
+    void testDeleteUserById(Boolean userIsReferenced, String url, String actor, ResultMatcher status, String message) throws Exception {
+        if (userIsReferenced) {
+            logRepository.save(Log.builder().id(1).user(userList.get(0)).message("Test").severity("INFO")
+                    .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12)).build());
+        }
+        MvcResult result = mockMvc.perform(delete(url)
+                        .param("actor", actor))
+                .andDo(print())
+                .andExpect(status)
+                .andReturn();
 
         Assertions.assertEquals(message, result.getResponse().getContentAsString());
     }
@@ -239,19 +234,19 @@ class UserControllerIT {
         );
     }
 
-  @ParameterizedTest(name = "{0}")
-  @MethodSource("getDeleteUserByNameArguments")
-  void testDeleteUserByName(String testname, Boolean createLog, String url, String actor, ResultMatcher status, String message)
-      throws Exception {
-    if (createLog) {
-      logRepository.save(Log.builder().id(1).user(userList.get(0)).message("Test").severity("INFO")
-          .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12)).build());
-    }
-    MvcResult result = mockMvc.perform(delete(url)
-            .param("actor", actor))
-        .andDo(print())
-        .andExpect(status)
-        .andReturn();
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("getDeleteUserByNameArguments")
+    void testDeleteUserByName(String testname, Boolean createLog, String url, String actor, ResultMatcher status, String message)
+            throws Exception {
+        if (createLog) {
+            logRepository.save(Log.builder().id(1).user(userList.get(0)).message("Test").severity("INFO")
+                    .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12)).build());
+        }
+        MvcResult result = mockMvc.perform(delete(url)
+                        .param("actor", actor))
+                .andDo(print())
+                .andExpect(status)
+                .andReturn();
 
         Assertions.assertEquals(message, result.getResponse().getContentAsString());
     }
@@ -270,59 +265,59 @@ class UserControllerIT {
                     result.getResponse().getContentAsString());
         }
 
-    @Test
-    void whenUserIsUsedSomewhereThenReturnCouldNotDelete() throws Exception {
-      logRepository.save(Log.builder().id(1).user(userList.get(0)).message("Test").severity("INFO")
-          .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12)).build());
-      MvcResult result = mockMvc.perform(delete("/user/delete"))
-          .andDo(print())
-          .andExpect(status().isInternalServerError())
-          .andReturn();
+        @Test
+        void whenUserIsUsedSomewhereThenReturnCouldNotDelete() throws Exception {
+            logRepository.save(Log.builder().id(1).user(userList.get(0)).message("Test").severity("INFO")
+                    .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12)).build());
+            MvcResult result = mockMvc.perform(delete("/user/delete"))
+                    .andDo(print())
+                    .andExpect(status().isInternalServerError())
+                    .andReturn();
 
             Assertions.assertEquals("Users cannot be deleted because they are referenced in another table!", result.getResponse().getContentAsString());
         }
     }
 
     private List<User> createUser() {
-      List<User> userList = new ArrayList<>();
-      User petra = User
-                        .builder()
-                        .id(1)
-                        .name("Petra")
-                        .birthdate(LocalDate.of(1999, 12, 13))
-                        .bmi(25.39)
-                        .weight(65)
-                        .height(1.60)
-                        .favouriteColor("Red")
-                        .build();
-                userRepository.saveAndFlush(petra);
-                User torsten = User
-                        .builder()
-                        .name("Torsten")
-                        .birthdate(LocalDate.of(1985, 12, 5))
-                        .bmi(18.3)
-                        .weight(61.3)
-                        .height(1.83)
-                        .id(2)
-                        .favouriteColor("Blue")
-                        .build();
-                userRepository.saveAndFlush(torsten);
-                User hans = User
-                        .builder()
-                        .name("Hans")
-                        .birthdate(LocalDate.of(1993, 2, 3))
-                        .bmi(22.11)
-                        .weight(75.7)
-                        .height(1.85)
-                        .id(3)
-                        .favouriteColor("Red")
-                        .build();
-      userList.add(petra);
-      userList.add(torsten);
-      userList.add(hans);
-      userRepository.save(petra);
-      userRepository.save(torsten);
-      userRepository.save(hans);
-      return userList;
+        List<User> userList = new ArrayList<>();
+        User petra = User
+                .builder()
+                .id(1)
+                .name("Petra")
+                .birthdate(LocalDate.of(1999, 12, 13))
+                .bmi(25.39)
+                .weight(65)
+                .height(1.60)
+                .favouriteColor("Red")
+                .build();
+        userRepository.saveAndFlush(petra);
+        User torsten = User
+                .builder()
+                .name("Torsten")
+                .birthdate(LocalDate.of(1985, 12, 5))
+                .bmi(18.3)
+                .weight(61.3)
+                .height(1.83)
+                .id(2)
+                .favouriteColor("Blue")
+                .build();
+        userRepository.saveAndFlush(torsten);
+        User hans = User
+                .builder()
+                .name("Hans")
+                .birthdate(LocalDate.of(1993, 2, 3))
+                .bmi(22.11)
+                .weight(75.7)
+                .height(1.85)
+                .id(3)
+                .favouriteColor("Red")
+                .build();
+        userList.add(petra);
+        userList.add(torsten);
+        userList.add(hans);
+        userRepository.save(petra);
+        userRepository.save(torsten);
+        userRepository.save(hans);
+        return userList;
     }
 }

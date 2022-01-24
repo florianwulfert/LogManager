@@ -107,8 +107,8 @@ class BmiControllerIT {
         Assertions.assertEquals(message, result.getResponse().getContentAsString());
     }
 
-    private void createUser(String bewertung) {
-        switch (bewertung) {
+    private void createUser(String weightStatus) {
+        switch (weightStatus) {
             case "underweight":
                 User torsten = User
                         .builder()

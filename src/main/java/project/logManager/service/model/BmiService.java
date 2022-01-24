@@ -47,8 +47,8 @@ public class BmiService extends DateUtil {
         }
     }
 
-    public Double calculateBMI(Double gewicht, Double groesse) {
-        BigDecimal bigDecimal = new BigDecimal(gewicht / (groesse * groesse)).
+    public Double calculateBMI(Double weight, Double height) {
+        BigDecimal bigDecimal = new BigDecimal(weight / (height * height)).
                 setScale(2, RoundingMode.DOWN);
         return bigDecimal.doubleValue();
     }
