@@ -63,7 +63,7 @@ class UserControllerIT {
                         "User Hugo was created. User has a BMI of 24.07 and therewith he has normal weight."),
                 Arguments.of("First user has to create himself", true, "Torsten", "Hugo", "05.11.1995", "78", "1.80", "blue",
                         status().isInternalServerError(),
-                        "User cannot be created because there are no user in the database yet. First user has to create himself! Hugo unequal Torsten"),
+                        "User cannot be created because there are no users in the database yet. First user has to create himself! Hugo unequal Torsten"),
                 Arguments.of("First user created himself", true, "Petra", "Petra", "05.11.1995", "78", "1.80", "blue",
                         status().isOk(),
                         "User Petra was created. User has a BMI of 24.07 and therewith he has normal weight."),

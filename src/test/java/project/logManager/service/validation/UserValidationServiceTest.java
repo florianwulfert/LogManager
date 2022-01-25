@@ -60,7 +60,7 @@ class UserValidationServiceTest {
                 .thenThrow(RuntimeException.class);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.checkIfUsersListIsEmpty(users.get(1).getName(), users.get(0)));
-        Assertions.assertEquals("User cannot be created because there are no user in the database yet. " +
+        Assertions.assertEquals("User cannot be created because there are no users in the database yet. " +
                 "First user has to create himself! Peter unequal Florian", ex.getMessage());
     }
 

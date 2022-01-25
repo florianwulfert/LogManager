@@ -38,7 +38,7 @@ public class UserValidationService {
             List<User> users = userRepository.findAll();
             if (users.isEmpty()) {
                 if (!user.getName().equals(actor)) {
-                    LOGGER.warn("User cannot be created because there are no user in the database yet. " +
+                    LOGGER.warn("User cannot be created because there are no users in the database yet. " +
                             "First user has to create himself! " +
                             user.getName() + " ungleich " + actor);
                     throw new FirstUserUnequalActorException(actor, user.getName());
