@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static project.logManager.common.message.Messages.*;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BmiController.class)
@@ -43,32 +44,22 @@ class BmiControllerIT {
 
     private static Stream<Arguments> getBmiArguments() {
         return Stream.of(
-                Arguments.of("01.01.2003", "75.7", "1.85", status().isOk(),
-                        "User has a BMI of 22.11 and therewith he has normal weight."),
-                Arguments.of("01.01.1987", "95.2", "1.82", status().isOk(),
-                        "User has a BMI of 28.74 and therewith he has overweight."),
-                Arguments.of("01.01.2003", "61.3", "1.83", status().isOk(),
-                        "User has a BMI of 18.3 and therewith he has underweight."),
-                Arguments.of("01.01.1987", "0", "0", status().isInternalServerError(),
-                        "Infinite or NaN"),
-                Arguments.of("01.01.1987", "-1", "-1", status().isInternalServerError(),
-                        "BMI could not be calculated."),
-                Arguments.of("01.01.2000", "75.0", null, status().isBadRequest(),
-                        "Required double parameter 'height' is not present"),
-                Arguments.of("01.01.2000", null, "1.75", status().isBadRequest(),
-                        "Required double parameter 'weight' is not present"),
-                Arguments.of(null, "75.0", "1.75", status().isBadRequest(),
-                        "Required LocalDate parameter 'birthdate' is not present"),
-                Arguments.of("01.01.2008", "75.0", "1.75", status().isOk(),
-                        "User is too young for an exact definition of the BMI.")
+                Arguments.of("01.01.2003", "75.7", "1.85", status().isOk(), USER_NORMAL_WEIGHT),
+                Arguments.of("01.01.1987", "95.2", "1.82", status().isOk(), USER_OVERWEIGHT),
+                Arguments.of("01.01.2003", "61.3", "1.83", status().isOk(), USER_UNDERWEIGHT),
+                Arguments.of("01.01.1987", "0", "0", status().isInternalServerError(), "Infinite or NaN"),
+                Arguments.of("01.01.1987", "-1", "-1", status().isInternalServerError(), COULD_NOT_CALCULATE),
+                Arguments.of("01.01.2000", "75.0", null, status().isBadRequest(), HEIGHT_NOT_PRESENT),
+                Arguments.of("01.01.2000", null, "1.75", status().isBadRequest(), WEIGHT_NOT_PRESENT),
+                Arguments.of(null, "75.0", "1.75", status().isBadRequest(), BIRTHDATE_NOT_PRESENT),
+                Arguments.of("01.01.2008", "75.0", "1.75", status().isOk(), USER_TOO_YOUNG)
         );
     }
 
     @ParameterizedTest(name = "{4}")
     @MethodSource("getBmiArguments")
     void testGetBmi(
-            String date, String weight, String height, ResultMatcher status, String message)
-            throws Exception {
+            String date, String weight, String height, ResultMatcher status, String message) throws Exception {
         MvcResult result = mockMvc.perform(get("/bmi")
                         .param("birthdate", date)
                         .param("weight", weight)
@@ -82,22 +73,18 @@ class BmiControllerIT {
 
     private static Stream<Arguments> findUserAndCalculateBmiArguments() {
         return Stream.of(
-                Arguments.of("underweight", "/bmi/Torsten", status().isOk(),
-                        "User has a BMI of 18.3 and therewith he has underweight."),
-                Arguments.of("overweight", "/bmi/Peter", status().isOk(),
-                        "User has a BMI of 28.74 and therewith he has overweight."),
-                Arguments.of("normalWeight", "/bmi/Hans", status().isOk(),
-                        "User has a BMI of 22.11 and therewith he has normal weight."),
+                Arguments.of("underweight", "/bmi/Torsten", status().isOk(), USER_UNDERWEIGHT),
+                Arguments.of("overweight", "/bmi/Peter", status().isOk(), USER_OVERWEIGHT),
+                Arguments.of("normalWeight", "/bmi/Hans", status().isOk(), USER_NORMAL_WEIGHT),
                 Arguments.of("userNotIdentified", "/bmi/ActorNichtVorhanden", status().isInternalServerError(),
-                        "User ActorNichtVorhanden not identified!")
+                        ACTOR_NOT_IDENTIFIED)
         );
     }
 
     @ParameterizedTest(name = "{3}")
     @MethodSource("findUserAndCalculateBmiArguments")
     void testFindUserAndCalculateBmi(
-            String weightStatus, String url, ResultMatcher status, String message
-    ) throws Exception {
+            String weightStatus, String url, ResultMatcher status, String message) throws Exception {
         createUser(weightStatus);
         MvcResult result = mockMvc.perform(get(url))
                 .andDo(print())

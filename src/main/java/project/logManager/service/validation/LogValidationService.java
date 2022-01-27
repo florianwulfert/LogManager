@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import project.logManager.common.dto.LogMessageDto;
 import project.logManager.common.enums.SeverityEnum;
 
+import static project.logManager.common.message.Messages.KATZE_TO_HUND;
+
 /**
  * @author - EugenFriesen
  * 13.02.2021
@@ -31,10 +33,10 @@ public class LogValidationService {
 
     public LogMessageDto validateMessage(String message) {
         if (message.equals("Katze")) {
-            LOGGER.info("Katze was translated to Hund!");
+            LOGGER.info(KATZE_TO_HUND);
             return LogMessageDto.builder()
                     .message("Hund")
-                    .returnMessage("Katze was translated to Hund!\n")
+                    .returnMessage(KATZE_TO_HUND + "\n")
                     .build();
         } return LogMessageDto.builder()
                 .message(message)

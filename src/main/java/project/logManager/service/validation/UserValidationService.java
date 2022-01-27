@@ -13,6 +13,8 @@ import project.logManager.service.model.UserService;
 
 import java.util.List;
 
+import static project.logManager.common.message.Messages.*;
+
 @Component
 @RequiredArgsConstructor
 public class UserValidationService {
@@ -28,9 +30,8 @@ public class UserValidationService {
                 return;
             }
         }
-        LOGGER.error("Given color {} is illegal!", userFarben);
-        throw new IllegalArgumentException("Color illegal! Choose from the following options: " +
-                "blue, red, orange, yellow, black");
+        LOGGER.error(COLOR_ILLEGAL, userFarben);
+        throw new IllegalArgumentException(COLOR_ILLEGAL_PLUS_CHOICE);
     }
 
     public boolean checkIfUsersListIsEmpty(String actor, User user) {
@@ -38,8 +39,7 @@ public class UserValidationService {
             List<User> users = userRepository.findAll();
             if (users.isEmpty()) {
                 if (!user.getName().equals(actor)) {
-                    LOGGER.warn("User cannot be created because there are no users in the database yet. " +
-                            "First user has to create himself! " +
+                    LOGGER.warn(NO_USERS_YET +
                             user.getName() + " ungleich " + actor);
                     throw new FirstUserUnequalActorException(actor, user.getName());
                 }
@@ -53,7 +53,7 @@ public class UserValidationService {
 
     private void handleErsterUserUngleichActor(String actor, FirstUserUnequalActorException er) {
         try {
-            logService.addLog("User could not be created.", "ERROR", actor);
+            logService.addLog(USER_NOT_CREATED, "ERROR", actor);
         } catch (RuntimeException rex) {
             throw new RuntimeException(er.getMessage());
         }
@@ -63,8 +63,8 @@ public class UserValidationService {
         try {
             User activeUser = userRepository.findUserByName(actor);
             if (activeUser == null) {
-                LOGGER.error("Actor is null!");
-                throw new RuntimeException(String.format("User %s not found.", actor));
+                LOGGER.error(ACTOR_IS_NULL);
+                throw new RuntimeException(String.format(USER_NOT_FOUND_NAME, actor));
             }
             return activeUser;
         } catch (RuntimeException rex) {
@@ -73,16 +73,16 @@ public class UserValidationService {
     }
 
     private String handleUserKonnteNichtAngelegtWerden(String actor, RuntimeException ex) {
-        LOGGER.error("User could not be created.");
-        logService.addLog("User could not be created.", "ERROR", actor);
+        LOGGER.error(USER_NOT_CREATED);
+        logService.addLog(USER_NOT_CREATED, "ERROR", actor);
         return ex.getMessage();
     }
 
     public void checkIfUserToPostExists(String name) {
         try {
             if (userRepository.findUserByName(name) != null) {
-                LOGGER.warn(String.format("User %s already exists.", name));
-                throw new RuntimeException(String.format("User %s already exists.", name));
+                LOGGER.warn(String.format(USER_EXISTS, name));
+                throw new RuntimeException(String.format(USER_EXISTS, name));
             }
         } catch (RuntimeException rex) {
             throw new RuntimeException(rex.getMessage());

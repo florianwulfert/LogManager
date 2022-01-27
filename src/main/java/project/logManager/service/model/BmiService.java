@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 
+import static project.logManager.common.message.Messages.*;
+
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -28,21 +30,21 @@ public class BmiService extends DateUtil {
         int ageUser = getAgeFromBirthDate(birthdate);
 
         if (ageUser < 18) {
-            LOGGER.warn("User is too young for an exact definition of the BMI.");
-            return "User is too young for an exact definition of the BMI.";
+            LOGGER.warn(USER_TOO_YOUNG);
+            return USER_TOO_YOUNG;
         }
 
-        String bmiMessage = "User has a BMI of %s and therewith he has";
+        String bmiMessage = BMI_MESSAGE;
 
         if (bmi > 18.5 && bmi <= 25) {
-            return String.format(bmiMessage + " normal weight.", bmi);
+            return String.format(bmiMessage + NORMAL_WEIGHT, bmi);
         } else if (bmi <= 18.5 && bmi > 0) {
-            return String.format(bmiMessage + " underweight.", bmi);
+            return String.format(bmiMessage + UNDERWEIGHT, bmi);
         } else if (bmi > 25) {
-            return String.format(bmiMessage + " overweight.", bmi);
+            return String.format(bmiMessage + OVERWEIGHT, bmi);
         } else {
-            LOGGER.error("BMI could not be calculated.");
-            throw new IllegalStateException("BMI could not be calculated.");
+            LOGGER.error(COULD_NOT_CALCULATE);
+            throw new IllegalStateException(COULD_NOT_CALCULATE);
         }
     }
 

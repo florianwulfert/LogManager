@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static project.logManager.common.message.Messages.*;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
@@ -59,55 +60,35 @@ class UserControllerIT {
     private static Stream<Arguments> getAddUserArguments() {
         return Stream.of(
                 Arguments.of("User created", false, "Petra", "Hugo", "05.11.1995", "78", "1.80", "blue",
-                        status().isOk(),
-                        "User Hugo was created. User has a BMI of 24.07 and therewith he has normal weight."),
+                        status().isOk(), HUGO_CREATED),
                 Arguments.of("First user has to create himself", true, "Torsten", "Hugo", "05.11.1995", "78", "1.80", "blue",
-                        status().isInternalServerError(),
-                        "User cannot be created because there are no users in the database yet. First user has to create himself! Hugo unequal Torsten"),
+                        status().isInternalServerError(), NO_USERS_YET + "Hugo unequal Torsten"),
                 Arguments.of("First user created himself", true, "Petra", "Petra", "05.11.1995", "78", "1.80", "blue",
-                        status().isOk(),
-                        "User Petra was created. User has a BMI of 24.07 and therewith he has normal weight."),
+                        status().isOk(), PETRA_CREATED),
                 Arguments.of("Actor not known", false, "ActorName", "Hugo", "05.11.1995", "78", "1.80", "blue",
-                        status().isInternalServerError(),
-                        "User ActorName not found."),
+                        status().isInternalServerError(), ACTORNAME_NOT_FOUND),
                 Arguments.of("Actor not given", false, null, "Hugo", "05.11.1995", "78", "1.80", "blue",
-                        status().isBadRequest(),
-                        "Required String parameter 'actor' is not present"),
+                        status().isBadRequest(), ACTOR_NOT_PRESENT),
                 Arguments.of("Color illegal", false, "Petra", "Hugo", "05.11.1995", "78", "1.80", "braun",
-                        status().isInternalServerError(),
-                        "Color illegal! Choose from the following options: blue, red, orange, yellow, black"),
+                        status().isInternalServerError(), COLOR_ILLEGAL_PLUS_CHOICE),
                 Arguments.of("Datum mit falschem Format angegeben", false, "Petra", "Hugo", "hallo", "78", "1.80", "blue",
-                        status().isBadRequest(),
-                        "Required path variable was not found or request param has wrong format! " +
-                                "Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'; " +
-                                "nested exception is org.springframework.core.convert.ConversionFailedException: " +
-                                "Failed to convert from type [java.lang.String] to type " +
-                                "[@org.springframework.web.bind.annotation.RequestParam @org.springframework.format." +
-                                "annotation.DateTimeFormat java.time.LocalDate] for value 'hallo'; " +
-                                "nested exception is java.lang.IllegalArgumentException: Parse attempt failed for value [hallo]"),
+                        status().isBadRequest(), BAD_REQUEST_ERROR_MESSAGE_DATE),
                 Arguments.of("weight mit falschem Format angegeben", false, "Petra", "Hugo", "05.11.1995", "hi", "1.80", "blue",
-                        status().isBadRequest(),
-                        "Required path variable was not found or request param has wrong format! " +
-                                "Failed to convert value of type 'java.lang.String' to required type 'double'; " +
-                                "nested exception is java.lang.NumberFormatException: For input string: \"hi\""),
+                        status().isBadRequest(), BAD_REQUEST_ERROR_MESSAGE_WEIGHT),
                 Arguments.of("height mit falschem Format angegeben", false, "Petra", "Hugo", "05.11.1995", "78", "hi", "blue",
-                        status().isBadRequest(),
-                        "Required path variable was not found or request param has wrong format! " +
-                                "Failed to convert value of type 'java.lang.String' to required type 'double'; " +
-                                "nested exception is java.lang.NumberFormatException: For input string: \"hi\""),
+                        status().isBadRequest(), BAD_REQUEST_ERROR_MESSAGE_HEIGHT),
                 Arguments.of("User to create already exists", false, "Petra", "Torsten", "05.11.1995", "78", "1.80", "blue",
-                        status().isInternalServerError(),
-                        "User Torsten already exists."),
+                        status().isInternalServerError(), TORSTEN_EXISTS),
                 Arguments.of("UserNameNull", false, "Petra", null, "05.11.1995", "78", "1.80", "blue",
-                        status().isBadRequest(), "Required String parameter 'name' is not present"),
+                        status().isBadRequest(), NAME_NOT_PRESENT),
                 Arguments.of("birthdateIsNull", false, "Petra", "Albert", null, "78", "1.80", "blue",
-                        status().isBadRequest(), "Required LocalDate parameter 'birthdate' is not present"),
+                        status().isBadRequest(), BIRTHDATE_NOT_PRESENT),
                 Arguments.of("weightIsNull", false, "Petra", "Albert", "05.11.1995", null, "1.80", "blue",
-                        status().isBadRequest(), "Required double parameter 'weight' is not present"),
+                        status().isBadRequest(), WEIGHT_NOT_PRESENT),
                 Arguments.of("heightIsNull", false, "Petra", "Albert", "05.11.1995", "78", null, "blue",
-                        status().isBadRequest(), "Required double parameter 'height' is not present"),
+                        status().isBadRequest(), HEIGHT_NOT_PRESENT),
                 Arguments.of("favouriteColorIsNull", false, "Petra", "Albert", "05.11.1995", "78", "1.80", null,
-                        status().isBadRequest(), "Required String parameter 'favouriteColor' is not present")
+                        status().isBadRequest(), FAVOURITE_COLOR_NOT_PRESENT)
         );
     }
 
@@ -140,12 +121,7 @@ class UserControllerIT {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Assertions.assertEquals("[{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\"," +
-                "\"weight\":65.0,\"height\":1.6,\"favouriteColor\":\"Red\",\"bmi\":25.39}" +
-                ",{\"id\":2,\"name\":\"Torsten\",\"birthdate\":\"1985-12-05\",\"weight\":61.3,\"height\":1.83," +
-                "\"favouriteColor\":\"Blue\",\"bmi\":18.3}," +
-                "{\"id\":3,\"name\":\"Hans\",\"birthdate\":\"1993-02-03\",\"weight\":75.7,\"height\":1.85," +
-                "\"favouriteColor\":\"Red\",\"bmi\":22.11}]", result.getResponse().getContentAsString());
+        Assertions.assertEquals(PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
     }
 
     @Nested
@@ -158,9 +134,7 @@ class UserControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals("{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\"," +
-                            "\"weight\":65.0,\"height\":1.6,\"favouriteColor\":\"Red\",\"bmi\":25.39}",
-                    result.getResponse().getContentAsString());
+            Assertions.assertEquals(PETRA, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -170,8 +144,7 @@ class UserControllerIT {
                     .andExpect(status().isBadRequest())
                     .andReturn();
 
-            Assertions.assertEquals("Required Integer parameter 'id' is not present",
-                    result.getResponse().getContentAsString());
+            Assertions.assertEquals(ID_NOT_PRESENT, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -190,9 +163,9 @@ class UserControllerIT {
         return Stream.of(
                 Arguments.of(false, "/user/delete/1", "Hans", status().isOk(), "User with the ID 1 was deleted."),
                 Arguments.of(false, "/user/delete/1", "Paul", status().isInternalServerError(), "User Paul not identified!"),
-                Arguments.of(false, "/user/delete/1", null, status().isBadRequest(), "Required String parameter 'actor' is not present"),
+                Arguments.of(false, "/user/delete/1", null, status().isBadRequest(), ACTOR_NOT_PRESENT),
                 Arguments.of(false, "/user/delete/8", "Torsten", status().isInternalServerError(), "User with the ID 8 not found."),
-                Arguments.of(false, "/user/delete/2", "Torsten", status().isInternalServerError(), "User cannot delete himself!"),
+                Arguments.of(false, "/user/delete/2", "Torsten", status().isInternalServerError(), USER_DELETE_HIMSELF),
                 Arguments.of(true, "/user/delete/1", "Torsten", status().isInternalServerError(),
                         "User Petra cannot be deleted because he is referenced in another table!")
         );
@@ -216,21 +189,16 @@ class UserControllerIT {
 
     private static Stream<Arguments> getDeleteUserByNameArguments() {
         return Stream.of(
-                Arguments.of("User successfully deleted by name", false, "/user/delete/name/Petra", "Torsten", status().isOk(), "User named Petra was deleted."),
-                Arguments.of("Actor wants to delete himself", false, "/user/delete/name/Torsten", "Torsten", status().isInternalServerError(),
-                        "User cannot delete himself!"),
-                Arguments.of("Actor not present", false, "/user/delete/name/Petra", null, status().isBadRequest(),
-                        "Required String parameter 'actor' is not present"),
-                Arguments.of("Actor not in database", false, "/user/delete/name/Petra", "ActorNichtBekannt", status().isInternalServerError(),
-                        "User named ActorNichtBekannt not found!"),
+                Arguments.of("User successfully deleted by name", false, "/user/delete/name/Petra", "Torsten", status().isOk(), PETRA_DELETED),
+                Arguments.of("Actor wants to delete himself", false, "/user/delete/name/Torsten", "Torsten", status().isInternalServerError(), USER_DELETE_HIMSELF),
+                Arguments.of("Actor not present", false, "/user/delete/name/Petra", null, status().isBadRequest(), ACTOR_NOT_PRESENT),
+                Arguments.of("Actor not in database", false, "/user/delete/name/Petra", "ActorName", status().isInternalServerError(), ACTORNAME_NOT_FOUND),
                 Arguments.of("User to delete not in database ", false, "/user/delete/name/UserToDeleteNichtBekannt", "Torsten", status().isInternalServerError(),
-                        "User named UserToDeleteNichtBekannt not found!"),
+                        USER_TO_DELETE_NOT_FOUND),
                 Arguments.of("User to delete not present", false, "/user/delete/name/", "Torsten", status().isBadRequest(),
-                        "Required path variable was not found or request param has wrong format! "
-                                + "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; "
-                                + "nested exception is java.lang.NumberFormatException: For input string: \"name\""),
+                        USER_TO_DELETE_NOT_PRESENT),
                 Arguments.of("User is referenced in another table", true, "/user/delete/name/Petra", "Torsten", status().isInternalServerError(),
-                        "User Petra cannot be deleted because he is referenced in another table!")
+                        PETRA_REFERENCED)
         );
     }
 

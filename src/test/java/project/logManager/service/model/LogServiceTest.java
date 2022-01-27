@@ -112,7 +112,7 @@ class LogServiceTest {
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(Mockito.any());
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
                 () -> systemUnderTest.addLog("Hallo", "INFO", "Peter"));
-        Assertions.assertEquals("User Peter not found.", ex.getMessage());
+        Assertions.assertEquals("User named Peter not found!", ex.getMessage());
     }
 
     @Test

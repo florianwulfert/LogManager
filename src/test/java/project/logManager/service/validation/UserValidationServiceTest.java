@@ -81,7 +81,7 @@ class UserValidationServiceTest {
     void testIfActorIsNull() {
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.checkIfActorExists(users.get(1).getName()));
-        Assertions.assertEquals("User Florian not found.", ex.getMessage());
+        Assertions.assertEquals("User named Florian not found!", ex.getMessage());
     }
 
     @Test
