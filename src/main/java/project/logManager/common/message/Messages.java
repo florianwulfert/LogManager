@@ -38,7 +38,6 @@ public class Messages {
     public static final String USER_OVERWEIGHT = "User has a BMI of 28.74 and therewith he has overweight.";
     public static final String USER_NORMAL_WEIGHT = "User has a BMI of 22.11 and therewith he has normal weight.";
     public static final String ACTOR_NOT_IDENTIFIED = "User ActorNichtVorhanden not identified!";
-
     public static final String HUGO_CREATED = "User Hugo was created. User has a BMI of 24.07 and therewith he has normal weight.";
     public static final String PETRA_CREATED = "User Petra was created. User has a BMI of 24.07 and therewith he has normal weight.";
     public static final String ACTORNAME_NOT_FOUND = "User named ActorName not found!";
@@ -74,6 +73,22 @@ public class Messages {
             + "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; "
             + "nested exception is java.lang.NumberFormatException: For input string: \"name\"";
     public static final String PETRA_REFERENCED = "User Petra cannot be deleted because he is referenced in another table!";
-    public static final String
-    public static final String
+    public static final String PAUL_NOT_IDENTIFIED = "User Paul not identified!";
+    public static final String ID_1_DELETED = "User with the ID 1 was deleted.";
+    public static final String ID_8_NOT_FOUND = "User with the ID 8 not found.";
+    public static final String MESSAGE_NOT_PRESENT = "Required String parameter 'message' is not present";
+    public static final String SEVERITY_NOT_PRESENT = "Required String parameter 'severity' is not present";
+    public static final String HANS_NOT_FOUND = "User named Hans not found!";
+    public static final String NAME_USER_NOT_PRESENT = "Required String parameter 'nameUser' is not present";
+    public static final String SEVERITY_HI_NOT_REGISTERED = "Severity hi not registered. Please choose one of the following options: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL";
+    public static final String HUND_SAVED = "Message \"Hund\" saved as INFO!";
+    public static final String LOG_EXAMPLE = "[{\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\"}]";
+    public static final String ID_FOR_LOGS_HAS_WRONG_FORMAT = "Required path variable was not found or request param has wrong format! " +
+            "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; " +
+            "nested exception is java.lang.NumberFormatException: For input string: \"hallo\"";
+    public static final String ID_2_DELETED = "Entry with the ID 2 was deleted from database.";
+    public static final String ID_NOT_EXISTS = "No class project.logManager.model.entity.Log entity with id 20 exists!";
+    public static final String ENTRIES_DELETED = "Entries with the ID(s) 1, 2 were deleted from database.";
+
+
 }

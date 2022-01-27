@@ -16,6 +16,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static project.logManager.common.message.Messages.*;
+
 @ExtendWith(MockitoExtension.class)
 
 class BmiServiceTest {
@@ -35,29 +37,28 @@ class BmiServiceTest {
 
     @Test
     void testBerechneBMIWhenUserTooYoung() {
-        Assertions.assertEquals("User is too young for an exact definition of the BMI.",
-                systemUnderTest.getBmiMessage(users.get(0).getBirthdate(),
+        Assertions.assertEquals(USER_TOO_YOUNG, systemUnderTest.getBmiMessage(users.get(0).getBirthdate(),
                         users.get(0).getWeight(),
                         users.get(0).getHeight()));
     }
 
     @Test
     void testBerechneBMIWithNormalWeight() {
-        Assertions.assertEquals("User has a BMI of 23.14 and therewith he has normal weight.",
+        Assertions.assertEquals(USER_NORMAL_WEIGHT,
                 systemUnderTest.getBmiMessage(LocalDate.of(1988, 12, 12),
-                        75.0, 1.80));
+                        75.7, 1.85));
     }
     @Test
     void testBerechneBMIWithUnderweight() {
-        Assertions.assertEquals("User has a BMI of 16.97 and therewith he has underweight.",
+        Assertions.assertEquals(USER_UNDERWEIGHT,
                 systemUnderTest.getBmiMessage(LocalDate.of(1988, 12, 12),
-                        55.0, 1.80));
+                        61.3, 1.83));
     }
     @Test
     void testBerechneBMIWithOverweight() {
-        Assertions.assertEquals("User has a BMI of 44.44 and therewith he has overweight.",
+        Assertions.assertEquals(USER_OVERWEIGHT,
                 systemUnderTest.getBmiMessage(LocalDate.of(2000, 12,12),
-                        100.0, 1.50));
+                        95.2, 1.82));
     }
 
     @Test
@@ -65,7 +66,7 @@ class BmiServiceTest {
         RuntimeException ex = Assertions.assertThrows(IllegalStateException.class, () ->
                 systemUnderTest.getBmiMessage(LocalDate.of(2000, 12, 12),
                         -100.0, 1.85));
-        Assertions.assertEquals("BMI could not be calculated.", ex.getMessage());
+        Assertions.assertEquals(COULD_NOT_CALCULATE, ex.getMessage());
     }
 
     @Test
@@ -83,8 +84,8 @@ class BmiServiceTest {
     @Test
     void testUserIsNull() {
         UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () ->
-                systemUnderTest.findUserAndCalculateBMI(users.get(0).getName()));
-        Assertions.assertEquals("User Peter not identified!", ex.getMessage());
+                systemUnderTest.findUserAndCalculateBMI("Paul"));
+        Assertions.assertEquals(PAUL_NOT_IDENTIFIED, ex.getMessage());
     }
 
     private List<User> addTestUser() {

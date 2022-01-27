@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static project.logManager.common.message.Messages.*;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
@@ -147,12 +148,12 @@ class LogControllerIT {
     private static Stream<Arguments> addLogArguments() {
         return Stream.of(
                 Arguments.of("PostLog", "INFO", "Test", "Petra", status().isOk(), "Message \"Test\" saved as INFO!"),
-                Arguments.of("MessageIsMissing", "DEBUG", null, "Petra", status().isBadRequest(), "Required String parameter 'message' is not present"),
-                Arguments.of("SeverityIsMissing", null, "Severity fehlt", "Petra", status().isBadRequest(), "Required String parameter 'severity' is not present"),
-                Arguments.of("UserIsMissing", "INFO", "Test", null, status().isBadRequest(), "Required String parameter 'nameUser' is not present"),
-                Arguments.of("SeverityIsFalse", "hi", "Test", "Petra", status().isInternalServerError(), "Severity hi not registered. Please choose one of the following options: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL"),
-                Arguments.of("UserIsFalse", "INFO", "Test", "Hans", status().isInternalServerError(), "User Hans not found."),
-                Arguments.of("KatzeToHund", "INFO", "Katze", "Petra", status().isOk(), "Katze was translated to Hund!\nMessage \"Hund\" saved as INFO!")
+                Arguments.of("MessageIsMissing", "DEBUG", null, "Petra", status().isBadRequest(), MESSAGE_NOT_PRESENT),
+                Arguments.of("SeverityIsMissing", null, "Severity fehlt", "Petra", status().isBadRequest(), SEVERITY_NOT_PRESENT),
+                Arguments.of("UserIsMissing", "INFO", "Test", null, status().isBadRequest(), NAME_USER_NOT_PRESENT),
+                Arguments.of("SeverityIsFalse", "hi", "Test", "Petra", status().isInternalServerError(), SEVERITY_HI_NOT_REGISTERED),
+                Arguments.of("UserIsFalse", "INFO", "Test", "Hans", status().isInternalServerError(), HANS_NOT_FOUND),
+                Arguments.of("KatzeToHund", "INFO", "Katze", "Petra", status().isOk(), KATZE_TO_HUND + "\n" + HUND_SAVED)
         );
     }
 
@@ -172,7 +173,6 @@ class LogControllerIT {
         Assertions.assertEquals(returnMessage, result.getResponse().getContentAsString());
     }
 
-
     @Nested
     class testSearchLogsById {
         @Test
@@ -182,8 +182,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals("[{\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\"}]",
-                    result.getResponse().getContentAsString());
+            Assertions.assertEquals(LOG_EXAMPLE, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -203,13 +202,9 @@ class LogControllerIT {
                     .andExpect(status().isBadRequest())
                     .andReturn();
 
-            Assertions.assertEquals("Required path variable was not found or request param has wrong format! " +
-                    "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; " +
-                    "nested exception is java.lang.NumberFormatException: For input string: \"hallo\"",
-                    result.getResponse().getContentAsString());
+            Assertions.assertEquals(ID_FOR_LOGS_HAS_WRONG_FORMAT, result.getResponse().getContentAsString());
         }
     }
-
 
     @Nested
     class testDeleteLogs {
@@ -220,8 +215,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals("Entry with the ID 2 was deleted from database.",
-                    result.getResponse().getContentAsString());
+            Assertions.assertEquals(ID_2_DELETED, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -231,8 +225,7 @@ class LogControllerIT {
                     .andExpect(status().isInternalServerError())
                     .andReturn();
 
-            Assertions.assertEquals("No class project.logManager.model.entity.Log entity with id 20 exists!",
-                    result.getResponse().getContentAsString());
+            Assertions.assertEquals(ID_NOT_EXISTS, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -242,10 +235,7 @@ class LogControllerIT {
                     .andExpect(status().isBadRequest())
                     .andReturn();
 
-            Assertions.assertEquals("Required path variable was not found or request param has wrong format! " +
-                            "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; " +
-                            "nested exception is java.lang.NumberFormatException: For input string: \"hallo\"",
-                    result.getResponse().getContentAsString());
+            Assertions.assertEquals(ID_FOR_LOGS_HAS_WRONG_FORMAT, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -256,8 +246,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals("Entries with the ID(s) 1, 2 were deleted from database.",
-                    result.getResponse().getContentAsString());
+            Assertions.assertEquals(ENTRIES_DELETED, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -268,7 +257,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals("No entries found!", result.getResponse().getContentAsString());
+            Assertions.assertEquals(NO_ENTRIES_FOUND, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -278,8 +267,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals("All logs were deleted from database!",
-                    result.getResponse().getContentAsString());
+            Assertions.assertEquals(ALL_LOGS_DELETED, result.getResponse().getContentAsString());
         }
     }
 

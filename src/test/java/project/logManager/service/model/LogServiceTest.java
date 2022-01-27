@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
+import static project.logManager.common.message.Messages.*;
 
 /**
  * @author - EugenFriesen
@@ -101,8 +102,7 @@ class LogServiceTest {
         Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
         Mockito.when(logValidationService.validateMessage(Mockito.anyString()))
                 .thenReturn(customLogMessageDto.get(0));
-        Assertions.assertEquals(customLogMessageDto.get(0).getReturnMessage() +
-                        "Message \"Hund\" saved as INFO!",
+        Assertions.assertEquals(customLogMessageDto.get(0).getReturnMessage() + HUND_SAVED,
                 systemUnderTest.addLog("Katze", "INFO", "Peter"));
     }
 
@@ -111,8 +111,8 @@ class LogServiceTest {
         Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(Mockito.any());
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
-                () -> systemUnderTest.addLog("Hallo", "INFO", "Peter"));
-        Assertions.assertEquals("User named Peter not found!", ex.getMessage());
+                () -> systemUnderTest.addLog("Hallo", "INFO", "Hans"));
+        Assertions.assertEquals(HANS_NOT_FOUND, ex.getMessage());
     }
 
     @Test
@@ -124,10 +124,9 @@ class LogServiceTest {
 
     @Test
     void testDeleteById() {
-        Assertions.assertEquals("Entry with the ID 1 was deleted from database.",
-                systemUnderTest.deleteById(1));
+        Assertions.assertEquals(ID_2_DELETED, systemUnderTest.deleteById(2));
         Mockito.verify(logRepository)
-                .deleteById(1);
+                .deleteById(2);
     }
 
     @Test
@@ -148,20 +147,19 @@ class LogServiceTest {
 
         logs.add(Log.builder()
                 .timestamp(LocalDateTime.of(2021, Month.JANUARY, 21, 17, 0, 0))
-                .id(8)
+                .id(2)
                 .severity("INFO")
                 .message("Haus")
                 .build());
 
         Mockito.when(logRepository.deleteBySeverity(Mockito.anyString())).thenReturn(logs);
-        Assertions.assertEquals("Entries with the ID(s) 1, 8 were deleted from database.",
-                systemUnderTest.deleteBySeverity("INFO"));
+        Assertions.assertEquals(ENTRIES_DELETED, systemUnderTest.deleteBySeverity("INFO"));
         Mockito.verify(logRepository).deleteBySeverity("INFO");
     }
 
     @Test
     void testNoEntriesFound() {
-        Assertions.assertEquals("No entries found!", systemUnderTest.deleteBySeverity("INFO"));
+        Assertions.assertEquals(NO_ENTRIES_FOUND, systemUnderTest.deleteBySeverity("INFO"));
         Mockito.verify(logRepository).deleteBySeverity("INFO");
     }
 
@@ -199,7 +197,7 @@ class LogServiceTest {
         customLogMessageDto.add(LogMessageDto
                 .builder()
                 .message("Hund")
-                .returnMessage("Katze wurde in Hund übersetzt!\n")
+                .returnMessage(KATZE_TO_HUND)
                 .build());
         customLogMessageDto.add(LogMessageDto
                 .builder()

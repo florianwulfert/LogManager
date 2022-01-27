@@ -161,13 +161,12 @@ class UserControllerIT {
 
     private static Stream<Arguments> getDeleteUserByIdArguments() {
         return Stream.of(
-                Arguments.of(false, "/user/delete/1", "Hans", status().isOk(), "User with the ID 1 was deleted."),
-                Arguments.of(false, "/user/delete/1", "Paul", status().isInternalServerError(), "User Paul not identified!"),
+                Arguments.of(false, "/user/delete/1", "Hans", status().isOk(), ID_1_DELETED),
+                Arguments.of(false, "/user/delete/1", "Paul", status().isInternalServerError(), PAUL_NOT_IDENTIFIED),
                 Arguments.of(false, "/user/delete/1", null, status().isBadRequest(), ACTOR_NOT_PRESENT),
-                Arguments.of(false, "/user/delete/8", "Torsten", status().isInternalServerError(), "User with the ID 8 not found."),
+                Arguments.of(false, "/user/delete/8", "Torsten", status().isInternalServerError(), ID_8_NOT_FOUND),
                 Arguments.of(false, "/user/delete/2", "Torsten", status().isInternalServerError(), USER_DELETE_HIMSELF),
-                Arguments.of(true, "/user/delete/1", "Torsten", status().isInternalServerError(),
-                        "User Petra cannot be deleted because he is referenced in another table!")
+                Arguments.of(true, "/user/delete/1", "Torsten", status().isInternalServerError(), PETRA_REFERENCED)
         );
     }
 
@@ -229,8 +228,7 @@ class UserControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals("All users were deleted from database!",
-                    result.getResponse().getContentAsString());
+            Assertions.assertEquals(ALL_USERS_DELETED, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -242,7 +240,7 @@ class UserControllerIT {
                     .andExpect(status().isInternalServerError())
                     .andReturn();
 
-            Assertions.assertEquals("Users cannot be deleted because they are referenced in another table!", result.getResponse().getContentAsString());
+            Assertions.assertEquals(USERS_REFERENCED, result.getResponse().getContentAsString());
         }
     }
 

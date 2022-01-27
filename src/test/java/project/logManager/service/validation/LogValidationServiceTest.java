@@ -9,6 +9,7 @@ import project.logManager.common.dto.LogMessageDto;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static project.logManager.common.message.Messages.KATZE_TO_HUND;
 
 /**
  * @author - EugenFriesen
@@ -35,7 +36,7 @@ class LogValidationServiceTest {
     void validateMessageIsKatze() {
         LogMessageDto customLogMessageDto = LogMessageDto.builder()
                 .message("Hund")
-                .returnMessage("Katze was translated to Hund!\n")
+                .returnMessage(KATZE_TO_HUND + "\n")
                 .build();
         Assertions.assertEquals(customLogMessageDto, systemUnderTest.validateMessage("Katze"));
     }

@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static project.logManager.common.message.Messages.*;
+
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -52,26 +54,23 @@ class UserServiceTest {
 
     @Test
     void testAddUser() {
-        Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("Test");
+        Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
         Mockito.when(userValidationService.checkIfActorExists(Mockito.anyString())).thenReturn(users.get(1));
-        systemUnderTest.addUser(users.get(1).getName(), "Peter", LocalDate.of
+        systemUnderTest.addUser(users.get(1).getName(), "Petra", LocalDate.of
                         (1988, 12, 12), 90.0,
-                1.85, "GELB");
-        Mockito.verify(logService).addLog("User Peter was created. Test",
-                "INFO", "Florian");
+                1.85, "YELLOW");
+        Mockito.verify(logService).addLog(PETRA_CREATED, "INFO", "Petra");
         Mockito.verify(userRepository).save(Mockito.any());
     }
 
     @Test
     void testUsersListIsEmpty() {
         Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(),
-                Mockito.any())).thenReturn("Test");
+                Mockito.any())).thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
         Mockito.when(userValidationService.checkIfUsersListIsEmpty(Mockito.anyString(), Mockito.any())).thenReturn(true);
-        systemUnderTest.addUser(users.get(0).getName(), users.get(0).getName(),
-                LocalDate.of(2000, 11, 18), 80,
+        systemUnderTest.addUser("Petra", "Petra", LocalDate.of(2000, 11, 18), 80,
                 1.85, "blau");
-        Mockito.verify(logService).addLog("User Peter was created. Test",
-                "INFO", "Peter");
+        Mockito.verify(logService).addLog(PETRA_CREATED, "INFO", "Petra");
         Mockito.verify(userRepository).save(Mockito.any());
     }
 
@@ -95,20 +94,19 @@ class UserServiceTest {
 
     @Test
     void testDeleteById() {
-        Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
-        Mockito.when(userRepository.findById(2)).thenReturn(Optional.ofNullable(users.get(1)));
-        Mockito.when(logService.existLogByActorId(users.get(1))).thenReturn(false);
-        systemUnderTest.deleteById(2, users.get(0).getName());
-        Mockito.verify(logService).addLog("User with the ID 2 was deleted.",
-                "WARNING", "Peter");
+        Mockito.when(userRepository.findUserByName("Petra")).thenReturn(users.get(1));
+        Mockito.when(userRepository.findById(1)).thenReturn(Optional.ofNullable(users.get(0)));
+        Mockito.when(logService.existLogByActorId(users.get(0))).thenReturn(false);
+        systemUnderTest.deleteById(1, users.get(1).getName());
+        Mockito.verify(logService).addLog(ID_1_DELETED, "WARNING", "Petra");
     }
 
     @Test
     void testIfActorIdIsNull() {
         Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(users.get(0)));
         UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () ->
-                systemUnderTest.deleteById(2, users.get(0).getName()));
-        Assertions.assertEquals("User Peter not identified!", ex.getMessage());
+                systemUnderTest.deleteById(2, "Paul"));
+        Assertions.assertEquals(PAUL_NOT_IDENTIFIED, ex.getMessage());
     }
 
     @Test
@@ -117,8 +115,7 @@ class UserServiceTest {
                 .thenReturn(users.get(0));
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.deleteById(users.get(0).getId(), users.get(0).getName()));
-        Assertions.assertEquals("User cannot delete himself!",
-                ex.getMessage());
+        Assertions.assertEquals(USER_DELETE_HIMSELF, ex.getMessage());
     }
 
     @Test
@@ -126,9 +123,8 @@ class UserServiceTest {
         Mockito.when(userRepository.findUserByName(users.get(0).getName())).
                 thenReturn(users.get(0));
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
-                systemUnderTest.deleteById(users.get(1).getId(), users.get(0).getName()));
-        Assertions.assertEquals("User with the ID 2 not found.",
-                ex.getMessage());
+                systemUnderTest.deleteById(8, users.get(0).getName()));
+        Assertions.assertEquals(ID_8_NOT_FOUND, ex.getMessage());
     }
 
     @Test
@@ -140,52 +136,46 @@ class UserServiceTest {
         Mockito.when(logService.existLogByActorId(users.get(1))).thenReturn(true);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.deleteById(2, "Peter"));
-        Assertions.assertEquals("User Florian cannot be deleted because he is referenced in another table!",
-                ex.getMessage());
+        Assertions.assertEquals(PETRA_REFERENCED, ex.getMessage());
     }
 
     @Test
     void testIfNameToDeleteEqualsActorname() {
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.deleteByName(users.get(0).getName(), users.get(0).getName()));
-        Assertions.assertEquals("User cannot delete himself!",
-                ex.getMessage());
+        Assertions.assertEquals(USER_DELETE_HIMSELF, ex.getMessage());
     }
 
     @Test
     void testIfUserToDeleteIsNull() {
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
-                () -> systemUnderTest.deleteByName("Peter", "Florian"));
-        Assertions.assertEquals("User named Peter not found!",
-                ex.getMessage());
+                () -> systemUnderTest.deleteByName("Hans", "Florian"));
+        Assertions.assertEquals(HANS_NOT_FOUND, ex.getMessage());
     }
 
     @Test
     void testIsUserToDeleteIsUsedSomewhereForName() {
-        Mockito.when(userRepository.findUserByName(users.get(0).getName())).thenReturn(users.get(0));
-        Mockito.when(logService.existLogByActorId(users.get(0))).thenReturn(true);
+        Mockito.when(userRepository.findUserByName(users.get(1).getName())).thenReturn(users.get(1));
+        Mockito.when(logService.existLogByActorId(users.get(1))).thenReturn(true);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
-                () -> systemUnderTest.deleteByName("Peter", "Florian"));
-        Assertions.assertEquals("User Peter cannot be deleted because he is referenced in another table!",
-                ex.getMessage());
+                () -> systemUnderTest.deleteByName("Petra", "Peter"));
+        Assertions.assertEquals(PETRA_REFERENCED, ex.getMessage());
     }
 
     @Test
     void testIfActorNameIsNull() {
         Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
-                () -> systemUnderTest.deleteByName("Peter", "hallo"));
-        Assertions.assertEquals("User named hallo not found!",
-                ex.getMessage());
+                () -> systemUnderTest.deleteByName("Peter", "Hans"));
+        Assertions.assertEquals(HANS_NOT_FOUND, ex.getMessage());
     }
 
     @Test
     void testDeleteByName() {
+        Mockito.when(userRepository.findUserByName("Petra")).thenReturn(users.get(1));
         Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
-        Mockito.when(userRepository.findUserByName("Florian")).thenReturn(users.get(1));
-        systemUnderTest.deleteByName("Peter", "Florian");
-        Mockito.verify(logService).addLog("User named Peter was deleted.",
-                "WARNING", "Florian");
+        systemUnderTest.deleteByName("Petra", "Peter");
+        Mockito.verify(logService).addLog(PETRA_DELETED, "WARNING", "Peter");
     }
 
     @Test
@@ -207,8 +197,7 @@ class UserServiceTest {
         Mockito.when(logRepository.findAll()).thenReturn(testLogs);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.deleteAll());
-        Assertions.assertEquals("Users cannot be deleted because they are referenced in another table!",
-                ex.getMessage());
+        Assertions.assertEquals(USERS_REFERENCED, ex.getMessage());
     }
 
     private List<User> addTestUser() {
@@ -225,7 +214,7 @@ class UserServiceTest {
 
         users.add(User.builder()
                 .id(2)
-                .name("Florian")
+                .name("Petra")
                 .birthdate(LocalDate.of(1988, 12, 12))
                 .weight(70.0)
                 .height(1.85)

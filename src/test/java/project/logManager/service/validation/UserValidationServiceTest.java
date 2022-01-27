@@ -17,6 +17,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static project.logManager.common.message.Messages.*;
+
 @ExtendWith(MockitoExtension.class)
 class UserValidationServiceTest {
 
@@ -39,13 +41,11 @@ class UserValidationServiceTest {
         users = addTestUser();
     }
 
-
     @Test
     void testIfColorIsNotCorrect() {
         RuntimeException ex = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 systemUnderTest.validateFarbenEnum("gold"));
-        Assertions.assertEquals("Color illegal! Choose from the following options: " +
-                "blue, red, orange, yellow, black", ex.getMessage());
+        Assertions.assertEquals(COLOR_ILLEGAL_PLUS_CHOICE, ex.getMessage());
     }
 
     @Test
@@ -59,9 +59,8 @@ class UserValidationServiceTest {
         Mockito.when(logService.addLog(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
                 .thenThrow(RuntimeException.class);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
-                systemUnderTest.checkIfUsersListIsEmpty(users.get(1).getName(), users.get(0)));
-        Assertions.assertEquals("User cannot be created because there are no users in the database yet. " +
-                "First user has to create himself! Peter unequal Florian", ex.getMessage());
+                systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(1)));
+        Assertions.assertEquals(NO_USERS_YET + "Florian unequal Peter", ex.getMessage());
     }
 
     //Der Fall trifft aktuell nicht ein, wird aber aus Testcoverage-Gründen getestet
@@ -80,16 +79,16 @@ class UserValidationServiceTest {
     @Test
     void testIfActorIsNull() {
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
-                systemUnderTest.checkIfActorExists(users.get(1).getName()));
-        Assertions.assertEquals("User named Florian not found!", ex.getMessage());
+                systemUnderTest.checkIfActorExists("Hans"));
+        Assertions.assertEquals(HANS_NOT_FOUND, ex.getMessage());
     }
 
     @Test
     void testIfUserToPostExists() {
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
-                systemUnderTest.checkIfUserToPostExists(users.get(0).getName()));
-        Assertions.assertEquals("User Peter already exists.", ex.getMessage());
+                systemUnderTest.checkIfUserToPostExists("Torsten"));
+        Assertions.assertEquals(TORSTEN_EXISTS, ex.getMessage());
     }
 
     @Test
