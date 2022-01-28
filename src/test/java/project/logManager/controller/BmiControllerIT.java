@@ -48,7 +48,7 @@ class BmiControllerIT {
                 Arguments.of("01.01.2003", "75.7", "1.85", status().isOk(), String.format(InfoMessages.BMI_MESSAGE, 22.11) + InfoMessages.NORMAL_WEIGHT),
                 Arguments.of("01.01.1987", "95.2", "1.82", status().isOk(), String.format(InfoMessages.BMI_MESSAGE, 28.74) + InfoMessages.OVERWEIGHT),
                 Arguments.of("01.01.2003", "61.3", "1.83", status().isOk(), String.format(InfoMessages.BMI_MESSAGE, 18.3) + InfoMessages.UNDERWEIGHT),
-                Arguments.of("01.01.1987", "0", "0", status().isInternalServerError(), "Infinite or NaN"),
+                Arguments.of("01.01.1987", "0", "0", status().isInternalServerError(), ErrorMessages.INFINITE_OR_NAN),
                 Arguments.of("01.01.1987", "-1", "-1", status().isInternalServerError(), ErrorMessages.COULD_NOT_CALCULATE),
                 Arguments.of("01.01.2000", "75.0", null, status().isBadRequest(), ErrorMessages.HEIGHT_NOT_PRESENT),
                 Arguments.of("01.01.2000", null, "1.75", status().isBadRequest(), ErrorMessages.WEIGHT_NOT_PRESENT),

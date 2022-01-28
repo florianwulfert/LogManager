@@ -17,6 +17,7 @@ import project.logManager.service.model.UserService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class UserValidationServiceTest {
@@ -49,37 +50,59 @@ class UserValidationServiceTest {
 
     @Test
     void testCheckIfUsersListIsEmpty() {
-        Assertions.assertTrue(systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(0)),
+        Assertions.assertTrue(systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(0), true),
                 "Test");
     }
 
     @Test
-    void testIfUserNotEqualActor() {
+    void testCheckIfUsersListIsNotEmpty() {
+        Mockito.when(userRepository.findAll()).thenReturn(users);
+        Assertions.assertFalse(systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(0), false), "Test");
+    }
+    @Test
+    void testIfUserNotEqualActorAndNoUsersYet() {
         Mockito.when(logService.addLog(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
                 .thenThrow(RuntimeException.class);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
-                systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(1)));
+                systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(1), true));
         Assertions.assertEquals(ErrorMessages.NO_USERS_YET + "Florian unequal Peter", ex.getMessage());
     }
 
-    //Der Fall trifft aktuell nicht ein, wird aber aus Testcoverage-Gründen getestet
+    @Test
+    void testIfUserNotEqualActorAndUserToDeleteIdNotFound() {
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(1), false));
+        Assertions.assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_ID, 2), ex.getMessage());
+    }
+
+    //Der Fall trifft aktuell nicht ein, wird aber aus TestCoverage-Gründen getestet
     @Test
     void testIfLogServiceDoesNotThrowException() {
-        systemUnderTest.checkIfUsersListIsEmpty("Hänsel", users.get(0));
+        systemUnderTest.checkIfUsersListIsEmpty("Hänsel", users.get(0), true);
+    }
+
+    @Test
+    void testIfActorNotExistsOnCreate() {
+        Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(null);
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.checkIfActorExists(users.get(0).getName(), true));
+        Assertions.assertEquals(String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Peter"), ex.getMessage());
+        Mockito.verify(logService).addLog(ErrorMessages.USER_NOT_CREATED, "ERROR", users.get(0).getName());
+    }
+
+    @Test
+    void testIfActorNotExistsOnDelete() {
+        Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(null);
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.checkIfActorExists(users.get(0).getName(), false));
+        Assertions.assertEquals(String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Peter"), ex.getMessage());
     }
 
     @Test
     void testIfActorExists() {
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
-        Assertions.assertEquals(users.get(0),
-                systemUnderTest.checkIfActorExists(users.get(0).getName()));
-    }
-
-    @Test
-    void testIfActorIsNull() {
-        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
-                systemUnderTest.checkIfActorExists("Hans"));
-        Assertions.assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Hans"), ex.getMessage());
+        Assertions.assertEquals(users.get(0), systemUnderTest.checkIfActorExists(
+                users.get(0).getName(), false));
     }
 
     @Test
@@ -93,6 +116,34 @@ class UserValidationServiceTest {
     @Test
     void testIfUserToPostIsNull() {
         systemUnderTest.checkIfUserToPostExists(users.get(0).getName());
+    }
+
+    @Test
+    void testIfUserToDeleteIdEqualsActorId() {
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.checkIfUserToDeleteIdEqualsActorId(1,1));
+        Assertions.assertEquals(ErrorMessages.USER_DELETE_HIMSELF, ex.getMessage());
+    }
+
+    @Test
+    void testIfIdExists() {
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(users.get(0)));
+        systemUnderTest.checkIfIdExists(1);
+    }
+
+    @Test
+    void testIfIdNotExists() {
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.checkIfIdExists(1));
+        Assertions.assertEquals(String.format(ErrorMessages.ID_NOT_FOUND, 1), ex.getMessage());
+    }
+
+    @Test
+    void testIfExistLogByUserToDelete() {
+        Mockito.when(logService.existLogByUserToDelete(Mockito.any())).thenReturn(true);
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.checkIfExistLogByUserToDelete(users.get(0)));
+        Assertions.assertEquals(String.format(ErrorMessages.USER_REFERENCED, users.get(0).getName()), ex.getMessage());
     }
 
     private List<User> addTestUser() {

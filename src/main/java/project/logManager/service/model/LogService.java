@@ -86,7 +86,7 @@ public class LogService {
         return String.format(InfoMessages.ENTRY_DELETED_ID, id);
     }
 
-    public boolean existLogByActorId(User actor) {
+    public boolean existLogByUserToDelete(User actor) {
         List<Log> logs = logRepository.findByUser(actor);
         return !logs.isEmpty();
     }

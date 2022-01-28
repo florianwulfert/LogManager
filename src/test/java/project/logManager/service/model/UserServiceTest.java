@@ -10,7 +10,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
-import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -55,7 +54,7 @@ class UserServiceTest {
     @Test
     void testAddUser() {
         Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
-        Mockito.when(userValidationService.checkIfActorExists(Mockito.anyString())).thenReturn(users.get(1));
+        Mockito.when(userValidationService.checkIfActorExists(Mockito.anyString(), true)).thenReturn(users.get(1));
         systemUnderTest.addUser(users.get(0).getName(), "Florian", LocalDate.of
                         (1988, 12, 12), 90.0,
                 1.85, "YELLOW");
@@ -68,7 +67,7 @@ class UserServiceTest {
     void testUsersListIsEmpty() {
         Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(),
                 Mockito.any())).thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
-        Mockito.when(userValidationService.checkIfUsersListIsEmpty(Mockito.anyString(), Mockito.any())).thenReturn(true);
+        Mockito.when(userValidationService.checkIfUsersListIsEmpty(Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(true);
         systemUnderTest.addUser("Florian", "Florian", LocalDate.of(2000, 11, 18), 80,
                 1.85, "blau");
         Mockito.verify(logService).addLog(String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE,
@@ -98,17 +97,9 @@ class UserServiceTest {
     void testDeleteById() {
         Mockito.when(userRepository.findUserByName("Florian")).thenReturn(users.get(1));
         Mockito.when(userRepository.findById(1)).thenReturn(Optional.ofNullable(users.get(0)));
-        Mockito.when(logService.existLogByActorId(users.get(0))).thenReturn(false);
+        Mockito.when(logService.existLogByUserToDelete(users.get(0))).thenReturn(false);
         systemUnderTest.deleteById(1, users.get(1).getName());
         Mockito.verify(logService).addLog(String.format(InfoMessages.USER_DELETED_ID, 1), "WARNING", "Florian");
-    }
-
-    @Test
-    void testIfActorIdIsNull() {
-        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(users.get(0)));
-        UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () ->
-                systemUnderTest.deleteById(2, "Paul"));
-        Assertions.assertEquals(String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Paul"), ex.getMessage());
     }
 
     @Test
@@ -135,7 +126,7 @@ class UserServiceTest {
                 .thenReturn(users.get(0));
         Mockito.when(userRepository.findById(users.get(1).getId()))
                 .thenReturn(Optional.ofNullable(users.get(1)));
-        Mockito.when(logService.existLogByActorId(users.get(1))).thenReturn(true);
+        Mockito.when(logService.existLogByUserToDelete(users.get(1))).thenReturn(true);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.deleteById(2, "Peter"));
         Assertions.assertEquals(String.format(ErrorMessages.USER_REFERENCED, "Florian"), ex.getMessage());
@@ -158,7 +149,7 @@ class UserServiceTest {
     @Test
     void testIsUserToDeleteIsUsedSomewhereForName() {
         Mockito.when(userRepository.findUserByName(users.get(1).getName())).thenReturn(users.get(1));
-        Mockito.when(logService.existLogByActorId(users.get(1))).thenReturn(true);
+        Mockito.when(logService.existLogByUserToDelete(users.get(1))).thenReturn(true);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class,
                 () -> systemUnderTest.deleteByName("Florian", "Peter"));
         Assertions.assertEquals(String.format(ErrorMessages.USER_REFERENCED, "Florian"), ex.getMessage());

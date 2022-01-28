@@ -1,9 +1,10 @@
 package project.logManager.exception;
 
+import project.logManager.common.message.ErrorMessages;
+
 public class FirstUserUnequalActorException extends RuntimeException {
 
     public FirstUserUnequalActorException(String actor, String name) {
-        super("User cannot be created because there are no users in the database yet. First user has to create himself! " +
-                name + " unequal " + actor);
+        super(ErrorMessages.NO_USERS_YET + name + " unequal " + actor);
     }
 }

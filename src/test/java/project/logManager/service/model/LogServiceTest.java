@@ -132,7 +132,7 @@ class LogServiceTest {
 
     @Test
     void testSearchLogByActorId() {
-        systemUnderTest.existLogByActorId(Mockito.any());
+        systemUnderTest.existLogByUserToDelete(Mockito.any());
         Mockito.verify(logRepository).findByUser(Mockito.any());
     }
 
