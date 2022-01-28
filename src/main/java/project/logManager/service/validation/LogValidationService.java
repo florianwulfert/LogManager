@@ -6,8 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.logManager.common.dto.LogMessageDto;
 import project.logManager.common.enums.SeverityEnum;
-
-import static project.logManager.common.message.Messages.KATZE_TO_HUND;
+import project.logManager.common.message.InfoMessages;
 
 /**
  * @author - EugenFriesen
@@ -33,10 +32,10 @@ public class LogValidationService {
 
     public LogMessageDto validateMessage(String message) {
         if (message.equals("Katze")) {
-            LOGGER.info(KATZE_TO_HUND);
+            LOGGER.info(InfoMessages.KATZE_TO_HUND);
             return LogMessageDto.builder()
                     .message("Hund")
-                    .returnMessage(KATZE_TO_HUND + "\n")
+                    .returnMessage(InfoMessages.KATZE_TO_HUND + "\n")
                     .build();
         } return LogMessageDto.builder()
                 .message(message)

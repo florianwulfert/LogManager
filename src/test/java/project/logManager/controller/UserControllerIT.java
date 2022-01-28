@@ -15,6 +15,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
+import project.logManager.common.message.ErrorMessages;
+import project.logManager.common.message.InfoMessages;
+import project.logManager.common.message.TestMessages;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -30,7 +33,7 @@ import java.util.stream.Stream;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static project.logManager.common.message.Messages.*;
+import static project.logManager.common.message.TestMessages.*;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
@@ -60,17 +63,17 @@ class UserControllerIT {
     private static Stream<Arguments> getAddUserArguments() {
         return Stream.of(
                 Arguments.of("User created", false, "Petra", "Hugo", "05.11.1995", "78", "1.80", "blue",
-                        status().isOk(), HUGO_CREATED),
+                        status().isOk(), String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Hugo", 24.07) + InfoMessages.NORMAL_WEIGHT),
                 Arguments.of("First user has to create himself", true, "Torsten", "Hugo", "05.11.1995", "78", "1.80", "blue",
-                        status().isInternalServerError(), NO_USERS_YET + "Hugo unequal Torsten"),
+                        status().isInternalServerError(), ErrorMessages.NO_USERS_YET + "Hugo unequal Torsten"),
                 Arguments.of("First user created himself", true, "Petra", "Petra", "05.11.1995", "78", "1.80", "blue",
-                        status().isOk(), PETRA_CREATED),
+                        status().isOk(), String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Petra", 24.07) + InfoMessages.NORMAL_WEIGHT),
                 Arguments.of("Actor not known", false, "ActorName", "Hugo", "05.11.1995", "78", "1.80", "blue",
-                        status().isInternalServerError(), ACTORNAME_NOT_FOUND),
+                        status().isInternalServerError(), String.format(ErrorMessages.USER_NOT_FOUND_NAME, "ActorName")),
                 Arguments.of("Actor not given", false, null, "Hugo", "05.11.1995", "78", "1.80", "blue",
-                        status().isBadRequest(), ACTOR_NOT_PRESENT),
+                        status().isBadRequest(), ErrorMessages.ACTOR_NOT_PRESENT),
                 Arguments.of("Color illegal", false, "Petra", "Hugo", "05.11.1995", "78", "1.80", "braun",
-                        status().isInternalServerError(), COLOR_ILLEGAL_PLUS_CHOICE),
+                        status().isInternalServerError(), ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE),
                 Arguments.of("Datum mit falschem Format angegeben", false, "Petra", "Hugo", "hallo", "78", "1.80", "blue",
                         status().isBadRequest(), BAD_REQUEST_ERROR_MESSAGE_DATE),
                 Arguments.of("weight mit falschem Format angegeben", false, "Petra", "Hugo", "05.11.1995", "hi", "1.80", "blue",
@@ -78,17 +81,17 @@ class UserControllerIT {
                 Arguments.of("height mit falschem Format angegeben", false, "Petra", "Hugo", "05.11.1995", "78", "hi", "blue",
                         status().isBadRequest(), BAD_REQUEST_ERROR_MESSAGE_HEIGHT),
                 Arguments.of("User to create already exists", false, "Petra", "Torsten", "05.11.1995", "78", "1.80", "blue",
-                        status().isInternalServerError(), TORSTEN_EXISTS),
+                        status().isInternalServerError(), String.format(ErrorMessages.USER_EXISTS, "Torsten")),
                 Arguments.of("UserNameNull", false, "Petra", null, "05.11.1995", "78", "1.80", "blue",
-                        status().isBadRequest(), NAME_NOT_PRESENT),
+                        status().isBadRequest(), ErrorMessages.NAME_NOT_PRESENT),
                 Arguments.of("birthdateIsNull", false, "Petra", "Albert", null, "78", "1.80", "blue",
-                        status().isBadRequest(), BIRTHDATE_NOT_PRESENT),
+                        status().isBadRequest(), ErrorMessages.BIRTHDATE_NOT_PRESENT),
                 Arguments.of("weightIsNull", false, "Petra", "Albert", "05.11.1995", null, "1.80", "blue",
-                        status().isBadRequest(), WEIGHT_NOT_PRESENT),
+                        status().isBadRequest(), ErrorMessages.WEIGHT_NOT_PRESENT),
                 Arguments.of("heightIsNull", false, "Petra", "Albert", "05.11.1995", "78", null, "blue",
-                        status().isBadRequest(), HEIGHT_NOT_PRESENT),
+                        status().isBadRequest(), ErrorMessages.HEIGHT_NOT_PRESENT),
                 Arguments.of("favouriteColorIsNull", false, "Petra", "Albert", "05.11.1995", "78", "1.80", null,
-                        status().isBadRequest(), FAVOURITE_COLOR_NOT_PRESENT)
+                        status().isBadRequest(), ErrorMessages.FAVOURITE_COLOR_NOT_PRESENT)
         );
     }
 
@@ -144,7 +147,7 @@ class UserControllerIT {
                     .andExpect(status().isBadRequest())
                     .andReturn();
 
-            Assertions.assertEquals(ID_NOT_PRESENT, result.getResponse().getContentAsString());
+            Assertions.assertEquals(ErrorMessages.ID_NOT_PRESENT, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -161,12 +164,12 @@ class UserControllerIT {
 
     private static Stream<Arguments> getDeleteUserByIdArguments() {
         return Stream.of(
-                Arguments.of(false, "/user/delete/1", "Hans", status().isOk(), ID_1_DELETED),
-                Arguments.of(false, "/user/delete/1", "Paul", status().isInternalServerError(), PAUL_NOT_IDENTIFIED),
-                Arguments.of(false, "/user/delete/1", null, status().isBadRequest(), ACTOR_NOT_PRESENT),
-                Arguments.of(false, "/user/delete/8", "Torsten", status().isInternalServerError(), ID_8_NOT_FOUND),
-                Arguments.of(false, "/user/delete/2", "Torsten", status().isInternalServerError(), USER_DELETE_HIMSELF),
-                Arguments.of(true, "/user/delete/1", "Torsten", status().isInternalServerError(), PETRA_REFERENCED)
+                Arguments.of(false, "/user/delete/1", "Hans", status().isOk(), String.format(InfoMessages.USER_DELETED_ID, 1)),
+                Arguments.of(false, "/user/delete/1", "Paul", status().isInternalServerError(), String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Paul")),
+                Arguments.of(false, "/user/delete/1", null, status().isBadRequest(), ErrorMessages.ACTOR_NOT_PRESENT),
+                Arguments.of(false, "/user/delete/8", "Torsten", status().isInternalServerError(), String.format(ErrorMessages.USER_NOT_FOUND_ID, 8)),
+                Arguments.of(false, "/user/delete/2", "Torsten", status().isInternalServerError(), ErrorMessages.USER_DELETE_HIMSELF),
+                Arguments.of(true, "/user/delete/1", "Torsten", status().isInternalServerError(), String.format(ErrorMessages.USER_REFERENCED, "Petra"))
         );
     }
 
@@ -188,16 +191,16 @@ class UserControllerIT {
 
     private static Stream<Arguments> getDeleteUserByNameArguments() {
         return Stream.of(
-                Arguments.of("User successfully deleted by name", false, "/user/delete/name/Petra", "Torsten", status().isOk(), PETRA_DELETED),
-                Arguments.of("Actor wants to delete himself", false, "/user/delete/name/Torsten", "Torsten", status().isInternalServerError(), USER_DELETE_HIMSELF),
-                Arguments.of("Actor not present", false, "/user/delete/name/Petra", null, status().isBadRequest(), ACTOR_NOT_PRESENT),
-                Arguments.of("Actor not in database", false, "/user/delete/name/Petra", "ActorName", status().isInternalServerError(), ACTORNAME_NOT_FOUND),
+                Arguments.of("User successfully deleted by name", false, "/user/delete/name/Petra", "Torsten", status().isOk(), String.format(InfoMessages.USER_DELETED_NAME, "Petra")),
+                Arguments.of("Actor wants to delete himself", false, "/user/delete/name/Torsten", "Torsten", status().isInternalServerError(), ErrorMessages.USER_DELETE_HIMSELF),
+                Arguments.of("Actor not present", false, "/user/delete/name/Petra", null, status().isBadRequest(), ErrorMessages.ACTOR_NOT_PRESENT),
+                Arguments.of("Actor not in database", false, "/user/delete/name/Petra", "ActorName", status().isInternalServerError(), String.format(ErrorMessages.USER_NOT_FOUND_NAME, "ActorName")),
                 Arguments.of("User to delete not in database ", false, "/user/delete/name/UserToDeleteNichtBekannt", "Torsten", status().isInternalServerError(),
-                        USER_TO_DELETE_NOT_FOUND),
+                        String.format(ErrorMessages.USER_NOT_FOUND_NAME, "UserToDeleteNichtBekannt")),
                 Arguments.of("User to delete not present", false, "/user/delete/name/", "Torsten", status().isBadRequest(),
-                        USER_TO_DELETE_NOT_PRESENT),
+                        TestMessages.USER_TO_DELETE_NOT_PRESENT),
                 Arguments.of("User is referenced in another table", true, "/user/delete/name/Petra", "Torsten", status().isInternalServerError(),
-                        PETRA_REFERENCED)
+                        String.format(ErrorMessages.USER_REFERENCED, "Petra"))
         );
     }
 
@@ -228,7 +231,7 @@ class UserControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals(ALL_USERS_DELETED, result.getResponse().getContentAsString());
+            Assertions.assertEquals(InfoMessages.ALL_USERS_DELETED, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -240,7 +243,7 @@ class UserControllerIT {
                     .andExpect(status().isInternalServerError())
                     .andReturn();
 
-            Assertions.assertEquals(USERS_REFERENCED, result.getResponse().getContentAsString());
+            Assertions.assertEquals(ErrorMessages.USERS_REFERENCED, result.getResponse().getContentAsString());
         }
     }
 

@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.transaction.annotation.Transactional;
+import project.logManager.common.message.ErrorMessages;
+import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 
@@ -25,7 +27,6 @@ import java.util.stream.Stream;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static project.logManager.common.message.Messages.*;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BmiController.class)
@@ -44,15 +45,15 @@ class BmiControllerIT {
 
     private static Stream<Arguments> getBmiArguments() {
         return Stream.of(
-                Arguments.of("01.01.2003", "75.7", "1.85", status().isOk(), USER_NORMAL_WEIGHT),
-                Arguments.of("01.01.1987", "95.2", "1.82", status().isOk(), USER_OVERWEIGHT),
-                Arguments.of("01.01.2003", "61.3", "1.83", status().isOk(), USER_UNDERWEIGHT),
+                Arguments.of("01.01.2003", "75.7", "1.85", status().isOk(), String.format(InfoMessages.BMI_MESSAGE, 22.11) + InfoMessages.NORMAL_WEIGHT),
+                Arguments.of("01.01.1987", "95.2", "1.82", status().isOk(), String.format(InfoMessages.BMI_MESSAGE, 28.74) + InfoMessages.OVERWEIGHT),
+                Arguments.of("01.01.2003", "61.3", "1.83", status().isOk(), String.format(InfoMessages.BMI_MESSAGE, 18.3) + InfoMessages.UNDERWEIGHT),
                 Arguments.of("01.01.1987", "0", "0", status().isInternalServerError(), "Infinite or NaN"),
-                Arguments.of("01.01.1987", "-1", "-1", status().isInternalServerError(), COULD_NOT_CALCULATE),
-                Arguments.of("01.01.2000", "75.0", null, status().isBadRequest(), HEIGHT_NOT_PRESENT),
-                Arguments.of("01.01.2000", null, "1.75", status().isBadRequest(), WEIGHT_NOT_PRESENT),
-                Arguments.of(null, "75.0", "1.75", status().isBadRequest(), BIRTHDATE_NOT_PRESENT),
-                Arguments.of("01.01.2008", "75.0", "1.75", status().isOk(), USER_TOO_YOUNG)
+                Arguments.of("01.01.1987", "-1", "-1", status().isInternalServerError(), ErrorMessages.COULD_NOT_CALCULATE),
+                Arguments.of("01.01.2000", "75.0", null, status().isBadRequest(), ErrorMessages.HEIGHT_NOT_PRESENT),
+                Arguments.of("01.01.2000", null, "1.75", status().isBadRequest(), ErrorMessages.WEIGHT_NOT_PRESENT),
+                Arguments.of(null, "75.0", "1.75", status().isBadRequest(), ErrorMessages.BIRTHDATE_NOT_PRESENT),
+                Arguments.of("01.01.2008", "75.0", "1.75", status().isOk(), ErrorMessages.USER_TOO_YOUNG)
         );
     }
 
@@ -73,11 +74,10 @@ class BmiControllerIT {
 
     private static Stream<Arguments> findUserAndCalculateBmiArguments() {
         return Stream.of(
-                Arguments.of("underweight", "/bmi/Torsten", status().isOk(), USER_UNDERWEIGHT),
-                Arguments.of("overweight", "/bmi/Peter", status().isOk(), USER_OVERWEIGHT),
-                Arguments.of("normalWeight", "/bmi/Hans", status().isOk(), USER_NORMAL_WEIGHT),
-                Arguments.of("userNotIdentified", "/bmi/ActorNichtVorhanden", status().isInternalServerError(),
-                        ACTOR_NOT_IDENTIFIED)
+                Arguments.of("underweight", "/bmi/Torsten", status().isOk(), String.format(InfoMessages.BMI_MESSAGE, 18.3) + InfoMessages.UNDERWEIGHT),
+                Arguments.of("overweight", "/bmi/Peter", status().isOk(), String.format(InfoMessages.BMI_MESSAGE, 28.74) + InfoMessages.OVERWEIGHT),
+                Arguments.of("normalWeight", "/bmi/Hans", status().isOk(), String.format(InfoMessages.BMI_MESSAGE, 22.11) + InfoMessages.NORMAL_WEIGHT),
+                Arguments.of("userNotIdentified", "/bmi/ActorNichtVorhanden", status().isInternalServerError(), String.format(ErrorMessages.USER_NOT_IDENTIFIED, "ActorNichtVorhanden"))
         );
     }
 

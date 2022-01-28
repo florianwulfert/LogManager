@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import project.logManager.common.message.ErrorMessages;
+import project.logManager.common.message.InfoMessages;
 import project.logManager.common.utils.DateUtil;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
@@ -14,8 +16,6 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-
-import static project.logManager.common.message.Messages.*;
 
 @Transactional
 @Service
@@ -30,21 +30,21 @@ public class BmiService extends DateUtil {
         int ageUser = getAgeFromBirthDate(birthdate);
 
         if (ageUser < 18) {
-            LOGGER.warn(USER_TOO_YOUNG);
-            return USER_TOO_YOUNG;
+            LOGGER.warn(ErrorMessages.USER_TOO_YOUNG);
+            return ErrorMessages.USER_TOO_YOUNG;
         }
 
-        String bmiMessage = BMI_MESSAGE;
+        String bmiMessage = InfoMessages.BMI_MESSAGE;
 
         if (bmi > 18.5 && bmi <= 25) {
-            return String.format(bmiMessage + NORMAL_WEIGHT, bmi);
+            return String.format(bmiMessage + InfoMessages.NORMAL_WEIGHT, bmi);
         } else if (bmi <= 18.5 && bmi > 0) {
-            return String.format(bmiMessage + UNDERWEIGHT, bmi);
+            return String.format(bmiMessage + InfoMessages.UNDERWEIGHT, bmi);
         } else if (bmi > 25) {
-            return String.format(bmiMessage + OVERWEIGHT, bmi);
+            return String.format(bmiMessage + InfoMessages.OVERWEIGHT, bmi);
         } else {
-            LOGGER.error(COULD_NOT_CALCULATE);
-            throw new IllegalStateException(COULD_NOT_CALCULATE);
+            LOGGER.error(ErrorMessages.COULD_NOT_CALCULATE);
+            throw new IllegalStateException(ErrorMessages.COULD_NOT_CALCULATE);
         }
     }
 

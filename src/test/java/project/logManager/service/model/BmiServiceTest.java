@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.common.message.ErrorMessages;
+import project.logManager.common.message.InfoMessages;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
@@ -15,8 +17,6 @@ import project.logManager.model.repository.UserRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static project.logManager.common.message.Messages.*;
 
 @ExtendWith(MockitoExtension.class)
 
@@ -37,26 +37,26 @@ class BmiServiceTest {
 
     @Test
     void testBerechneBMIWhenUserTooYoung() {
-        Assertions.assertEquals(USER_TOO_YOUNG, systemUnderTest.getBmiMessage(users.get(0).getBirthdate(),
+        Assertions.assertEquals(ErrorMessages.USER_TOO_YOUNG, systemUnderTest.getBmiMessage(users.get(0).getBirthdate(),
                         users.get(0).getWeight(),
                         users.get(0).getHeight()));
     }
 
     @Test
     void testBerechneBMIWithNormalWeight() {
-        Assertions.assertEquals(USER_NORMAL_WEIGHT,
+        Assertions.assertEquals(String.format(InfoMessages.BMI_MESSAGE, 22.11) + InfoMessages.NORMAL_WEIGHT,
                 systemUnderTest.getBmiMessage(LocalDate.of(1988, 12, 12),
                         75.7, 1.85));
     }
     @Test
     void testBerechneBMIWithUnderweight() {
-        Assertions.assertEquals(USER_UNDERWEIGHT,
+        Assertions.assertEquals(String.format(InfoMessages.BMI_MESSAGE, 18.3) + InfoMessages.UNDERWEIGHT,
                 systemUnderTest.getBmiMessage(LocalDate.of(1988, 12, 12),
                         61.3, 1.83));
     }
     @Test
     void testBerechneBMIWithOverweight() {
-        Assertions.assertEquals(USER_OVERWEIGHT,
+        Assertions.assertEquals(String.format(InfoMessages.BMI_MESSAGE, 28.74) + InfoMessages.OVERWEIGHT,
                 systemUnderTest.getBmiMessage(LocalDate.of(2000, 12,12),
                         95.2, 1.82));
     }
@@ -66,7 +66,7 @@ class BmiServiceTest {
         RuntimeException ex = Assertions.assertThrows(IllegalStateException.class, () ->
                 systemUnderTest.getBmiMessage(LocalDate.of(2000, 12, 12),
                         -100.0, 1.85));
-        Assertions.assertEquals(COULD_NOT_CALCULATE, ex.getMessage());
+        Assertions.assertEquals(ErrorMessages.COULD_NOT_CALCULATE, ex.getMessage());
     }
 
     @Test
@@ -85,7 +85,7 @@ class BmiServiceTest {
     void testUserIsNull() {
         UserNotFoundException ex = Assertions.assertThrows(UserNotFoundException.class, () ->
                 systemUnderTest.findUserAndCalculateBMI("Paul"));
-        Assertions.assertEquals(PAUL_NOT_IDENTIFIED, ex.getMessage());
+        Assertions.assertEquals(String.format(ErrorMessages.USER_NOT_IDENTIFIED,"Paul"), ex.getMessage());
     }
 
     private List<User> addTestUser() {

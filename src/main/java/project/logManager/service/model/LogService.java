@@ -5,6 +5,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.logManager.common.dto.LogMessageDto;
+import project.logManager.common.message.ErrorMessages;
+import project.logManager.common.message.InfoMessages;
 import project.logManager.exception.SeverityNotFoundException;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
@@ -17,8 +19,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-
-import static project.logManager.common.message.Messages.*;
 
 /**
  * @author - EugenFriesen
@@ -37,7 +37,7 @@ public class LogService {
 
     public List<Log> getLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate) {
         if (!logValidationService.validateSeverity(severity)) {
-            LOGGER.error(SEVERITY_NOT_REGISTERED, severity);
+            LOGGER.error(ErrorMessages.SEVERITY_NOT_REGISTERED, severity);
             throw new SeverityNotFoundException(severity);
         }
         return logRepository.findLogs(severity, message, startDate, endDate);
@@ -45,7 +45,7 @@ public class LogService {
 
     public String addLog(String message, String severity, String userName) {
         if (!logValidationService.validateSeverity(severity)) {
-            LOGGER.error(SEVERITY_NOT_REGISTERED, severity);
+            LOGGER.error(ErrorMessages.SEVERITY_NOT_REGISTERED, severity);
             throw new SeverityNotFoundException(severity);
         }
         LogMessageDto logMessage = logValidationService.validateMessage(message);
@@ -53,8 +53,8 @@ public class LogService {
         saveLog(logMessage.getMessage(), severity, user);
 
         logMessage.setReturnMessage(logMessage.getReturnMessage() +
-                String.format(MESSAGE_SAVED, logMessage.getMessage(), severity));
-        LOGGER.info(String.format(MESSAGE_SAVED, logMessage.getMessage(), severity));
+                String.format(InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), severity));
+        LOGGER.info(String.format(InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), severity));
         return logMessage.getReturnMessage();
     }
 
@@ -71,8 +71,8 @@ public class LogService {
     private User checkActor(String userName) {
         User user = userRepository.findUserByName(userName);
         if (user == null) {
-            LOGGER.error(String.format(USER_NOT_FOUND_NAME, userName));
-            throw new RuntimeException(String.format(USER_NOT_FOUND_NAME, userName));
+            LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
+            throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
         }
         return user;
     }
@@ -83,7 +83,7 @@ public class LogService {
 
     public String deleteById(Integer id) {
         logRepository.deleteById(id);
-        return String.format(ENTRY_DELETED_ID, id);
+        return String.format(InfoMessages.ENTRY_DELETED_ID, id);
     }
 
     public boolean existLogByActorId(User actor) {
@@ -94,7 +94,7 @@ public class LogService {
     public String deleteBySeverity(String severity) {
         List<Log> deletedLogs = logRepository.deleteBySeverity(severity);
         if (deletedLogs.isEmpty()) {
-            return NO_ENTRIES_FOUND;
+            return ErrorMessages.NO_ENTRIES_FOUND;
         }
 
         StringBuilder sb = new StringBuilder();
@@ -113,7 +113,7 @@ public class LogService {
 
     public String deleteAll() {
         logRepository.deleteAll();
-        LOGGER.info(ALL_LOGS_DELETED);
-        return ALL_LOGS_DELETED;
+        LOGGER.info(InfoMessages.ALL_LOGS_DELETED);
+        return InfoMessages.ALL_LOGS_DELETED;
     }
 }

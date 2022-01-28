@@ -14,6 +14,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
+import project.logManager.common.message.ErrorMessages;
+import project.logManager.common.message.InfoMessages;
+import project.logManager.common.message.TestMessages;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -29,7 +32,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static project.logManager.common.message.Messages.*;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
@@ -148,12 +150,12 @@ class LogControllerIT {
     private static Stream<Arguments> addLogArguments() {
         return Stream.of(
                 Arguments.of("PostLog", "INFO", "Test", "Petra", status().isOk(), "Message \"Test\" saved as INFO!"),
-                Arguments.of("MessageIsMissing", "DEBUG", null, "Petra", status().isBadRequest(), MESSAGE_NOT_PRESENT),
-                Arguments.of("SeverityIsMissing", null, "Severity fehlt", "Petra", status().isBadRequest(), SEVERITY_NOT_PRESENT),
-                Arguments.of("UserIsMissing", "INFO", "Test", null, status().isBadRequest(), NAME_USER_NOT_PRESENT),
-                Arguments.of("SeverityIsFalse", "hi", "Test", "Petra", status().isInternalServerError(), SEVERITY_HI_NOT_REGISTERED),
-                Arguments.of("UserIsFalse", "INFO", "Test", "Hans", status().isInternalServerError(), HANS_NOT_FOUND),
-                Arguments.of("KatzeToHund", "INFO", "Katze", "Petra", status().isOk(), KATZE_TO_HUND + "\n" + HUND_SAVED)
+                Arguments.of("MessageIsMissing", "DEBUG", null, "Petra", status().isBadRequest(), ErrorMessages.MESSAGE_NOT_PRESENT),
+                Arguments.of("SeverityIsMissing", null, "Severity fehlt", "Petra", status().isBadRequest(), ErrorMessages.SEVERITY_NOT_PRESENT),
+                Arguments.of("UserIsMissing", "INFO", "Test", null, status().isBadRequest(), ErrorMessages.NAME_USER_NOT_PRESENT),
+                Arguments.of("SeverityIsFalse", "hi", "Test", "Petra", status().isInternalServerError(), String.format(ErrorMessages.SEVERITY_NOT_REGISTERED_CHOICE, "hi")),
+                Arguments.of("UserIsFalse", "INFO", "Test", "Hans", status().isInternalServerError(), String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Hans")),
+                Arguments.of("KatzeToHund", "INFO", "Katze", "Petra", status().isOk(), InfoMessages.KATZE_TO_HUND + "\n" + InfoMessages.HUND_SAVED)
         );
     }
 
@@ -182,7 +184,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals(LOG_EXAMPLE, result.getResponse().getContentAsString());
+            Assertions.assertEquals(TestMessages.LOG_EXAMPLE, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -202,7 +204,7 @@ class LogControllerIT {
                     .andExpect(status().isBadRequest())
                     .andReturn();
 
-            Assertions.assertEquals(ID_FOR_LOGS_HAS_WRONG_FORMAT, result.getResponse().getContentAsString());
+            Assertions.assertEquals(TestMessages.ID_FOR_LOGS_HAS_WRONG_FORMAT, result.getResponse().getContentAsString());
         }
     }
 
@@ -215,7 +217,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals(ID_2_DELETED, result.getResponse().getContentAsString());
+            Assertions.assertEquals(String.format(InfoMessages.ENTRY_DELETED_ID, 2), result.getResponse().getContentAsString());
         }
 
         @Test
@@ -225,7 +227,7 @@ class LogControllerIT {
                     .andExpect(status().isInternalServerError())
                     .andReturn();
 
-            Assertions.assertEquals(ID_NOT_EXISTS, result.getResponse().getContentAsString());
+            Assertions.assertEquals(TestMessages.ID_NOT_EXISTS, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -235,7 +237,7 @@ class LogControllerIT {
                     .andExpect(status().isBadRequest())
                     .andReturn();
 
-            Assertions.assertEquals(ID_FOR_LOGS_HAS_WRONG_FORMAT, result.getResponse().getContentAsString());
+            Assertions.assertEquals(TestMessages.ID_FOR_LOGS_HAS_WRONG_FORMAT, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -246,7 +248,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals(ENTRIES_DELETED, result.getResponse().getContentAsString());
+            Assertions.assertEquals(TestMessages.ENTRIES_DELETED, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -257,7 +259,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals(NO_ENTRIES_FOUND, result.getResponse().getContentAsString());
+            Assertions.assertEquals(ErrorMessages.NO_ENTRIES_FOUND, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -267,7 +269,7 @@ class LogControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
 
-            Assertions.assertEquals(ALL_LOGS_DELETED, result.getResponse().getContentAsString());
+            Assertions.assertEquals(InfoMessages.ALL_LOGS_DELETED, result.getResponse().getContentAsString());
         }
     }
 
