@@ -85,7 +85,7 @@ class UserValidationServiceTest {
     void testIfActorNotExistsOnCreate() {
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(null);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
-                systemUnderTest.checkIfActorExists(users.get(0).getName(), true));
+                systemUnderTest.checkIfNameExists(users.get(0).getName(), true));
         Assertions.assertEquals(String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Peter"), ex.getMessage());
         Mockito.verify(logService).addLog(ErrorMessages.USER_NOT_CREATED, "ERROR", users.get(0).getName());
     }
@@ -94,14 +94,14 @@ class UserValidationServiceTest {
     void testIfActorNotExistsOnDelete() {
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(null);
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
-                systemUnderTest.checkIfActorExists(users.get(0).getName(), false));
+                systemUnderTest.checkIfNameExists(users.get(0).getName(), false));
         Assertions.assertEquals(String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Peter"), ex.getMessage());
     }
 
     @Test
     void testIfActorExists() {
         Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
-        Assertions.assertEquals(users.get(0), systemUnderTest.checkIfActorExists(
+        Assertions.assertEquals(users.get(0), systemUnderTest.checkIfNameExists(
                 users.get(0).getName(), false));
     }
 

@@ -9,10 +9,12 @@ import project.logManager.common.message.ErrorMessages;
 import project.logManager.exception.FirstUserUnequalActorException;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
+import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.model.LogService;
 import project.logManager.service.model.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +24,7 @@ public class UserValidationService {
 
     private final UserRepository userRepository;
     private final LogService logService;
+    private final LogRepository logRepository;
 
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
@@ -65,16 +68,16 @@ public class UserValidationService {
         }
     }
 
-    public User checkIfActorExists(String actor, boolean isCreate) {
+    public User checkIfNameExists(String name, boolean isCreate) {
         try {
-            User activeUser = userRepository.findUserByName(actor);
+            User activeUser = userRepository.findUserByName(name);
             if (activeUser == null) {
-                LOGGER.warn(String.format(ErrorMessages.USER_NOT_IDENTIFIED, actor));
-                throw new UserNotFoundException(actor);
+                LOGGER.warn(String.format(ErrorMessages.USER_NOT_IDENTIFIED, name));
+                throw new UserNotFoundException(name);
             } return activeUser;
         } catch (RuntimeException rex) {
             if (isCreate) {
-                throw new RuntimeException(handleUserKonnteNichtAngelegtWerden(actor, rex));
+                throw new RuntimeException(handleUserKonnteNichtAngelegtWerden(name, rex));
             } else {
                 throw new RuntimeException(rex.getMessage());
             }
@@ -120,6 +123,24 @@ public class UserValidationService {
         }
     }
 
+    public List<User> checkIfUserToDeleteEqualsActor(String name, String actorName) {
+        User userToDelete = userRepository.findUserByName(name);
+        User actor = userRepository.findUserByName(actorName);
+        List<User> users = new ArrayList<>();
+        users.add(userToDelete);
+        users.add(actor);
+        if (userToDelete.equals(actor)) {
+            LOGGER.error(ErrorMessages.USER_DELETE_HIMSELF);
+            throw new RuntimeException(ErrorMessages.USER_DELETE_HIMSELF);
+        } return users;
+    }
+
+    public void checkIfUsersAreReferenced() {
+        if (!logRepository.findAll().isEmpty()) {
+            LOGGER.warn(ErrorMessages.USERS_REFERENCED);
+            throw new RuntimeException(ErrorMessages.USERS_REFERENCED);
+        }
+    }
 
 
 

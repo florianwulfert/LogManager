@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -45,7 +44,7 @@ public class UserService {
         if (userValidationService.checkIfUsersListIsEmpty(actor, user, true)) {
             saveUser(user, actor);
         } else {
-            User activeUser = userValidationService.checkIfActorExists(actor, true);
+            User activeUser = userValidationService.checkIfNameExists(actor, true);
             saveUser(user, activeUser.getName());
         }
         return bmiService.getBmiMessage(birthdate, weight, height);
@@ -61,7 +60,7 @@ public class UserService {
 
     public String deleteById(Integer id, String actorName) {
         User userToDelete = userValidationService.checkIfIdExists(id);
-        User actor = userValidationService.checkIfActorExists(actorName, false);
+        User actor = userValidationService.checkIfNameExists(actorName, false);
         userValidationService.checkIfUserToDeleteIdEqualsActorId(id, actor.getId());
         userValidationService.checkIfUsersListIsEmpty(actor.getName(), userToDelete, false);
         userValidationService.checkIfExistLogByUserToDelete(userToDelete);
@@ -74,37 +73,20 @@ public class UserService {
     }
 
     public String deleteByName(String name, String actorName) {
-        if (name.equals(actorName)) {
-            LOGGER.error(ErrorMessages.USER_DELETE_HIMSELF);
-            throw new RuntimeException(ErrorMessages.USER_DELETE_HIMSELF);
-        }
-        User userToDelete = userRepository.findUserByName(name);
-        User actor = userRepository.findUserByName(actorName);
-        if (userToDelete == null) {
-            LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
-            throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
-        }
-        if (logService.existLogByUserToDelete(userToDelete)) {
-            LOGGER.error(String.format(ErrorMessages.USER_REFERENCED, name));
-            throw new RuntimeException(String.format(ErrorMessages.USER_REFERENCED, userToDelete.getName()));
-        }
-        if (actor == null) {
-            LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_NAME, actorName));
-            throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_NAME, actorName));
-        }
+        List<User> users = userValidationService.checkIfUserToDeleteEqualsActor(name, actorName);
+        userValidationService.checkIfNameExists(users.get(0).getName(), false);
+        userValidationService.checkIfExistLogByUserToDelete(users.get(0));
+        userValidationService.checkIfNameExists(users.get(1).getName(), false);
 
-        String deleteMessage = InfoMessages.USER_DELETED_NAME;
-        userRepository.deleteById(userToDelete.getId());
-        logService.addLog(String.format(deleteMessage, name), "WARNING", actorName);
-        LOGGER.info(String.format(deleteMessage, name));
-        return String.format(deleteMessage, name);
+        userRepository.deleteById(users.get(0).getId());
+
+        logService.addLog(String.format(InfoMessages.USER_DELETED_NAME, name), "WARNING", actorName);
+        LOGGER.info(String.format(InfoMessages.USER_DELETED_NAME, name));
+        return String.format(InfoMessages.USER_DELETED_NAME, name);
     }
 
     public String deleteAll() {
-        if (!logRepository.findAll().isEmpty()) {
-            LOGGER.warn(ErrorMessages.USERS_REFERENCED);
-            throw new RuntimeException(ErrorMessages.USERS_REFERENCED);
-        }
+        userValidationService.checkIfUsersAreReferenced();
         userRepository.deleteAll();
         LOGGER.info(InfoMessages.ALL_USERS_DELETED);
         return InfoMessages.ALL_USERS_DELETED;

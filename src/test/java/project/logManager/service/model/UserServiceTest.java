@@ -54,7 +54,7 @@ class UserServiceTest {
     @Test
     void testAddUser() {
         Mockito.when(bmiService.getBmiMessage(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
-        Mockito.when(userValidationService.checkIfActorExists(Mockito.anyString(), true)).thenReturn(users.get(1));
+        Mockito.when(userValidationService.checkIfNameExists(Mockito.anyString(), true)).thenReturn(users.get(1));
         systemUnderTest.addUser(users.get(0).getName(), "Florian", LocalDate.of
                         (1988, 12, 12), 90.0,
                 1.85, "YELLOW");
@@ -95,9 +95,7 @@ class UserServiceTest {
 
     @Test
     void testDeleteById() {
-        Mockito.when(userRepository.findUserByName("Florian")).thenReturn(users.get(1));
-        Mockito.when(userRepository.findById(1)).thenReturn(Optional.ofNullable(users.get(0)));
-        Mockito.when(logService.existLogByUserToDelete(users.get(0))).thenReturn(false);
+        Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
         systemUnderTest.deleteById(1, users.get(1).getName());
         Mockito.verify(logService).addLog(String.format(InfoMessages.USER_DELETED_ID, 1), "WARNING", "Florian");
     }
