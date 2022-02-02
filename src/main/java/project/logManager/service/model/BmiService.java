@@ -25,15 +25,17 @@ public class BmiService extends DateUtil {
 
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
-    public String getBmiMessage(LocalDate birthdate, Double weight, Double height) {
+    public String calculateBmiAndGetBmiMessage(LocalDate birthdate, Double weight, Double height) {
         Double bmi = calculateBMI(weight, height);
-        int ageUser = getAgeFromBirthDate(birthdate);
+        return getBmiMessage(birthdate, bmi);
+    }
 
+    private String getBmiMessage(LocalDate birthdate, double bmi) {
+        int ageUser = getAgeFromBirthDate(birthdate);
         if (ageUser < 18) {
             LOGGER.warn(ErrorMessages.USER_TOO_YOUNG);
             return ErrorMessages.USER_TOO_YOUNG;
         }
-
         String bmiMessage = InfoMessages.BMI_MESSAGE;
 
         if (bmi > 18.5 && bmi <= 25) {
@@ -54,11 +56,11 @@ public class BmiService extends DateUtil {
         return bigDecimal.doubleValue();
     }
 
-    public String findUserAndCalculateBMI(String userName) {
+    public String findUserAndGetBMI(String userName) {
         User user = userRepository.findUserByName(userName);
         if (user == null) {
             throw new UserNotFoundException(userName);
         }
-        return getBmiMessage(user.getBirthdate(), user.getWeight(), user.getHeight());
+        return getBmiMessage(user.getBirthdate(), user.getBmi());
     }
 }

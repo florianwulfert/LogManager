@@ -9,12 +9,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.message.ErrorMessages;
+import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
+import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.model.LogService;
 import project.logManager.service.model.UserService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +36,9 @@ class UserValidationServiceTest {
 
     @Mock
     LogService logService;
+
+    @Mock
+    LogRepository logRepository;
 
     List<User> users;
 
@@ -59,6 +65,7 @@ class UserValidationServiceTest {
         Mockito.when(userRepository.findAll()).thenReturn(users);
         Assertions.assertFalse(systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(0), false), "Test");
     }
+
     @Test
     void testIfUserNotEqualActorAndNoUsersYet() {
         Mockito.when(logService.addLog(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
@@ -135,7 +142,7 @@ class UserValidationServiceTest {
     void testIfIdNotExists() {
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.checkIfIdExists(1));
-        Assertions.assertEquals(String.format(ErrorMessages.ID_NOT_FOUND, 1), ex.getMessage());
+        Assertions.assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_ID, 1), ex.getMessage());
     }
 
     @Test
@@ -144,6 +151,37 @@ class UserValidationServiceTest {
         RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
                 systemUnderTest.checkIfExistLogByUserToDelete(users.get(0)));
         Assertions.assertEquals(String.format(ErrorMessages.USER_REFERENCED, users.get(0).getName()), ex.getMessage());
+    }
+
+    @Test
+    void testIfUserToDeleteEqualsActor() {
+        Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
+        Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.checkIfUserToDeleteEqualsActor(users.get(0).getName(), users.get(0).getName()));
+        Assertions.assertEquals(ErrorMessages.USER_DELETE_HIMSELF, ex.getMessage());
+    }
+
+    @Test
+    void testUsersAreReferenced() {
+        List<Log> logs = new ArrayList<>();
+        logs.add(Log
+                .builder()
+                .user(users.get(0))
+                .timestamp(LocalDateTime.of(2000,12,12,12,12,12))
+                .message("Test")
+                .severity("INFO")
+                .build());
+        Mockito.when(logRepository.findAll()).thenReturn(logs);
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, () ->
+                systemUnderTest.checkIfUsersAreReferenced());
+        Assertions.assertEquals(ErrorMessages.USERS_REFERENCED, ex.getMessage());
+    }
+
+    @Test
+    void testUsersAreNotRefernced() {
+        Mockito.when(logRepository.findAll()).thenReturn(new ArrayList<>());
+        systemUnderTest.checkIfUsersAreReferenced();
     }
 
     private List<User> addTestUser() {

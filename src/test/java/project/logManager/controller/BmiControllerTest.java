@@ -26,7 +26,7 @@ class BmiControllerTest {
     @Test
     void testGetBmi() {
         systemUnderTest.getBmi(LocalDate.of(2000,12,12), 90.0, 1.8);
-        Mockito.verify(bmiService).getBmiMessage
+        Mockito.verify(bmiService).calculateBmiAndGetBmiMessage
                 (LocalDate.of(2000,12,12), 90.0, 1.8);
     }
 
@@ -34,7 +34,7 @@ class BmiControllerTest {
     void testFindUserAndCalculateBMI() {
         List<User> users = addTestUser();
         systemUnderTest.findUserAndCalculateBMI(users.get(0).getName());
-        Mockito.verify(bmiService).findUserAndCalculateBMI(users.get(0).getName());
+        Mockito.verify(bmiService).findUserAndGetBMI(users.get(0).getName());
     }
 
     private List<User> addTestUser() {

@@ -14,7 +14,6 @@ import project.logManager.model.repository.UserRepository;
 import project.logManager.service.model.LogService;
 import project.logManager.service.model.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,7 +71,7 @@ public class UserValidationService {
         try {
             User activeUser = userRepository.findUserByName(name);
             if (activeUser == null) {
-                LOGGER.warn(String.format(ErrorMessages.USER_NOT_IDENTIFIED, name));
+                LOGGER.info(String.format(ErrorMessages.USER_NOT_IDENTIFIED, name));
                 throw new UserNotFoundException(name);
             } return activeUser;
         } catch (RuntimeException rex) {
@@ -111,8 +110,8 @@ public class UserValidationService {
     public User checkIfIdExists(int id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {
-            LOGGER.info(String.format(ErrorMessages.ID_NOT_FOUND, id));
-            throw new RuntimeException(String.format(ErrorMessages.ID_NOT_FOUND, id));
+            LOGGER.info(String.format(ErrorMessages.USER_NOT_FOUND_ID, id));
+            throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_ID, id));
         } return user.get();
     }
 
@@ -123,16 +122,13 @@ public class UserValidationService {
         }
     }
 
-    public List<User> checkIfUserToDeleteEqualsActor(String name, String actorName) {
+    public void checkIfUserToDeleteEqualsActor(String name, String actorName) {
         User userToDelete = userRepository.findUserByName(name);
         User actor = userRepository.findUserByName(actorName);
-        List<User> users = new ArrayList<>();
-        users.add(userToDelete);
-        users.add(actor);
         if (userToDelete.equals(actor)) {
             LOGGER.error(ErrorMessages.USER_DELETE_HIMSELF);
             throw new RuntimeException(ErrorMessages.USER_DELETE_HIMSELF);
-        } return users;
+        }
     }
 
     public void checkIfUsersAreReferenced() {

@@ -23,11 +23,11 @@ public class BmiController {
             @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate birthdate,
             @RequestParam double weight,
             @RequestParam double height) {
-        return bmiService.getBmiMessage(birthdate, weight, height);
+        return bmiService.calculateBmiAndGetBmiMessage(birthdate, weight, height);
     }
 
     @GetMapping("/bmi/{user}")
     public String findUserAndCalculateBMI(@PathVariable final String user) {
-        return bmiService.findUserAndCalculateBMI(user);
+        return bmiService.findUserAndGetBMI(user);
     }
 }

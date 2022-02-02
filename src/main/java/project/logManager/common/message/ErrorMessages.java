@@ -33,5 +33,4 @@ public class ErrorMessages {
     public static final String SEVERITY_NOT_REGISTERED_CHOICE = "Severity %s not registered. Please choose one of the following options:" +
             " TRACE, DEBUG, INFO, WARNING, ERROR, FATAL";
     public static final String INFINITE_OR_NAN = "Infinite or NaN";
-    public static final String ID_NOT_FOUND =  "ID %s not found.";
 }

@@ -47,7 +47,7 @@ public class UserService {
             User activeUser = userValidationService.checkIfNameExists(actor, true);
             saveUser(user, activeUser.getName());
         }
-        return bmiService.getBmiMessage(birthdate, weight, height);
+        return bmiService.calculateBmiAndGetBmiMessage(birthdate, weight, height);
     }
 
     public List<User> findUserList() {
@@ -73,12 +73,12 @@ public class UserService {
     }
 
     public String deleteByName(String name, String actorName) {
-        List<User> users = userValidationService.checkIfUserToDeleteEqualsActor(name, actorName);
-        userValidationService.checkIfNameExists(users.get(0).getName(), false);
-        userValidationService.checkIfExistLogByUserToDelete(users.get(0));
-        userValidationService.checkIfNameExists(users.get(1).getName(), false);
+        User user = userValidationService.checkIfNameExists(name, false);
+        userValidationService.checkIfExistLogByUserToDelete(user);
+        userValidationService.checkIfNameExists(actorName, false);
+        userValidationService.checkIfUserToDeleteEqualsActor(name, actorName);
 
-        userRepository.deleteById(users.get(0).getId());
+        userRepository.deleteById(user.getId());
 
         logService.addLog(String.format(InfoMessages.USER_DELETED_NAME, name), "WARNING", actorName);
         LOGGER.info(String.format(InfoMessages.USER_DELETED_NAME, name));
@@ -94,10 +94,10 @@ public class UserService {
 
     private void saveUser(User user, String actor) {
         userRepository.save(user);
-        String bmi = bmiService.getBmiMessage(user.getBirthdate(), user.getWeight(), user.getHeight());
+        String bmi = bmiService.calculateBmiAndGetBmiMessage(user.getBirthdate(), user.getWeight(), user.getHeight());
         logService.addLog(String.format(InfoMessages.USER_CREATED + "%s", user.getName(), bmi),
                 "INFO", actor);
-        LOGGER.info(String.format(InfoMessages.USER_CREATED + bmiService.getBmiMessage(
+        LOGGER.info(String.format(InfoMessages.USER_CREATED + bmiService.calculateBmiAndGetBmiMessage(
                 user.getBirthdate(), user.getWeight(), user.getHeight()),
                 user.getName()));
     }
