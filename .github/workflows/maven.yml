@@ -5,9 +5,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: 
-    - master
-    - feature/translation
+    branches:
+      - master
+      - feature/translation
   pull_request:
     branches: [ master ]
 
@@ -15,18 +15,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: build
-      run: mvn clean install -DskipTests
+      - uses: actions/checkout@v2
+      - name: build
+        run: mvn clean install -DskipTests
   unit-tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Unit Tests with Mockito
-      run: mvn test
+      - uses: actions/checkout@v2
+      - name: Unit Tests with Mockito
+        run: mvn test
   integration-tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Integration tests
-      run: mvn verify
+      - uses: actions/checkout@v2
+      - name: Integration tests
+        run: mvn verify

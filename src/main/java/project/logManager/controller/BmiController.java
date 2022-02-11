@@ -1,6 +1,5 @@
 package project.logManager.controller;
 
-
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,18 +15,18 @@ import java.time.LocalDate;
 @RestController
 public class BmiController {
 
-    private final BmiService bmiService;
+  private final BmiService bmiService;
 
-    @GetMapping("/bmi")
-    public String getBmi(
-            @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate birthdate,
-            @RequestParam double weight,
-            @RequestParam double height) {
-        return bmiService.calculateBmiAndGetBmiMessage(birthdate, weight, height);
-    }
+  @GetMapping("/bmi")
+  public String getBmi(
+      @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate birthdate,
+      @RequestParam double weight,
+      @RequestParam double height) {
+    return bmiService.calculateBmiAndGetBmiMessage(birthdate, weight, height);
+  }
 
-    @GetMapping("/bmi/{user}")
-    public String findUserAndCalculateBMI(@PathVariable final String user) {
-        return bmiService.findUserAndGetBMI(user);
-    }
+  @GetMapping("/bmi/{user}")
+  public String findUserAndCalculateBMI(@PathVariable final String user) {
+    return bmiService.findUserAndGetBMI(user);
+  }
 }

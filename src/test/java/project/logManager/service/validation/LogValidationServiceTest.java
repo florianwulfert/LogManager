@@ -11,42 +11,36 @@ import project.logManager.common.message.InfoMessages;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author - EugenFriesen
- * 13.02.2021
- **/
-
+/** @author - EugenFriesen 13.02.2021 */
 @ExtendWith(MockitoExtension.class)
 class LogValidationServiceTest {
 
-    @InjectMocks
-    LogValidationService systemUnderTest;
+  @InjectMocks LogValidationService systemUnderTest;
 
-    @Test
-    void validateSeverity() {
-        assertTrue(systemUnderTest.validateSeverity("INFO"));
-    }
+  @Test
+  void validateSeverity() {
+    assertTrue(systemUnderTest.validateSeverity("INFO"));
+  }
 
-    @Test
-    void validateSeverityWrongSeverity() {
-        assertFalse(systemUnderTest.validateSeverity("KATZE"));
-    }
+  @Test
+  void validateSeverityWrongSeverity() {
+    assertFalse(systemUnderTest.validateSeverity("KATZE"));
+  }
 
-    @Test
-    void validateMessageIsKatze() {
-        LogMessageDto customLogMessageDto = LogMessageDto.builder()
-                .message("Hund")
-                .returnMessage(InfoMessages.KATZE_TO_HUND + "\n")
-                .build();
-        Assertions.assertEquals(customLogMessageDto, systemUnderTest.validateMessage("Katze"));
-    }
+  @Test
+  void validateMessageIsKatze() {
+    LogMessageDto customLogMessageDto =
+        LogMessageDto.builder()
+            .message("Hund")
+            .returnMessage(InfoMessages.KATZE_TO_HUND + "\n")
+            .build();
+    Assertions.assertEquals(customLogMessageDto, systemUnderTest.validateMessage("Katze"));
+  }
 
-    @Test
-    void validateMessageIsNotKatze() {
-        LogMessageDto customLogMessageDto = LogMessageDto.builder()
-                .message("Apfel")
-                .returnMessage("")
-                .build();
-        Assertions.assertEquals(customLogMessageDto, systemUnderTest.validateMessage("Apfel"));
-    }
+  @Test
+  void validateMessageIsNotKatze() {
+    LogMessageDto customLogMessageDto =
+        LogMessageDto.builder().message("Apfel").returnMessage("").build();
+    Assertions.assertEquals(customLogMessageDto, systemUnderTest.validateMessage("Apfel"));
+  }
 }
