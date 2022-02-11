@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
-import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.UserValidationService;
 
@@ -22,7 +21,6 @@ public class UserService {
     private final LogService logService;
     private final UserRepository userRepository;
     private final BmiService bmiService;
-    private final LogRepository logRepository;
     private final UserValidationService userValidationService;
 
     private static final Logger LOGGER = LogManager.getLogger(UserService.class);
