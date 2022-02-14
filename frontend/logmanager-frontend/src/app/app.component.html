@@ -1,9 +1,8 @@
-<mat-toolbar color="primary">
-  <button>
-    <mat-icon>
-      menu
-    </mat-icon>
-  </button>
-  <span>{{title}}</span>
-</mat-toolbar>
-<app-user></app-user>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav role="navigation">
+    <app-menu (sidenavClose)="sidenav.close()"></app-menu>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-header (sidenavToggle)="sidenav.toggle()"></app-header>
+  </mat-sidenav-content>
+</mat-sidenav-container>
