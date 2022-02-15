@@ -5,5 +5,12 @@
     * BMI-Rechner
     * Logging
 * [ ] Verschönerungen
-  * Icons im Menü
+  * [x] Icons im Menü
+  * [ ] Header Farbe ändern
+  * [ ] Menü Hoverfarbe ändern
+* [ ] Komponente erstellen und Routing hinzufügen
+  * User
+  * BMI-Rechner
+  * Logging
+
 
