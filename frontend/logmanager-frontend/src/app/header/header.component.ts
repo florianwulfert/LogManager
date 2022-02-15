@@ -14,8 +14,6 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  title = 'User Manager';
-
   public onToggleSidenav = () => {
     this.sidenavToggle.emit();
   }

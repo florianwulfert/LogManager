@@ -3,7 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {UserComponent} from './user/user.component';
+import {UserComponent} from './components/user/user.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatButtonModule} from "@angular/material/button";
@@ -14,6 +14,9 @@ import {MenuComponent} from './menu/menu.component';
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
 import {LayoutComponent} from './layout/layout.component';
+import {BmiComponent} from './components/bmi/bmi.component';
+import {LoggingComponent} from './components/logging/logging.component';
+import {RoutingModule} from './routing/routing.module';
 
 @NgModule({
   declarations: [
@@ -21,7 +24,9 @@ import {LayoutComponent} from './layout/layout.component';
     UserComponent,
     HeaderComponent,
     MenuComponent,
-    LayoutComponent
+    LayoutComponent,
+    BmiComponent,
+    LoggingComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +37,8 @@ import {LayoutComponent} from './layout/layout.component';
     MatIconModule,
     MatSidenavModule,
     MatListModule,
-    MatMenuModule
+    MatMenuModule,
+    RoutingModule
   ],
   exports: [
     BrowserModule,
