@@ -13,7 +13,6 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MenuComponent} from './menu/menu.component';
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
-import {LayoutComponent} from './layout/layout.component';
 import {BmiComponent} from './components/bmi/bmi.component';
 import {LoggingComponent} from './components/logging/logging.component';
 import {RoutingModule} from './routing/routing.module';
@@ -26,7 +25,6 @@ import {HomeComponent} from './home/home.component';
     UserComponent,
     HeaderComponent,
     MenuComponent,
-    LayoutComponent,
     BmiComponent,
     LoggingComponent,
     HomeComponent
