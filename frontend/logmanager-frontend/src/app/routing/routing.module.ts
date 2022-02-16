@@ -1,13 +1,13 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from "@angular/router";
-import {AppComponent} from "../app.component";
 import {BmiComponent} from "../components/bmi/bmi.component";
 import {UserComponent} from "../components/user/user.component";
 import {LoggingComponent} from "../components/logging/logging.component";
+import {HomeComponent} from "../home/home.component";
 
 const routes: Routes = [
-  {path: 'app', component: AppComponent}
+  {path: 'app', redirectTo: 'home'},
 ];
 
 const routesBmi: Routes = [
@@ -22,6 +22,14 @@ const routesLogging: Routes = [
   {path: 'logging', component: LoggingComponent}
 ];
 
+const routesHome: Routes = [
+  {path: 'home', component: HomeComponent}
+];
+
+const different: Routes = [
+  {path: '**', redirectTo: 'home'},
+];
+
 @NgModule({
   declarations: [],
   imports: [
@@ -29,7 +37,9 @@ const routesLogging: Routes = [
     RouterModule.forRoot(routes),
     RouterModule.forChild(routesBmi),
     RouterModule.forChild(routesUser),
-    RouterModule.forChild(routesLogging)
+    RouterModule.forChild(routesLogging),
+    RouterModule.forChild(routesHome),
+    RouterModule.forChild(different)
   ],
   exports: [
     CommonModule,
