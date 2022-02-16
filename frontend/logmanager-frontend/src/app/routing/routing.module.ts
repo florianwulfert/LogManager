@@ -33,7 +33,7 @@ const routesLogging: Routes = [
   ],
   exports: [
     CommonModule,
-    RouterModule,
+    RouterModule
   ]
 })
 export class RoutingModule { }

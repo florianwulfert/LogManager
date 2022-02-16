@@ -17,6 +17,8 @@ import {LayoutComponent} from './layout/layout.component';
 import {BmiComponent} from './components/bmi/bmi.component';
 import {LoggingComponent} from './components/logging/logging.component';
 import {RoutingModule} from './routing/routing.module';
+import {MatCardModule} from "@angular/material/card";
+import {HomeComponent} from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -26,20 +28,22 @@ import {RoutingModule} from './routing/routing.module';
     MenuComponent,
     LayoutComponent,
     BmiComponent,
-    LoggingComponent
+    LoggingComponent,
+    HomeComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatListModule,
-    MatMenuModule,
-    RoutingModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSidenavModule,
+        MatListModule,
+        MatMenuModule,
+        RoutingModule,
+        MatCardModule
+    ],
   exports: [
     BrowserModule,
     AppRoutingModule,
