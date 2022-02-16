@@ -18,6 +18,7 @@ import {LoggingComponent} from './components/logging/logging.component';
 import {RoutingModule} from './routing/routing.module';
 import {MatCardModule} from "@angular/material/card";
 import {HomeComponent} from './home/home.component';
+import {MatTableModule} from "@angular/material/table";
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import {HomeComponent} from './home/home.component';
         MatListModule,
         MatMenuModule,
         RoutingModule,
-        MatCardModule
+        MatCardModule,
+        MatTableModule
     ],
   exports: [
     BrowserModule,

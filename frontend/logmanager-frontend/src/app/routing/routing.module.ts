@@ -34,7 +34,6 @@ const different: Routes = [
   declarations: [],
   imports: [
     CommonModule,
-    RouterModule.forRoot(routes),
     RouterModule.forChild(routesBmi),
     RouterModule.forChild(routesUser),
     RouterModule.forChild(routesLogging),

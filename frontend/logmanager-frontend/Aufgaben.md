@@ -8,12 +8,14 @@
   * [x] Icons im Menü
   * [x] Header Farbe ändern
   * [x] Menü Hoverfarbe ändern
+  * [x] Cards anpassen
 * [x] Komponente erstellen und Routing hinzufügen
   * User
   * BMI-Rechner
   * Logging
 * [x] Überschrift als HomeButton
-* [ ] 3 Cards auf Home-Screen - BMI, User, Logging
+* [x] 3 Cards auf Home-Screen - BMI, User, Logging
   * Logo, description, Routing
   * Anordnung mittig
+* [ ] Tabelle für User erstellen mit dummy-Daten, aber echten Spalten.
 
