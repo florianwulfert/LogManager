@@ -12,7 +12,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  bmiDescription = 'Berechnen Sie Ihren BMI anhand ihres Gewichts und ihrer Größe oder lassen Sie sich den BMI einer anderen Person anzeigen.'
-  userDescription = 'Hier können Sie nach einem User suchen, ihn anlegen oder löschen.'
-  loggingDescription = 'Hier können Sie die durchgeführten Aktionen im User Manager nachvollziehen.'
+  bmiDescription = 'Click here to calculate your BMI according to your weight and height or see the BMI of another user.'
+  userDescription = 'Click here to search a user, create one or delete one.'
+  loggingDescription = 'Click here to see which actions took place in the User Manager.'
 }
