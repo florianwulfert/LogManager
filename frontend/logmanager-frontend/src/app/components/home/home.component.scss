@@ -1,5 +1,6 @@
 .cardFormat{
-
+  background-color: #efebeb;
+  margin: 15px;
 }
 
 mat-card{
@@ -31,6 +32,12 @@ a{
   margin-top: 40px;
 }
 
-.colorCard{
-  background-color: #efebeb;
+.zoom {
+  transition: transform .5s;
+}
+
+.zoom:hover {
+  -ms-transform: scale(2.0); /* IE 9 */
+  -webkit-transform: scale(0.5); /* Safari 3-8 */
+  transform: scale(1.05);
 }
