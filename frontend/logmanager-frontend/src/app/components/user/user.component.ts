@@ -9,7 +9,6 @@ export interface UserAtributes {
   height: number;
   favouriteColor: string;
   bmi: number;
-
 }
 
 const ELEMENT_DATA: UserAtributes[] = [
@@ -29,7 +28,7 @@ export class UserComponent {
 
   ngOnInit(): void {
     this.userService.getUsers().subscribe(result => {
-      console.log(result.headers.get('Access-Control-Allow-Origin'));
+      console.log(result);
     });
   }
 
