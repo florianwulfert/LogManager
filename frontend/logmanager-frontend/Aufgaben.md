@@ -17,5 +17,6 @@
 * [x] 3 Cards auf Home-Screen - BMI, User, Logging
   * Logo, description, Routing
   * Anordnung mittig
-* [ ] Tabelle für User erstellen mit dummy-Daten, aber echten Spalten.
+* [x] Tabelle für User erstellen mit dummy-Daten, aber echten Spalten.
+* [ ] User Liste vom Backend bekommen
 

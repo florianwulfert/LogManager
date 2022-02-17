@@ -1,17 +1,21 @@
 import {Component} from '@angular/core';
+import {UserService} from "../../modules/user/service/user.service";
 
-export interface PeriodicElement {
+export interface UserAtributes {
   id: number;
   name: string;
-  birthdate: Date;
+  birthdate: string;
   weight: number;
-  height: string;
+  height: number;
+  favouriteColor: string;
+  bmi: number;
+
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'}
+const ELEMENT_DATA: UserAtributes[] = [
+  {id: 1, name: 'Peter', birthdate: new Date(2001,12,19).toDateString(), weight: 75, height: 1.80, favouriteColor: "blue", bmi: 23.14},
+  {id: 2, name: 'Hans', birthdate: new Date(2002,2,8).toDateString(), weight: 100, height: 1.80, favouriteColor: "yellow", bmi: 30.86},
+  {id: 3, name: 'Werner', birthdate: new Date(1992,3,24).toDateString(), weight: 80, height: 1.80, favouriteColor: "red", bmi: 24.69},
 ];
 
 @Component({
@@ -21,14 +25,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class UserComponent {
 
-  constructor() {
-  }
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
+    this.userService.getUsers().subscribe(result => {
+      console.log(result.headers.get('Access-Control-Allow-Origin'));
+    });
   }
 
-  user = 'Florian'
-
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi'];
   dataSource = ELEMENT_DATA;
 }

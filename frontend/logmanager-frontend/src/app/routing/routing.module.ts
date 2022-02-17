@@ -4,7 +4,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {BmiComponent} from "../components/bmi/bmi.component";
 import {UserComponent} from "../components/user/user.component";
 import {LoggingComponent} from "../components/logging/logging.component";
-import {HomeComponent} from "../home/home.component";
+import {HomeComponent} from "../components/home/home.component";
 
 const routes: Routes = [
   {path: 'app', redirectTo: 'home'},
