@@ -1,16 +1,6 @@
 import {Component} from '@angular/core';
 import {UserService} from "../../modules/user/service/user.service";
 
-export interface UserAtributes {
-  id: number;
-  name: string;
-  birthdate: string;
-  weight: number;
-  height: number;
-  favouriteColor: string;
-  bmi: number;
-}
-
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
