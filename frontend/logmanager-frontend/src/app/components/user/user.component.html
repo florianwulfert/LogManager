@@ -59,7 +59,30 @@
   </table>
   </ng-template>
   <div class="col">
-    <button mat-raised-button class="createUser zoom">Create User</button>
+    <button mat-raised-button class="createUser zoom" (click)="onToggleExpansion()">Create User</button>
   </div>
+  <div *ngIf="expansionToggle"></div>
+
+  <mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      Personal data
+    </mat-panel-title>
+    <mat-panel-description>
+      Type your name and age
+
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+
+  <mat-form-field appearance="fill">
+    <mat-label>First name</mat-label>
+    <input matInput>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Age</mat-label>
+    <input matInput type="number" min="1">
+  </mat-form-field>
+</mat-expansion-panel>
 </div>
 

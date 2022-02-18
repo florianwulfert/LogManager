@@ -19,6 +19,8 @@ import {MatCardModule} from "@angular/material/card";
 import {HomeComponent} from './components/home/home.component';
 import {MatTableModule} from "@angular/material/table";
 import {HttpClientModule} from "@angular/common/http";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatFormFieldModule} from "@angular/material/form-field";
 
 @NgModule({
   declarations: [
@@ -30,21 +32,23 @@ import {HttpClientModule} from "@angular/common/http";
     LoggingComponent,
     HomeComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatIconModule,
-        MatSidenavModule,
-        MatListModule,
-        MatMenuModule,
-        RoutingModule,
-        MatCardModule,
-        MatTableModule,
-        HttpClientModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    MatMenuModule,
+    RoutingModule,
+    MatCardModule,
+    MatTableModule,
+    HttpClientModule,
+    MatExpansionModule,
+    MatFormFieldModule
+  ],
   exports: [
     BrowserModule,
     AppRoutingModule,
