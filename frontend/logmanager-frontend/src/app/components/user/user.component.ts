@@ -12,11 +12,13 @@ export class UserComponent {
 
   dataSource: any;
 
+  listIsEmptyMessage: string = 'There are no users to show!';
+
   ngOnInit(): void {
     this.userService.getUsers().subscribe(result => {
       this.dataSource = result.body
     });
   }
 
-  displayedColumns: string[] = ['name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi'];
+  displayedColumns: string[] = ['name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
 }

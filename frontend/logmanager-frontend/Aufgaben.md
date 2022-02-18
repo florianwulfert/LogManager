@@ -4,7 +4,7 @@
     * UserAdministration
     * BMI-Rechner
     * Logging
-* [ ] Verschönerungen
+* [x] Verschönerungen
   * [x] Icons im Menü
   * [x] Header Farbe ändern
   * [x] Menü Hoverfarbe ändern
@@ -18,5 +18,10 @@
   * Logo, description, Routing
   * Anordnung mittig
 * [x] Tabelle für User erstellen mit dummy-Daten, aber echten Spalten.
-* [ ] User Liste vom Backend bekommen
+* [x] User Liste vom Backend bekommen
+* [x] Wenn keine User vorhanden sind, soll eine Ausgabe erfolgen im UserComponent
+* [ ] Buttons erstellen
+  * [ ] User anlegen - Feld pop-up - rechts neben User Tabelle
+  * [x] User löschen - Spalte in Tabelle mit Papierkorb
+  * [ ] User filtern - über der Tabelle
 
