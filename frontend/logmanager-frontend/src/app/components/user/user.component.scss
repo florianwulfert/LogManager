@@ -11,3 +11,24 @@ table {
 .deleteButton{
   margin-right: -40px;
 }
+
+.createUser{
+  background-color: #180c65;
+  color: white;
+  text-decoration: none;
+  font-size: xx-large;
+  padding: 80px 300px;
+  position: absolute;
+  right: 80px;
+  top: 142px;
+}
+
+.zoom {
+  transition: transform .5s;
+}
+
+.zoom:hover {
+  -ms-transform: scale(2.0); /* IE 9 */
+  -webkit-transform: scale(0.5); /* Safari 3-8 */
+  transform: scale(1.03);
+}
