@@ -1,25 +1,29 @@
-import {Component, OnInit} from '@angular/core';
-import {UserService} from "../../modules/user/service/user.service";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {UserFacade} from "../../modules/user/store/user.facade";
+import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss']
 })
-export class UserComponent implements OnInit{
+export class UserComponent implements OnInit, OnDestroy{
 
-  constructor(private userService: UserService) {}
+  constructor(private userFacade: UserFacade) {}
+
+  subscriptionManager = new SubscriptionManager();
 
   dataSource: any;
-
+  displayedColumns: string[] = ['name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
   listIsEmptyMessage: string = 'There are no users to show!';
 
   ngOnInit(): void {
-    this.userService.getUsers().subscribe(result => {
+    this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
       this.dataSource = result.body
     });
   }
 
-  displayedColumns: string[] = ['name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
-
+  ngOnDestroy(): void {
+    this.subscriptionManager.clear();
+  }
 }
