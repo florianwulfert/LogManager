@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../modules/user/service/user.service";
 
 @Component({
@@ -7,8 +7,6 @@ import {UserService} from "../../modules/user/service/user.service";
   styleUrls: ['./user.component.scss']
 })
 export class UserComponent implements OnInit{
-
-  @Output() public expansionToggle = new EventEmitter();
 
   constructor(private userService: UserService) {}
 
@@ -24,7 +22,4 @@ export class UserComponent implements OnInit{
 
   displayedColumns: string[] = ['name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
 
-  public onToggleExpansion = () => {
-    this.expansionToggle.emit();
-  }
 }

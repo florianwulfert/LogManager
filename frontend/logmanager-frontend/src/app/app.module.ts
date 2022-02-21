@@ -21,6 +21,8 @@ import {MatTableModule} from "@angular/material/table";
 import {HttpClientModule} from "@angular/common/http";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatFormFieldModule} from "@angular/material/form-field";
+import {CreateUserComponent} from './components/user/create-user/create-user.component';
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import {MatFormFieldModule} from "@angular/material/form-field";
     MenuComponent,
     BmiComponent,
     LoggingComponent,
-    HomeComponent
+    HomeComponent,
+    CreateUserComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +50,8 @@ import {MatFormFieldModule} from "@angular/material/form-field";
     MatTableModule,
     HttpClientModule,
     MatExpansionModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatInputModule
   ],
   exports: [
     BrowserModule,
