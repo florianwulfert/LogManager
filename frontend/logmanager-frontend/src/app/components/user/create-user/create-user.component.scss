@@ -2,10 +2,21 @@
   margin-left: 30px;
 }
 
-.field-format{
-
-}
-
 mat-form-field{
   width: 100%;
+}
+
+.create{
+  background-color: #180c65;
+  color: white;
+}
+
+.reset{
+  background-color: #efebeb;
+}
+
+.button-format{
+  margin: 5px;
+  padding-right: 20px;
+  padding-left: 20px;
 }
