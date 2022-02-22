@@ -14,11 +14,15 @@ export class UserComponent implements OnInit, OnDestroy{
   subscriptionManager = new SubscriptionManager();
 
   dataSource: any;
-  displayedColumns: string[] = ['name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
+  displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
   listIsEmptyMessage: string = 'There are no users to show!';
 
   ngOnInit(): void {
+    console.log("hi");
+    this.userFacade.getUser();
+    console.log("jo");
     this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
+      console.log(result);
       this.dataSource = result.body
     });
   }

@@ -6,22 +6,21 @@ import {Observable, of} from 'rxjs';
 import {map, switchMap} from 'rxjs/internal/operators';
 import {catchError} from 'rxjs/operators';
 import {UserService} from "../service/user.service";
-import {GetUserResponse} from "../dto/get-user-response";
+import {GetUserRequest} from "../dto/get-user-request";
 
 @Injectable({ providedIn: 'root' })
 export class UserEffects {
   search$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getUsersAction),
-      switchMap(() =>
-        this.stockSearchService.getUsers().pipe(
-          map((userResponse: GetUserResponse) => getUserResponseAction(userResponse)),
-          catchError((error: string) => of(loadGetUserErrorAction({error}))
-          )
+      switchMap((getUserRequest: GetUserRequest) =>
+        this.userService.getUsers(getUserRequest).pipe(
+          map(getUserResponse => getUserResponseAction(getUserResponse)),
+          catchError((error: string) => of(loadGetUserErrorAction({ error })))
         )
       )
     )
   );
 
-  constructor(private readonly actions$: Actions, private readonly stockSearchService: UserService) {}
+  constructor(private readonly actions$: Actions, private readonly userService: UserService) {}
 }

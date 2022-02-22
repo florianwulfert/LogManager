@@ -23,6 +23,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {CreateUserComponent} from './components/user/create-user/create-user.component';
 import {MatInputModule} from "@angular/material/input";
+import {UserModule} from "./modules/user/user.module";
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import {MatInputModule} from "@angular/material/input";
     HttpClientModule,
     MatExpansionModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    UserModule
   ],
   exports: [
     BrowserModule,
