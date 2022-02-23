@@ -1,8 +1,9 @@
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {GetUserResponse} from 'src/app/modules/user/dto/get-user-response';
-import {GetUserRequest} from "../dto/get-user-request";
+import {map} from "rxjs/internal/operators";
+import {catchError} from "rxjs/operators";
 
 const API_BASE = 'http://localhost:8081/users';
 
@@ -12,9 +13,19 @@ const API_BASE = 'http://localhost:8081/users';
 export class UserService {
   constructor(private readonly http: HttpClient) {}
 
-  getUsers(getUserRequest: GetUserRequest): Observable<HttpResponse<GetUserResponse>> {
+  getUsers(): Observable<GetUserResponse> {
     return this.http.get<GetUserResponse>(API_BASE, {
       observe: 'response'
-    })
+    }).pipe(
+      map((r) => {
+        console.log(r);
+        return r.body || {
+          result: []
+        }
+      }),
+      catchError(() => {
+          return throwError('Zurzeit ist eine Abfragen der Nutzer technischen Gründen nicht möglich.');
+      })
+    );
   }
 }

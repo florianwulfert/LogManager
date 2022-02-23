@@ -1,6 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserFacade} from "../../modules/user/store/user.facade";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
+import {UserDto} from "../../modules/user/dto/user.dto";
 
 @Component({
   selector: 'app-user',
@@ -13,7 +14,7 @@ export class UserComponent implements OnInit, OnDestroy{
 
   subscriptionManager = new SubscriptionManager();
 
-  dataSource: any;
+  dataSource: UserDto[] = [];
   displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
   listIsEmptyMessage: string = 'There are no users to show!';
 
@@ -23,7 +24,7 @@ export class UserComponent implements OnInit, OnDestroy{
     console.log("jo");
     this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
       console.log(result);
-      this.dataSource = result.body
+      this.dataSource = result
     });
   }
 

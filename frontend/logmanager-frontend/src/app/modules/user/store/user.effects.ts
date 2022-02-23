@@ -14,8 +14,8 @@ export class UserEffects {
     this.actions$.pipe(
       ofType(getUsersAction),
       switchMap((getUserRequest: GetUserRequest) =>
-        this.userService.getUsers(getUserRequest).pipe(
-          map(getUserResponse => getUserResponseAction(getUserResponse)),
+        this.userService.getUsers().pipe(
+          map((getUserResponse) => getUserResponseAction(getUserResponse)),
           catchError((error: string) => of(loadGetUserErrorAction({ error })))
         )
       )
