@@ -19,11 +19,8 @@ export class UserComponent implements OnInit, OnDestroy{
   listIsEmptyMessage: string = 'There are no users to show!';
 
   ngOnInit(): void {
-    console.log("hi");
     this.userFacade.getUser();
-    console.log("jo");
     this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
-      console.log(result);
       this.dataSource = result
     });
   }

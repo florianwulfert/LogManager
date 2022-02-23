@@ -9,46 +9,48 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <div class="create-user-body">
-      <div class="field-format">
-        <mat-form-field appearance="fill">
-          <mat-label>Name</mat-label>
-          <input matInput>
-        </mat-form-field>
+    <form #form>
+      <div class="create-user-body">
+        <div class="field-format">
+          <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Birthdate</mat-label>
+            <input matInput>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Weight</mat-label>
+            <input matInput>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Height</mat-label>
+            <input matInput>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Favourite color</mat-label>
+            <input matInput>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+      <div class="button-position">
+        <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
+        <button mat-raised-button class="create button-format">Create</button>
       </div>
 
-      <div>
-        <mat-form-field appearance="fill">
-          <mat-label>Birthdate</mat-label>
-          <input matInput>
-        </mat-form-field>
-      </div>
-
-      <div>
-        <mat-form-field appearance="fill">
-          <mat-label>Weight</mat-label>
-          <input matInput>
-        </mat-form-field>
-      </div>
-
-      <div>
-        <mat-form-field appearance="fill">
-          <mat-label>Height</mat-label>
-          <input matInput>
-        </mat-form-field>
-      </div>
-
-      <div>
-        <mat-form-field appearance="fill">
-          <mat-label>Favourite color</mat-label>
-          <input matInput>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <div class="button-position">
-      <button mat-raised-button class="reset button-format">Reset</button>
-      <button mat-raised-button class="create button-format">Create</button>
-    </div>
   </mat-expansion-panel>
 </mat-accordion>
