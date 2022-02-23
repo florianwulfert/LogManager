@@ -5,29 +5,10 @@
 
   <ng-template #show>
     <div class="col">
-      <mat-accordion multi>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Search user
-            </mat-panel-title>
-            <mat-panel-description>
-              Type in user name
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-
-          <div class="create-user-body">
-            <div class="field-format">
-              <mat-form-field appearance="fill">
-                <mat-label>Name</mat-label>
-                <input matInput>
-              </mat-form-field>
-            </div>
-            <button mat-raised-button class="search button-format">Search</button>
-          </div>
-
-        </mat-expansion-panel>
-      </mat-accordion>
+      <mat-form-field appearance="standard">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter" #input>
+      </mat-form-field>
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
         <!-- ID Column -->
@@ -81,13 +62,17 @@
             </button>
           </td>
         </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"> hi</tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
       </table>
     </div>
   </ng-template>
 
   <div class="col">
+    <div class="rightSide"></div>
     <app-create-user></app-create-user>
   </div>
 </div>

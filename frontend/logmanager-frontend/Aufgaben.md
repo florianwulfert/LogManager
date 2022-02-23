@@ -23,5 +23,6 @@
 * [ ] Buttons erstellen
   * [x] User anlegen - Feld pop-up - rechts neben User Tabelle
   * [x] User löschen - Spalte in Tabelle mit Papierkorb
-  * [ ] User filtern - über der Tabelle - genaue Anforderung?
+  * [x] User filtern - über der Tabelle
+* [ ] AddUser hinzufügen
 
