@@ -21,7 +21,7 @@
 * [x] User Liste vom Backend bekommen
 * [x] Wenn keine User vorhanden sind, soll eine Ausgabe erfolgen im UserComponent
 * [ ] Buttons erstellen
-  * [ ] User anlegen - Feld pop-up - rechts neben User Tabelle
+  * [x] User anlegen - Feld pop-up - rechts neben User Tabelle
   * [x] User löschen - Spalte in Tabelle mit Papierkorb
-  * [ ] User filtern - über der Tabelle
+  * [ ] User filtern - über der Tabelle - genaue Anforderung?
 

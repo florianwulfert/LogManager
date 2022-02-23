@@ -3,9 +3,31 @@
 
   <div *ngIf="dataSource === undefined || dataSource.length === 0 ; else show ">{{ listIsEmptyMessage }}</div>
 
-
   <ng-template #show>
     <div class="col">
+      <mat-accordion multi>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Search user
+            </mat-panel-title>
+            <mat-panel-description>
+              Type in user name
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div class="create-user-body">
+            <div class="field-format">
+              <mat-form-field appearance="fill">
+                <mat-label>Name</mat-label>
+                <input matInput>
+              </mat-form-field>
+            </div>
+            <button mat-raised-button class="search button-format">Search</button>
+          </div>
+
+        </mat-expansion-panel>
+      </mat-accordion>
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
         <!-- ID Column -->

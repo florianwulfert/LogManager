@@ -32,3 +32,17 @@ table {
   -webkit-transform: scale(0.5); /* Safari 3-8 */
   transform: scale(1.03);
 }
+
+.search{
+  background-color: #180c65;
+  color: white;
+}
+
+.button-format{
+  margin-left: 10px;
+  width: 150px;
+}
+
+mat-expansion-panel{
+  margin-bottom: 10px;
+}
