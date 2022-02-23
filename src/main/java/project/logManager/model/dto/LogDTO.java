@@ -4,14 +4,10 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-/**
- * @author - EugenFriesen
- * 12.02.2021
- **/
-
+/** @author - EugenFriesen 12.02.2021 */
 @Data
 public class LogDTO {
-    String severity;
-    String message;
-    LocalDateTime timestamp;
+  String severity;
+  String message;
+  LocalDateTime timestamp;
 }
