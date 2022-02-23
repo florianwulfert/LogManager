@@ -1,18 +1,24 @@
 package project.logManager.controller;
 
+import java.time.LocalDate;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import project.logManager.common.dto.UserResponseDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
+@CrossOrigin
 public class UserController {
 
   private final UserService userService;
@@ -32,8 +38,8 @@ public class UserController {
   }
 
   @GetMapping("/users")
-  public List<User> findUsers() {
-    return userService.findUserList();
+  public UserResponseDto findUsers() {
+    return new UserResponseDto(userService.findUserList());
   }
 
   @GetMapping("/user/id")

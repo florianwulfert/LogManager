@@ -20,10 +20,14 @@
     "@angular/platform-browser": "~13.2.0",
     "@angular/platform-browser-dynamic": "~13.2.0",
     "@angular/router": "~13.2.0",
+    "bootstrap": "^5.0.1",
     "material-icons": "^1.10.6",
-    "rxjs": "~7.5.0",
+    "rxjs": "^6.6.3",
     "tslib": "^2.3.0",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "@ngrx/effects": "^10.0.1",
+    "@ngrx/entity": "^10.0.1",
+    "@ngrx/store": "^10.0.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~13.2.3",
@@ -37,6 +41,8 @@
     "karma-coverage": "~2.1.0",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
-    "typescript": "~4.5.2"
+    "typescript": "~4.5.2",
+    "@ngrx/schematics": "^13.0.2",
+    "@ngrx/store-devtools": "^10.0.1"
   }
 }
