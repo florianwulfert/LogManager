@@ -25,4 +25,6 @@
   * [x] User löschen - Spalte in Tabelle mit Papierkorb
   * [x] User filtern - über der Tabelle
 * [ ] AddUser hinzufügen
+* [ ] Delete
+  * [x] deleteAll Button (entweder in Tabelle, oder über createUser)
 

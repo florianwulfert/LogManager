@@ -25,6 +25,7 @@ import {MatInputModule} from "@angular/material/input";
 import {UserModule} from "./modules/user/user.module";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -36,27 +37,28 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     LoggingComponent,
     HomeComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatIconModule,
-        MatSidenavModule,
-        MatListModule,
-        MatMenuModule,
-        RoutingModule,
-        MatCardModule,
-        MatTableModule,
-        HttpClientModule,
-        MatExpansionModule,
-        MatFormFieldModule,
-        MatInputModule,
-        UserModule,
-        ReactiveFormsModule,
-        MatSnackBarModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    MatMenuModule,
+    RoutingModule,
+    MatCardModule,
+    MatTableModule,
+    HttpClientModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatInputModule,
+    UserModule,
+    ReactiveFormsModule,
+    MatSnackBarModule,
+    MatTooltipModule
+  ],
   exports: [
     BrowserModule,
     AppRoutingModule,

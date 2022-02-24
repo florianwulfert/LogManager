@@ -69,6 +69,6 @@ export class UserComponent implements OnInit, OnDestroy {
         verticalPosition: this.verticalPosition,
       });
     }
-
   }
+  position = new FormControl('above');
 }
