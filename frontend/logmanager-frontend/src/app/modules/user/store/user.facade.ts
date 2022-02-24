@@ -17,6 +17,7 @@ export class UserFacade {
   }
 
   addUser(request: AddUserRequest): void {
+    console.log(request)
     this.userState.dispatch(addUserAction(request));
   }
 }

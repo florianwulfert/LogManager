@@ -33,7 +33,7 @@ export class UserEffects {
     this.actions$.pipe(
       ofType(addUserAction),
       switchMap((addUserRequest:AddUserRequest) =>
-        this.userService.addUser().pipe(
+        this.userService.addUser(addUserRequest).pipe(
           map((addUserResponse) => addUserResponseAction(addUserResponse)),
           catchError((error: string) => of(loadAddUserErrorAction({ error })))
         )

@@ -5,6 +5,7 @@ import {GetUserResponse} from 'src/app/modules/user/dto/get-user-response';
 import {map} from "rxjs/internal/operators";
 import {catchError} from "rxjs/operators";
 import {AddUserResponse} from "../dto/add-user-response";
+import {AddUserRequest} from "../dto/add-user-request";
 
 const API_BASE = 'http://localhost:8081/users';
 const API_ADD_USER = 'http://localhost:8081/user';
@@ -30,8 +31,14 @@ export class UserService {
     );
   }
 
-  addUser(): Observable<AddUserResponse> {
-    return this.http.post<AddUserResponse>(API_ADD_USER, {
+  addUser(addUserRequest: AddUserRequest): Observable<AddUserResponse> {
+    return this.http.post<AddUserResponse>(API_ADD_USER
+      + "?actor=" + addUserRequest.actor
+      + "&name=" + addUserRequest.name
+      + "&birthdate=" + addUserRequest.birthdate
+      + "&weight=" + addUserRequest.weight
+      + "&height=" + addUserRequest.height
+      + "&favouriteColor=" + addUserRequest.favouriteColor,{
       observe: 'response'
     }).pipe(
       map((r) => {
