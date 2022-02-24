@@ -24,7 +24,6 @@ export class UserComponent implements OnInit, OnDestroy {
     this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
     });
-
   }
 
   ngOnDestroy(): void {

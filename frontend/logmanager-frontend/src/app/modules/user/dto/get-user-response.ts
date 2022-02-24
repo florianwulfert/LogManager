@@ -7,4 +7,3 @@ export interface GetUserResponse {
 export interface GetUserErrorResponse {
   error: string;
 }
-

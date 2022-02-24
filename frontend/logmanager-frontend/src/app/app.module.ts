@@ -24,6 +24,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {CreateUserComponent} from './components/user/create-user/create-user.component';
 import {MatInputModule} from "@angular/material/input";
 import {UserModule} from "./modules/user/user.module";
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -36,25 +37,26 @@ import {UserModule} from "./modules/user/user.module";
     HomeComponent,
     CreateUserComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatListModule,
-    MatMenuModule,
-    RoutingModule,
-    MatCardModule,
-    MatTableModule,
-    HttpClientModule,
-    MatExpansionModule,
-    MatFormFieldModule,
-    MatInputModule,
-    UserModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSidenavModule,
+        MatListModule,
+        MatMenuModule,
+        RoutingModule,
+        MatCardModule,
+        MatTableModule,
+        HttpClientModule,
+        MatExpansionModule,
+        MatFormFieldModule,
+        MatInputModule,
+        UserModule,
+        ReactiveFormsModule
+    ],
   exports: [
     BrowserModule,
     AppRoutingModule,
