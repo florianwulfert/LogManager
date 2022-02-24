@@ -21,7 +21,6 @@ import {MatTableModule} from "@angular/material/table";
 import {HttpClientModule} from "@angular/common/http";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatFormFieldModule} from "@angular/material/form-field";
-import {CreateUserComponent} from './components/user/create-user/create-user.component';
 import {MatInputModule} from "@angular/material/input";
 import {UserModule} from "./modules/user/user.module";
 import {ReactiveFormsModule} from "@angular/forms";
@@ -36,7 +35,6 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     BmiComponent,
     LoggingComponent,
     HomeComponent,
-    CreateUserComponent
   ],
     imports: [
         BrowserModule,

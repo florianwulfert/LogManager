@@ -46,3 +46,29 @@ table {
 .rightSide{
   margin-bottom: 70px;
 }
+
+.create-user-body{
+  margin-left: 30px;
+}
+
+mat-form-field{
+  width: 100%;
+}
+
+.create{
+  background-color: #180c65;
+  color: white;
+}
+
+.reset{
+  background-color: #efebeb;
+}
+
+.button-position{
+  text-align: right;
+}
+
+.button-format{
+  margin-left: 10px;
+  width: 150px;
+}

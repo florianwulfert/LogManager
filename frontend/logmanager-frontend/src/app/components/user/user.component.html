@@ -73,7 +73,63 @@
 
   <div class="col">
     <div class="rightSide"></div>
-    <app-create-user></app-create-user>
+    <mat-accordion multi>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Create user
+          </mat-panel-title>
+          <mat-panel-description>
+            Type in user information
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <form [formGroup]="form">
+          <div class="create-user-body">
+            <div class="field-format">
+              <mat-form-field appearance="fill">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name">
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Birthdate</mat-label>
+                <input matInput formControlName="birthdate">
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Weight</mat-label>
+                <input matInput formControlName="weight">
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Height</mat-label>
+                <input matInput formControlName="height">
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Favourite Color</mat-label>
+                <input matInput formControlName="favouriteColor">
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+        <div class="button-position">
+          <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
+          <button mat-raised-button class="create button-format" (click)="createUser()">Create</button>
+        </div>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+
   </div>
 </div>
 
