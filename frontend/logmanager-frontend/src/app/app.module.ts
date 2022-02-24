@@ -21,9 +21,10 @@ import {MatTableModule} from "@angular/material/table";
 import {HttpClientModule} from "@angular/common/http";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatFormFieldModule} from "@angular/material/form-field";
-import {CreateUserComponent} from './components/user/create-user/create-user.component';
 import {MatInputModule} from "@angular/material/input";
 import {UserModule} from "./modules/user/user.module";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [
@@ -34,27 +35,28 @@ import {UserModule} from "./modules/user/user.module";
     BmiComponent,
     LoggingComponent,
     HomeComponent,
-    CreateUserComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatListModule,
-    MatMenuModule,
-    RoutingModule,
-    MatCardModule,
-    MatTableModule,
-    HttpClientModule,
-    MatExpansionModule,
-    MatFormFieldModule,
-    MatInputModule,
-    UserModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSidenavModule,
+        MatListModule,
+        MatMenuModule,
+        RoutingModule,
+        MatCardModule,
+        MatTableModule,
+        HttpClientModule,
+        MatExpansionModule,
+        MatFormFieldModule,
+        MatInputModule,
+        UserModule,
+        ReactiveFormsModule,
+        MatSnackBarModule
+    ],
   exports: [
     BrowserModule,
     AppRoutingModule,

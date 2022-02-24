@@ -7,7 +7,19 @@ export interface UserState {
   error: string;
 }
 
+export interface UserInteraction {
+  response: string;
+  error: string;
+}
+
 export const USER_INITIAL_STATE: UserState = {
   userList: [],
-  error: '',
+  error: ''
 };
+
+export const USER_INTERACTION_INITIAL_STATE: UserInteraction = {
+  response: '',
+  error: ''
+}
+
+
