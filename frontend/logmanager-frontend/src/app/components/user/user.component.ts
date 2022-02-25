@@ -61,7 +61,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   createUser(): void {
     let request = new AddUserRequest
-    this.prepareAddUserRequest(request)
+    request = this.prepareAddUserRequest(request)
     this.userFacade.addUser(request);
     this.subscriptionManager.add(this.userFacade.stateAddUser$).subscribe(result => {
       this.returnUserMessage = result
