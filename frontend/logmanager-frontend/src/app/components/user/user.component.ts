@@ -19,6 +19,7 @@ export class UserComponent implements OnInit, OnDestroy {
   subscriptionManager = new SubscriptionManager();
   featureManager = new FeatureManager(this._snackBar);
   returnUserMessage: string | undefined;
+  returnUserDeleteMessage: string | undefined;
 
   displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
   listIsEmptyMessage: string = 'There are no users to show!';
@@ -68,5 +69,14 @@ export class UserComponent implements OnInit, OnDestroy {
       this.returnUserMessage = result
     })
     this.featureManager.openSnackbar(this.returnUserMessage);
+  }
+
+  deleteUsers(): void {
+    this.userFacade.deleteUser();
+    this.subscriptionManager.add(this.userFacade.stateDeleteUser$).subscribe(result => {
+      this.returnUserDeleteMessage = result
+      console.log(result)
+    })
+    this.featureManager.openSnackbar(this.returnUserDeleteMessage);
   }
 }

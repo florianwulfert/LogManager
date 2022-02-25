@@ -59,7 +59,8 @@
             <button mat-icon-button
                     matTooltip="Delete all users"
                     [matTooltipPosition]="position.value"
-                    class="main-deleteButton">
+                    class="main-deleteButton"
+                    (click)="deleteUsers()">
               <mat-icon> delete</mat-icon>
             </button>
           </th>
