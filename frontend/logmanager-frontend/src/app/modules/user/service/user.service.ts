@@ -39,10 +39,9 @@ export class UserService {
       + "&weight=" + addUserRequest.weight
       + "&height=" + addUserRequest.height
       + "&favouriteColor=" + addUserRequest.favouriteColor,{
-      observe: 'body'
+      observe: 'response'
     }).pipe(
       map((r) => {
-        debugger
         return r || {
           result: ''
         }

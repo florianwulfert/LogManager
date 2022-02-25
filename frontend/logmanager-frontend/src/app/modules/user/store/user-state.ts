@@ -9,7 +9,6 @@ export interface UserState {
 
 export interface UserInteraction {
   response: string;
-  error: string;
 }
 
 export const USER_INITIAL_STATE: UserState = {
@@ -19,7 +18,6 @@ export const USER_INITIAL_STATE: UserState = {
 
 export const USER_INTERACTION_INITIAL_STATE: UserInteraction = {
   response: '',
-  error: ''
 }
 
 

@@ -8,5 +8,4 @@ export const getUsersError = createSelector(userState, (state: UserState): strin
 
 const userInteraction = createFeatureSelector<UserInteraction>(USER_FEATURE_NAME);
 export const addUser = createSelector(userInteraction, (state: UserInteraction): string => state.response);
-export const addUserError = createSelector(userInteraction, (state: UserInteraction): string => state.error);
 

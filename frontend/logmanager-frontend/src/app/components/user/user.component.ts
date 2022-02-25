@@ -2,9 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserFacade} from "../../modules/user/store/user.facade";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
-import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
+import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, FormGroup} from "@angular/forms";
 import {AddUserRequest} from "../../modules/user/dto/add-user-request";
+import {FeatureManager} from "../../../assets/utils/feature.manager";
 
 @Component({
   selector: 'app-user',
@@ -13,10 +14,10 @@ import {AddUserRequest} from "../../modules/user/dto/add-user-request";
 })
 export class UserComponent implements OnInit, OnDestroy {
 
-  constructor(private userFacade: UserFacade, private _snackBar: MatSnackBar) {
-  }
+  constructor(private userFacade: UserFacade, private _snackBar: MatSnackBar) {}
 
   subscriptionManager = new SubscriptionManager();
+  featureManager = new FeatureManager(this._snackBar);
   returnUserMessage: string | undefined;
 
   displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
@@ -66,17 +67,6 @@ export class UserComponent implements OnInit, OnDestroy {
     this.subscriptionManager.add(this.userFacade.stateAddUser$).subscribe(result => {
       this.returnUserMessage = result
     })
-    this.openSnackbar();
-  }
-
-  openSnackbar(): void {
-    let horizontalPosition: MatSnackBarHorizontalPosition = 'center';
-    let verticalPosition: MatSnackBarVerticalPosition = 'top';
-    if (this.returnUserMessage != null) {
-      this._snackBar.open(this.returnUserMessage, 'Close', {
-        horizontalPosition: horizontalPosition,
-        verticalPosition: verticalPosition
-      });
-    }
+    this.featureManager.openSnackbar(this.returnUserMessage);
   }
 }
