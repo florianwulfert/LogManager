@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {UserFacade} from "../../modules/user/store/user.facade";
+import {UserFacade} from "../../modules/user/user.facade";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, FormGroup} from "@angular/forms";
-import {AddUserRequest} from "../../modules/user/dto/add-user-request";
+import {AddUserRequest} from "../../modules/user/addUser/dto/add-user-request";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 
 @Component({

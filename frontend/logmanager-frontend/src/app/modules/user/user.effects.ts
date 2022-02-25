@@ -4,20 +4,23 @@ import {Action} from '@ngrx/store';
 import {
   addUserAction,
   addUserResponseAction,
+  deleteUserAction,
+  deleteUserResponseAction,
   getUserResponseAction,
   getUsersAction,
   loadAddUserErrorAction,
+  loadDeleteUserErrorAction,
   loadGetUserErrorAction
-} from 'src/app/modules/user/store/user.actions'
+} from 'src/app/modules/user/user.actions'
 import {Observable, of} from 'rxjs';
 import {map, switchMap} from 'rxjs/internal/operators';
 import {catchError} from 'rxjs/operators';
-import {UserService} from "../service/user.service";
-import {AddUserRequest} from "../dto/add-user-request";
+import {UserService} from "./user.service";
+import {AddUserRequest} from "./addUser/dto/add-user-request";
 
 @Injectable({ providedIn: 'root' })
 export class UserEffects {
-  search$: Observable<Action> = createEffect(() =>
+  get$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getUsersAction),
       switchMap(() =>
@@ -40,5 +43,18 @@ export class UserEffects {
       )
     )
   );
+
+  delete$: Observable<Action> = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteUserAction),
+      switchMap(() =>
+        this.userService.deleteUser().pipe(
+          map((deleteUserResponse) => deleteUserResponseAction(deleteUserResponse)),
+          catchError((error: string) => of(loadDeleteUserErrorAction({ error })))
+        )
+      )
+    )
+  );
+
   constructor(private readonly actions$: Actions, private readonly userService: UserService) {}
 }

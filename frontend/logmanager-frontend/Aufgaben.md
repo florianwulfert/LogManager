@@ -27,4 +27,7 @@
 * [ ] AddUser hinzufügen
 * [ ] Delete
   * [x] deleteAll Button (entweder in Tabelle, oder über createUser)
+  * [ ] deleteAll() implementieren
+* [ ] state-Klassen für create, get, delete
+* 
 
