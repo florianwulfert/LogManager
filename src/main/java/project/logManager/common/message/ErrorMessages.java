@@ -44,4 +44,6 @@ public class ErrorMessages {
       "Severity %s not registered. Please choose one of the following options:"
           + " TRACE, DEBUG, INFO, WARNING, ERROR, FATAL";
   public static final String INFINITE_OR_NAN = "Infinite or NaN";
+  public static final String ILLEGAL_BIRTHDATE_FORMAT = "Illegal format for birthdate! Use format: DD.MM.YYYY";
+
 }

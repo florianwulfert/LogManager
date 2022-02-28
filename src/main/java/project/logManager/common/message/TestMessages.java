@@ -2,14 +2,6 @@ package project.logManager.common.message;
 
 public class TestMessages {
 
-  public static final String BAD_REQUEST_ERROR_MESSAGE_DATE =
-      "Required path variable was not found or request param has wrong format! "
-          + "Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'; "
-          + "nested exception is org.springframework.core.convert.ConversionFailedException: "
-          + "Failed to convert from type [java.lang.String] to type "
-          + "[@org.springframework.web.bind.annotation.RequestParam @org.springframework.format."
-          + "annotation.DateTimeFormat java.time.LocalDate] for value 'hallo'; "
-          + "nested exception is java.lang.IllegalArgumentException: Parse attempt failed for value [hallo]";
   public static final String BAD_REQUEST_ERROR_MESSAGE_WEIGHT =
       "Required path variable was not found or request param has wrong format! "
           + "Failed to convert value of type 'java.lang.String' to required type 'double'; "
