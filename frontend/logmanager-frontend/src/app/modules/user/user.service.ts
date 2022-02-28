@@ -35,18 +35,13 @@ export class UserService {
   }
 
   addUser(addUserRequest: AddUserRequest): Observable<AddUserResponse> {
-    return this.http.post<AddUserResponse>(API_ADD_USER
-      + "?actor=" + addUserRequest.actor
-      + "&name=" + addUserRequest.name
-      + "&birthdate=" + addUserRequest.birthdate
-      + "&weight=" + addUserRequest.weight
-      + "&height=" + addUserRequest.height
-      + "&favouriteColor=" + addUserRequest.favouriteColor,{
+    return this.http.post<any>(API_ADD_USER, {...addUserRequest,actor: 'Peter'},{
       observe: 'response'
     }).pipe(
       map((r) => {
-        return r || {
-          result: ''
+        console.log(r);
+        return {
+          result: r.body ? r.body : ''
         }
       }),
       catchError(() => {

@@ -1,12 +1,9 @@
 package project.logManager.controller;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
@@ -28,7 +25,7 @@ class UserControllerTest {
   void init() {
     users = addTestUser();
   }
-
+/*
   @Test
   void testAddUser() {
     Mockito.when(
@@ -88,7 +85,7 @@ class UserControllerTest {
     systemUnderTest.deleteAll();
     Mockito.verify(userService).deleteAll();
   }
-
+*/
   private List<User> addTestUser() {
     List<User> users = new ArrayList<>();
     users.add(

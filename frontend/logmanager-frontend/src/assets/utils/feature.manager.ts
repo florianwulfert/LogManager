@@ -13,4 +13,8 @@ export class FeatureManager {
       });
     }
   }
+
+  refreshPage(): void {
+    window.location.reload()
+  }
 }

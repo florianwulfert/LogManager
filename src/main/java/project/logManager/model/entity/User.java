@@ -39,3 +39,5 @@ public class User {
   @Column(name = "bmi")
   double bmi;
 }
+
+

@@ -77,4 +77,5 @@ export class UserComponent implements OnInit, OnDestroy {
     })
     this.featureManager.openSnackbar(this.returnUserMessage);
   }
+
 }

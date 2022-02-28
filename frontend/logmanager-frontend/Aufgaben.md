@@ -20,14 +20,15 @@
 * [x] Tabelle für User erstellen mit dummy-Daten, aber echten Spalten.
 * [x] User Liste vom Backend bekommen
 * [x] Wenn keine User vorhanden sind, soll eine Ausgabe erfolgen im UserComponent
-* [ ] Buttons erstellen
+* [X] Buttons erstellen
   * [x] User anlegen - Feld pop-up - rechts neben User Tabelle
   * [x] User löschen - Spalte in Tabelle mit Papierkorb
   * [x] User filtern - über der Tabelle
 * [ ] AddUser hinzufügen
 * [ ] Delete
   * [x] deleteAll Button (entweder in Tabelle, oder über createUser)
-  * [ ] deleteAll() implementieren
-* [ ] state-Klassen für create, get, delete
-* 
+  * [x] deleteAll() implementieren
+  * [ ] snack-bar zum Laufen bringen
+* [x] state-Klassen für create, get, delete
+* [ ] refresh der Tabelle mit UserList
 
