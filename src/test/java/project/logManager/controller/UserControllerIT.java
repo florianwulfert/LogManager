@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
+import project.logManager.common.message.TestMessages;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -34,9 +35,6 @@ import java.util.stream.Stream;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static project.logManager.common.message.ErrorMessages.*;
-import static project.logManager.common.message.InfoMessages.NORMAL_WEIGHT;
-import static project.logManager.common.message.TestMessages.*;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
@@ -70,92 +68,92 @@ class UserControllerIT {
             "{\"actor\":\"Petra\",\"name\":\"Hugo\",\"birthdate\":\"13.12.1999\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
             status().isOk(),
             String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Hugo", 24.07)
-                + NORMAL_WEIGHT),
+                + InfoMessages.NORMAL_WEIGHT),
         Arguments.of(
             "First user has to create himself",
             true,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isInternalServerError(),
-            NO_USERS_YET + "Hugo unequal Torsten"),
+                ErrorMessages.NO_USERS_YET + "Hugo unequal Torsten"),
         Arguments.of(
             "First user created himself",
             true,
             "{\"actor\":\"Petra\",\"name\":\"Petra\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isOk(),
             String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Petra", 24.07)
-                + NORMAL_WEIGHT),
+                + InfoMessages.NORMAL_WEIGHT),
         Arguments.of(
             "Actor not known",
             false,
             "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
             status().isInternalServerError(),
-            String.format(USER_NOT_FOUND_NAME, "UnknownActor")),
+            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "UnknownActor")),
         Arguments.of(
             "Actor not given",
             false,
             "{\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
             status().isInternalServerError(),
-            PARAMETER_IS_MISSING),
+                ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "Color illegal",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"purple\"}",
             status().isInternalServerError(),
-            COLOR_ILLEGAL_PLUS_CHOICE),
+                ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE),
         Arguments.of(
             "Datum mit falschem Format angegeben",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"hallo\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isInternalServerError(),
-            ILLEGAL_BIRTHDATE_FORMAT),
+                ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT),
         Arguments.of(
             "weight mit falschem Format angegeben",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"hi\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
-            PARAMETER_WRONG_FORMAT),
+                ErrorMessages.PARAMETER_WRONG_FORMAT),
         Arguments.of(
             "height mit falschem Format angegeben",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":\"hi\",\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
-            PARAMETER_WRONG_FORMAT),
+                ErrorMessages.PARAMETER_WRONG_FORMAT),
         Arguments.of(
             "User to create already exists",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Petra\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isInternalServerError(),
-            String.format(USER_EXISTS, "Petra")),
+            String.format(ErrorMessages.USER_EXISTS, "Petra")),
         Arguments.of(
             "UserNameNull",
             false,
             "{\"actor\":\"Torsten\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isInternalServerError(),
-            PARAMETER_IS_MISSING),
+                ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "birthdateIsNull",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isInternalServerError(),
-            PARAMETER_IS_MISSING),
+                ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "weightIsNull",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isInternalServerError(),
-            PARAMETER_IS_MISSING),
+                ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "heightIsNull",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"favouriteColor\":\"blue\"}",
             status().isInternalServerError(),
-            PARAMETER_IS_MISSING),
+                ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "favouriteColorIsNull",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":\"1.8\"}",
             status().isInternalServerError(),
-            PARAMETER_IS_MISSING));
+                ErrorMessages.PARAMETER_IS_MISSING));
   }
 
   @ParameterizedTest(name = "{0}")
@@ -190,7 +188,7 @@ class UserControllerIT {
     MvcResult result =
         mockMvc.perform(get("/users")).andDo(print()).andExpect(status().isOk()).andReturn();
 
-    Assertions.assertEquals(PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
+    Assertions.assertEquals(TestMessages.PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
   }
 
   @Nested
@@ -204,7 +202,7 @@ class UserControllerIT {
               .andExpect(status().isOk())
               .andReturn();
 
-      Assertions.assertEquals(PETRA, result.getResponse().getContentAsString());
+      Assertions.assertEquals(TestMessages.PETRA, result.getResponse().getContentAsString());
     }
 
     @Test
@@ -247,25 +245,25 @@ class UserControllerIT {
             "Paul",
             status().isInternalServerError(),
             String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Paul")),
-        Arguments.of(false, "/user/delete/1", null, status().isBadRequest(), ACTOR_NOT_PRESENT),
+        Arguments.of(false, "/user/delete/1", null, status().isBadRequest(), TestMessages.ACTOR_NOT_PRESENT),
         Arguments.of(
             false,
             "/user/delete/8",
             "Torsten",
             status().isInternalServerError(),
-            String.format(USER_NOT_FOUND_ID, 8)),
+            String.format(ErrorMessages.USER_NOT_FOUND_ID, 8)),
         Arguments.of(
             false,
             "/user/delete/2",
             "Torsten",
             status().isInternalServerError(),
-            USER_DELETE_HIMSELF),
+                ErrorMessages.USER_DELETE_HIMSELF),
         Arguments.of(
             true,
             "/user/delete/1",
             "Torsten",
             status().isInternalServerError(),
-            String.format(USER_REFERENCED, "Petra")));
+            String.format(ErrorMessages.USER_REFERENCED, "Petra")));
   }
 
   @ParameterizedTest(name = "{4}")
@@ -308,35 +306,35 @@ class UserControllerIT {
             "/user/delete/name/Torsten",
             "Torsten",
             status().isInternalServerError(),
-            USER_DELETE_HIMSELF),
+                ErrorMessages.USER_DELETE_HIMSELF),
         Arguments.of(
             "Actor not present",
             false,
             "/user/delete/name/Petra",
             null,
             status().isBadRequest(),
-            ACTOR_NOT_PRESENT),
+                TestMessages.ACTOR_NOT_PRESENT),
         Arguments.of(
             "Actor not in database",
             false,
             "/user/delete/name/Petra",
             "ActorName",
             status().isInternalServerError(),
-            String.format(USER_NOT_IDENTIFIED, "ActorName")),
+            String.format(ErrorMessages.USER_NOT_IDENTIFIED, "ActorName")),
         Arguments.of(
             "User to delete not in database ",
             false,
             "/user/delete/name/UserToDeleteNichtBekannt",
             "Torsten",
             status().isInternalServerError(),
-            String.format(USER_NOT_IDENTIFIED, "UserToDeleteNichtBekannt")),
+            String.format(ErrorMessages.USER_NOT_IDENTIFIED, "UserToDeleteNichtBekannt")),
         Arguments.of(
             "User to delete not present",
             false,
             "/user/delete/name/",
             "Torsten",
             status().isBadRequest(),
-            USER_TO_DELETE_NOT_PRESENT),
+            TestMessages.USER_TO_DELETE_NOT_PRESENT),
         Arguments.of(
             "User is referenced in another table",
             true,

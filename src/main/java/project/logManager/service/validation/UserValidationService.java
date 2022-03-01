@@ -31,17 +31,13 @@ public class UserValidationService {
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
   public void checkIfAnyEntriesAreNull(UserRequestDto allParameters) {
-    try {
-      if (allParameters.actor == null
-          || allParameters.name == null
-          || allParameters.birthdate == null
-          || allParameters.favouriteColor == null
-          || allParameters.weight == null
-          || allParameters.height == null) {
-        LOGGER.info(PARAMETER_IS_MISSING);
-        throw new RuntimeException();
-      }
-    } catch (RuntimeException allParams) {
+    if (allParameters.actor == null
+        || allParameters.name == null
+        || allParameters.birthdate == null
+        || allParameters.favouriteColor == null
+        || allParameters.weight == null
+        || allParameters.height == null) {
+      LOGGER.info(PARAMETER_IS_MISSING);
       throw new RuntimeException(PARAMETER_IS_MISSING);
     }
   }
