@@ -32,23 +32,21 @@ jobs:
   frontend-build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [ 10.x, 12.x, 14.x, 15.x ]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 12.x
 
       - name: Install dependencies
+        working-directory: ./frontend/log-manager-frontend
         run: npm install
 
       - name: Run the tests
+        working-directory: ./frontend/log-manager-frontend
         run: npm test
 
       - name: Build
+        working-directory: ./frontend/log-manager-frontend
         run: npm run build
