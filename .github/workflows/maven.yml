@@ -32,7 +32,6 @@ jobs:
   frontend-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./frontend/logmanager-frontend
+      - uses: ./
       - name: test
         run: npm test
