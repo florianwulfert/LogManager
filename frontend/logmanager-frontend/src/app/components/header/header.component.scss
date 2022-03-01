@@ -14,20 +14,25 @@ mat-toolbar {
 
 @media (max-width: 959px) {
   mat-toolbar {
-    border-radius: 0px;
+    border-radius: 0;
   }
 }
 
-h2{
+h2 {
   color: white;
 }
 
-mat-icon{
+mat-icon {
   color: white;
 }
 
-.marginLeft-20{
+.marginLeft-20 {
   margin-left: 18px;
+}
+
+.profile {
+  position: absolute;
+  right: 20px;
 }
 
 
