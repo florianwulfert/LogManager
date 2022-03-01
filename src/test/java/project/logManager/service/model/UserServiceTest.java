@@ -33,6 +33,8 @@ class UserServiceTest {
     users = addTestUser();
   }
 
+  // TODO: Fix UserService-Tests
+
   /*@Test
   void testAddUser() {
     Mockito.when(

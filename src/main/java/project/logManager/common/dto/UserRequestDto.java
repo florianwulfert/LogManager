@@ -15,8 +15,8 @@ public class UserRequestDto {
     public String actor;
     public String name;
     public String birthdate;
-    public double weight;
-    public double height;
+    public Double weight;
+    public Double height;
     public String favouriteColor;
 
     public LocalDate getBirthdateAsLocalDate() {

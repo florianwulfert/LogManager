@@ -2,14 +2,6 @@ package project.logManager.common.message;
 
 public class TestMessages {
 
-  public static final String BAD_REQUEST_ERROR_MESSAGE_WEIGHT =
-      "Required path variable was not found or request param has wrong format! "
-          + "Failed to convert value of type 'java.lang.String' to required type 'double'; "
-          + "nested exception is java.lang.NumberFormatException: For input string: \"hi\"";
-  public static final String BAD_REQUEST_ERROR_MESSAGE_HEIGHT =
-      "Required path variable was not found or request param has wrong format! "
-          + "Failed to convert value of type 'java.lang.String' to required type 'double'; "
-          + "nested exception is java.lang.NumberFormatException: For input string: \"hi\"";
   public static final String PETRA_TORSTEN_HANS =
       "{\"result\":[{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\","
           + "\"weight\":65.0,\"height\":1.6,\"favouriteColor\":\"Red\",\"bmi\":25.39}"
@@ -34,4 +26,5 @@ public class TestMessages {
       "No class project.logManager.model.entity.Log entity with id 20 exists!";
   public static final String ENTRIES_DELETED =
       "Entries with the ID(s) 1, 2 were deleted from database.";
+  public static final String ACTOR_NOT_PRESENT = "Required String parameter 'actor' is not present";
 }

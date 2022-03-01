@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
@@ -21,6 +22,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static project.logManager.common.message.ErrorMessages.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserValidationServiceTest {
@@ -43,11 +46,39 @@ class UserValidationServiceTest {
   }
 
   @Test
+  void testIfAnyEntriesAreNull() {
+    RuntimeException ex =
+        Assertions.assertThrows(
+            RuntimeException.class,
+            () -> systemUnderTest.checkIfAnyEntriesAreNull(UserRequestDto.builder()
+                    .actor("Peter")
+                    .name("Hans")
+                    .birthdate("19.02.1995")
+                    .weight(75.0)
+                    .height(1.80)
+                    .favouriteColor(null)
+                    .build()));
+    Assertions.assertEquals(PARAMETER_IS_MISSING, ex.getMessage());
+  }
+
+  @Test
+  void testNoEntryIsNull() {
+    systemUnderTest.checkIfAnyEntriesAreNull(UserRequestDto.builder()
+            .actor("Peter")
+            .name("Hans")
+            .birthdate("19.02.1995")
+            .weight(75.0)
+            .height(1.80)
+            .favouriteColor("blue")
+            .build());
+  }
+
+  @Test
   void testIfColorIsNotCorrect() {
     RuntimeException ex =
         Assertions.assertThrows(
             IllegalArgumentException.class, () -> systemUnderTest.validateFarbenEnum("gold"));
-    Assertions.assertEquals(ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE, ex.getMessage());
+    Assertions.assertEquals(COLOR_ILLEGAL_PLUS_CHOICE, ex.getMessage());
   }
 
   @Test
@@ -71,7 +102,7 @@ class UserValidationServiceTest {
         Assertions.assertThrows(
             RuntimeException.class,
             () -> systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(1), true));
-    Assertions.assertEquals(ErrorMessages.NO_USERS_YET + "Florian unequal Peter", ex.getMessage());
+    Assertions.assertEquals(NO_USERS_YET + "Florian unequal Peter", ex.getMessage());
   }
 
   @Test
@@ -80,7 +111,7 @@ class UserValidationServiceTest {
         Assertions.assertThrows(
             RuntimeException.class,
             () -> systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(1), false));
-    Assertions.assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_ID, 2), ex.getMessage());
+    Assertions.assertEquals(String.format(USER_NOT_FOUND_ID, 2), ex.getMessage());
   }
 
   // Der Fall trifft aktuell nicht ein, wird aber aus TestCoverage-Gründen getestet
@@ -99,7 +130,7 @@ class UserValidationServiceTest {
     Assertions.assertEquals(
         String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Peter"), ex.getMessage());
     Mockito.verify(logService)
-        .addLog(ErrorMessages.USER_NOT_CREATED, "ERROR", users.get(0).getName());
+        .addLog(USER_NOT_CREATED, "ERROR", users.get(0).getName());
   }
 
   @Test
@@ -110,7 +141,7 @@ class UserValidationServiceTest {
             RuntimeException.class,
             () -> systemUnderTest.checkIfNameExists(users.get(0).getName(), false));
     Assertions.assertEquals(
-        String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Peter"), ex.getMessage());
+        String.format(USER_NOT_IDENTIFIED, "Peter"), ex.getMessage());
   }
 
   @Test
@@ -126,7 +157,7 @@ class UserValidationServiceTest {
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class, () -> systemUnderTest.checkIfUserToPostExists("Torsten"));
-    Assertions.assertEquals(String.format(ErrorMessages.USER_EXISTS, "Torsten"), ex.getMessage());
+    Assertions.assertEquals(String.format(USER_EXISTS, "Torsten"), ex.getMessage());
   }
 
   @Test
@@ -139,7 +170,7 @@ class UserValidationServiceTest {
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class, () -> systemUnderTest.checkIfUserToDeleteIdEqualsActorId(1, 1));
-    Assertions.assertEquals(ErrorMessages.USER_DELETE_HIMSELF, ex.getMessage());
+    Assertions.assertEquals(USER_DELETE_HIMSELF, ex.getMessage());
   }
 
   @Test
@@ -153,7 +184,7 @@ class UserValidationServiceTest {
   void testIfIdNotExists() {
     RuntimeException ex =
         Assertions.assertThrows(RuntimeException.class, () -> systemUnderTest.checkIfIdExists(1));
-    Assertions.assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_ID, 1), ex.getMessage());
+    Assertions.assertEquals(String.format(USER_NOT_FOUND_ID, 1), ex.getMessage());
   }
 
   @Test
@@ -164,7 +195,7 @@ class UserValidationServiceTest {
             RuntimeException.class,
             () -> systemUnderTest.checkIfExistLogByUserToDelete(users.get(0)));
     Assertions.assertEquals(
-        String.format(ErrorMessages.USER_REFERENCED, users.get(0).getName()), ex.getMessage());
+        String.format(USER_REFERENCED, users.get(0).getName()), ex.getMessage());
   }
 
   @Test
@@ -177,7 +208,7 @@ class UserValidationServiceTest {
             () ->
                 systemUnderTest.checkIfUserToDeleteEqualsActor(
                     users.get(0).getName(), users.get(0).getName()));
-    Assertions.assertEquals(ErrorMessages.USER_DELETE_HIMSELF, ex.getMessage());
+    Assertions.assertEquals(USER_DELETE_HIMSELF, ex.getMessage());
   }
 
   @Test
@@ -194,7 +225,7 @@ class UserValidationServiceTest {
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class, () -> systemUnderTest.checkIfUsersAreReferenced());
-    Assertions.assertEquals(ErrorMessages.USERS_REFERENCED, ex.getMessage());
+    Assertions.assertEquals(USERS_REFERENCED, ex.getMessage());
   }
 
   @Test

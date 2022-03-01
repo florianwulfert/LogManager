@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
+import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.enums.UserColorEnum;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.exception.FirstUserUnequalActorException;
@@ -17,6 +18,8 @@ import project.logManager.service.model.UserService;
 import java.util.List;
 import java.util.Optional;
 
+import static project.logManager.common.message.ErrorMessages.PARAMETER_IS_MISSING;
+
 @Component
 @RequiredArgsConstructor
 public class UserValidationService {
@@ -26,6 +29,22 @@ public class UserValidationService {
   private final LogRepository logRepository;
 
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
+
+  public void checkIfAnyEntriesAreNull(UserRequestDto allParameters) {
+    try {
+      if (allParameters.actor == null
+          || allParameters.name == null
+          || allParameters.birthdate == null
+          || allParameters.favouriteColor == null
+          || allParameters.weight == null
+          || allParameters.height == null) {
+        LOGGER.info(PARAMETER_IS_MISSING);
+        throw new RuntimeException();
+      }
+    } catch (RuntimeException allParams) {
+      throw new RuntimeException(PARAMETER_IS_MISSING);
+    }
+  }
 
   public void validateFarbenEnum(String userFarben) {
     for (UserColorEnum farbenEnum : UserColorEnum.values()) {
