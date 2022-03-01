@@ -104,7 +104,7 @@ class UserControllerIT {
             "Datum mit falschem Format angegeben",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"hallo\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
-            status().isInternalServerError(),
+            status().isBadRequest(),
                 ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT),
         Arguments.of(
             "weight mit falschem Format angegeben",
