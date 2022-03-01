@@ -33,6 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: test
+      - name: change to frontend directory
         uses: ./frontend/logmanager-frontend
+      - name: test
         run: npm test
