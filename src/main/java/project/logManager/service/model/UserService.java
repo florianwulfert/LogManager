@@ -26,6 +26,7 @@ public class UserService {
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
   public String addUser(UserRequestDto userRequestDto) {
+    userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
     User user =
         User.builder()
             .name(userRequestDto.name)
