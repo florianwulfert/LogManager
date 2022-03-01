@@ -1,10 +1,14 @@
 package project.logManager.controller;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.common.dto.UserRequestDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
 
@@ -25,35 +29,41 @@ class UserControllerTest {
   void init() {
     users = addTestUser();
   }
-/*
+
   @Test
   void testAddUser() {
     Mockito.when(
-            userService.addUser(
-                users.get(1).getName(),
-                users.get(0).getName(),
-                users.get(0).getBirthdate(),
-                90.0,
-                1.85,
-                users.get(0).getFavouriteColor()))
+            systemUnderTest.addUser(
+                UserRequestDto.builder()
+                    .actor("Torsten")
+                    .name("Hugo")
+                    .birthdate("05.10.1994")
+                    .weight(75.0)
+                    .height(1.65)
+                    .favouriteColor("red")
+                    .build()))
         .thenReturn("Test");
     Assertions.assertEquals(
-        "User Peter was created. Test",
+        "User Hugo was created. Test",
         systemUnderTest.addUser(
-            users.get(1).getName(),
-            users.get(0).getName(),
-            users.get(0).getBirthdate(),
-            90.0,
-            1.85,
-            users.get(0).getFavouriteColor()));
+            UserRequestDto.builder()
+                .actor("Torsten")
+                .name("Hugo")
+                .birthdate("05.10.1994")
+                .weight(75.0)
+                .height(1.65)
+                .favouriteColor("red")
+                .build()));
     Mockito.verify(userService)
         .addUser(
-            users.get(1).getName(),
-            users.get(0).getName(),
-            users.get(0).getBirthdate(),
-            users.get(0).getWeight(),
-            users.get(0).getHeight(),
-            users.get(0).getFavouriteColor());
+            UserRequestDto.builder()
+                .actor("Torsten")
+                .name("Hugo")
+                .birthdate("05.10.1994")
+                .weight(75.0)
+                .height(1.65)
+                .favouriteColor("red")
+                .build());
   }
 
   @Test
@@ -85,7 +95,7 @@ class UserControllerTest {
     systemUnderTest.deleteAll();
     Mockito.verify(userService).deleteAll();
   }
-*/
+
   private List<User> addTestUser() {
     List<User> users = new ArrayList<>();
     users.add(
