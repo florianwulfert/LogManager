@@ -9,7 +9,9 @@
         <mat-label>Filter</mat-label>
         <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter" #input>
       </mat-form-field>
-      <button mat-raised-button class="create button-format refresh-button-position" (click)="featureManager.refreshPage()">Refresh</button>
+      <button mat-raised-button class="create button-format refresh-button-position"
+              (click)="featureManager.refreshPage()">Refresh
+      </button>
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
         <!-- ID Column -->
@@ -131,8 +133,8 @@
             </div>
           </div>
         </form>
-          <button mat-raised-button class="create button-format" (click)="createUser()">Create</button>
-          <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
+        <button mat-raised-button class="create button-format" (click)="createUser()">Create</button>
+        <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
       </mat-expansion-panel>
     </mat-accordion>
 
