@@ -3,5 +3,4 @@ import {GetLogsErrorResponse, GetLogsResponse} from "./getLogs/dto/get-logs-resp
 
 export const getLogsAction = createAction('Get logs');
 export const getLogsResponseAction = createAction('Get list of logs', props<GetLogsResponse>())
-export const loadGetLogsErrorAction = createAction('Loag Get logs failure', props<GetLogsErrorResponse>())
-
+export const loadGetLogsErrorAction = createAction('Load Get logs failure', props<GetLogsErrorResponse>())

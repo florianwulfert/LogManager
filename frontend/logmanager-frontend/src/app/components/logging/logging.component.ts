@@ -1,18 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
-import {LogsFacade} from "../../modules/logging/logs.facade";
+import {LogFacade} from "../../modules/logging/log-facade.service";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
-
-
-export interface Log {
-  id: string
-  message: string
-  severity: string
-  timestamp: string
-  user: string
-}
-
 
 
 @Component({
@@ -22,13 +12,14 @@ export interface Log {
 })
 export class LoggingComponent implements OnInit, OnDestroy {
 
-  constructor(private logsFacade: LogsFacade) { }
+  constructor(private logsFacade: LogFacade) {
+  }
 
   subscriptionManager = new SubscriptionManager();
 
   displayedColumns: string[] = ['id', 'message', 'severity', 'timestamp', 'user', 'delete'];
   listIsEmptyMessage: string = 'There are no logs to show!';
-  dataSource : any;
+  dataSource: any;
 
   ngOnInit(): void {
     this.logsFacade.getLogs()

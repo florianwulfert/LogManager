@@ -5,7 +5,7 @@ import {LogsGetState} from "./getLogs/store/logs-get.state";
 import {getLogs} from "./logs.selector";
 
 @Injectable({providedIn: 'root'})
-export class LogsFacade {
+export class LogFacade {
   stateGetLogsResponse$ = this.logsGetState.select(getLogs)
 
   constructor(private readonly logsGetState: Store<LogsGetState>) {
