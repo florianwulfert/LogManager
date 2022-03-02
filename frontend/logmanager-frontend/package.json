@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "serve": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -24,6 +24,10 @@
     "material-icons": "^1.10.6",
     "rxjs": "^6.6.3",
     "karma-firefox-launcher": "^1.1.0",
+    "karma-coverage": "~2.1.0",
+    "karma-jasmine": "~4.0.0",
+    "karma": "~6.3.0",
+    "karma-jasmine-html-reporter": "~1.7.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4",
     "@ngrx/effects": "^10.0.1",
@@ -37,11 +41,6 @@
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
     "jasmine-core": "~4.0.0",
-    "karma": "~6.3.0",
-    "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage": "~2.1.0",
-    "karma-jasmine": "~4.0.0",
-    "karma-jasmine-html-reporter": "~1.7.0",
     "typescript": "~4.5.2",
     "@ngrx/schematics": "^13.0.2",
     "@ngrx/store-devtools": "^10.0.1"
