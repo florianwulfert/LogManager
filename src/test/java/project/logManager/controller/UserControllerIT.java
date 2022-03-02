@@ -101,19 +101,19 @@ class UserControllerIT {
             status().isInternalServerError(),
                 ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE),
         Arguments.of(
-            "Datum wrong format",
+            "Date has wrong format",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"hallo\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
                 ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT),
         Arguments.of(
-            "weight wrong format",
+            "weight has wrong format",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"hi\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
                 ErrorMessages.PARAMETER_WRONG_FORMAT),
         Arguments.of(
-            "height wrong format",
+            "height has wrong format",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":\"hi\",\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
