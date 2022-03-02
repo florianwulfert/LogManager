@@ -8,8 +8,13 @@
     <h2>User Manager</h2>
   </a>
   <div class="profile">
-    <button mat-icon-button >
+    <button mat-icon-button [mat-menu-trigger-for]="login" #menuTrigger>
       <mat-icon>account_circle</mat-icon>
     </button>
+    <mat-menu #login>
+      <button mat-menu-item (click)="openDialog()">Open dialog</button>
+    </mat-menu>
+
+
   </div>
 </mat-toolbar>
