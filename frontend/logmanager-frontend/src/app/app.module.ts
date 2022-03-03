@@ -23,7 +23,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {UserModule} from "./modules/user/user.module";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatDialogModule} from "@angular/material/dialog";
@@ -62,6 +62,7 @@ import {ProfileMenuComponent} from './components/navigation/profile-menu/profile
     MatSnackBarModule,
     MatTooltipModule,
     MatDialogModule,
+    FormsModule,
   ],
   exports: [
     BrowserModule,

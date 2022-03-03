@@ -10,6 +10,8 @@ import {ProfileMenuComponent} from "../profile-menu/profile-menu.component";
 })
 export class HeaderComponent implements OnInit {
 
+  name: string | undefined
+
   @Output() public sidenavToggle = new EventEmitter();
   @ViewChild('menuTrigger')
   menuTrigger!: MatMenuTrigger;
@@ -25,7 +27,12 @@ export class HeaderComponent implements OnInit {
   }
 
   openDialog() {
-    const dialogRef = this.dialog.open(ProfileMenuComponent, {restoreFocus: false});
-    dialogRef.afterClosed().subscribe(() => this.menuTrigger.focus());
+    const dialogRef = this.dialog.open(ProfileMenuComponent, {
+      restoreFocus: false,
+      data: {name: this.name},
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      this.menuTrigger.focus()
+    });
   }
 }
