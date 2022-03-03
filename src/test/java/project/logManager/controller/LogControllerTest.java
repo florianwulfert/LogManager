@@ -6,11 +6,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 /** @author - EugenFriesen 14.02.2021 */
@@ -21,25 +23,28 @@ class LogControllerTest {
 
   @Mock LogService logService;
 
+  @Mock
+  LogDTOMapper logDTOMapper;
+
   @Test
   void testGetLogs() {
     LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
     LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
     systemUnderTest.getLogs("INFO", "Test", startDate, endDate);
     verify(logService, Mockito.times(1))
-        .getLogs(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
+        .getLogs(any(), any(), any(), any());
   }
 
   @Test
   void testAddLog() {
     systemUnderTest.addLog("INFO", "Test", "Peter");
-    verify(logService).addLog(Mockito.any(), Mockito.any(), Mockito.any());
+    verify(logService).addLog(any(), any(), any());
   }
 
   @Test
   void testGetLogsById() {
-    systemUnderTest.getLogsByID(1);
-    verify(logService).searchLogsByID(1);
+    systemUnderTest.getLogsByID(any());
+    verify(logDTOMapper).logsToLogDTOs(any());
   }
 
   @Test
