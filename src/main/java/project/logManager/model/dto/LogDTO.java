@@ -10,4 +10,5 @@ public class LogDTO {
   String severity;
   String message;
   LocalDateTime timestamp;
+  String user;
 }

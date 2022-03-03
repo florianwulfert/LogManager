@@ -5,7 +5,7 @@ import {EffectsModule} from "@ngrx/effects";
 import {GET_LOGS_FEATURE_NAME} from "./getLogs/store/logs-get.state";
 import {LogsGetReducer} from "./getLogs/store/logs-get.reducer";
 import {LogEffects} from "./logs.effects";
-import {LogFacade} from "./log-facade.service";
+import {LogFacade} from "./logs.facade";
 
 @NgModule({
   declarations: [],

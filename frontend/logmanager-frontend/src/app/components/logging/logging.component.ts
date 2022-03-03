@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
-import {LogFacade} from "../../modules/logging/log-facade.service";
+import {FormControl} from "@angular/forms";
+import {LogFacade} from "../../modules/logging/logs.facade";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
 
@@ -33,13 +33,5 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   position = new FormControl('above');
-
-  public form: FormGroup = new FormGroup({
-    id: new FormControl(),
-    message: new FormControl(),
-    severity: new FormControl(),
-    timestamp: new FormControl(),
-    user: new FormControl()
-  })
 
 }

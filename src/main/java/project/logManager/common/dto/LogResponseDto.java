@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import project.logManager.model.entity.Log;
+import project.logManager.model.dto.LogDTO;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LogResponseDto {
-    List<Log> result;
+    List<LogDTO> result;
 }
