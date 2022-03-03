@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
@@ -23,16 +22,14 @@ class LogControllerTest {
 
   @Mock LogService logService;
 
-  @Mock
-  LogDTOMapper logDTOMapper;
+  @Mock LogDTOMapper logDTOMapper;
 
   @Test
   void testGetLogs() {
     LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
     LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
     systemUnderTest.getLogs("INFO", "Test", startDate, endDate);
-    verify(logService, Mockito.times(1))
-        .getLogs(any(), any(), any(), any());
+    verify(logService).getLogs(any(), any(), any(), any());
   }
 
   @Test
