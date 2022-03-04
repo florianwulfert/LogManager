@@ -32,6 +32,7 @@ export class HeaderComponent implements OnInit {
       data: {name: this.name},
     });
     dialogRef.afterClosed().subscribe((result) => {
+      this.name = result
       this.menuTrigger.focus()
     });
   }
