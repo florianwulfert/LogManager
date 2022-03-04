@@ -1,6 +1,9 @@
 package project.logManager.controller;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -28,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -132,17 +136,18 @@ class LogControllerIT {
       ResultMatcher status,
       Integer logNumber)
       throws Exception {
-    mockMvc
-        .perform(
-            get("/logs")
-                .param("severity", severity)
-                .param("message", message)
-                .param("startDateTime", startDateTime)
-                .param("endDateTime", endDateTime))
-        .andDo(print())
-        .andExpect(status)
-        .andExpect(jsonPath("$.*", hasSize(logNumber)))
-        .andReturn();
+    MvcResult result =
+        mockMvc
+            .perform(
+                get("/logs")
+                    .param("severity", severity)
+                    .param("message", message)
+                    .param("startDateTime", startDateTime)
+                    .param("endDateTime", endDateTime))
+            .andDo(print())
+            .andExpect(status)
+            .andExpect(jsonPath("$.result", hasSize(logNumber)))
+            .andReturn();
   }
 
   @Nested
@@ -156,7 +161,7 @@ class LogControllerIT {
               .andExpect(status().isInternalServerError())
               .andReturn();
 
-      Assertions.assertEquals(
+      assertEquals(
           "Severity hi not registered. Please choose one of the following options: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL",
           result.getResponse().getContentAsString());
     }
@@ -170,7 +175,7 @@ class LogControllerIT {
               .andExpect(status().isBadRequest())
               .andReturn();
 
-      Assertions.assertEquals(
+      assertEquals(
           "Required path variable was not found or request param has wrong format! "
               + "Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDateTime'; "
               + "nested exception is org.springframework.core.convert.ConversionFailedException: "
@@ -190,7 +195,7 @@ class LogControllerIT {
               .andExpect(status().isBadRequest())
               .andReturn();
 
-      Assertions.assertEquals(
+      assertEquals(
           "Required path variable was not found or request param has wrong format! "
               + "Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDateTime'; "
               + "nested exception is org.springframework.core.convert.ConversionFailedException: "
@@ -260,7 +265,7 @@ class LogControllerIT {
       ResultMatcher status,
       String returnMessage)
       throws Exception {
-    createUser("Petra");
+    createUser();
     MvcResult result =
         mockMvc
             .perform(
@@ -272,7 +277,7 @@ class LogControllerIT {
             .andExpect(status)
             .andReturn();
 
-    Assertions.assertEquals(returnMessage, result.getResponse().getContentAsString());
+    assertEquals(returnMessage, result.getResponse().getContentAsString());
   }
 
   @Nested
@@ -282,7 +287,7 @@ class LogControllerIT {
       MvcResult result =
           mockMvc.perform(get("/logs/1")).andDo(print()).andExpect(status().isOk()).andReturn();
 
-      Assertions.assertEquals(TestMessages.LOG_EXAMPLE, result.getResponse().getContentAsString());
+      assertEquals(TestMessages.LOG_EXAMPLE, result.getResponse().getContentAsString());
     }
 
     @Test
@@ -290,7 +295,7 @@ class LogControllerIT {
       MvcResult result =
           mockMvc.perform(get("/logs/50")).andDo(print()).andExpect(status().isOk()).andReturn();
 
-      Assertions.assertEquals("[null]", result.getResponse().getContentAsString());
+      assertEquals("[null]", result.getResponse().getContentAsString());
     }
 
     @Test
@@ -302,7 +307,7 @@ class LogControllerIT {
               .andExpect(status().isBadRequest())
               .andReturn();
 
-      Assertions.assertEquals(
+      assertEquals(
           TestMessages.ID_FOR_LOGS_HAS_WRONG_FORMAT, result.getResponse().getContentAsString());
     }
   }
@@ -318,7 +323,7 @@ class LogControllerIT {
               .andExpect(status().isOk())
               .andReturn();
 
-      Assertions.assertEquals(
+      assertEquals(
           String.format(InfoMessages.ENTRY_DELETED_ID, 2),
           result.getResponse().getContentAsString());
     }
@@ -332,8 +337,7 @@ class LogControllerIT {
               .andExpect(status().isInternalServerError())
               .andReturn();
 
-      Assertions.assertEquals(
-          TestMessages.ID_NOT_EXISTS, result.getResponse().getContentAsString());
+      assertEquals(TestMessages.ID_NOT_EXISTS, result.getResponse().getContentAsString());
     }
 
     @Test
@@ -345,7 +349,7 @@ class LogControllerIT {
               .andExpect(status().isBadRequest())
               .andReturn();
 
-      Assertions.assertEquals(
+      assertEquals(
           TestMessages.ID_FOR_LOGS_HAS_WRONG_FORMAT, result.getResponse().getContentAsString());
     }
 
@@ -358,8 +362,7 @@ class LogControllerIT {
               .andExpect(status().isOk())
               .andReturn();
 
-      Assertions.assertEquals(
-          TestMessages.ENTRIES_DELETED, result.getResponse().getContentAsString());
+      assertEquals(TestMessages.ENTRIES_DELETED, result.getResponse().getContentAsString());
     }
 
     @Test
@@ -371,8 +374,7 @@ class LogControllerIT {
               .andExpect(status().isOk())
               .andReturn();
 
-      Assertions.assertEquals(
-          ErrorMessages.NO_ENTRIES_FOUND, result.getResponse().getContentAsString());
+      assertEquals(ErrorMessages.NO_ENTRIES_FOUND, result.getResponse().getContentAsString());
     }
 
     @Test
@@ -384,8 +386,7 @@ class LogControllerIT {
               .andExpect(status().isOk())
               .andReturn();
 
-      Assertions.assertEquals(
-          InfoMessages.ALL_LOGS_DELETED, result.getResponse().getContentAsString());
+      assertEquals(InfoMessages.ALL_LOGS_DELETED, result.getResponse().getContentAsString());
     }
   }
 
@@ -394,50 +395,18 @@ class LogControllerIT {
         Log.builder().id(id).severity(severity).message(message).timestamp(timestamp).build());
   }
 
-  private void createUser(String user) {
-    switch (user) {
-      case "Petra":
-        User petra =
-            User.builder()
-                .id(1)
-                .name("Petra")
-                .birthdate(LocalDate.of(1999, 12, 13))
-                .bmi(25.39)
-                .weight(65)
-                .height(1.60)
-                .favouriteColor("Red")
-                .build();
-        userRepository.save(petra);
-        break;
-      case "Torsten":
-        User torsten =
-            User.builder()
-                .name("Torsten")
-                .birthdate(LocalDate.of(1985, 12, 5))
-                .bmi(18.3)
-                .weight(61.3)
-                .height(1.83)
-                .id(2)
-                .favouriteColor("Blue")
-                .build();
-        userRepository.save(torsten);
-        break;
-      case "Hans":
-        User hans =
-            User.builder()
-                .name("Hans")
-                .birthdate(LocalDate.of(1993, 2, 3))
-                .bmi(22.11)
-                .weight(75.7)
-                .height(1.85)
-                .id(3)
-                .favouriteColor("Red")
-                .build();
-        userRepository.save(hans);
-        break;
-      default:
-        break;
-    }
+  private void createUser() {
+    User petra =
+        User.builder()
+            .id(1)
+            .name("Petra")
+            .birthdate(LocalDate.of(1999, 12, 13))
+            .bmi(25.39)
+            .weight(65)
+            .height(1.60)
+            .favouriteColor("Red")
+            .build();
+    userRepository.save(petra);
   }
 
   private void createLogs() {
