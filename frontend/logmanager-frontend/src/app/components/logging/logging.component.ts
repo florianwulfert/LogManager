@@ -17,7 +17,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
   subscriptionManager = new SubscriptionManager();
 
-  displayedColumns: string[] = ['id', 'message', 'severity', 'timestamp', 'user', 'delete'];
+  displayedColumns: string[] = ['message', 'severity', 'timestamp', 'user', 'delete'];
   listIsEmptyMessage: string = 'There are no logs to show!';
   dataSource: any;
 
