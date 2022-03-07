@@ -5,7 +5,10 @@
 
   <ng-template #show>
     <div class="col">
-
+      <mat-form-field appearance="standard" class="filter">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter" #input>
+      </mat-form-field>
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
         <!-- Message Column -->
@@ -51,7 +54,9 @@
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        </tr>
       </table>
     </div>
   </ng-template>
