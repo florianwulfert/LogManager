@@ -34,4 +34,9 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
   position = new FormControl('above');
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
 }
