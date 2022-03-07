@@ -35,7 +35,7 @@ export class UserService {
   }
 
   addUser(addUserRequest: AddUserRequest): Observable<AddUserResponse> {
-    return this.http.post<any>(API_ADD_USER, {...addUserRequest,actor: 'Peter'},{
+    return this.http.post<any>(API_ADD_USER, {...addUserRequest, actor: 'Peter'},{
       observe: 'response'
     }).pipe(
       map((r) => {
