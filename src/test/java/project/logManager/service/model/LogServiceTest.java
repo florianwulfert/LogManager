@@ -11,8 +11,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.dto.LogMessageDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
+import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
+import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.LogValidationService;
@@ -23,6 +25,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static project.logManager.common.message.TestMessages.ENTRIES_DELETED;
 
@@ -38,8 +41,11 @@ class LogServiceTest {
 
   @Mock UserRepository userRepository;
 
+  @Mock LogDTOMapper logDTOMapper;
+
   List<LogMessageDto> customLogMessageDto;
   List<User> users;
+  List<LogDTO> logs;
 
   @BeforeEach
   void init() {
@@ -50,17 +56,13 @@ class LogServiceTest {
   @Test
   void testGetLogs() {
     LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0);
-    List<Log> logs = new ArrayList<>();
-    Log log = createNewLog(1, "WARNING", "Das ist ein Test", timestamp);
-    logs.add(log);
     Mockito.when(logValidationService.validateSeverity(Mockito.anyString())).thenReturn(true);
-    Mockito.when(logRepository.findLogs(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+    Mockito.when(logDTOMapper.logsToLogDTOs(logRepository.findLogs(any(), any(), any(), any())))
         .thenReturn(logs);
     LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
     LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
     systemUnderTest.getLogs("WARNING", "Test", startDate, endDate);
-    Mockito.verify(logRepository, Mockito.times(1))
-        .findLogs(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
+    Mockito.verify(logDTOMapper).logsToLogDTOs(logRepository.findLogs(any(), any(), any(), any()));
   }
 
   @Test
@@ -74,18 +76,18 @@ class LogServiceTest {
 
   @Test
   void testAddLog() {
-    Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(true);
+    Mockito.when(logValidationService.validateSeverity(any())).thenReturn(true);
     Mockito.when(logValidationService.validateMessage(Mockito.anyString()))
         .thenReturn(customLogMessageDto.get(1));
     Mockito.when(userRepository.findUserByName("Paul")).thenReturn(users.get(0));
     Assertions.assertEquals(
         "Message \"Banane\" saved as INFO!", systemUnderTest.addLog("Banane", "INFO", "Paul"));
-    Mockito.verify(logRepository, Mockito.times(1)).save(Mockito.any());
+    Mockito.verify(logRepository, Mockito.times(1)).save(any());
   }
 
   @Test
   void testAddLogWrongSeverity() {
-    Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(false);
+    Mockito.when(logValidationService.validateSeverity(any())).thenReturn(false);
     RuntimeException ex =
         Assertions.assertThrows(
             IllegalArgumentException.class,
@@ -108,7 +110,7 @@ class LogServiceTest {
   @Test
   void testIfUserIsNull() {
     Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
-    Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(Mockito.any());
+    Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(any());
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class, () -> systemUnderTest.addLog("Hallo", "INFO", "Hans"));
@@ -131,8 +133,8 @@ class LogServiceTest {
 
   @Test
   void testSearchLogByActorId() {
-    systemUnderTest.existLogByUserToDelete(Mockito.any());
-    Mockito.verify(logRepository).findByUser(Mockito.any());
+    systemUnderTest.existLogByUserToDelete(any());
+    Mockito.verify(logRepository).findByUser(any());
   }
 
   @Test
