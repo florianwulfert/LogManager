@@ -3,6 +3,8 @@ import {FormControl} from "@angular/forms";
 import {LogFacade} from "../../modules/logging/logs.facade";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
+import {FeatureManager} from "../../../assets/utils/feature.manager";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 @Component({
@@ -12,10 +14,12 @@ import {MatTableDataSource} from "@angular/material/table";
 })
 export class LoggingComponent implements OnInit, OnDestroy {
 
-  constructor(private logsFacade: LogFacade) {
+  constructor(private logsFacade: LogFacade, private _snackBar: MatSnackBar) {
   }
 
   subscriptionManager = new SubscriptionManager();
+  returnUserMessage: string | undefined;
+  featureManager = new FeatureManager(this._snackBar);
 
   displayedColumns: string[] = ['message', 'severity', 'timestamp', 'user', 'delete'];
   listIsEmptyMessage: string = 'There are no logs to show!';
@@ -39,4 +43,11 @@ export class LoggingComponent implements OnInit, OnDestroy {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  deleteLogs(): void {
+    this.logsFacade.deleteLogs();
+    this.subscriptionManager.add(this.logsFacade.stateDeleteLogs$).subscribe(result => {
+      this.returnUserMessage = result
+    })
+    this.featureManager.openSnackbar(this.returnUserMessage);
+  }
 }

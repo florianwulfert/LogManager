@@ -9,9 +9,9 @@ import {UserDeleteState} from "./deleteUser/store/user-delete.state";
 
 @Injectable({providedIn: 'root'})
 export class UserFacade {
-  stateGetUserResponse$ = this.userGetState.select(getUsers);
-  stateAddUser$ = this.userAddState.select(addUser);
-  stateDeleteUser$ = this.userDeleteState.select(deleteUsers);
+  stateGetUserResponse$ = this.userGetState.select(getUsers)
+  stateAddUser$ = this.userAddState.select(addUser)
+  stateDeleteUser$ = this.userDeleteState.select(deleteUsers)
 
   constructor(
     private readonly userGetState: Store<UserGetState>,
