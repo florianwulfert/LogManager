@@ -92,9 +92,11 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
 
-        <form [formGroup]="form">
+        <form [formGroup]="form" *ngIf="form.value!=='' ; else show">
+          <ng-template #show>{{emptyFieldMessage}}</ng-template>
+          <div #show></div>
           <div class="create-user-body">
-            <div class="field-format">
+            <div>
               <mat-form-field appearance="fill">
                 <mat-label>Name</mat-label>
                 <input matInput formControlName="name">

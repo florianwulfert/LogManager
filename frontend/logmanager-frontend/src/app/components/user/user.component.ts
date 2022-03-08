@@ -21,8 +21,8 @@ export class UserComponent implements OnInit, OnDestroy {
   returnUserMessage: string | undefined;
 
   displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
-  listIsEmptyMessage: string = 'There are no users to show!';
   dataSource: any;
+  emptyFieldMessage: string = 'Please fill all fields'
 
   ngOnInit(): void {
     this.userFacade.getUser();
