@@ -22,7 +22,6 @@ export class LoggingComponent implements OnInit, OnDestroy {
   featureManager = new FeatureManager(this._snackBar);
 
   displayedColumns: string[] = ['message', 'severity', 'timestamp', 'user', 'delete'];
-  listIsEmptyMessage: string = 'There are no logs to show!';
   dataSource: any;
 
   ngOnInit(): void {
