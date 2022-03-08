@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import project.logManager.common.message.ErrorMessages;
 
 @RestControllerAdvice
 public class CustomRestExceptionHandler {
@@ -13,6 +12,13 @@ public class CustomRestExceptionHandler {
     @ExceptionHandler(DateFormatException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     String dateFormatExceptionHandler(DateFormatException ex) {
-        return ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT;
+        return ex.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ParameterNotPresentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String parameterNotPresentExceptionHandler(ParameterNotPresentException ex) {
+        return ex.getMessage();
     }
 }
