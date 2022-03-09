@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.ErrorMessages;
+import project.logManager.exception.ParameterNotPresentException;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -45,9 +46,9 @@ class UserValidationServiceTest {
 
   @Test
   void testIfAnyEntriesAreNull() {
-    RuntimeException ex =
+    ParameterNotPresentException ex =
         Assertions.assertThrows(
-            RuntimeException.class,
+            ParameterNotPresentException.class,
             () -> systemUnderTest.checkIfAnyEntriesAreNull(UserRequestDto.builder()
                     .actor("Peter")
                     .name("Hans")
