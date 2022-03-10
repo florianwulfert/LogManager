@@ -21,24 +21,24 @@ class LogValidationServiceTest {
 
   @Test
   void testEntryIsNull() {
-    LogRequestDto testDto = LogRequestDto.builder()
-            .message(null)
-            .severity(null)
-            .user("Hans").build();
-    ParameterNotPresentException ex = assertThrows(ParameterNotPresentException.class,
+    LogRequestDto testDto =
+        LogRequestDto.builder().message(null).severity(null).user("Hans").build();
+    ParameterNotPresentException ex =
+        assertThrows(
+            ParameterNotPresentException.class,
             () -> systemUnderTest.checkIfAnyEntriesAreNull(testDto));
-    assertEquals(ErrorMessages.PARAMETER_IS_MISSING,ex.getMessage());
+    assertEquals(ErrorMessages.PARAMETER_IS_MISSING, ex.getMessage());
   }
 
   @Test
   void testEntryIsEmptyString() {
-    LogRequestDto testDto = LogRequestDto.builder()
-            .message("Test")
-            .severity("WARNING")
-            .user("").build();
-    ParameterNotPresentException ex = assertThrows(ParameterNotPresentException.class,
+    LogRequestDto testDto =
+        LogRequestDto.builder().message("Test").severity("WARNING").user("").build();
+    ParameterNotPresentException ex =
+        assertThrows(
+            ParameterNotPresentException.class,
             () -> systemUnderTest.checkIfAnyEntriesAreNull(testDto));
-    assertEquals(ErrorMessages.PARAMETER_IS_MISSING,ex.getMessage());
+    assertEquals(ErrorMessages.PARAMETER_IS_MISSING, ex.getMessage());
   }
 
   @Test

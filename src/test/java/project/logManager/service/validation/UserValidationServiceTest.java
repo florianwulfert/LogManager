@@ -52,14 +52,16 @@ class UserValidationServiceTest {
     ParameterNotPresentException ex =
         Assertions.assertThrows(
             ParameterNotPresentException.class,
-            () -> systemUnderTest.checkIfAnyEntriesAreNull(UserRequestDto.builder()
-                    .actor("Peter")
-                    .name("Hans")
-                    .birthdate("19.02.1995")
-                    .weight(75.0)
-                    .height(1.80)
-                    .favouriteColor(null)
-                    .build()));
+            () ->
+                systemUnderTest.checkIfAnyEntriesAreNull(
+                    UserRequestDto.builder()
+                        .actor("Peter")
+                        .name("Hans")
+                        .birthdate("19.02.1995")
+                        .weight(75.0)
+                        .height(1.80)
+                        .favouriteColor(null)
+                        .build()));
     Assertions.assertEquals(ErrorMessages.PARAMETER_IS_MISSING, ex.getMessage());
   }
 
@@ -86,8 +88,7 @@ class UserValidationServiceTest {
 
   @Test
   void testIfUserNotEqualActorAndNoUsersYet() {
-    Mockito.when(logService.addLog(any()))
-        .thenThrow(RuntimeException.class);
+    Mockito.when(logService.addLog(any())).thenThrow(RuntimeException.class);
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class,
@@ -119,8 +120,7 @@ class UserValidationServiceTest {
             () -> systemUnderTest.checkIfNameExists(users.get(0).getName(), true));
     Assertions.assertEquals(
         String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Peter"), ex.getMessage());
-    Mockito.verify(logService)
-        .addLog(any());
+    Mockito.verify(logService).addLog(any());
   }
 
   @Test
@@ -165,8 +165,7 @@ class UserValidationServiceTest {
 
   @Test
   void testIfIdExists() {
-    Mockito.when(userRepository.findById(any()))
-        .thenReturn(Optional.ofNullable(users.get(0)));
+    Mockito.when(userRepository.findById(any())).thenReturn(Optional.ofNullable(users.get(0)));
     systemUnderTest.checkIfIdExists(1);
   }
 

@@ -81,11 +81,12 @@ public class UserValidationService {
 
   private void handleErsterUserUngleichActor(String actor, FirstUserUnequalActorException er) {
     try {
-      LogRequestDto logRequestDto = LogRequestDto
-              .builder()
+      LogRequestDto logRequestDto =
+          LogRequestDto.builder()
               .message(ErrorMessages.USER_NOT_CREATED)
               .severity("ERROR")
-              .user(actor).build();
+              .user(actor)
+              .build();
       logService.addLog(logRequestDto);
     } catch (RuntimeException rex) {
       throw new RuntimeException(er.getMessage());
@@ -111,11 +112,12 @@ public class UserValidationService {
 
   private String handleUserKonnteNichtAngelegtWerden(String actor, RuntimeException ex) {
     LOGGER.error(ErrorMessages.USER_NOT_CREATED);
-    LogRequestDto logRequestDto = LogRequestDto
-            .builder()
+    LogRequestDto logRequestDto =
+        LogRequestDto.builder()
             .message(ErrorMessages.USER_NOT_CREATED)
             .severity("ERROR")
-            .user(actor).build();
+            .user(actor)
+            .build();
     logService.addLog(logRequestDto);
     return ex.getMessage();
   }

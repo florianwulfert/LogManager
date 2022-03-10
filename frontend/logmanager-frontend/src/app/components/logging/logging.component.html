@@ -77,7 +77,7 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Message</mat-label>
-                <input matInput formControlName="message" >
+                <input matInput formControlName="message">
                 <mat-error *ngIf="form.controls['message'].hasError('required')">
                   Message is <strong>required</strong>
                 </mat-error>
@@ -90,16 +90,6 @@
                 <input matInput formControlName="severity">
                 <mat-error *ngIf="form.controls['severity'].hasError('required')">
                   Severity is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <div>
-              <mat-form-field appearance="fill">
-                <mat-label>Timestamp</mat-label>
-                <input matInput formControlName="timestamp">
-                <mat-error *ngIf="form.controls['timestamp'].hasError('required')">
-                  Timestamp is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
             </div>

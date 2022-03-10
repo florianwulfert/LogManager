@@ -66,11 +66,12 @@ public class UserService {
     userValidationService.checkIfExistLogByUserToDelete(userToDelete);
 
     userRepository.deleteById(id);
-    LogRequestDto logRequestDto = LogRequestDto
-            .builder()
+    LogRequestDto logRequestDto =
+        LogRequestDto.builder()
             .message(String.format(InfoMessages.USER_DELETED_ID, id))
             .severity("WARNING")
-            .user(actorName).build();
+            .user(actorName)
+            .build();
     logService.addLog(logRequestDto);
     LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, id));
     return String.format(InfoMessages.USER_DELETED_ID, id);
@@ -83,11 +84,12 @@ public class UserService {
     userValidationService.checkIfUserToDeleteEqualsActor(name, actorName);
 
     userRepository.deleteById(user.getId());
-    LogRequestDto logRequestDto = LogRequestDto
-            .builder()
+    LogRequestDto logRequestDto =
+        LogRequestDto.builder()
             .message(String.format(InfoMessages.USER_DELETED_NAME, name))
             .severity("WARNING")
-            .user(actorName).build();
+            .user(actorName)
+            .build();
     logService.addLog(logRequestDto);
     LOGGER.info(String.format(InfoMessages.USER_DELETED_NAME, name));
     return String.format(InfoMessages.USER_DELETED_NAME, name);
@@ -105,11 +107,12 @@ public class UserService {
     String bmi =
         bmiService.calculateBmiAndGetBmiMessage(
             user.getBirthdate(), user.getWeight(), user.getHeight());
-    LogRequestDto logRequestDto = LogRequestDto
-            .builder()
+    LogRequestDto logRequestDto =
+        LogRequestDto.builder()
             .message(String.format(InfoMessages.USER_CREATED + "%s", user.getName(), bmi))
             .severity("INFO")
-            .user(actor).build();
+            .user(actor)
+            .build();
     logService.addLog(logRequestDto);
     LOGGER.info(
         String.format(

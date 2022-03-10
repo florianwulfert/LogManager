@@ -39,7 +39,7 @@ export class LogEffects {
       switchMap(() =>
         this.logService.deleteLogs().pipe(
           map((deleteLogsResponse) => deleteLogsResponseAction(deleteLogsResponse)),
-          catchError((error: string) => of(loadDeleteLogsErrorAction({ error })))
+          catchError((error: string) => of(loadDeleteLogsErrorAction({error})))
         )
       )
     )
@@ -48,10 +48,10 @@ export class LogEffects {
   add$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(addLogAction),
-      switchMap((addLogRequest:AddLogRequest) =>
+      switchMap((addLogRequest: AddLogRequest) =>
         this.logService.addLog(addLogRequest).pipe(
           map((addLogResponse) => addLogResponseAction(addLogResponse)),
-          catchError((error: string) => of(loadAddLogErrorAction({ error })))
+          catchError((error: string) => of(loadAddLogErrorAction({error})))
         )
       )
     )

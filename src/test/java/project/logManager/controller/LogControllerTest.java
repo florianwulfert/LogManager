@@ -35,12 +35,8 @@ class LogControllerTest {
 
   @Test
   void testAddLog() {
-    LogRequestDto testDto = LogRequestDto
-            .builder()
-            .message("TestMessage")
-            .severity("INFO")
-            .user("Peter")
-            .build();
+    LogRequestDto testDto =
+        LogRequestDto.builder().message("TestMessage").severity("INFO").user("Peter").build();
     systemUnderTest.addLog(testDto);
     verify(logService).addLog(any());
   }

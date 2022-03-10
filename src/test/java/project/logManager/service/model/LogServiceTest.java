@@ -74,43 +74,32 @@ class LogServiceTest {
 
   @Test
   void testAddLog() {
-    LogRequestDto logRequestDto = LogRequestDto
-            .builder()
-            .message("Banane")
-            .severity("INFO")
-            .user("Paul").build();
+    LogRequestDto logRequestDto =
+        LogRequestDto.builder().message("Banane").severity("INFO").user("Paul").build();
     Mockito.when(logValidationService.validateSeverity(any())).thenReturn(true);
     Mockito.when(logValidationService.validateMessage(Mockito.anyString()))
         .thenReturn(customLogMessageDto.get(1));
     Mockito.when(userRepository.findUserByName("Paul")).thenReturn(users.get(0));
-    assertEquals(
-        "Message \"Banane\" saved as INFO!", systemUnderTest.addLog(logRequestDto));
+    assertEquals("Message \"Banane\" saved as INFO!", systemUnderTest.addLog(logRequestDto));
     Mockito.verify(logRepository, Mockito.times(1)).save(any());
   }
 
   @Test
   void testAddLogWrongSeverity() {
-    LogRequestDto logRequestDto = LogRequestDto
-            .builder()
-            .message("Ein Test")
-            .severity("KATZE")
-            .user("Peter").build();
+    LogRequestDto logRequestDto =
+        LogRequestDto.builder().message("Ein Test").severity("KATZE").user("Peter").build();
     Mockito.when(logValidationService.validateSeverity(any())).thenReturn(false);
     RuntimeException ex =
         Assertions.assertThrows(
-            IllegalArgumentException.class,
-            () -> systemUnderTest.addLog(logRequestDto));
+            IllegalArgumentException.class, () -> systemUnderTest.addLog(logRequestDto));
     assertEquals(
         String.format(ErrorMessages.SEVERITY_NOT_REGISTERED_CHOICE, "KATZE"), ex.getMessage());
   }
 
   @Test
   void testKatzeReturnMessage() {
-    LogRequestDto logRequestDto = LogRequestDto
-            .builder()
-            .message("Katze")
-            .severity("INFO")
-            .user("Peter").build();
+    LogRequestDto logRequestDto =
+        LogRequestDto.builder().message("Katze").severity("INFO").user("Peter").build();
     Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
     Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
     Mockito.when(logValidationService.validateMessage(Mockito.anyString()))
@@ -122,18 +111,14 @@ class LogServiceTest {
 
   @Test
   void testIfUserIsNull() {
-    LogRequestDto logRequestDto = LogRequestDto
-            .builder()
-            .message("Hallo")
-            .severity("INFO")
-            .user("Hans").build();
+    LogRequestDto logRequestDto =
+        LogRequestDto.builder().message("Hallo").severity("INFO").user("Hans").build();
     Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
     Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(any());
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class, () -> systemUnderTest.addLog(logRequestDto));
-    assertEquals(
-        String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Hans"), ex.getMessage());
+    assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Hans"), ex.getMessage());
   }
 
   @Test
@@ -144,8 +129,7 @@ class LogServiceTest {
 
   @Test
   void testDeleteById() {
-    assertEquals(
-        String.format(InfoMessages.ENTRY_DELETED_ID, 2), systemUnderTest.deleteById(2));
+    assertEquals(String.format(InfoMessages.ENTRY_DELETED_ID, 2), systemUnderTest.deleteById(2));
     Mockito.verify(logRepository).deleteById(2);
   }
 
@@ -181,8 +165,7 @@ class LogServiceTest {
 
   @Test
   void testNoEntriesFound() {
-    assertEquals(
-        ErrorMessages.NO_ENTRIES_FOUND, systemUnderTest.deleteBySeverity("INFO"));
+    assertEquals(ErrorMessages.NO_ENTRIES_FOUND, systemUnderTest.deleteBySeverity("INFO"));
     Mockito.verify(logRepository).deleteBySeverity("INFO");
   }
 

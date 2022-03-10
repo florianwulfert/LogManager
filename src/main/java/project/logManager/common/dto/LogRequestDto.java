@@ -6,7 +6,7 @@ import lombok.Data;
 @Builder
 @Data
 public class LogRequestDto {
-    public String message;
-    public String severity;
-    public String user;
+  public String message;
+  public String severity;
+  public String user;
 }

@@ -50,7 +50,7 @@ export class LogService {
   }
 
   addLog(addLogRequest: AddLogRequest): Observable<AddLogResponse> {
-    return this.http.post<any>(API_ADD_LOG, {...addLogRequest},{
+    return this.http.post<any>(API_ADD_LOG, {...addLogRequest}, {
       observe: 'response'
     }).pipe(
       map((r) => {

@@ -71,7 +71,7 @@ class UserControllerIT {
             true,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isInternalServerError(),
-                ErrorMessages.NO_USERS_YET + "Hugo unequal Torsten"),
+            ErrorMessages.NO_USERS_YET + "Hugo unequal Torsten"),
         Arguments.of(
             "First user created himself",
             true,
@@ -90,31 +90,31 @@ class UserControllerIT {
             false,
             "{\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
             status().isBadRequest(),
-                ErrorMessages.PARAMETER_IS_MISSING),
+            ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "Color illegal",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"purple\"}",
             status().isInternalServerError(),
-                ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE),
+            ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE),
         Arguments.of(
             "Date has wrong format",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"hallo\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
-                ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT),
+            ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT),
         Arguments.of(
             "weight has wrong format",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"hi\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
-                ErrorMessages.PARAMETER_WRONG_FORMAT),
+            ErrorMessages.PARAMETER_WRONG_FORMAT),
         Arguments.of(
             "height has wrong format",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":\"hi\",\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
-                ErrorMessages.PARAMETER_WRONG_FORMAT),
+            ErrorMessages.PARAMETER_WRONG_FORMAT),
         Arguments.of(
             "User to create already exists",
             false,
@@ -126,31 +126,31 @@ class UserControllerIT {
             false,
             "{\"actor\":\"Torsten\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
-                ErrorMessages.PARAMETER_IS_MISSING),
+            ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "birthdateIsNull",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
-                ErrorMessages.PARAMETER_IS_MISSING),
+            ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "weightIsNull",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
-                ErrorMessages.PARAMETER_IS_MISSING),
+            ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "heightIsNull",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
-                ErrorMessages.PARAMETER_IS_MISSING),
+            ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "favouriteColorIsNull",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":\"1.8\"}",
             status().isBadRequest(),
-                ErrorMessages.PARAMETER_IS_MISSING));
+            ErrorMessages.PARAMETER_IS_MISSING));
   }
 
   @ParameterizedTest(name = "{0}")
@@ -185,7 +185,8 @@ class UserControllerIT {
     MvcResult result =
         mockMvc.perform(get("/users")).andDo(print()).andExpect(status().isOk()).andReturn();
 
-    Assertions.assertEquals(TestMessages.PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
+    Assertions.assertEquals(
+        TestMessages.PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
   }
 
   @Nested
@@ -242,7 +243,8 @@ class UserControllerIT {
             "Paul",
             status().isInternalServerError(),
             String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Paul")),
-        Arguments.of(false, "/user/delete/1", null, status().isBadRequest(), TestMessages.ACTOR_NOT_PRESENT),
+        Arguments.of(
+            false, "/user/delete/1", null, status().isBadRequest(), TestMessages.ACTOR_NOT_PRESENT),
         Arguments.of(
             false,
             "/user/delete/8",
@@ -254,7 +256,7 @@ class UserControllerIT {
             "/user/delete/2",
             "Torsten",
             status().isInternalServerError(),
-                ErrorMessages.USER_DELETE_HIMSELF),
+            ErrorMessages.USER_DELETE_HIMSELF),
         Arguments.of(
             true,
             "/user/delete/1",
@@ -303,14 +305,14 @@ class UserControllerIT {
             "/user/delete/name/Torsten",
             "Torsten",
             status().isInternalServerError(),
-                ErrorMessages.USER_DELETE_HIMSELF),
+            ErrorMessages.USER_DELETE_HIMSELF),
         Arguments.of(
             "Actor not present",
             false,
             "/user/delete/name/Petra",
             null,
             status().isBadRequest(),
-                TestMessages.ACTOR_NOT_PRESENT),
+            TestMessages.ACTOR_NOT_PRESENT),
         Arguments.of(
             "Actor not in database",
             false,
