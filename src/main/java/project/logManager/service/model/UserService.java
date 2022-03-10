@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
@@ -65,8 +66,12 @@ public class UserService {
     userValidationService.checkIfExistLogByUserToDelete(userToDelete);
 
     userRepository.deleteById(id);
-
-    logService.addLog(String.format(InfoMessages.USER_DELETED_ID, id), "WARNING", actorName);
+    LogRequestDto logRequestDto = LogRequestDto
+            .builder()
+            .message(String.format(InfoMessages.USER_DELETED_ID, id))
+            .severity("WARNING")
+            .user(actorName).build();
+    logService.addLog(logRequestDto);
     LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, id));
     return String.format(InfoMessages.USER_DELETED_ID, id);
   }
@@ -78,8 +83,12 @@ public class UserService {
     userValidationService.checkIfUserToDeleteEqualsActor(name, actorName);
 
     userRepository.deleteById(user.getId());
-
-    logService.addLog(String.format(InfoMessages.USER_DELETED_NAME, name), "WARNING", actorName);
+    LogRequestDto logRequestDto = LogRequestDto
+            .builder()
+            .message(String.format(InfoMessages.USER_DELETED_NAME, name))
+            .severity("WARNING")
+            .user(actorName).build();
+    logService.addLog(logRequestDto);
     LOGGER.info(String.format(InfoMessages.USER_DELETED_NAME, name));
     return String.format(InfoMessages.USER_DELETED_NAME, name);
   }
@@ -96,8 +105,12 @@ public class UserService {
     String bmi =
         bmiService.calculateBmiAndGetBmiMessage(
             user.getBirthdate(), user.getWeight(), user.getHeight());
-    logService.addLog(
-        String.format(InfoMessages.USER_CREATED + "%s", user.getName(), bmi), "INFO", actor);
+    LogRequestDto logRequestDto = LogRequestDto
+            .builder()
+            .message(String.format(InfoMessages.USER_CREATED + "%s", user.getName(), bmi))
+            .severity("INFO")
+            .user(actor).build();
+    logService.addLog(logRequestDto);
     LOGGER.info(
         String.format(
             InfoMessages.USER_CREATED

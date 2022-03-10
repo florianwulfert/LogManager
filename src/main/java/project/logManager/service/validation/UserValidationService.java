@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
+import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.enums.UserColorEnum;
 import project.logManager.common.message.ErrorMessages;
@@ -80,7 +81,12 @@ public class UserValidationService {
 
   private void handleErsterUserUngleichActor(String actor, FirstUserUnequalActorException er) {
     try {
-      logService.addLog(ErrorMessages.USER_NOT_CREATED, "ERROR", actor);
+      LogRequestDto logRequestDto = LogRequestDto
+              .builder()
+              .message(ErrorMessages.USER_NOT_CREATED)
+              .severity("ERROR")
+              .user(actor).build();
+      logService.addLog(logRequestDto);
     } catch (RuntimeException rex) {
       throw new RuntimeException(er.getMessage());
     }
@@ -105,7 +111,12 @@ public class UserValidationService {
 
   private String handleUserKonnteNichtAngelegtWerden(String actor, RuntimeException ex) {
     LOGGER.error(ErrorMessages.USER_NOT_CREATED);
-    logService.addLog(ErrorMessages.USER_NOT_CREATED, "ERROR", actor);
+    LogRequestDto logRequestDto = LogRequestDto
+            .builder()
+            .message(ErrorMessages.USER_NOT_CREATED)
+            .severity("ERROR")
+            .user(actor).build();
+    logService.addLog(logRequestDto);
     return ex.getMessage();
   }
 
