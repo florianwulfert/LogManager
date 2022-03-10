@@ -18,7 +18,7 @@ public class Book {
     @Column
     private String titel;
     @Column
-    private Integer erscheinugsjahr;
+    private Integer erscheinungsjahr;
 
 
     @Id
