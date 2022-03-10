@@ -1,10 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {LogFacade} from "../../modules/logging/logs.facade";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
 
 
 @Component({
@@ -45,6 +46,31 @@ export class LoggingComponent implements OnInit, OnDestroy {
   deleteLogs(): void {
     this.logsFacade.deleteLogs();
     this.subscriptionManager.add(this.logsFacade.stateDeleteLogs$).subscribe(result => {
+      this.returnUserMessage = result
+    })
+    this.featureManager.openSnackbar(this.returnUserMessage);
+  }
+
+  public form: FormGroup = new FormGroup({
+    message: new FormControl('', [Validators.required]),
+    severity: new FormControl('', [Validators.required]),
+    timestamp: new FormControl('', [Validators.required]),
+    user: new FormControl('', [Validators.required]),
+  })
+
+  prepareAddLogRequest(request: AddLogRequest): AddLogRequest {
+    request.message = this.form.get("message")?.value
+    request.severity = this.form.get("severity")?.value
+    request.timestamp = this.form.get("timestamp")?.value
+    request.user = this.form.get("user")?.value
+    return request;
+  }
+
+  createLog(): void {
+    let request = new AddLogRequest
+    request = this.prepareAddLogRequest(request)
+    this.logsFacade.addLog(request);
+    this.subscriptionManager.add(this.logsFacade.stateAddLog$).subscribe(result => {
       this.returnUserMessage = result
     })
     this.featureManager.openSnackbar(this.returnUserMessage);
