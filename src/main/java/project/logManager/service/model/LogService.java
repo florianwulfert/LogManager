@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /** @author - EugenFriesen 12.02.2021 */
 @Transactional
@@ -44,7 +45,7 @@ public class LogService {
 
   public String addLog(LogRequestDto logRequestDto) {
     logValidationService.checkIfAnyEntriesAreNull(logRequestDto);
-    if (!logValidationService.validateSeverity(logRequestDto.severity)) {
+    if (!logValidationService.validateSeverity(logRequestDto.severity.toUpperCase(Locale.ROOT))) {
       LOGGER.error(ErrorMessages.SEVERITY_NOT_REGISTERED, logRequestDto.severity);
       throw new SeverityNotFoundException(logRequestDto.severity);
     }
