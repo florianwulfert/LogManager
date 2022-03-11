@@ -8,6 +8,7 @@ import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.enums.UserColorEnum;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.exception.FirstUserUnequalActorException;
+import project.logManager.exception.ParameterNotPresentException;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -17,8 +18,6 @@ import project.logManager.service.model.UserService;
 
 import java.util.List;
 import java.util.Optional;
-
-import static project.logManager.common.message.ErrorMessages.PARAMETER_IS_MISSING;
 
 @Component
 @RequiredArgsConstructor
@@ -32,13 +31,17 @@ public class UserValidationService {
 
   public void checkIfAnyEntriesAreNull(UserRequestDto allParameters) {
     if (allParameters.actor == null
+        || allParameters.actor.equals("")
         || allParameters.name == null
+        || allParameters.name.equals("")
         || allParameters.birthdate == null
+        || allParameters.birthdate.equals("")
         || allParameters.favouriteColor == null
+        || allParameters.favouriteColor.equals("")
         || allParameters.weight == null
         || allParameters.height == null) {
-      LOGGER.info(PARAMETER_IS_MISSING);
-      throw new RuntimeException(PARAMETER_IS_MISSING);
+      LOGGER.info(ErrorMessages.PARAMETER_IS_MISSING);
+      throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
     }
   }
 

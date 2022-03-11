@@ -16,7 +16,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
-import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.common.message.TestMessages;
@@ -50,8 +49,6 @@ class UserControllerIT {
   @Autowired private UserRepository userRepository;
 
   @Autowired private LogRepository logRepository;
-
-  private static UserRequestDto userRequestDto;
 
   List<User> userList = new ArrayList<>();
 
@@ -92,7 +89,7 @@ class UserControllerIT {
             "Actor not given",
             false,
             "{\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
-            status().isInternalServerError(),
+            status().isBadRequest(),
                 ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "Color illegal",
@@ -128,31 +125,31 @@ class UserControllerIT {
             "UserNameNull",
             false,
             "{\"actor\":\"Torsten\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
-            status().isInternalServerError(),
+            status().isBadRequest(),
                 ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "birthdateIsNull",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
-            status().isInternalServerError(),
+            status().isBadRequest(),
                 ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "weightIsNull",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
-            status().isInternalServerError(),
+            status().isBadRequest(),
                 ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "heightIsNull",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"favouriteColor\":\"blue\"}",
-            status().isInternalServerError(),
+            status().isBadRequest(),
                 ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "favouriteColorIsNull",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":\"1.8\"}",
-            status().isInternalServerError(),
+            status().isBadRequest(),
                 ErrorMessages.PARAMETER_IS_MISSING));
   }
 

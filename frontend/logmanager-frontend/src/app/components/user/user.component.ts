@@ -3,7 +3,7 @@ import {UserFacade} from "../../modules/user/user.facade";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AddUserRequest} from "../../modules/user/addUser/dto/add-user-request";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 
@@ -14,15 +14,16 @@ import {FeatureManager} from "../../../assets/utils/feature.manager";
 })
 export class UserComponent implements OnInit, OnDestroy {
 
-  constructor(private userFacade: UserFacade, private _snackBar: MatSnackBar) {}
+  constructor(private userFacade: UserFacade, private _snackBar: MatSnackBar) {
+  }
 
   subscriptionManager = new SubscriptionManager();
   featureManager = new FeatureManager(this._snackBar);
   returnUserMessage: string | undefined;
 
   displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
-  listIsEmptyMessage: string = 'There are no users to show!';
   dataSource: any;
+  emptyFieldMessage: string = 'Please fill all fields'
 
   ngOnInit(): void {
     this.userFacade.getUser();
@@ -38,11 +39,11 @@ export class UserComponent implements OnInit, OnDestroy {
   position = new FormControl('above');
 
   public form: FormGroup = new FormGroup({
-    name: new FormControl(),
-    birthdate: new FormControl(),
-    height: new FormControl(),
-    weight: new FormControl(),
-    favouriteColor: new FormControl()
+    name: new FormControl('', [Validators.required]),
+    birthdate: new FormControl('', [Validators.required]),
+    height: new FormControl('', [Validators.required]),
+    weight: new FormControl('', [Validators.required]),
+    favouriteColor: new FormControl('', [Validators.required])
   })
 
   applyFilter(event: Event) {
@@ -77,5 +78,4 @@ export class UserComponent implements OnInit, OnDestroy {
     })
     this.featureManager.openSnackbar(this.returnUserMessage);
   }
-
 }

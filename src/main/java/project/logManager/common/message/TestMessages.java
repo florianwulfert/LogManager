@@ -17,7 +17,7 @@ public class TestMessages {
           + "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; "
           + "nested exception is java.lang.NumberFormatException: For input string: \"name\"";
   public static final String LOG_EXAMPLE =
-      "[{\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\"}]";
+      "[{\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\",\"user\":null}]";
   public static final String ID_FOR_LOGS_HAS_WRONG_FORMAT =
       "Required path variable was not found or request param has wrong format! "
           + "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; "

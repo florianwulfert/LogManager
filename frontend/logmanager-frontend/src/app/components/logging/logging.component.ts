@@ -1,15 +1,52 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormControl} from "@angular/forms";
+import {LogFacade} from "../../modules/logging/logs.facade";
+import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
+import {MatTableDataSource} from "@angular/material/table";
+import {FeatureManager} from "../../../assets/utils/feature.manager";
+import {MatSnackBar} from "@angular/material/snack-bar";
+
 
 @Component({
   selector: 'app-logging',
   templateUrl: './logging.component.html',
   styleUrls: ['./logging.component.scss']
 })
-export class LoggingComponent implements OnInit {
+export class LoggingComponent implements OnInit, OnDestroy {
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private logsFacade: LogFacade, private _snackBar: MatSnackBar) {
   }
 
+  subscriptionManager = new SubscriptionManager();
+  returnUserMessage: string | undefined;
+  featureManager = new FeatureManager(this._snackBar);
+
+  displayedColumns: string[] = ['message', 'severity', 'timestamp', 'user', 'delete'];
+  dataSource: any;
+
+  ngOnInit(): void {
+    this.logsFacade.getLogs()
+    this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
+      this.dataSource = new MatTableDataSource(result)
+    })
+  }
+
+  ngOnDestroy() {
+    this.subscriptionManager.clear()
+  }
+
+  position = new FormControl('above');
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  deleteLogs(): void {
+    this.logsFacade.deleteLogs();
+    this.subscriptionManager.add(this.logsFacade.stateDeleteLogs$).subscribe(result => {
+      this.returnUserMessage = result
+    })
+    this.featureManager.openSnackbar(this.returnUserMessage);
+  }
 }
