@@ -77,7 +77,7 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Message</mat-label>
-                <input matInput formControlName="message">
+                <textarea matInput formControlName="message" maxlength="250"></textarea>
                 <mat-error *ngIf="form.controls['message'].hasError('required')">
                   Message is <strong>required</strong>
                 </mat-error>
