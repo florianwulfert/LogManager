@@ -111,7 +111,7 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Birthdate</mat-label>
-                <input matInput formControlName="birthdate">
+                <input type="date" matInput formControlName="birthdate">
                 <button *ngIf="form.controls['birthdate'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['birthdate'].reset()">
                   <mat-icon>close</mat-icon>
                 </button>
