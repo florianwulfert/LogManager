@@ -12,7 +12,7 @@
       <!-- Message Column -->
       <ng-container matColumnDef="message">
         <th mat-header-cell *matHeaderCellDef> Message</th>
-        <td mat-cell *matCellDef="let element"> {{element.message}} </td>
+        <td mat-cell *matCellDef="let element" class="truncated-cell"> {{element.message}} </td>
       </ng-container>
 
       <!-- Severity Column -->
@@ -78,6 +78,10 @@
               <mat-form-field appearance="fill">
                 <mat-label>Message</mat-label>
                 <textarea matInput formControlName="message" maxlength="250"></textarea>
+                <button *ngIf="form.controls['message'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['message'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-hint align="end">{{form.controls['message'].value.length}} / 250</mat-hint>
                 <mat-error *ngIf="form.controls['message'].hasError('required')">
                   Message is <strong>required</strong>
                 </mat-error>
@@ -88,6 +92,9 @@
               <mat-form-field appearance="fill">
                 <mat-label>Severity</mat-label>
                 <input matInput formControlName="severity">
+                <button *ngIf="form.controls['severity'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['severity'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
                 <mat-error *ngIf="form.controls['severity'].hasError('required')">
                   Severity is <strong>required</strong>
                 </mat-error>
@@ -98,6 +105,9 @@
               <mat-form-field appearance="fill">
                 <mat-label>User</mat-label>
                 <input matInput formControlName="user">
+                <button *ngIf="form.controls['user'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['user'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
                 <mat-error *ngIf="form.controls['user'].hasError('required')">
                   User is <strong>required</strong>
                 </mat-error>
@@ -106,7 +116,7 @@
 
           </div>
         </form>
-        <button mat-raised-button class="create button-format" (click)="createLog()">Create</button>
+        <button mat-raised-button class="create button-format" (click)="createLog()" [disabled]="!form.valid">Create</button>
         <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
       </mat-expansion-panel>
     </mat-accordion>

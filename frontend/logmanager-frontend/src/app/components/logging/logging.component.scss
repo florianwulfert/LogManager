@@ -87,3 +87,9 @@ mat-form-field {
 mat-error {
   color: red;
 }
+
+.truncated-cell {
+  max-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
