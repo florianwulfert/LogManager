@@ -28,6 +28,9 @@ export class HeaderComponent implements OnInit {
   actorDto: ActorDto = new ActorDto()
 
   ngOnInit(): void {
+    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
+      this.name = r
+    })
   }
 
   public onToggleSidenav = () => {
@@ -43,8 +46,7 @@ export class HeaderComponent implements OnInit {
       this.actorDto.actor = result
       this.actorFacade.saveActor(this.actorDto)
       this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
-        console.log(r)
-        this.name = r.actor
+        this.name = r
       })
       this.menuTrigger.focus()
     });
