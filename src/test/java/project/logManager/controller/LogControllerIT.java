@@ -232,7 +232,7 @@ class LogControllerIT {
             "SeverityIsFalse",
             "{\"message\":\"Test\", \"severity\":\"hi\",\"user\":\"Petra\"}",
             status().isInternalServerError(),
-            String.format(ErrorMessages.SEVERITY_NOT_REGISTERED_CHOICE, "hi")),
+            String.format(ErrorMessages.SEVERITY_NOT_REGISTERED_CHOICE, "HI")),
         Arguments.of(
             "UserIsFalse",
             "{\"message\":\"Test\", \"severity\":\"INFO\",\"user\":\"Alex\"}",
