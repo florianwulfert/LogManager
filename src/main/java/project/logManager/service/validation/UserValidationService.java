@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
+import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.enums.UserColorEnum;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.exception.FirstUserUnequalActorException;
+import project.logManager.exception.ParameterNotPresentException;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -26,6 +28,22 @@ public class UserValidationService {
   private final LogRepository logRepository;
 
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
+
+  public void checkIfAnyEntriesAreNull(UserRequestDto allParameters) {
+    if (allParameters.actor == null
+        || allParameters.actor.equals("")
+        || allParameters.name == null
+        || allParameters.name.equals("")
+        || allParameters.birthdate == null
+        || allParameters.birthdate.equals("")
+        || allParameters.favouriteColor == null
+        || allParameters.favouriteColor.equals("")
+        || allParameters.weight == null
+        || allParameters.height == null) {
+      LOGGER.info(ErrorMessages.PARAMETER_IS_MISSING);
+      throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
+    }
+  }
 
   public void validateFarbenEnum(String userFarben) {
     for (UserColorEnum farbenEnum : UserColorEnum.values()) {

@@ -8,7 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.ErrorMessages;
+import project.logManager.exception.ParameterNotPresentException;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -40,6 +42,22 @@ class UserValidationServiceTest {
   @BeforeEach
   void init() {
     users = addTestUser();
+  }
+
+  @Test
+  void testIfAnyEntriesAreNull() {
+    ParameterNotPresentException ex =
+        Assertions.assertThrows(
+            ParameterNotPresentException.class,
+            () -> systemUnderTest.checkIfAnyEntriesAreNull(UserRequestDto.builder()
+                    .actor("Peter")
+                    .name("Hans")
+                    .birthdate("19.02.1995")
+                    .weight(75.0)
+                    .height(1.80)
+                    .favouriteColor(null)
+                    .build()));
+    Assertions.assertEquals(ErrorMessages.PARAMETER_IS_MISSING, ex.getMessage());
   }
 
   @Test
