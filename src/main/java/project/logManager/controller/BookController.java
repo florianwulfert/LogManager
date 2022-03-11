@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import lombok.RequiredArgsConstructor;
 import project.logManager.model.entity.Book;
 import project.logManager.service.model.BookService;
 
 @RestController
+@RequiredArgsConstructor
 public class BookController {
 
 

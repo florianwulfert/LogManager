@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import project.logManager.model.entity.Book;
 import project.logManager.model.repository.BookRepository;
 
 @Service
+@RequiredArgsConstructor
 public class BookService {
     @Autowired
     private final BookRepository bookRepository;
