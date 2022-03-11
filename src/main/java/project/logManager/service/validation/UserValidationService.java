@@ -81,13 +81,7 @@ public class UserValidationService {
 
   private void handleErsterUserUngleichActor(String actor, FirstUserUnequalActorException er) {
     try {
-      LogRequestDto logRequestDto =
-          LogRequestDto.builder()
-              .message(ErrorMessages.USER_NOT_CREATED)
-              .severity("ERROR")
-              .user(actor)
-              .build();
-      logService.addLog(logRequestDto);
+      saveLog(ErrorMessages.USER_NOT_CREATED, "ERROR", actor);
     } catch (RuntimeException rex) {
       throw new RuntimeException(er.getMessage());
     }
@@ -112,13 +106,7 @@ public class UserValidationService {
 
   private String handleUserKonnteNichtAngelegtWerden(String actor, RuntimeException ex) {
     LOGGER.error(ErrorMessages.USER_NOT_CREATED);
-    LogRequestDto logRequestDto =
-        LogRequestDto.builder()
-            .message(ErrorMessages.USER_NOT_CREATED)
-            .severity("ERROR")
-            .user(actor)
-            .build();
-    logService.addLog(logRequestDto);
+    saveLog(ErrorMessages.USER_NOT_CREATED, "ERROR", actor);
     return ex.getMessage();
   }
 
@@ -171,5 +159,15 @@ public class UserValidationService {
       LOGGER.warn(ErrorMessages.USERS_REFERENCED);
       throw new RuntimeException(ErrorMessages.USERS_REFERENCED);
     }
+  }
+
+  private void saveLog(String message, String severity, String actor) {
+    LogRequestDto logRequestDto =
+            LogRequestDto.builder()
+                    .message(message)
+                    .severity(severity)
+                    .user(actor)
+                    .build();
+    logService.addLog(logRequestDto);
   }
 }

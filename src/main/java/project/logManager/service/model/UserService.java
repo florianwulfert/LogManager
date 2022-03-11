@@ -66,13 +66,7 @@ public class UserService {
     userValidationService.checkIfExistLogByUserToDelete(userToDelete);
 
     userRepository.deleteById(id);
-    LogRequestDto logRequestDto =
-        LogRequestDto.builder()
-            .message(String.format(InfoMessages.USER_DELETED_ID, id))
-            .severity("WARNING")
-            .user(actorName)
-            .build();
-    logService.addLog(logRequestDto);
+    saveLog(String.format(InfoMessages.USER_DELETED_ID, id), "WARNING", actorName);
     LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, id));
     return String.format(InfoMessages.USER_DELETED_ID, id);
   }
@@ -84,13 +78,7 @@ public class UserService {
     userValidationService.checkIfUserToDeleteEqualsActor(name, actorName);
 
     userRepository.deleteById(user.getId());
-    LogRequestDto logRequestDto =
-        LogRequestDto.builder()
-            .message(String.format(InfoMessages.USER_DELETED_NAME, name))
-            .severity("WARNING")
-            .user(actorName)
-            .build();
-    logService.addLog(logRequestDto);
+    saveLog(String.format(InfoMessages.USER_DELETED_NAME, name), "WARNING", actorName);
     LOGGER.info(String.format(InfoMessages.USER_DELETED_NAME, name));
     return String.format(InfoMessages.USER_DELETED_NAME, name);
   }
@@ -107,18 +95,22 @@ public class UserService {
     String bmi =
         bmiService.calculateBmiAndGetBmiMessage(
             user.getBirthdate(), user.getWeight(), user.getHeight());
-    LogRequestDto logRequestDto =
-        LogRequestDto.builder()
-            .message(String.format(InfoMessages.USER_CREATED + "%s", user.getName(), bmi))
-            .severity("INFO")
-            .user(actor)
-            .build();
-    logService.addLog(logRequestDto);
+    saveLog(String.format(InfoMessages.USER_CREATED + "%s", user, bmi),"INFO", actor);
     LOGGER.info(
         String.format(
             InfoMessages.USER_CREATED
                 + bmiService.calculateBmiAndGetBmiMessage(
                     user.getBirthdate(), user.getWeight(), user.getHeight()),
             user.getName()));
+  }
+
+  private void saveLog(String message, String severity, String actor) {
+    LogRequestDto logRequestDto =
+            LogRequestDto.builder()
+                    .message(message)
+                    .severity(severity)
+                    .user(actor)
+                    .build();
+    logService.addLog(logRequestDto);
   }
 }
