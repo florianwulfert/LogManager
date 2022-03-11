@@ -22,6 +22,7 @@ public class LogValidationService {
     if (allParameters.severity == null
         || allParameters.severity.equals("")
         || allParameters.message == null
+        || allParameters.message.equals("")
         || allParameters.user == null
         || allParameters.user.equals("")) {
       LOGGER.info(ErrorMessages.PARAMETER_IS_MISSING);

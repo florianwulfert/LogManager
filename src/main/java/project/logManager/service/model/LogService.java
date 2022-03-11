@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /** @author - EugenFriesen 12.02.2021 */
 @Transactional
@@ -45,20 +44,20 @@ public class LogService {
 
   public String addLog(LogRequestDto logRequestDto) {
     logValidationService.checkIfAnyEntriesAreNull(logRequestDto);
-    if (!logValidationService.validateSeverity(logRequestDto.severity.toUpperCase(Locale.ROOT))) {
-      LOGGER.error(ErrorMessages.SEVERITY_NOT_REGISTERED, logRequestDto.severity);
-      throw new SeverityNotFoundException(logRequestDto.severity);
+    if (!logValidationService.validateSeverity(logRequestDto.getSeverity())) {
+      LOGGER.error(ErrorMessages.SEVERITY_NOT_REGISTERED, logRequestDto.getSeverity());
+      throw new SeverityNotFoundException(logRequestDto.getSeverity());
     }
     LogMessageDto logMessage = logValidationService.validateMessage(logRequestDto.message);
     User user = checkActor(logRequestDto.user);
-    saveLog(logMessage.getMessage(), logRequestDto.message, user);
+    saveLog(logMessage.getMessage(), logRequestDto.getSeverity(), user);
 
     logMessage.setReturnMessage(
         logMessage.getReturnMessage()
             + String.format(
-                InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.severity));
+                InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
     LOGGER.info(
-        String.format(InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.severity));
+        String.format(InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
     return logMessage.getReturnMessage();
   }
 
