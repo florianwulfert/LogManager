@@ -1,6 +1,22 @@
 package project.logManager.controller;
 
-import org.junit.jupiter.api.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+import javax.transaction.Transactional;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,17 +39,6 @@ import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
-
-import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
@@ -62,39 +67,39 @@ class UserControllerIT {
         Arguments.of(
             "User created",
             false,
-            "{\"actor\":\"Petra\",\"name\":\"Hugo\",\"birthdate\":\"13.12.1999\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
+            "{\"actor\":\"Petra\",\"name\":\"Hugo\",\"birthdate\":\"1999-12-13\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
             status().isOk(),
             String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Hugo", 24.07)
                 + InfoMessages.NORMAL_WEIGHT),
         Arguments.of(
             "First user has to create himself",
             true,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
+            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isInternalServerError(),
             ErrorMessages.NO_USERS_YET + "Hugo unequal Torsten"),
         Arguments.of(
             "First user created himself",
             true,
-            "{\"actor\":\"Petra\",\"name\":\"Petra\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
+            "{\"actor\":\"Petra\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isOk(),
             String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Petra", 24.07)
                 + InfoMessages.NORMAL_WEIGHT),
         Arguments.of(
             "Actor not known",
             false,
-            "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
+            "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
             status().isInternalServerError(),
             String.format(ErrorMessages.USER_NOT_FOUND_NAME, "UnknownActor")),
         Arguments.of(
             "Actor not given",
             false,
-            "{\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
+            "{\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
             status().isBadRequest(),
             ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "Color illegal",
             false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"purple\"}",
+            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"purple\"}",
             status().isInternalServerError(),
             ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE),
         Arguments.of(
@@ -106,25 +111,25 @@ class UserControllerIT {
         Arguments.of(
             "weight has wrong format",
             false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"hi\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"hi\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
             ErrorMessages.PARAMETER_WRONG_FORMAT),
         Arguments.of(
             "height has wrong format",
             false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":\"hi\",\"favouriteColor\":\"blue\"}",
+            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":\"hi\",\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
             ErrorMessages.PARAMETER_WRONG_FORMAT),
         Arguments.of(
             "User to create already exists",
             false,
-            "{\"actor\":\"Torsten\",\"name\":\"Petra\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+            "{\"actor\":\"Torsten\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isInternalServerError(),
             String.format(ErrorMessages.USER_EXISTS, "Petra")),
         Arguments.of(
             "UserNameNull",
             false,
-            "{\"actor\":\"Torsten\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+            "{\"actor\":\"Torsten\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
             ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
@@ -136,19 +141,19 @@ class UserControllerIT {
         Arguments.of(
             "weightIsNull",
             false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
             ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "heightIsNull",
             false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"favouriteColor\":\"blue\"}",
+            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"favouriteColor\":\"blue\"}",
             status().isBadRequest(),
             ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "favouriteColorIsNull",
             false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"05.11.1995\",\"weight\":\"78.0\",\"height\":\"1.8\"}",
+            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":\"1.8\"}",
             status().isBadRequest(),
             ErrorMessages.PARAMETER_IS_MISSING));
   }

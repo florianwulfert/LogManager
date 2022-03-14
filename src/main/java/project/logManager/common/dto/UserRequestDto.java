@@ -22,7 +22,7 @@ public class UserRequestDto {
       String[] bd = this.birthdate.split("-");
       return LocalDate.of(
           Integer.parseInt(bd[0]), Integer.parseInt(bd[1]), Integer.parseInt(bd[2]));
-    } catch (IndexOutOfBoundsException | DateTimeException e) {
+    } catch (IndexOutOfBoundsException | NumberFormatException | DateTimeException e) {
       throw new DateFormatException(ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT);
     }
   }
