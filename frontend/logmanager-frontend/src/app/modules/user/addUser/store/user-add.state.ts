@@ -5,5 +5,5 @@ export interface UserAddState {
 }
 
 export const USER_ADD_INITIAL_STATE: UserAddState = {
-  response: '',
+  response: ''
 }

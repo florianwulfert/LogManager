@@ -3,6 +3,7 @@ package project.logManager.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.dto.LogResponseDto;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
@@ -14,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** @author - EugenFriesen 12.02.2021 */
-@CrossOrigin
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin
 public class LogController {
 
   private final LogService logService;
@@ -35,12 +36,8 @@ public class LogController {
   }
 
   @PostMapping("/log")
-  public String addLog(
-      @RequestParam final String severity,
-      @RequestParam final String message,
-      @RequestParam final String nameUser) {
-
-    return logService.addLog(message, severity, nameUser);
+  public String addLog(@RequestBody LogRequestDto allParameters) {
+    return logService.addLog(allParameters);
   }
 
   @GetMapping("/logs/{id}")

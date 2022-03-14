@@ -9,7 +9,8 @@ export class MenuComponent implements OnInit {
 
   @Output() sidenavClose = new EventEmitter();
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

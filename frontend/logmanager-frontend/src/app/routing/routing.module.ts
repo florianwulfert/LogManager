@@ -45,4 +45,5 @@ const different: Routes = [
     RouterModule
   ]
 })
-export class RoutingModule { }
+export class RoutingModule {
+}
