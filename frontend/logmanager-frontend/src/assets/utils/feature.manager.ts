@@ -1,7 +1,8 @@
 import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
 
 export class FeatureManager {
-  constructor(private _snackBar: MatSnackBar) {}
+  constructor(private _snackBar: MatSnackBar) {
+  }
 
   openSnackbar(message: string | undefined): void {
     let horizontalPosition: MatSnackBarHorizontalPosition = 'center';

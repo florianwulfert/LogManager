@@ -40,7 +40,8 @@ public class RestExceptionHandler {
   @ResponseBody
   @ExceptionHandler(HttpMessageNotReadableException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  String invalidFormatExceptionHandler(HttpMessageNotReadableException httpMessageNotReadableException) {
+  String invalidFormatExceptionHandler(
+      HttpMessageNotReadableException httpMessageNotReadableException) {
     return PARAMETER_WRONG_FORMAT;
   }
 }

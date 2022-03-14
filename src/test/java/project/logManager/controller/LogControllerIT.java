@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -158,12 +159,10 @@ class LogControllerIT {
           mockMvc
               .perform(get("/logs").param("severity", "hi"))
               .andDo(print())
-              .andExpect(status().isInternalServerError())
+              .andExpect(status().isOk())
               .andReturn();
 
-      assertEquals(
-          "Severity hi not registered. Please choose one of the following options: TRACE, DEBUG, INFO, WARNING, ERROR, FATAL",
-          result.getResponse().getContentAsString());
+      assertEquals("{\"result\":[]}", result.getResponse().getContentAsString());
     }
 
     @Test
@@ -210,69 +209,54 @@ class LogControllerIT {
   private static Stream<Arguments> addLogArguments() {
     return Stream.of(
         Arguments.of(
-            "PostLog", "INFO", "Test", "Petra", status().isOk(), "Message \"Test\" saved as INFO!"),
+            "PostLog",
+            "{\"message\":\"Test\",\"severity\":\"INFO\",\"user\":\"Petra\"}",
+            status().isOk(),
+            "Message \"Test\" saved as INFO!"),
         Arguments.of(
             "MessageIsMissing",
-            "DEBUG",
-            null,
-            "Petra",
+            "{\"severity\":\"INFO\",\"user\":\"Petra\"}",
             status().isBadRequest(),
-            ErrorMessages.MESSAGE_NOT_PRESENT),
+            ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "SeverityIsMissing",
-            null,
-            "Severity fehlt",
-            "Petra",
+            "{\"message\":\"Test\",\"user\":\"Petra\"}",
             status().isBadRequest(),
-            ErrorMessages.SEVERITY_NOT_PRESENT),
+            ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "UserIsMissing",
-            "INFO",
-            "Test",
-            null,
+            "{\"message\":\"Test\",\"severity\":\"INFO\"}",
             status().isBadRequest(),
-            ErrorMessages.NAME_USER_NOT_PRESENT),
+            ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "SeverityIsFalse",
-            "hi",
-            "Test",
-            "Petra",
+            "{\"message\":\"Test\", \"severity\":\"hi\",\"user\":\"Petra\"}",
             status().isInternalServerError(),
-            String.format(ErrorMessages.SEVERITY_NOT_REGISTERED_CHOICE, "hi")),
+            String.format(ErrorMessages.SEVERITY_NOT_REGISTERED_CHOICE, "HI")),
         Arguments.of(
             "UserIsFalse",
-            "INFO",
-            "Test",
-            "Hans",
+            "{\"message\":\"Test\", \"severity\":\"INFO\",\"user\":\"Alex\"}",
             status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Hans")),
+            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Alex")),
         Arguments.of(
             "KatzeToHund",
-            "INFO",
-            "Katze",
-            "Petra",
+            "{\"message\":\"Katze\", \"severity\":\"INFO\",\"user\":\"Petra\"}",
             status().isOk(),
             InfoMessages.KATZE_TO_HUND + "\n" + InfoMessages.HUND_SAVED));
   }
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("addLogArguments")
-  void testAddLog(
-      String testName,
-      String severity,
-      String message,
-      String nameUser,
-      ResultMatcher status,
-      String returnMessage)
+  void testAddLog(String testName, String testData, ResultMatcher status, String returnMessage)
       throws Exception {
     createUser();
     MvcResult result =
         mockMvc
             .perform(
                 post("/log")
-                    .param("severity", severity)
-                    .param("message", message)
-                    .param("nameUser", nameUser))
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(testData)
+                    .accept(MediaType.APPLICATION_JSON_VALUE))
             .andDo(print())
             .andExpect(status)
             .andReturn();

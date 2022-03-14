@@ -2,26 +2,26 @@ table {
   width: 100%;
 }
 
-.page{
+.page {
   margin-top: 20px;
   margin-left: 40px;
   margin-right: 40px;
 }
 
-th{
+th {
   color: #180c65;
 }
 
-.deleteButton{
-  margin-right: -40px;
+.deleteButton {
+  margin-right: -30px;
 }
 
-.main-deleteButton{
-  margin-right: -40px;
+.main-deleteButton {
+  margin-right: -30px;
   transform: scale(1.3);
 }
 
-.createUser{
+.createUser {
   background-color: #180c65;
   color: white;
   text-decoration: none;
@@ -42,42 +42,54 @@ th{
   transform: scale(1.03);
 }
 
-.search{
+.search {
   background-color: #180c65;
   color: white;
 }
 
-.rightSide{
+.rightSide {
   margin-bottom: 70px;
 }
 
-.create-user-body{
+.create-user-body {
   margin-left: 30px;
 }
 
-mat-form-field{
+mat-form-field {
   width: 100%;
+  margin-bottom: 10px;
 }
 
-.filter{
+.filter {
   width: 350px;
+  margin-bottom: 0;
 }
 
-.create{
+.create {
   background-color: #180c65;
   color: white;
 }
 
-.reset{
+.reset {
   background-color: #efebeb;
 }
 
-.refresh-button-position{
+.refresh-button-position {
   margin-top: 20px;
 }
 
-.button-format{
+.button-format {
   margin-left: 10px;
   width: 150px;
   float: right;
+}
+
+mat-error {
+  color: red;
+}
+
+.truncated-cell {
+  max-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }

@@ -10,20 +10,22 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name="book")
 public class Book {
-    
-    @Column
-    private String titel;
-    @Column
-    private Integer erscheinungsjahr;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
+
+   @Column private String titel;
+   @Column private Integer erscheinungsjahr;
+
 }

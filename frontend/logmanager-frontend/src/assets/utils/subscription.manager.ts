@@ -4,7 +4,8 @@ import {takeUntil} from "rxjs/operators";
 export class SubscriptionManager {
   public readonly observableCollection = new Subject();
 
-  constructor() {}
+  constructor() {
+  }
 
   add(subject: Observable<any>): Observable<any> {
     return subject.pipe(takeUntil(this.observableCollection));

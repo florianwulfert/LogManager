@@ -1,7 +1,7 @@
 <div class="page row">
   <h1>List of users</h1>
 
-  <div class="col">
+  <div class="col-12 col-lg-8">
     <mat-form-field appearance="standard" class="filter">
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter" #input>
@@ -79,7 +79,7 @@
     </table>
   </div>
 
-  <div class="col">
+  <div class="col-12 col-lg-4">
     <div class="rightSide"></div>
     <mat-accordion multi>
       <mat-expansion-panel>
@@ -98,7 +98,10 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Name</mat-label>
-                <input matInput formControlName="name" >
+                <input matInput formControlName="name">
+                <button *ngIf="form.controls['name'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['name'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
                 <mat-error *ngIf="form.controls['name'].hasError('required')">
                   Name is <strong>required</strong>
                 </mat-error>
@@ -108,7 +111,10 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Birthdate</mat-label>
-                <input matInput formControlName="birthdate">
+                <input type="date" matInput formControlName="birthdate">
+                <button *ngIf="form.controls['birthdate'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['birthdate'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
                 <mat-error *ngIf="form.controls['birthdate'].hasError('required')">
                   Birthdate is <strong>required</strong>
                 </mat-error>
@@ -119,6 +125,9 @@
               <mat-form-field appearance="fill">
                 <mat-label>Weight</mat-label>
                 <input matInput formControlName="weight">
+                <button *ngIf="form.controls['weight'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['weight'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
                 <mat-error *ngIf="form.controls['weight'].hasError('required')">
                   Weight is <strong>required</strong>
                 </mat-error>
@@ -129,6 +138,9 @@
               <mat-form-field appearance="fill">
                 <mat-label>Height</mat-label>
                 <input matInput formControlName="height">
+                <button *ngIf="form.controls['height'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['height'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
                 <mat-error *ngIf="form.controls['height'].hasError('required')">
                   Height is <strong>required</strong>
                 </mat-error>
@@ -139,6 +151,9 @@
               <mat-form-field appearance="fill">
                 <mat-label>Favourite Color</mat-label>
                 <input matInput formControlName="favouriteColor">
+                <button *ngIf="form.controls['favouriteColor'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['favouriteColor'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
                 <mat-error *ngIf="form.controls['favouriteColor'].hasError('required')">
                   Favourite color is <strong>required</strong>
                 </mat-error>
@@ -146,7 +161,7 @@
             </div>
           </div>
         </form>
-        <button mat-raised-button class="create button-format" (click)="createUser()">Create</button>
+        <button mat-raised-button class="create button-format" (click)="createUser()" [disabled]="!form.valid">Create</button>
         <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
       </mat-expansion-panel>
     </mat-accordion>
