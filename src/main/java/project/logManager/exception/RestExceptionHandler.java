@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import project.logManager.common.message.ErrorMessages;
 
 import static project.logManager.common.message.ErrorMessages.PARAMETER_MISSING_OR_WRONG_FORMAT;
-import static project.logManager.common.message.ErrorMessages.PARAMETER_WRONG_FORMAT;
 
 /** @author - EugenFriesen 14.02.2021 */
 @RestControllerAdvice
@@ -41,6 +41,6 @@ public class RestExceptionHandler {
   @ExceptionHandler(HttpMessageNotReadableException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   String invalidFormatExceptionHandler(HttpMessageNotReadableException httpMessageNotReadableException) {
-    return PARAMETER_WRONG_FORMAT;
+    return ErrorMessages.PARAMETER_WRONG_FORMAT;
   }
 }

@@ -26,11 +26,13 @@ export class BmiComponent implements OnInit {
   public form: FormGroup = new FormGroup({
     weight: new FormControl('', [Validators.required]),
     height: new FormControl('', [Validators.required]),
+    birthdate: new FormControl('', [Validators.required])
   })
 
   prepareCalcBmiRequest(request: CalculateBmiRequest): CalculateBmiRequest {
     request.weight = this.form.get("weight")?.value
     request.height = this.form.get("height")?.value
+    request.birthdate = this.form.get("birthdate")?.value
     return request;
   }
 

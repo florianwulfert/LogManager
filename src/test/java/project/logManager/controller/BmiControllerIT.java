@@ -79,6 +79,8 @@ class BmiControllerIT {
             "01.01.2000", null, "1.75", status().isBadRequest(), ErrorMessages.WEIGHT_NOT_PRESENT),
         Arguments.of(
             null, "75.0", "1.75", status().isBadRequest(), ErrorMessages.BIRTHDATE_NOT_PRESENT),
+            Arguments.of(
+                    "08.03.2002", "hi", "1.75", status().isBadRequest(), ErrorMessages.BIRTHDATE_NOT_PRESENT),
         Arguments.of("01.01.2008", "75.0", "1.75", status().isOk(), ErrorMessages.USER_TOO_YOUNG));
   }
 
