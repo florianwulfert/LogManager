@@ -20,9 +20,7 @@ public class UserController {
   @PostMapping("/user")
   public String addUser(@RequestBody UserRequestDto allParameters) {
     return String.format(
-        "User %s was created. "
-            + userService.addUser(allParameters),
-        allParameters.name);
+        "User %s was created. " + userService.addUser(allParameters), allParameters.name);
   }
 
   @GetMapping("/users")

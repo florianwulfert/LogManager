@@ -23,10 +23,11 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {UserModule} from "./modules/user/user.module";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {LogModule} from "./modules/logging/logs.module";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -59,7 +60,9 @@ import {LogModule} from "./modules/logging/logs.module";
     ReactiveFormsModule,
     MatSnackBarModule,
     MatTooltipModule,
-    LogModule
+    LogModule,
+    MatSelectModule,
+    FormsModule
   ],
   exports: [
     BrowserModule,

@@ -18,7 +18,7 @@ import {catchError} from 'rxjs/operators';
 import {UserService} from "./user.service";
 import {AddUserRequest} from "./addUser/dto/add-user-request";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class UserEffects {
   get$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
@@ -26,7 +26,7 @@ export class UserEffects {
       switchMap(() =>
         this.userService.getUsers().pipe(
           map((getUserResponse) => getUserResponseAction(getUserResponse)),
-          catchError((error: string) => of(loadGetUserErrorAction({ error })))
+          catchError((error: string) => of(loadGetUserErrorAction({error})))
         )
       )
     )
@@ -35,10 +35,10 @@ export class UserEffects {
   add$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(addUserAction),
-      switchMap((addUserRequest:AddUserRequest) =>
+      switchMap((addUserRequest: AddUserRequest) =>
         this.userService.addUser(addUserRequest).pipe(
           map((addUserResponse) => addUserResponseAction(addUserResponse)),
-          catchError((error: string) => of(loadAddUserErrorAction({ error })))
+          catchError((error: string) => of(loadAddUserErrorAction({error})))
         )
       )
     )
@@ -50,11 +50,12 @@ export class UserEffects {
       switchMap(() =>
         this.userService.deleteUser().pipe(
           map((deleteUserResponse) => deleteUserResponseAction(deleteUserResponse)),
-          catchError((error: string) => of(loadDeleteUserErrorAction({ error })))
+          catchError((error: string) => of(loadDeleteUserErrorAction({error})))
         )
       )
     )
   );
 
-  constructor(private readonly actions$: Actions, private readonly userService: UserService) {}
+  constructor(private readonly actions$: Actions, private readonly userService: UserService) {
+  }
 }
