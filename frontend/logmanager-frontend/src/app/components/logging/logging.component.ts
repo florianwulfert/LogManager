@@ -23,6 +23,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   featureManager = new FeatureManager(this._snackBar);
 
   displayedColumns: string[] = ['message', 'severity', 'timestamp', 'user', 'delete'];
+  severities: string[] = ['TRACE', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'FATAL'];
   dataSource: any;
 
   ngOnInit(): void {
@@ -57,7 +58,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
     user: new FormControl('', [Validators.required]),
   })
 
-  prepareAddLogRequest(request: AddLogRequest): AddLogRequest {
+  prepareAddLogRequest(request: AddLogRequest) {
     request.message = this.form.get("message")?.value
     request.severity = this.form.get("severity")?.value
     request.user = this.form.get("user")?.value
@@ -66,7 +67,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
   createLog(): void {
     let request = new AddLogRequest
-    request = this.prepareAddLogRequest(request)
+    this.prepareAddLogRequest(request)
     this.logsFacade.addLog(request);
     this.subscriptionManager.add(this.logsFacade.stateAddLog$).subscribe(result => {
       this.returnUserMessage = result

@@ -92,12 +92,12 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Severity</mat-label>
-                <input matInput formControlName="severity">
-                <button *ngIf="form.controls['severity'].value" matSuffix mat-icon-button aria-label="Clear"
-                        (click)="form.controls['severity'].reset()">
-                  <mat-icon>close</mat-icon>
-                </button>
-                <mat-error *ngIf="form.controls['severity'].hasError('required')">
+                <mat-select formControlName="severity">
+                  <mat-option *ngFor="let severity of severities" [value]="severity">
+                    {{severity}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.controls['user'].hasError('required')">
                   Severity is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
@@ -119,8 +119,7 @@
 
           </div>
         </form>
-        <button mat-raised-button class="create button-format" (click)="createLog()" [disabled]="!form.valid">Create
-        </button>
+        <button mat-raised-button class="create button-format" (click)="createLog()" [disabled]="!form.valid">Create</button>
         <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
       </mat-expansion-panel>
     </mat-accordion>
