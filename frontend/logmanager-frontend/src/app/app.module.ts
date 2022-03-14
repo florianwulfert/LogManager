@@ -27,6 +27,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {LogModule} from "./modules/logging/logs.module";
+import {BmiModule} from "./modules/bmi/bmi.module";
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import {LogModule} from "./modules/logging/logs.module";
     ReactiveFormsModule,
     MatSnackBarModule,
     MatTooltipModule,
-    LogModule
+    LogModule,
+    BmiModule
   ],
   exports: [
     BrowserModule,
