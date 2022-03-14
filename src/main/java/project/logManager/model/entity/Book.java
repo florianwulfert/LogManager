@@ -22,12 +22,8 @@ public class Book {
     @Column
     private Integer erscheinungsjahr;
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
-
-
-
 }
