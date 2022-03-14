@@ -21,7 +21,7 @@ public class BookController {
 private final BookService bookService;
 
 
-@GetMapping("/Books")
+@GetMapping("/books")
 public List<Book> getAllBooks(){ 
 
     return bookService.getAllBooks();
@@ -33,10 +33,16 @@ public List<Book> getAllBooks(){
 public Book addBook(@RequestParam String titel, @RequestParam Integer erscheinungsjahr){
 
     return bookService.addBook(erscheinungsjahr,titel);
+
 }
 
 
 
+@GetMapping("/searchBook")
+public List<Book> findBooksBytitel(@RequestParam String titel) {
+
+    return bookService.searchBooksByTitel(titel);
+}
 }
 
 
