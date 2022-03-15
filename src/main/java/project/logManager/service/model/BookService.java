@@ -2,12 +2,12 @@ package project.logManager.service.model;
 
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
-
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.Book;
 import project.logManager.model.repository.BookRepository;
 
@@ -28,17 +28,18 @@ public class BookService {
         Book book=new Book();
         book.setErscheinungsjahr(erscheinungsjahr);
         book.setTitel(titel);
-        LOGGER.info("Neu Book wurde erstellt");
+        saveBook(book);
+        LOGGER.info(String.format(InfoMessages.BOOK_CREATED,titel));
         return saveBook(book);
     }
 
     public List<Book> getAllBooks(){
-        LOGGER.info("Alle Bücher werden ausgegeben ");
+        LOGGER.info("all Books founds");
         return bookRepository.findAll();
     }
 
     public List<Book> searchBooksByTitel(String titel){
-        LOGGER.info("Die Bücher mit dem eingegebene Titel sind ausgegeben");
+        LOGGER.info(String.format(InfoMessages.Book_CREATED_TITELE, titel));
         return bookRepository.findByTitel(titel);
     }
 
