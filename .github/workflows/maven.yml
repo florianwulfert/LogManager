@@ -55,7 +55,7 @@ jobs:
         working-directory: frontend/logmanager-frontend
         run: npm install
       - name: Initialization for Linting
-        working-directory: frontend/logmanager-frontend/node_modules/bin
+        working-directory: frontend/logmanager-frontend/node_modules/.bin
         run: eslint --init
       - name: Lint
         working-directory: frontend/logmanager-frontend
