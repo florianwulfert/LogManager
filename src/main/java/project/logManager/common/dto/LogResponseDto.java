@@ -13,5 +13,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LogResponseDto {
-    List<LogDTO> result;
+  List<LogDTO> result;
 }
