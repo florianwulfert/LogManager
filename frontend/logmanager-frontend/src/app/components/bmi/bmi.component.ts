@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {CalculateBmiRequest} from "../../modules/bmi/calculate-bmi/dto/calculate-bmi-request";
 import {BmiFacade} from "../../modules/bmi/bmi.facade";
@@ -11,7 +11,7 @@ import {FeatureManager} from "../../../assets/utils/feature.manager";
   templateUrl: './bmi.component.html',
   styleUrls: ['./bmi.component.scss']
 })
-export class BmiComponent implements OnInit {
+export class BmiComponent {
 
   constructor(private bmiFacade: BmiFacade, private _snackBar: MatSnackBar) {
   }
@@ -19,9 +19,6 @@ export class BmiComponent implements OnInit {
   subscriptionManager = new SubscriptionManager();
   featureManager = new FeatureManager(this._snackBar);
   returnUserMessage: string | undefined;
-
-  ngOnInit(): void {
-  }
 
   public form: FormGroup = new FormGroup({
     weight: new FormControl('', [Validators.required]),
