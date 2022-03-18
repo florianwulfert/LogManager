@@ -82,7 +82,7 @@
                         (click)="form.controls['message'].reset()">
                   <mat-icon>close</mat-icon>
                 </button>
-                <mat-hint *ngIf="form.controls['message'].value != null" align="end">{{form.controls['message'].value.length}} / 250</mat-hint>
+                <mat-hint *ngIf="form.controls['message'].value !== null" align="end">{{form.controls['message'].value.length}} / 250</mat-hint>
                 <mat-error *ngIf="form.controls['message'].hasError('required')">
                   Message is <strong>required</strong>
                 </mat-error>

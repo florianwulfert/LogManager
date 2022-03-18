@@ -11,7 +11,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  backend-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -31,18 +31,32 @@ jobs:
         run: mvn verify
   frontend-build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-
       - name: Install dependencies
         working-directory: frontend/logmanager-frontend
         run: npm install
-
       - name: Build
         working-directory: frontend/logmanager-frontend
         run: npm run build
+  frontend-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Install dependencies
+        working-directory: frontend/logmanager-frontend
+        run: npm install
+      - name: Initialization for Linting
+        working-directory: frontend/logmanager-frontend/node_modules/.bin
+        run: ./eslint --init
+      - name: Lint
+        working-directory: frontend/logmanager-frontend
+        run: npm run lint
