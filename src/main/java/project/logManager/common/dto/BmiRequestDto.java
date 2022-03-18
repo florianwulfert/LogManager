@@ -16,11 +16,15 @@ public class BmiRequestDto {
     public Double height;
 
     public LocalDate getBirthdateAsLocalDate() {
+        return getLocalDate(this.birthdate);
+    }
+
+    static LocalDate getLocalDate(String birthdate) {
         try {
-            String[] bd = this.birthdate.split("\\.");
+            String[] bd = birthdate.split("-");
             return LocalDate.of(
-                    Integer.parseInt(bd[2]), Integer.parseInt(bd[1]), Integer.parseInt(bd[0]));
-        } catch (IndexOutOfBoundsException | DateTimeException e) {
+                    Integer.parseInt(bd[0]), Integer.parseInt(bd[1]), Integer.parseInt(bd[2]));
+        } catch (IndexOutOfBoundsException | NumberFormatException | DateTimeException e) {
             throw new DateFormatException(ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT);
         }
     }

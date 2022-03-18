@@ -15,7 +15,8 @@ public class BmiController {
 
   @GetMapping("/bmi")
   public String getBmi(@RequestBody BmiRequestDto parameters) {
-    return bmiService.calculateBmiAndGetBmiMessage(parameters.getBirthdateAsLocalDate(), parameters.weight, parameters.height);
+    return bmiService.calculateBmiAndGetBmiMessage(
+        parameters.getBirthdateAsLocalDate(), parameters.weight, parameters.height);
   }
 
   @GetMapping("/bmi/{user}")

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -44,57 +45,57 @@ class BmiControllerIT {
   private static Stream<Arguments> getBmiArguments() {
     return Stream.of(
         Arguments.of(
-            "01.01.2003",
-            "75.7",
-            "1.85",
+            "{\"birthdate\":\"2003-01-01\",\"weight\":\"75.7\",\"height\":\"1.85\"}",
             status().isOk(),
             String.format(InfoMessages.BMI_MESSAGE, 22.11) + InfoMessages.NORMAL_WEIGHT),
         Arguments.of(
-            "01.01.1987",
-            "95.2",
-            "1.82",
+            "{\"birthdate\":\"2003-01-01\",\"weight\":\"100.5\",\"height\":\"1.85\"}",
             status().isOk(),
-            String.format(InfoMessages.BMI_MESSAGE, 28.74) + InfoMessages.OVERWEIGHT),
+            String.format(InfoMessages.BMI_MESSAGE, 29.36) + InfoMessages.OVERWEIGHT),
         Arguments.of(
-            "01.01.2003",
-            "61.3",
-            "1.83",
+            "{\"birthdate\":\"2003-01-01\",\"weight\":\"45.1\",\"height\":\"1.85\"}",
             status().isOk(),
-            String.format(InfoMessages.BMI_MESSAGE, 18.3) + InfoMessages.UNDERWEIGHT),
+            String.format(InfoMessages.BMI_MESSAGE, 13.17) + InfoMessages.UNDERWEIGHT),
         Arguments.of(
-            "01.01.1987",
-            "0",
-            "0",
+            "{\"birthdate\":\"2003-01-01\",\"weight\":\"0\",\"height\":\"0\"}",
             status().isInternalServerError(),
             ErrorMessages.INFINITE_OR_NAN),
         Arguments.of(
-            "01.01.1987",
-            "-1",
-            "-1",
+            "{\"birthdate\":\"2003-01-01\",\"weight\":\"-1\",\"height\":\"1\"}",
             status().isInternalServerError(),
             ErrorMessages.COULD_NOT_CALCULATE),
         Arguments.of(
-            "01.01.2000", "75.0", null, status().isBadRequest(), ErrorMessages.HEIGHT_NOT_PRESENT),
+            "{\"birthdate\":\"2003-01-01\",\"weight\":\"75.7\"}",
+            status().isBadRequest(),
+            ErrorMessages.HEIGHT_NOT_PRESENT),
         Arguments.of(
-            "01.01.2000", null, "1.75", status().isBadRequest(), ErrorMessages.WEIGHT_NOT_PRESENT),
+            "{\"birthdate\":\"2003-01-01\",\"height\":\"1.85\"}",
+            status().isBadRequest(),
+            ErrorMessages.WEIGHT_NOT_PRESENT),
         Arguments.of(
-            null, "75.0", "1.75", status().isBadRequest(), ErrorMessages.BIRTHDATE_NOT_PRESENT),
-            Arguments.of(
-                    "08.03.2002", "hi", "1.75", status().isBadRequest(), ErrorMessages.BIRTHDATE_NOT_PRESENT),
-        Arguments.of("01.01.2008", "75.0", "1.75", status().isOk(), ErrorMessages.USER_TOO_YOUNG));
+            "{\"weight\":\"75.7\",\"height\":\"1.85\"}",
+            status().isBadRequest(),
+            ErrorMessages.BIRTHDATE_NOT_PRESENT),
+        Arguments.of(
+            "{\"birthdate\":\"2003-01-01\",\"weight\":\"hi\",\"height\":\"1.85\"}",
+            status().isBadRequest(),
+            ErrorMessages.PARAMETER_WRONG_FORMAT),
+        Arguments.of(
+            "{\"birthdate\":\"2009-01-01\",\"weight\":\"75.7\",\"height\":\"1.85\"}",
+            status().isOk(),
+            ErrorMessages.USER_TOO_YOUNG));
   }
 
-  @ParameterizedTest(name = "{4}")
+  @ParameterizedTest
   @MethodSource("getBmiArguments")
-  void testGetBmi(String date, String weight, String height, ResultMatcher status, String message)
-      throws Exception {
+  void testGetBmi(String testData, ResultMatcher status, String message) throws Exception {
     MvcResult result =
         mockMvc
             .perform(
                 get("/bmi")
-                    .param("birthdate", date)
-                    .param("weight", weight)
-                    .param("height", height))
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(testData)
+                    .accept(MediaType.APPLICATION_JSON_VALUE))
             .andDo(print())
             .andExpect(status)
             .andReturn();
