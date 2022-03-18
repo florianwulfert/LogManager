@@ -13,8 +13,7 @@ import {
   loadGetUserErrorAction
 } from 'src/app/modules/user/user.actions'
 import {Observable, of} from 'rxjs';
-import {map, switchMap} from 'rxjs/internal/operators';
-import {catchError} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {UserService} from "./user.service";
 import {AddUserRequest} from "./addUser/dto/add-user-request";
 

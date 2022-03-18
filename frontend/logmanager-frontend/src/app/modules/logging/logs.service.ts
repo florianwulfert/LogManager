@@ -1,8 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable, throwError} from "rxjs";
-import {map} from "rxjs/internal/operators";
-import {catchError} from "rxjs/operators";
+import {catchError, map} from "rxjs/operators";
 import {GetLogsResponse} from "./getLogs/dto/get-logs-response";
 import {DeleteLogsResponse} from "./deleteLogs/dto/delete-logs-response";
 import {AddLogResponse} from "./addLogs/dto/add-log-response";
