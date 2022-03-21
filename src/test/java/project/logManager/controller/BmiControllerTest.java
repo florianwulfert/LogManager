@@ -24,7 +24,7 @@ class BmiControllerTest {
   @Test
   void testGetBmi() {
     BmiRequestDto testDto =
-        BmiRequestDto.builder().birthdate("05.10.1994").weight(75.0).height(1.65).build();
+        BmiRequestDto.builder().birthdate("1994-10-10").weight(75.0).height(1.65).build();
     systemUnderTest.getBmi(testDto);
     Mockito.verify(bmiService)
         .calculateBmiAndGetBmiMessage(
