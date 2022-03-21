@@ -28,9 +28,7 @@ export class HeaderComponent implements OnInit {
   actorDto: ActorDto = new ActorDto()
 
   ngOnInit(): void {
-    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
-      this.name = r
-    })
+    this.openDialog()
   }
 
   public onToggleSidenav = () => {
