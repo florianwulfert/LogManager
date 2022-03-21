@@ -57,18 +57,18 @@ public class BookService {
     }
 
     public String deleteByTitel(String titel , String actor){
-        List<Book> deletBooks=bookRepository.findByTitel(titel);
-          if(deletBooks.isEmpty()){
+        List<Book> deleteBooks=bookRepository.findByTitel(titel);
+          if(deleteBooks.isEmpty()){
             LOGGER.info(InfoMessages.NO_BOOKS_FOUNDS,titel);
             return InfoMessages.NO_BOOKS_FOUNDS;
-        } else if (deletBooks.size()==1){
-             bookRepository.deleteById(deletBooks.get(0).getId());
+        } else if (deleteBooks.size()==1){
+             bookRepository.deleteById(deleteBooks.get(0).getId());
              saveLog(String.format(InfoMessages.BOOK_DELETED_TITLE, titel),"INFO", actor);
              return String.format(InfoMessages.BOOK_DELETED_TITLE,titel);
             }
         else{
             String listString="";
-            for(Book b : deletBooks){
+            for(Book b : deleteBooks)
                 if (!listString.equals("")){
                     listString=listString+", ";
                 }
