@@ -7,9 +7,9 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
-import {HeaderComponent} from "./components/header/header.component";
+import {HeaderComponent} from "./components/navigation/header/header.component";
 import {MatSidenavModule} from "@angular/material/sidenav";
-import {MenuComponent} from './components/menu/menu.component';
+import {MenuComponent} from './components/navigation/menu/menu.component';
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
 import {BmiComponent} from './components/bmi/bmi.component';
@@ -28,6 +28,9 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {LogModule} from "./modules/logging/logs.module";
 import {MatSelectModule} from "@angular/material/select";
+import {MatDialogModule} from "@angular/material/dialog";
+import {ProfileMenuComponent} from './components/navigation/profile-menu/profile-menu.component';
+import {ActorModule} from "./modules/actor/actor.module"
 
 @NgModule({
   declarations: [
@@ -38,6 +41,7 @@ import {MatSelectModule} from "@angular/material/select";
     BmiComponent,
     LoggingComponent,
     HomeComponent,
+    ProfileMenuComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,6 +64,11 @@ import {MatSelectModule} from "@angular/material/select";
     ReactiveFormsModule,
     MatSnackBarModule,
     MatTooltipModule,
+    MatDialogModule,
+    FormsModule,
+    MatTooltipModule,
+    LogModule,
+    ActorModule,
     LogModule,
     MatSelectModule,
     FormsModule

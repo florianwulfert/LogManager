@@ -14,7 +14,7 @@ mat-toolbar {
 
 @media (max-width: 959px) {
   mat-toolbar {
-    border-radius: 0px;
+    border-radius: 0;
   }
 }
 
@@ -30,4 +30,18 @@ mat-icon {
   margin-left: 18px;
 }
 
+.profile {
+  position: absolute;
+  right: 20px;
+}
 
+.welcome-sign {
+  position: absolute;
+  right: 90px;
+  color: white;
+}
+
+.sign-in-field{
+  text-align: center;
+  color: #180c65;
+}

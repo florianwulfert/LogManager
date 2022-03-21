@@ -7,18 +7,22 @@ import {catchError} from "rxjs/operators";
 import {AddUserResponse} from "./addUser/dto/add-user-response";
 import {AddUserRequest} from "./addUser/dto/add-user-request";
 import {DeleteUserResponse} from "./deleteUser/dto/delete-user-response";
+import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
+import {ActorFacade} from "../actor/actor.facade";
 
 const API_BASE = 'http://localhost:8081/users';
 const API_ADD_USER = 'http://localhost:8081/user';
 const API_DELETE_USER = 'http://localhost:8081/user/delete';
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private readonly http: HttpClient) {
+  constructor(private readonly http: HttpClient, private readonly actorFacade: ActorFacade) {
   }
+
+  name: string | undefined
+  subscriptionManager = new SubscriptionManager();
 
   getUsers(): Observable<GetUserResponse> {
     return this.http.get<GetUserResponse>(API_BASE, {
@@ -36,7 +40,10 @@ export class UserService {
   }
 
   addUser(addUserRequest: AddUserRequest): Observable<AddUserResponse> {
-    return this.http.post<any>(API_ADD_USER, {...addUserRequest, actor: 'Peter'}, {
+    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
+      this.name = r
+    })
+    return this.http.post<any>(API_ADD_USER, {...addUserRequest, actor: this.name}, {
       observe: 'response'
     }).pipe(
       map((r) => {

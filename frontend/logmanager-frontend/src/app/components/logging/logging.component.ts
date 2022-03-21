@@ -55,13 +55,11 @@ export class LoggingComponent implements OnInit, OnDestroy {
   public form: FormGroup = new FormGroup({
     message: new FormControl('', [Validators.required]),
     severity: new FormControl('', [Validators.required]),
-    user: new FormControl('', [Validators.required]),
   })
 
   prepareAddLogRequest(request: AddLogRequest) {
     request.message = this.form.get("message")?.value
     request.severity = this.form.get("severity")?.value
-    request.user = this.form.get("user")?.value
     return request;
   }
 
