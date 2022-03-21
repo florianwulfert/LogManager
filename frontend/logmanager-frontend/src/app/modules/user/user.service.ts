@@ -17,7 +17,8 @@ const API_DELETE_USER = 'http://localhost:8081/user/delete';
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {
+  }
 
   getUsers(): Observable<GetUserResponse> {
     return this.http.get<GetUserResponse>(API_BASE, {
@@ -29,13 +30,13 @@ export class UserService {
         }
       }),
       catchError(() => {
-          return throwError('Due to technical issues it is currently not possible to request users.');
+        return throwError('Due to technical issues it is currently not possible to request users.');
       })
     );
   }
 
   addUser(addUserRequest: AddUserRequest): Observable<AddUserResponse> {
-    return this.http.post<any>(API_ADD_USER, {...addUserRequest, actor: 'Peter'},{
+    return this.http.post<any>(API_ADD_USER, {...addUserRequest, actor: 'Peter'}, {
       observe: 'response'
     }).pipe(
       map((r) => {

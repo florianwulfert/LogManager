@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.logManager.common.dto.LogMessageDto;
+import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.exception.SeverityNotFoundException;
@@ -36,26 +37,27 @@ public class LogService {
 
   public List<LogDTO> getLogs(
       String severity, String message, LocalDateTime startDate, LocalDateTime endDate) {
-    if (!logValidationService.validateSeverity(severity)) {
-      LOGGER.error(ErrorMessages.SEVERITY_NOT_REGISTERED, severity);
-      throw new SeverityNotFoundException(severity);
-    }
-    return logDTOMapper.logsToLogDTOs(logRepository.findLogs(severity, message, startDate, endDate));
+
+    return logDTOMapper.logsToLogDTOs(
+        logRepository.findLogs(severity, message, startDate, endDate));
   }
 
-  public String addLog(String message, String severity, String userName) {
-    if (!logValidationService.validateSeverity(severity)) {
-      LOGGER.error(ErrorMessages.SEVERITY_NOT_REGISTERED, severity);
-      throw new SeverityNotFoundException(severity);
+  public String addLog(LogRequestDto logRequestDto) {
+    logValidationService.checkIfAnyEntriesAreNull(logRequestDto);
+    if (!logValidationService.validateSeverity(logRequestDto.getSeverity())) {
+      LOGGER.error(ErrorMessages.SEVERITY_NOT_REGISTERED, logRequestDto.getSeverity());
+      throw new SeverityNotFoundException(logRequestDto.getSeverity());
     }
-    LogMessageDto logMessage = logValidationService.validateMessage(message);
-    User user = checkActor(userName);
-    saveLog(logMessage.getMessage(), severity, user);
+    LogMessageDto logMessage = logValidationService.validateMessage(logRequestDto.message);
+    User user = checkActor(logRequestDto.user);
+    saveLog(logMessage.getMessage(), logRequestDto.getSeverity(), user);
 
     logMessage.setReturnMessage(
         logMessage.getReturnMessage()
-            + String.format(InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), severity));
-    LOGGER.info(String.format(InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), severity));
+            + String.format(
+                InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
+    LOGGER.info(
+        String.format(InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
     return logMessage.getReturnMessage();
   }
 

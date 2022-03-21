@@ -1,17 +1,15 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent {
 
   @Output() sidenavClose = new EventEmitter();
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor() {
   }
 
   public onSidenavClose = () => {

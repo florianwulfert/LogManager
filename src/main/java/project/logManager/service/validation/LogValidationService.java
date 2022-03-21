@@ -5,8 +5,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.logManager.common.dto.LogMessageDto;
+import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.enums.SeverityEnum;
+import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
+import project.logManager.exception.ParameterNotPresentException;
 
 /** @author - EugenFriesen 13.02.2021 */
 @Service
@@ -15,10 +18,19 @@ public class LogValidationService {
 
   private static final Logger LOGGER = LogManager.getLogger(LogValidationService.class);
 
-  public boolean validateSeverity(String severity) {
-    if (severity == null) {
-      return true;
+  public void checkIfAnyEntriesAreNull(LogRequestDto allParameters) {
+    if (allParameters.severity == null
+        || allParameters.severity.equals("")
+        || allParameters.message == null
+        || allParameters.message.equals("")
+        || allParameters.user == null
+        || allParameters.user.equals("")) {
+      LOGGER.info(ErrorMessages.PARAMETER_IS_MISSING);
+      throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
     }
+  }
+
+  public boolean validateSeverity(String severity) {
     for (SeverityEnum severityEnum : SeverityEnum.values()) {
       if (severity.equals(severityEnum.name())) {
         return true;

@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+
 @ExtendWith(MockitoExtension.class)
 class UserValidationServiceTest {
 
@@ -49,14 +52,16 @@ class UserValidationServiceTest {
     ParameterNotPresentException ex =
         Assertions.assertThrows(
             ParameterNotPresentException.class,
-            () -> systemUnderTest.checkIfAnyEntriesAreNull(UserRequestDto.builder()
-                    .actor("Peter")
-                    .name("Hans")
-                    .birthdate("19.02.1995")
-                    .weight(75.0)
-                    .height(1.80)
-                    .favouriteColor(null)
-                    .build()));
+            () ->
+                systemUnderTest.checkIfAnyEntriesAreNull(
+                    UserRequestDto.builder()
+                        .actor("Peter")
+                        .name("Hans")
+                        .birthdate("19.02.1995")
+                        .weight(75.0)
+                        .height(1.80)
+                        .favouriteColor(null)
+                        .build()));
     Assertions.assertEquals(ErrorMessages.PARAMETER_IS_MISSING, ex.getMessage());
   }
 
@@ -83,8 +88,7 @@ class UserValidationServiceTest {
 
   @Test
   void testIfUserNotEqualActorAndNoUsersYet() {
-    Mockito.when(logService.addLog(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()))
-        .thenThrow(RuntimeException.class);
+    Mockito.when(logService.addLog(any())).thenThrow(RuntimeException.class);
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class,
@@ -109,20 +113,19 @@ class UserValidationServiceTest {
 
   @Test
   void testIfActorNotExistsOnCreate() {
-    Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(null);
+    Mockito.when(userRepository.findUserByName(anyString())).thenReturn(null);
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class,
             () -> systemUnderTest.checkIfNameExists(users.get(0).getName(), true));
     Assertions.assertEquals(
         String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Peter"), ex.getMessage());
-    Mockito.verify(logService)
-        .addLog(ErrorMessages.USER_NOT_CREATED, "ERROR", users.get(0).getName());
+    Mockito.verify(logService).addLog(any());
   }
 
   @Test
   void testIfActorNotExistsOnDelete() {
-    Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(null);
+    Mockito.when(userRepository.findUserByName(anyString())).thenReturn(null);
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class,
@@ -133,14 +136,14 @@ class UserValidationServiceTest {
 
   @Test
   void testIfActorExists() {
-    Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
+    Mockito.when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
     Assertions.assertEquals(
         users.get(0), systemUnderTest.checkIfNameExists(users.get(0).getName(), false));
   }
 
   @Test
   void testIfUserToPostExists() {
-    Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
+    Mockito.when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class, () -> systemUnderTest.checkIfUserToPostExists("Torsten"));
@@ -162,8 +165,7 @@ class UserValidationServiceTest {
 
   @Test
   void testIfIdExists() {
-    Mockito.when(userRepository.findById(Mockito.any()))
-        .thenReturn(Optional.ofNullable(users.get(0)));
+    Mockito.when(userRepository.findById(any())).thenReturn(Optional.ofNullable(users.get(0)));
     systemUnderTest.checkIfIdExists(1);
   }
 
@@ -176,7 +178,7 @@ class UserValidationServiceTest {
 
   @Test
   void testIfExistLogByUserToDelete() {
-    Mockito.when(logService.existLogByUserToDelete(Mockito.any())).thenReturn(true);
+    Mockito.when(logService.existLogByUserToDelete(any())).thenReturn(true);
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class,
@@ -187,8 +189,8 @@ class UserValidationServiceTest {
 
   @Test
   void testIfUserToDeleteEqualsActor() {
-    Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
-    Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(users.get(0));
+    Mockito.when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
+    Mockito.when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class,

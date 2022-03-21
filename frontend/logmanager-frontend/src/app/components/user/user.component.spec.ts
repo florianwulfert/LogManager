@@ -15,7 +15,7 @@ describe('UserComponent', () => {
       ],
       declarations: [UserComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
