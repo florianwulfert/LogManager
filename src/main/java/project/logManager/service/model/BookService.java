@@ -78,7 +78,7 @@ public class BookService {
                 if (!listString.equals("")){
                     listString=listString+", ";
                 }
-                listString=listString+"{Titel:"+b.getTitel()+", Erscheinungsjahr:"+b.getErscheinungsjahr()+",ID:"+b.getID+"}";
+                listString=listString+"{Titel:"+b.getTitel()+", Erscheinungsjahr:"+b.getErscheinungsjahr()+",ID:"+b.getId()+"}";
             }
             return String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel,listString);
         }
