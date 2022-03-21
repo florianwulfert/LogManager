@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.exception.DateFormatException;
+import project.logManager.exception.ParameterNotPresentException;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -11,9 +12,11 @@ import java.time.LocalDate;
 @Builder
 @Data
 public class BmiRequestDto {
+
     public String birthdate;
     public Double weight;
     public Double height;
+
 
     public LocalDate getBirthdateAsLocalDate() {
         return getLocalDate(this.birthdate);
@@ -26,6 +29,8 @@ public class BmiRequestDto {
                     Integer.parseInt(bd[0]), Integer.parseInt(bd[1]), Integer.parseInt(bd[2]));
         } catch (IndexOutOfBoundsException | NumberFormatException | DateTimeException e) {
             throw new DateFormatException(ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT);
+        } catch (RuntimeException ex) {
+            throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
         }
     }
 }

@@ -67,15 +67,15 @@ class BmiControllerIT {
         Arguments.of(
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"75.7\"}",
             status().isBadRequest(),
-            ErrorMessages.HEIGHT_NOT_PRESENT),
+            ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "{\"birthdate\":\"2003-01-01\",\"height\":\"1.85\"}",
             status().isBadRequest(),
-            ErrorMessages.WEIGHT_NOT_PRESENT),
+            ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "{\"weight\":\"75.7\",\"height\":\"1.85\"}",
             status().isBadRequest(),
-            ErrorMessages.BIRTHDATE_NOT_PRESENT),
+            ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"hi\",\"height\":\"1.85\"}",
             status().isBadRequest(),
