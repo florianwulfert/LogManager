@@ -11,4 +11,6 @@ import project.logManager.model.entity.Book;
 public interface BookRepository extends JpaRepository <Book,Integer> {
    
     List<Book> findByTitel(String titel);
+    
+    List<Book> deleteByTitel(String titel);
 }
