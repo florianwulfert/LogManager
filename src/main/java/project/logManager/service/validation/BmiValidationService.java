@@ -8,16 +8,14 @@ import project.logManager.common.message.ErrorMessages;
 import project.logManager.exception.ParameterNotPresentException;
 import project.logManager.service.model.UserService;
 
-import java.time.LocalDate;
-
 @Component
 @RequiredArgsConstructor
 public class BmiValidationService {
 
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
-  public void checkIfEntriesAreNull(LocalDate birthdate, Double weight, Double height) {
-    if (birthdate == null || birthdate.equals("") || weight == null || height == null) {
+  public void checkIfEntriesAreNull(Double weight, Double height) {
+    if (weight == null || height == null) {
       LOGGER.info(ErrorMessages.PARAMETER_IS_MISSING);
       throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
     }

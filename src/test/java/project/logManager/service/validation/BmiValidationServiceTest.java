@@ -7,8 +7,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.exception.ParameterNotPresentException;
 
-import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -22,7 +20,7 @@ class BmiValidationServiceTest {
     ParameterNotPresentException ex =
         assertThrows(
             ParameterNotPresentException.class,
-            () -> systemUnderTest.checkIfEntriesAreNull(LocalDate.of(2000, 12, 12), null, 1.87));
+            () -> systemUnderTest.checkIfEntriesAreNull(null, 1.87));
 
     assertEquals(ErrorMessages.PARAMETER_IS_MISSING, ex.getMessage());
   }
