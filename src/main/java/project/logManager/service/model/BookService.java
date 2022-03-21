@@ -31,18 +31,12 @@ public class BookService {
         book.setErscheinungsjahr(erscheinungsjahr);
         book.setTitel(titel);
         saveBook(book);
-        //TodoSaveLog
-        logService.addLog(LogRequestDto.builder()
-                        .message("New book was added.")
-                        .severity("INFO")
-                        .user(actor)
-                        .build());
-        LOGGER.info(String.format(InfoMessages.BOOK_CREATED,titel));
+        saveLog(String.format(InfoMessages.Book_CREATED_TITLE),"INFO",actor);
         return book;
     }
 
     public List<Book> getAllBooks(String actor){
-        //Todo SaveLog
+        saveLog(String.format(InfoMessages.ALL_BOOKS_FOUNDS ,actor ),"INFO",actor);
         return bookRepository.findAll();
     }
 
