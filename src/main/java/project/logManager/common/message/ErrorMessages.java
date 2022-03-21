@@ -40,6 +40,4 @@ public class ErrorMessages {
   public static final String PARAMETER_WRONG_FORMAT = "One of the parameters has wrong format.";
   public static final String PARAMETER_MISSING_OR_WRONG_FORMAT =
       "Required path variable was not found or request param has wrong format! ";
-  public static final String NO_BOOKS_FOUNDS="no books with titele %s founds";    
-
 }
