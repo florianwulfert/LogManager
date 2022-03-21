@@ -7,7 +7,7 @@
   <a routerLink="/home" class="marginLeft-20">
     <h2>User Manager</h2>
   </a>
-  <div class="welcome-sign" *ngIf="name!=undefined">
+  <div class="welcome-sign" *ngIf="name!==undefined">
     Welcome {{name}}
   </div>
   <div class="profile">
@@ -17,7 +17,5 @@
     <mat-menu #login>
       <button mat-menu-item (click)="openDialog()" class="sign-in-field">Sign in</button>
     </mat-menu>
-
-
   </div>
 </mat-toolbar>
