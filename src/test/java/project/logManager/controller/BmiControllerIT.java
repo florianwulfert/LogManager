@@ -53,7 +53,7 @@ class BmiControllerIT {
             status().isOk(),
             String.format(InfoMessages.BMI_MESSAGE, 29.36) + InfoMessages.OVERWEIGHT),
         Arguments.of(
-            "{\"birthdate\":\"2003-01-01\",\"weight\":\"45.1\",\"height\":\"1.85\"}",
+            "{\"birthdate\":\"2000-01-01\",\"weight\":\"45.1\",\"height\":\"1.85\"}",
             status().isOk(),
             String.format(InfoMessages.BMI_MESSAGE, 13.17) + InfoMessages.UNDERWEIGHT),
         Arguments.of(
