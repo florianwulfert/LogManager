@@ -28,4 +28,12 @@ public class CustomRestExceptionHandler {
     LOGGER.info(ex.getMessage());
     return ex.getMessage();
   }
+
+  @ResponseBody
+  @ExceptionHandler(IllegalColorException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  String illegalColorExceptionHandler(IllegalColorException ex) {
+    LOGGER.info(ex.getMessage());
+    return ex.getMessage();
+  }
 }

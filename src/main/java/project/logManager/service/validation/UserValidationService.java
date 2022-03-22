@@ -9,6 +9,7 @@ import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.enums.UserColorEnum;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.exception.FirstUserUnequalActorException;
+import project.logManager.exception.IllegalColorException;
 import project.logManager.exception.ParameterNotPresentException;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
@@ -52,8 +53,8 @@ public class UserValidationService {
         return;
       }
     }
-    LOGGER.error(ErrorMessages.COLOR_ILLEGAL, userFarben);
-    throw new IllegalArgumentException(ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE);
+    LOGGER.info(ErrorMessages.COLOR_ILLEGAL, userFarben);
+    throw new IllegalColorException(ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE);
   }
 
   public boolean checkIfUsersListIsEmpty(String actor, User user, boolean onCreate) {

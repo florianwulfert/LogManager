@@ -13,8 +13,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.service.model.UserService;
 
-import static project.logManager.common.message.ErrorMessages.PARAMETER_MISSING_OR_WRONG_FORMAT;
-
 /** @author - EugenFriesen 14.02.2021 */
 @RestControllerAdvice
 public class RestExceptionHandler {
@@ -50,7 +48,7 @@ public class RestExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   String invalidFormatExceptionHandler(
       HttpMessageNotReadableException httpMessageNotReadableException) {
-    LOGGER.info(PARAMETER_MISSING_OR_WRONG_FORMAT);
+    LOGGER.info(ErrorMessages.PARAMETER_WRONG_FORMAT);
     return ErrorMessages.PARAMETER_WRONG_FORMAT;
   }
 }
