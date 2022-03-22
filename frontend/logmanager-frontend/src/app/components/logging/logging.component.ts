@@ -6,7 +6,6 @@ import {MatTableDataSource} from "@angular/material/table";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
-import {DeleteLogRequest} from "../../modules/logging/deleteLog/dto/delete-log-request";
 
 
 @Component({
@@ -20,7 +19,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   subscriptionManager = new SubscriptionManager();
-  returnLogMessage: string | undefined;
+  returnUserMessage: string | undefined;
   featureManager = new FeatureManager(this._snackBar);
 
   displayedColumns: string[] = ['message', 'severity', 'timestamp', 'user', 'delete'];
@@ -28,10 +27,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   dataSource: any;
 
   ngOnInit(): void {
-    this.logsFacade.getLogs()
-    this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
-      this.dataSource = new MatTableDataSource(result)
-    })
+    this.getLogs()
   }
 
   ngOnDestroy() {
@@ -48,15 +44,23 @@ export class LoggingComponent implements OnInit, OnDestroy {
   deleteLogs(): void {
     this.logsFacade.deleteLogs();
     this.subscriptionManager.add(this.logsFacade.stateDeleteLogs$).subscribe(result => {
-      this.returnLogMessage = result
+      this.returnUserMessage = result
     })
-    this.featureManager.openSnackbar(this.returnLogMessage);
+    this.featureManager.openSnackbar(this.returnUserMessage);
+    this.getLogs()
   }
 
   public form: FormGroup = new FormGroup({
     message: new FormControl('', [Validators.required]),
     severity: new FormControl('', [Validators.required]),
   })
+
+  getLogs(): void {
+    this.logsFacade.getLogs()
+    this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
+      this.dataSource = new MatTableDataSource(result)
+    })
+  }
 
   prepareAddLogRequest(request: AddLogRequest) {
     request.message = this.form.get("message")?.value
@@ -69,19 +73,9 @@ export class LoggingComponent implements OnInit, OnDestroy {
     this.prepareAddLogRequest(request)
     this.logsFacade.addLog(request);
     this.subscriptionManager.add(this.logsFacade.stateAddLog$).subscribe(result => {
-      this.returnLogMessage = result
+      this.returnUserMessage = result
     })
-    this.featureManager.openSnackbar(this.returnLogMessage);
-  }
-
-  deleteLog(element: any): void {
-    let request = new DeleteLogRequest
-    let elementValues = Object.keys(element).map(key => element[key])
-    request.id = elementValues[0]
-    this.logsFacade.deleteLog(request)
-    this.subscriptionManager.add(this.logsFacade.stateDeleteLog$).subscribe(result => {
-      this.returnLogMessage = result
-    })
-    this.featureManager.openSnackbar(this.returnLogMessage)
+    this.featureManager.openSnackbar(this.returnUserMessage);
+    this.getLogs()
   }
 }

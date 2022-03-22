@@ -6,9 +6,6 @@
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter" #input>
     </mat-form-field>
-    <button mat-raised-button class="create button-format refresh-button-position"
-            (click)="featureManager.refreshPage()">Refresh
-    </button>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
       <!-- ID Column -->
