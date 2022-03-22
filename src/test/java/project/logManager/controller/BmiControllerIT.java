@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.util.stream.Stream;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -92,7 +93,7 @@ class BmiControllerIT {
     MvcResult result =
         mockMvc
             .perform(
-                get("/bmi")
+                post("/bmi")
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content(testData)
                     .accept(MediaType.APPLICATION_JSON_VALUE))
