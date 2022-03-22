@@ -31,7 +31,7 @@ public class BookService {
         book.setErscheinungsjahr(erscheinungsjahr);
         book.setTitel(titel);
         saveBook(book);
-        saveLog(String.format(InfoMessages.Book_CREATED_TITLE),"INFO",actor);
+        saveLog(String.format(InfoMessages.Book_CREATED_TITLE,titel),"INFO",actor);
         return book;
     }
 
@@ -68,7 +68,7 @@ public class BookService {
             }
         else{
             String listString="";
-            for(Book b : deleteBooks)
+            for(Book b : deleteBooks){
                 if (!listString.equals("")){
                     listString=listString+", ";
                 }
@@ -76,9 +76,9 @@ public class BookService {
             }
             return String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel,listString);
         }
-        
+         
     }
-
+        
     public String deleteBooks(){
         bookRepository.deleteAll();
         return InfoMessages.ALL_BOOKS_DELETED;
