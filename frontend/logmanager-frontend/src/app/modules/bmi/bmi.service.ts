@@ -17,7 +17,7 @@ export class BmiService {
 
 
   calcBmi(calcBmiRequest: CalculateBmiRequest): Observable<CalculateBmiResponse> {
-    return this.http.get<CalculateBmiResponse>(API_CALC_BMI, {
+    return this.http.post<CalculateBmiResponse>(API_CALC_BMI, {...calcBmiRequest}, {
       observe: 'response'
     }).pipe(
       map((r) => {
