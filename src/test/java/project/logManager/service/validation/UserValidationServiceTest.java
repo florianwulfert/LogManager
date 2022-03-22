@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.ErrorMessages;
+import project.logManager.exception.IllegalColorException;
 import project.logManager.exception.ParameterNotPresentException;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
@@ -67,9 +68,9 @@ class UserValidationServiceTest {
 
   @Test
   void testIfColorIsNotCorrect() {
-    RuntimeException ex =
+    IllegalColorException ex =
         Assertions.assertThrows(
-            IllegalArgumentException.class, () -> systemUnderTest.validateFarbenEnum("gold"));
+            IllegalColorException.class, () -> systemUnderTest.validateFarbenEnum("gold"));
     Assertions.assertEquals(ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE, ex.getMessage());
   }
 
