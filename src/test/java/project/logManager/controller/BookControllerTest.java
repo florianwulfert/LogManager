@@ -58,8 +58,8 @@ public class BookControllerTest {
 
     @Test
     void testDeleteBooksByTitel() {
-        bookController.deleteBooksByTitel(any(), "Torsten");
-        verify(bookService).deleteByTitel(any(), "Torsten");
+        bookController.deleteBooksByTitel(books.get(0).getTitel(), "Torsten");
+        verify(bookService).deleteByTitel("haya", "Torsten");
     }
 
     @Test
