@@ -111,6 +111,7 @@ public class UserService {
                     .severity(severity)
                     .user(actor)
                     .build();
+    LOGGER.info(logRequestDto);
     logService.addLog(logRequestDto);
   }
 }
