@@ -19,9 +19,11 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
-  @InjectMocks UserController systemUnderTest;
+  @InjectMocks
+  UserController systemUnderTest;
 
-  @Mock UserService userService;
+  @Mock
+  UserService userService;
 
   List<User> users;
 
@@ -33,15 +35,15 @@ class UserControllerTest {
   @Test
   void testAddUser() {
     Mockito.when(
-            systemUnderTest.addUser(
-                UserRequestDto.builder()
-                    .actor("Torsten")
-                    .name("Hugo")
-                    .birthdate("05.10.1994")
-                    .weight(75.0)
-                    .height(1.65)
-                    .favouriteColor("red")
-                    .build()))
+        systemUnderTest.addUser(
+            UserRequestDto.builder()
+                .actor("Torsten")
+                .name("Hugo")
+                .birthdate("05.10.1994")
+                .weight(75.0)
+                .height(1.65)
+                .favouriteColor("red")
+                .build()))
         .thenReturn("Test");
     Assertions.assertEquals(
         "User Hugo was created. Test",
