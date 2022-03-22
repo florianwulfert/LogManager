@@ -27,10 +27,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   dataSource: any;
 
   ngOnInit(): void {
-    this.logsFacade.getLogs()
-    this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
-      this.dataSource = new MatTableDataSource(result)
-    })
+    this.getLogs()
   }
 
   ngOnDestroy() {
@@ -50,12 +47,20 @@ export class LoggingComponent implements OnInit, OnDestroy {
       this.returnUserMessage = result
     })
     this.featureManager.openSnackbar(this.returnUserMessage);
+    this.getLogs()
   }
 
   public form: FormGroup = new FormGroup({
     message: new FormControl('', [Validators.required]),
     severity: new FormControl('', [Validators.required]),
   })
+
+  getLogs(): void {
+    this.logsFacade.getLogs()
+    this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
+      this.dataSource = new MatTableDataSource(result)
+    })
+  }
 
   prepareAddLogRequest(request: AddLogRequest) {
     request.message = this.form.get("message")?.value
@@ -71,5 +76,6 @@ export class LoggingComponent implements OnInit, OnDestroy {
       this.returnUserMessage = result
     })
     this.featureManager.openSnackbar(this.returnUserMessage);
+    this.getLogs()
   }
 }

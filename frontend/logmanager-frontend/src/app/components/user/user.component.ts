@@ -23,13 +23,9 @@ export class UserComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
   dataSource: any;
-  emptyFieldMessage: string = 'Please fill all fields'
 
   ngOnInit(): void {
-    this.userFacade.getUser();
-    this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
-      this.dataSource = new MatTableDataSource(result)
-    });
+    this.getUserList()
   }
 
   ngOnDestroy(): void {
@@ -69,6 +65,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.returnUserMessage = result
     })
     this.featureManager.openSnackbar(this.returnUserMessage);
+    this.getUserList()
   }
 
   deleteUsers(): void {
@@ -77,5 +74,13 @@ export class UserComponent implements OnInit, OnDestroy {
       this.returnUserMessage = result
     })
     this.featureManager.openSnackbar(this.returnUserMessage);
+    this.getUserList()
+  }
+
+  getUserList(): void {
+    this.userFacade.getUser();
+    this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
+      this.dataSource = new MatTableDataSource(result)
+    });
   }
 }
