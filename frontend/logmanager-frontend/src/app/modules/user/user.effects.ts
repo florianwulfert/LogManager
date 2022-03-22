@@ -6,16 +6,19 @@ import {
   addUserResponseAction,
   deleteUserAction,
   deleteUserResponseAction,
+  deleteUsersAction,
   getUserResponseAction,
   getUsersAction,
   loadAddUserErrorAction,
   loadDeleteUserErrorAction,
+  loadDeleteUsersErrorAction,
   loadGetUserErrorAction
 } from 'src/app/modules/user/user.actions'
 import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {UserService} from "./user.service";
 import {AddUserRequest} from "./addUser/dto/add-user-request";
+import {DeleteUserRequest} from "./deleteUser/dto/delete-user-request";
 
 @Injectable({providedIn: 'root'})
 export class UserEffects {
@@ -43,11 +46,23 @@ export class UserEffects {
     )
   );
 
-  delete$: Observable<Action> = createEffect(() =>
+  deleteUsers$: Observable<Action> = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteUsersAction),
+      switchMap(() =>
+        this.userService.deleteUsers().pipe(
+          map((deleteUserResponse) => deleteUserResponseAction(deleteUserResponse)),
+          catchError((error: string) => of(loadDeleteUsersErrorAction({error})))
+        )
+      )
+    )
+  );
+
+  deleteUser$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(deleteUserAction),
-      switchMap(() =>
-        this.userService.deleteUser().pipe(
+      switchMap((deleteUserRequest: DeleteUserRequest) =>
+        this.userService.deleteUser(deleteUserRequest.id).pipe(
           map((deleteUserResponse) => deleteUserResponseAction(deleteUserResponse)),
           catchError((error: string) => of(loadDeleteUserErrorAction({error})))
         )
