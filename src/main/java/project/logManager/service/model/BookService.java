@@ -31,22 +31,12 @@ public class BookService {
         book.setErscheinungsjahr(erscheinungsjahr);
         book.setTitel(titel);
         saveBook(book);
-        logService.addLog(LogRequestDto.builder()
-                        .message("New book was added.")
-                        .severity("INFO")
-                        .user(actor)
-                        .build());
-        LOGGER.info(String.format(InfoMessages.BOOK_CREATED,titel));
+        saveLog(String.format(InfoMessages.Book_CREATED_TITLE,titel),"INFO",actor);
         return book;
     }
 
     public List<Book> getAllBooks(String actor){
-        logService.addLog(LogRequestDto.builder()
-                       .message("All books founds.")
-                       .severity("INFO")
-                       .user(actor)
-                       .build());
-        LOGGER.info("All books founds");
+        saveLog(String.format(InfoMessages.ALL_BOOKS_FOUNDS ,actor ),"INFO",actor);
         return bookRepository.findAll();
     }
 
@@ -62,28 +52,35 @@ public class BookService {
     public String deleteById(Integer id ,String actor){
         Book book= bookRepository.getOne(id);
         bookRepository.delete(book);
-        saveLog(String.format(InfoMessages.BOOK_DELETED_ID, id), "WARNING", actor);
-        LOGGER.info(String.format(InfoMessages.BOOK_DELETED_ID, id));
+        saveLog(String.format(InfoMessages.BOOK_DELETED_ID, id), "INFO", actor);
         return String.format(InfoMessages.BOOK_DELETED_ID ,id);
     }
 
     public String deleteByTitel(String titel , String actor){
-        List<Book> deletBooks=bookRepository.deleteByTitel(titel);
-          if(deletBooks.isEmpty()){
+        List<Book> deleteBooks=bookRepository.findByTitel(titel);
+          if(deleteBooks.isEmpty()){
             LOGGER.info(InfoMessages.NO_BOOKS_FOUNDS,titel);
             return InfoMessages.NO_BOOKS_FOUNDS;
-        } else if (deletBooks.size()==1){
-             bookRepository.deleteById(deletBooks.get(0).getId());
-             saveLog(String.format(InfoMessages.BOOK_DELETED_TITLE, titel),"", actor);
-             LOGGER.info(String.format(InfoMessages.BOOK_DELETED_TITLE,titel));
+        } else if (deleteBooks.size()==1){
+             bookRepository.deleteById(deleteBooks.get(0).getId());
+             saveLog(String.format(InfoMessages.BOOK_DELETED_TITLE, titel),"INFO", actor);
              return String.format(InfoMessages.BOOK_DELETED_TITLE,titel);
             }
-        return String.format(InfoMessages.BOOK_DELETED_TITLE, titel);
+        else{
+            String listString="";
+            for(Book b : deleteBooks){
+                if (!listString.equals("")){
+                    listString=listString+", ";
+                }
+                listString=listString+"{Titel:"+b.getTitel()+", Erscheinungsjahr:"+b.getErscheinungsjahr()+",ID:"+b.getId()+"}";
+            }
+            return String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel,listString);
+        }
+         
     }
-
+        
     public String deleteBooks(){
         bookRepository.deleteAll();
-        LOGGER.info(InfoMessages.ALL_BOOKS_DELETED);
         return InfoMessages.ALL_BOOKS_DELETED;
     }
 
@@ -94,6 +91,7 @@ public class BookService {
                 .severity(severity)
                 .user(actor)
                 .build();
+        LOGGER.info(message);
         logService.addLog(logRequestDto);
     }
 }
