@@ -1,6 +1,5 @@
 package project.logManager.controller;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
@@ -40,8 +39,8 @@ public class BookControllerTest {
                         .titel("petra")
                         .erscheinungsjahr(1990)
                         .build());
-        bookController.addBook(books.get(0).getTitel(),books.get(0).getErscheinungsjahr(), "Torsten");
-        verify(bookService).addBook( 1998,"haya", "Torsten");
+        bookController.addBook(books.get(0).getTitel(), books.get(0).getErscheinungsjahr(), "Torsten");
+        verify(bookService).addBook(1998, "haya", "Torsten");
     }
 
     @Test
