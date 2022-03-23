@@ -1,7 +1,5 @@
 package project.logManager.exception;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import project.logManager.common.message.ErrorMessages;
-import project.logManager.service.model.UserService;
 
 /** @author - EugenFriesen 14.02.2021 */
 @RestControllerAdvice

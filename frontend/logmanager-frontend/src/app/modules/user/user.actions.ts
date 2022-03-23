@@ -3,6 +3,8 @@ import {GetUserErrorResponse, GetUserResponse} from "./getUser/dto/get-user-resp
 import {AddUserErrorResponse, AddUserResponse} from "./addUser/dto/add-user-response";
 import {AddUserRequest} from "./addUser/dto/add-user-request";
 import {DeleteUserErrorResponse, DeleteUserResponse} from "./deleteUser/dto/delete-user-response";
+import {DeleteUsersErrorResponse, DeleteUsersResponse} from "./deleteUsers/dto/delete-users-response";
+import {DeleteUserRequest} from "./deleteUser/dto/delete-user-request";
 
 export const getUsersAction = createAction('Get users');
 export const getUserResponseAction = createAction('Get list of users', props<GetUserResponse>());
@@ -12,6 +14,10 @@ export const addUserAction = createAction('Add user', props<AddUserRequest>());
 export const addUserResponseAction = createAction('Get response if user creation succeed', props<AddUserResponse>());
 export const loadAddUserErrorAction = createAction('Load Add User failure', props<AddUserErrorResponse>());
 
-export const deleteUserAction = createAction('Delete users');
-export const deleteUserResponseAction = createAction('Get response if user deleting succeed', props<DeleteUserResponse>());
+export const deleteUserAction = createAction('Delete one user', props<DeleteUserRequest>());
+export const deleteUserResponseAction = createAction('Get response if deleting of one user succeed', props<DeleteUserResponse>());
 export const loadDeleteUserErrorAction = createAction('Load Delete User failure', props<DeleteUserErrorResponse>());
+
+export const deleteUsersAction = createAction('Delete users');
+export const deleteUsersResponseAction = createAction('Get response if user deleting succeed', props<DeleteUsersResponse>());
+export const loadDeleteUsersErrorAction = createAction('Load Delete Users failure', props<DeleteUsersErrorResponse>());

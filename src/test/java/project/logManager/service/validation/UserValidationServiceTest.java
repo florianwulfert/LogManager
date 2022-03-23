@@ -61,7 +61,7 @@ class UserValidationServiceTest {
                         .birthdate("19.02.1995")
                         .weight(75.0)
                         .height(1.80)
-                        .favouriteColor(null)
+                        .favouriteColor("")
                         .build()));
     Assertions.assertEquals(ErrorMessages.PARAMETER_IS_MISSING, ex.getMessage());
   }
