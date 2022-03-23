@@ -49,7 +49,6 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   prepareAddUserRequest(request: AddUserRequest): AddUserRequest {
-    request.actor = "Peter"
     request.name = this.form.get("name")?.value
     request.birthdate = this.form.get("birthdate")?.value
     request.weight = this.form.get("weight")?.value
@@ -75,6 +74,7 @@ export class UserComponent implements OnInit, OnDestroy {
       this.returnUserMessage = result
     })
     this.featureManager.openSnackbar(this.returnUserMessage);
+    this.getUserList()
   }
 
   deleteUser(element: any): void {
@@ -82,11 +82,6 @@ export class UserComponent implements OnInit, OnDestroy {
     let elementValues = Object.keys(element).map(key => element[key])
     request.id = elementValues[0]
     this.userFacade.deleteUser(request);
-    this.subscriptionManager.add(this.userFacade.stateDeleteUser$).subscribe(result => {
-      this.returnUserMessage = result
-    })
-    this.featureManager.openSnackbar(this.returnUserMessage);
-    this.getUserList()
   }
 
   getUserList(): void {

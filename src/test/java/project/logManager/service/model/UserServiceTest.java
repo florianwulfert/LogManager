@@ -103,9 +103,6 @@ class UserServiceTest {
   void testDeleteById() {
     Mockito.when(userValidationService.checkIfNameExists(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(users.get(1));
-    Assertions.assertEquals(
-        String.format(InfoMessages.USER_DELETED_ID, 1),
-        systemUnderTest.deleteById(1, users.get(0).getName()));
     Mockito.verify(logService).addLog(any());
   }
 

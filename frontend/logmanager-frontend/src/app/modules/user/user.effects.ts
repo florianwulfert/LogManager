@@ -7,6 +7,7 @@ import {
   deleteUserAction,
   deleteUserResponseAction,
   deleteUsersAction,
+  deleteUsersResponseAction,
   getUserResponseAction,
   getUsersAction,
   loadAddUserErrorAction,
@@ -51,7 +52,7 @@ export class UserEffects {
       ofType(deleteUsersAction),
       switchMap(() =>
         this.userService.deleteUsers().pipe(
-          map((deleteUserResponse) => deleteUserResponseAction(deleteUserResponse)),
+          map((deleteUsersResponse) => deleteUsersResponseAction(deleteUsersResponse)),
           catchError((error: string) => of(loadDeleteUsersErrorAction({error})))
         )
       )
@@ -63,7 +64,8 @@ export class UserEffects {
       ofType(deleteUserAction),
       switchMap((deleteUserRequest: DeleteUserRequest) =>
         this.userService.deleteUser(deleteUserRequest.id).pipe(
-          map((deleteUserResponse) => deleteUserResponseAction(deleteUserResponse)),
+          map((deleteUserResponse) =>
+            deleteUserResponseAction(deleteUserResponse)),
           catchError((error: string) => of(loadDeleteUserErrorAction({error})))
         )
       )
