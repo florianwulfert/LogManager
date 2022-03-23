@@ -17,6 +17,4 @@ export class BmiFacade {
   calcBmi(request: CalculateBmiRequest): void {
     this.calBmiState.dispatch(calcBmiAction(request));
   }
-
-
 }

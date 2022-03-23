@@ -64,4 +64,3 @@ class BmiControllerTest {
     return users;
   }
 }
-
