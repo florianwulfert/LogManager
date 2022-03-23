@@ -16,6 +16,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
@@ -54,7 +57,7 @@ class UserControllerTest {
                 .height(1.65)
                 .favouriteColor("red")
                 .build()));
-    Mockito.verify(userService)
+    verify(userService)
         .addUser(
             UserRequestDto.builder()
                 .actor("Torsten")
@@ -69,31 +72,31 @@ class UserControllerTest {
   @Test
   void testFindUsers() {
     systemUnderTest.findUsers();
-    Mockito.verify(userService).findUserList();
+    verify(userService).findUserList();
   }
 
   @Test
   void testFindUserById() {
     systemUnderTest.findUserByID(1);
-    Mockito.verify(userService).findUserById(1);
+    verify(userService).findUserById(1);
   }
 
   @Test
   void testDeleteUserById() {
     systemUnderTest.deleteUserByID(users.get(0).getId(), users.get(1).getName());
-    Mockito.verify(userService).deleteById(1, users.get(1).getName());
+    verify(userService).deleteById(1, users.get(1).getName());
   }
 
   @Test
   void testDeleteUserByName() {
     systemUnderTest.deleteUserByName("Peter", "Hans");
-    Mockito.verify(userService).deleteByName("Peter", "Hans");
+    verify(userService).deleteByName("Peter", "Hans");
   }
 
   @Test
   void testDeleteAll() {
-    systemUnderTest.deleteAll();
-    Mockito.verify(userService).deleteAll();
+    systemUnderTest.deleteAll(users.get(0).getName());
+    verify(userService).deleteAll(anyString());
   }
 
   private List<User> addTestUser() {

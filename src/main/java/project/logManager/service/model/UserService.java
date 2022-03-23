@@ -83,10 +83,11 @@ public class UserService {
     return String.format(InfoMessages.USER_DELETED_NAME, name);
   }
 
-  public String deleteAll() {
+  public String deleteAll(String actor) {
     userValidationService.checkIfUsersAreReferenced();
     userRepository.deleteAll();
     LOGGER.info(InfoMessages.ALL_USERS_DELETED);
+    saveLog(InfoMessages.ALL_USERS_DELETED,"INFO", actor);
     return InfoMessages.ALL_USERS_DELETED;
   }
 
@@ -111,7 +112,7 @@ public class UserService {
                     .severity(severity)
                     .user(actor)
                     .build();
-    LOGGER.info(logRequestDto);
+    LOGGER.info("Log " + logRequestDto + String.format(" was saved as %s", severity));
     logService.addLog(logRequestDto);
   }
 }

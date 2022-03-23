@@ -50,6 +50,7 @@ public class UserValidationService {
   public void validateFarbenEnum(String userFarben) {
     for (UserColorEnum farbenEnum : UserColorEnum.values()) {
       if (userFarben.equals(farbenEnum.getColor())) {
+        LOGGER.info("Color is valid!");
         return;
       }
     }
@@ -66,11 +67,12 @@ public class UserValidationService {
             LOGGER.warn(ErrorMessages.NO_USERS_YET + user.getName() + " ungleich " + actor);
             throw new FirstUserUnequalActorException(actor, user.getName());
           } else {
-            LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_ID, user.getId()));
+            LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_ID, user.getId()));
             throw new RuntimeException(
                 String.format(ErrorMessages.USER_NOT_FOUND_ID, user.getId()));
           }
         }
+        LOGGER.info("User equals Actor!");
         return true;
       }
       return false;
