@@ -1,5 +1,8 @@
 package project.logManager.service.model;
 
+import java.util.List;
+import java.util.Optional;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,10 +15,6 @@ import project.logManager.model.entity.Book;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.UserValidationService;
-
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -76,7 +75,7 @@ public class UserService {
     return user;
   }
 
-  public String deleteById(Integer id, String actorName) {
+  public void deleteById(Integer id, String actorName) {
     User userToDelete = userValidationService.checkIfIdExists(id);
     User actor = userValidationService.checkIfNameExists(
         actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
@@ -87,7 +86,6 @@ public class UserService {
     userRepository.deleteById(id);
     saveLog(String.format(InfoMessages.USER_DELETED_ID, id), "WARNING", actorName);
     LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, id));
-    return String.format(InfoMessages.USER_DELETED_ID, id);
   }
 
   public String deleteByName(String name, String actorName) {

@@ -1,5 +1,7 @@
 import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
+import {Injectable} from "@angular/core";
 
+@Injectable({providedIn: 'root'})
 export class FeatureManager {
   constructor(private _snackBar: MatSnackBar) {
   }

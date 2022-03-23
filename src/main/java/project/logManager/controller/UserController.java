@@ -1,6 +1,5 @@
 package project.logManager.controller;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +16,9 @@ import project.logManager.common.dto.UserResponseDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
 
-@AllArgsConstructor(onConstructor_ = { @Autowired })
+@AllArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
 @CrossOrigin
-@Tag(name = "User")
 public class UserController {
 
   private final UserService userService;
@@ -29,13 +27,6 @@ public class UserController {
   public String addUser(@RequestBody UserRequestDto allParameters) {
     return String.format(
         "User %s was created. " + userService.addUser(allParameters), allParameters.name);
-  }
-
-  @PostMapping("/user/favouriteBook")
-  public String addFavouritBookToUser(
-      @RequestParam final Integer bookId,
-      @RequestParam final int userId) {
-    return userService.addFavouriteBookToUser(bookId, userId);
   }
 
   @GetMapping("/users")
@@ -49,8 +40,9 @@ public class UserController {
   }
 
   @DeleteMapping("/user/delete/{id}")
-  public String deleteUserByID(@PathVariable final Integer id, @RequestParam String actor) {
-    return userService.deleteById(id, actor);
+  public UserResponseDto deleteUserByID(@PathVariable final Integer id, @RequestParam final String actor) {
+    userService.deleteById(id, actor);
+    return new UserResponseDto(userService.findUserList());
   }
 
   @DeleteMapping("/user/delete/name/{name}")

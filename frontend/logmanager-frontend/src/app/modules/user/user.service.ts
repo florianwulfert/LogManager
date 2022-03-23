@@ -9,6 +9,7 @@ import {DeleteUserResponse} from "./deleteUser/dto/delete-user-response";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {ActorFacade} from "../actor/actor.facade";
 import {DeleteUsersResponse} from "./deleteUsers/dto/delete-users-response";
+import {FeatureManager} from "../../../assets/utils/feature.manager";
 
 const API_BASE = 'http://localhost:8081/users';
 const API_ADD_USER = 'http://localhost:8081/user';
@@ -19,7 +20,7 @@ const API_DELETE_USER = 'http://localhost:8081/user/delete/';
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private readonly http: HttpClient, private readonly actorFacade: ActorFacade) {
+  constructor(private readonly http: HttpClient, private readonly actorFacade: ActorFacade, private featureManager: FeatureManager) {
   }
 
   name: string | undefined
@@ -58,7 +59,7 @@ export class UserService {
     );
   }
 
-  deleteUsers(): Observable<DeleteUserResponse> {
+  deleteUsers(): Observable<DeleteUsersResponse> {
     return this.http.delete<DeleteUsersResponse>(API_DELETE_USERS, {
       observe: 'response'
     }).pipe(
@@ -82,11 +83,13 @@ export class UserService {
       observe: 'response'
     }).pipe(
       map((r) => {
+        this.featureManager.openSnackbar("User with ID " + i + " was successfully deleted.");
         return r.body || {
-          result: ''
+          result: []
         }
       }),
       catchError(() => {
+        this.featureManager.openSnackbar("User with ID " + i + " could not be deleted.");
         return throwError('Due to technical issues it is currently not possible to delete this user.');
       })
     );
