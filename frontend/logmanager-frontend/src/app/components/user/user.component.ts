@@ -52,7 +52,6 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   prepareAddUserRequest(request: AddUserRequest): AddUserRequest {
-    request.actor = "Peter"
     request.name = this.form.get("name")?.value
     request.birthdate = this.form.get("birthdate")?.value
     request.weight = this.form.get("weight")?.value
