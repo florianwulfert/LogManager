@@ -1,11 +1,11 @@
 package project.logManager.common.dto;
 
-import java.time.DateTimeException;
-import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Data;
-import project.logManager.common.message.ErrorMessages;
-import project.logManager.exception.DateFormatException;
+
+import java.time.LocalDate;
+
+import static project.logManager.common.dto.BmiRequestDto.getLocalDate;
 
 @Builder
 @Data
@@ -18,12 +18,6 @@ public class UserRequestDto {
   public String favouriteColor;
 
   public LocalDate getBirthdateAsLocalDate() {
-    try {
-      String[] bd = this.birthdate.split("-");
-      return LocalDate.of(
-          Integer.parseInt(bd[0]), Integer.parseInt(bd[1]), Integer.parseInt(bd[2]));
-    } catch (IndexOutOfBoundsException | NumberFormatException | DateTimeException e) {
-      throw new DateFormatException(ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT);
-    }
+    return getLocalDate(this.birthdate);
   }
 }
