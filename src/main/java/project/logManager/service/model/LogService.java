@@ -68,7 +68,6 @@ public class LogService {
     log.setUser(user);
     Date timestamp = new Date();
     log.setTimestamp(timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-    LOGGER.info("Log " + log + " saved!");
     logRepository.save(log);
   }
 
