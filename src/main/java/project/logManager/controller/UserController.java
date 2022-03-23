@@ -45,7 +45,7 @@ public class UserController {
   }
 
   @DeleteMapping("/user/delete")
-  public String deleteAll(@RequestParam final String actor) {
-    return userService.deleteAll(actor);
+  public String deleteAll() {
+    return userService.deleteAll();
   }
 }

@@ -83,11 +83,10 @@ public class UserService {
     return String.format(InfoMessages.USER_DELETED_NAME, name);
   }
 
-  public String deleteAll(String actor) {
+  public String deleteAll() {
     userValidationService.checkIfUsersAreReferenced();
     userRepository.deleteAll();
     LOGGER.info(InfoMessages.ALL_USERS_DELETED);
-    saveLog(InfoMessages.ALL_USERS_DELETED,"INFO", actor);
     return InfoMessages.ALL_USERS_DELETED;
   }
 

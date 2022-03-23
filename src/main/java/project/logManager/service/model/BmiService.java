@@ -29,6 +29,7 @@ public class BmiService extends DateUtil {
   public String calculateBmiAndGetBmiMessage(LocalDate birthdate, Double weight, Double height) {
     bmiValidationService.checkIfEntriesAreNull(weight, height);
     Double bmi = calculateBMI(weight, height);
+    LOGGER.info(getBmiMessage(birthdate, bmi));
     return getBmiMessage(birthdate, bmi);
   }
 

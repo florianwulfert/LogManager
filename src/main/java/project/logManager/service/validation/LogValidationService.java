@@ -25,9 +25,10 @@ public class LogValidationService {
         || allParameters.message.equals("")
         || allParameters.user == null
         || allParameters.user.equals("")) {
-      LOGGER.info(ErrorMessages.PARAMETER_IS_MISSING);
+      LOGGER.warn(ErrorMessages.PARAMETER_IS_MISSING);
       throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
     }
+    LOGGER.info(InfoMessages.PARAMETERS_ARE_VALID);
   }
 
   public boolean validateSeverity(String severity) {

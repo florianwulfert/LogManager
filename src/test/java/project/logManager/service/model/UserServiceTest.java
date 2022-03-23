@@ -122,7 +122,7 @@ class UserServiceTest {
 
   @Test
   void testDeleteAll() {
-    Assertions.assertEquals(InfoMessages.ALL_USERS_DELETED, systemUnderTest.deleteAll(users.get(0).getName()));
+    Assertions.assertEquals(InfoMessages.ALL_USERS_DELETED, systemUnderTest.deleteAll());
     Mockito.verify(userRepository).deleteAll();
   }
 

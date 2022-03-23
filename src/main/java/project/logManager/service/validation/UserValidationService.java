@@ -8,6 +8,7 @@ import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.enums.UserColorEnum;
 import project.logManager.common.message.ErrorMessages;
+import project.logManager.common.message.InfoMessages;
 import project.logManager.exception.FirstUserUnequalActorException;
 import project.logManager.exception.IllegalColorException;
 import project.logManager.exception.ParameterNotPresentException;
@@ -45,6 +46,7 @@ public class UserValidationService {
       LOGGER.info(ErrorMessages.PARAMETER_IS_MISSING);
       throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
     }
+    LOGGER.info(InfoMessages.PARAMETERS_ARE_VALID);
   }
 
   public void validateFarbenEnum(String userFarben) {
@@ -75,6 +77,7 @@ public class UserValidationService {
         LOGGER.info("User equals Actor!");
         return true;
       }
+      LOGGER.info("List of users is empty!");
       return false;
     } catch (FirstUserUnequalActorException ex) {
       handleErsterUserUngleichActor(actor, ex);
@@ -129,6 +132,7 @@ public class UserValidationService {
       LOGGER.error(ErrorMessages.USER_DELETE_HIMSELF);
       throw new RuntimeException(ErrorMessages.USER_DELETE_HIMSELF);
     }
+    LOGGER.info(InfoMessages.USER_CAN_BE_DELETED);
   }
 
   public User checkIfIdExists(int id) {

@@ -74,7 +74,7 @@ public class LogService {
   private User checkActor(String userName) {
     User user = userRepository.findUserByName(userName);
     if (user == null) {
-      LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
+      LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
       throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
     }
     return user;

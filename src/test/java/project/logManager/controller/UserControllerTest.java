@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -95,8 +94,8 @@ class UserControllerTest {
 
   @Test
   void testDeleteAll() {
-    systemUnderTest.deleteAll(users.get(0).getName());
-    verify(userService).deleteAll(anyString());
+    systemUnderTest.deleteAll();
+    verify(userService).deleteAll();
   }
 
   private List<User> addTestUser() {
