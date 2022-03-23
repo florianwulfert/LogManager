@@ -21,7 +21,6 @@ export class BmiService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r);
         return r.body || {
           result: r.body ? r.body : ''
         }

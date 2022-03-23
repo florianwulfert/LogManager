@@ -38,7 +38,6 @@ export class BmiComponent {
     request = this.prepareCalcBmiRequest(request)
     this.bmiFacade.calcBmi(request);
     this.subscriptionManager.add(this.bmiFacade.stateCalcBmi$).subscribe(result => {
-      console.log(result)
       this.returnUserMessage = result
     })
     this.featureManager.openSnackbar(this.returnUserMessage);

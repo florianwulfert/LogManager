@@ -54,7 +54,6 @@ export class LogService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r);
         return {
           result: r.body ? r.body : ''
         }
