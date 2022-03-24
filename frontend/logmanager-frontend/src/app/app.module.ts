@@ -27,6 +27,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {LogModule} from "./modules/logging/logs.module";
+import {BmiModule} from "./modules/bmi/bmi.module";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDialogModule} from "@angular/material/dialog";
 import {ProfileMenuComponent} from './components/navigation/profile-menu/profile-menu.component';
@@ -71,7 +72,9 @@ import {ActorModule} from "./modules/actor/actor.module"
     ActorModule,
     LogModule,
     MatSelectModule,
-    FormsModule
+    FormsModule,
+    LogModule,
+    BmiModule
   ],
   exports: [
     BrowserModule,

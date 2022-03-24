@@ -47,9 +47,9 @@ public class BookService {
                 .user(actor)
                 .build());
         LOGGER.info("All books founds");
-        return bookRepository.findAll();
+       return bookRepository.findAll();
     }
-
+  
     public List<Book> searchBooksByTitel(String titel) {
         LOGGER.info(String.format(InfoMessages.Book_FOUND_TITLE, titel));
         return bookRepository.findByTitel(titel);
@@ -63,23 +63,32 @@ public class BookService {
         return String.format(InfoMessages.BOOK_DELETED_ID, id);
     }
 
-    public String deleteByTitel(String titel, String actor) {
-        List<Book> deletBooks = bookRepository.deleteByTitel(titel);
-        if (deletBooks.isEmpty()) {
-            LOGGER.info(InfoMessages.NO_BOOKS_FOUNDS, titel);
+    public String deleteByTitel(String titel , String actor){
+        List<Book> deleteBooks=bookRepository.findByTitel(titel);
+          if(deleteBooks.isEmpty()){
+            LOGGER.info(InfoMessages.NO_BOOKS_FOUNDS,titel);
             return InfoMessages.NO_BOOKS_FOUNDS;
-        } else if (deletBooks.size() == 1) {
-            bookRepository.deleteById(deletBooks.get(0).getId());
-            saveLog(String.format(InfoMessages.BOOK_DELETED_TITLE, titel), "", actor);
-            LOGGER.info(String.format(InfoMessages.BOOK_DELETED_TITLE, titel));
-            return String.format(InfoMessages.BOOK_DELETED_TITLE, titel);
+        } else if (deleteBooks.size()==1){
+             bookRepository.deleteById(deleteBooks.get(0).getId());
+             saveLog(String.format(InfoMessages.BOOK_DELETED_TITLE, titel),"INFO", actor);
+             return String.format(InfoMessages.BOOK_DELETED_TITLE,titel);
+            }
+        else{
+            String listString="";
+            for(Book b : deleteBooks){
+                if (!listString.equals("")){
+                    listString=listString+", ";
+                }
+                listString=listString+"{Titel:"+b.getTitel()+", Erscheinungsjahr:"+b.getErscheinungsjahr()+",ID:"+b.getId()+"}";
+            }
+            return String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel,listString);
         }
-        return String.format(InfoMessages.BOOK_DELETED_TITLE, titel);
+         
     }
-
-    public String deleteBooks() {
+        
+    public String deleteBooks(){
         bookRepository.deleteAll();
-        LOGGER.info(InfoMessages.ALL_BOOKS_DELETED);
+        LOGGER.INFO(InfoMessages.ALL_BOOKS_DELETED);
         return InfoMessages.ALL_BOOKS_DELETED;
     }
 
@@ -89,6 +98,7 @@ public class BookService {
                 .severity(severity)
                 .user(actor)
                 .build();
+        LOGGER.info(message);
         logService.addLog(logRequestDto);
     }
 }

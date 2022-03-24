@@ -1,1 +1,55 @@
-<p>bmi works!</p>
+<div class="container ">
+
+  <mat-card class="main-card">
+    <h1 align="center">BMI-Calculator</h1>
+    <form [formGroup]="form">
+
+      <div class="calculate-bmi-body">
+
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Birthdate</mat-label>
+            <input type="date" matInput formControlName="birthdate">
+            <button *ngIf="form.controls['birthdate'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['birthdate'].reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-error *ngIf="form.controls['birthdate'].hasError('required')">
+              Birthdate is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Weight</mat-label>
+            <input matInput formControlName="weight">
+            <button *ngIf="form.controls['weight'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['weight'].reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-error *ngIf="form.controls['weight'].hasError('required')">
+              Weight is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Height</mat-label>
+            <input matInput formControlName="height">
+            <button *ngIf="form.controls['height'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['height'].reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-error *ngIf="form.controls['height'].hasError('required')">
+              Height is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+      </div>
+    </form>
+
+    <button mat-raised-button class="calculate button-format" (click)="calculateBmi()" [disabled]="!form.valid">Calculate</button>
+    <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
+  </mat-card>
+
+</div>

@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.common.dto.BmiRequestDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.BmiService;
 
@@ -22,8 +23,12 @@ class BmiControllerTest {
 
   @Test
   void testGetBmi() {
-    systemUnderTest.getBmi(LocalDate.of(2000, 12, 12), 90.0, 1.8);
-    Mockito.verify(bmiService).calculateBmiAndGetBmiMessage(LocalDate.of(2000, 12, 12), 90.0, 1.8);
+    BmiRequestDto testDto =
+        BmiRequestDto.builder().birthdate("1994-10-10").weight(75.0).height(1.65).build();
+    systemUnderTest.getBmi(testDto);
+    Mockito.verify(bmiService)
+        .calculateBmiAndGetBmiMessage(
+            testDto.getBirthdateAsLocalDate(), testDto.weight, testDto.height);
   }
 
   @Test

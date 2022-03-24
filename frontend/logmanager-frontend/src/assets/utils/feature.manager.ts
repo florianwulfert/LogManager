@@ -6,7 +6,7 @@ export class FeatureManager {
 
   openSnackbar(message: string | undefined): void {
     let horizontalPosition: MatSnackBarHorizontalPosition = 'center';
-    let verticalPosition: MatSnackBarVerticalPosition = 'top';
+    let verticalPosition: MatSnackBarVerticalPosition = 'bottom';
     if (message != null && message != '') {
       this._snackBar.open(message, 'Close', {
         horizontalPosition: horizontalPosition,
