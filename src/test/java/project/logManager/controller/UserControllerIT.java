@@ -83,7 +83,7 @@ class UserControllerIT {
             "Actor not known",
             false,
             "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
-            status().isInternalServerError(),
+            status().isBadRequest(),
             String.format(ErrorMessages.USER_NOT_FOUND_NAME, "UnknownActor")),
         Arguments.of(
             "Actor not given",
@@ -242,7 +242,7 @@ class UserControllerIT {
             "/user/delete/1",
             "Paul",
             status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Paul")),
+            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Paul")),
         Arguments.of(
             false, "/user/delete/1", null, status().isBadRequest(), TestMessages.ACTOR_NOT_PRESENT),
         Arguments.of(
@@ -319,14 +319,14 @@ class UserControllerIT {
             "/user/delete/name/Petra",
             "ActorName",
             status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_IDENTIFIED, "ActorName")),
+            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "ActorName")),
         Arguments.of(
             "User to delete not in database ",
             false,
             "/user/delete/name/UserToDeleteNichtBekannt",
             "Torsten",
             status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_IDENTIFIED, "UserToDeleteNichtBekannt")),
+            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "UserToDeleteNichtBekannt")),
         Arguments.of(
             "User to delete not present",
             false,

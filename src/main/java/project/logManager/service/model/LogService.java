@@ -8,13 +8,11 @@ import project.logManager.common.dto.LogMessageDto;
 import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
-import project.logManager.exception.SeverityNotFoundException;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.model.repository.LogRepository;
-import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.LogValidationService;
 
 import javax.transaction.Transactional;
@@ -32,7 +30,6 @@ public class LogService {
 
   private final LogRepository logRepository;
   private final LogValidationService logValidationService;
-  private final UserRepository userRepository;
   private final LogDTOMapper logDTOMapper;
 
   public List<LogDTO> getLogs(
@@ -44,12 +41,9 @@ public class LogService {
 
   public String addLog(LogRequestDto logRequestDto) {
     logValidationService.checkIfAnyEntriesAreNull(logRequestDto);
-    if (!logValidationService.validateSeverity(logRequestDto.getSeverity())) {
-      LOGGER.error(ErrorMessages.SEVERITY_NOT_REGISTERED, logRequestDto.getSeverity());
-      throw new SeverityNotFoundException(logRequestDto.getSeverity());
-    }
+    logValidationService.validateSeverity(logRequestDto.getSeverity());
     LogMessageDto logMessage = logValidationService.validateMessage(logRequestDto.message);
-    User user = checkActor(logRequestDto.user);
+    User user = logValidationService.checkActor(logRequestDto.user);
     saveLog(logMessage.getMessage(), logRequestDto.getSeverity(), user);
 
     logMessage.setReturnMessage(
@@ -57,7 +51,8 @@ public class LogService {
             + String.format(
                 InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
     LOGGER.info(
-        String.format(InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
+        String.format(
+            InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
     return logMessage.getReturnMessage();
   }
 
@@ -69,15 +64,6 @@ public class LogService {
     Date timestamp = new Date();
     log.setTimestamp(timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
     logRepository.save(log);
-  }
-
-  private User checkActor(String userName) {
-    User user = userRepository.findUserByName(userName);
-    if (user == null) {
-      LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
-      throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
-    }
-    return user;
   }
 
   public Log searchLogsByID(Integer id) {

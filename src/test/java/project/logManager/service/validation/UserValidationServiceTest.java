@@ -120,7 +120,7 @@ class UserValidationServiceTest {
             RuntimeException.class,
             () -> systemUnderTest.checkIfNameExists(users.get(0).getName(), true));
     Assertions.assertEquals(
-        String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Peter"), ex.getMessage());
+        String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Peter"), ex.getMessage());
     Mockito.verify(logService).addLog(any());
   }
 
@@ -132,7 +132,7 @@ class UserValidationServiceTest {
             RuntimeException.class,
             () -> systemUnderTest.checkIfNameExists(users.get(0).getName(), false));
     Assertions.assertEquals(
-        String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Peter"), ex.getMessage());
+        String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Peter"), ex.getMessage());
   }
 
   @Test

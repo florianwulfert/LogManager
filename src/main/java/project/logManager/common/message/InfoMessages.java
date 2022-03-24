@@ -26,4 +26,6 @@ public class InfoMessages {
   public static final String ALL_BOOKS_FOUNDS = "all Books founds";
   public static final String PARAMETERS_ARE_VALID = "Parameters are valid.";
   public static final String USER_CAN_BE_DELETED = "User can be deleted.";
+  public static final String SEVERITY_VALID = "User can be deleted.";
+  public static final String USER_FOUND = "User %s found.";
 }

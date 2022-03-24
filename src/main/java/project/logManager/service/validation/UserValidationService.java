@@ -97,7 +97,7 @@ public class UserValidationService {
     try {
       User activeUser = userRepository.findUserByName(name);
       if (activeUser == null) {
-        LOGGER.info(String.format(ErrorMessages.USER_NOT_IDENTIFIED, name));
+        LOGGER.info(String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
         throw new UserNotFoundException(name);
       }
       return activeUser;

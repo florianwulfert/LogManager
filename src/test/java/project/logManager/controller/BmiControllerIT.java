@@ -124,8 +124,8 @@ class BmiControllerIT {
         Arguments.of(
             "userNotIdentified",
             "/bmi/ActorNichtVorhanden",
-            status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_IDENTIFIED, "ActorNichtVorhanden")));
+            status().isBadRequest(),
+            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "ActorNichtVorhanden")));
   }
 
   @ParameterizedTest(name = "{3}")

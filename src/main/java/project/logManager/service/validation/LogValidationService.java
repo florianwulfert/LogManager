@@ -10,6 +10,10 @@ import project.logManager.common.enums.SeverityEnum;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.exception.ParameterNotPresentException;
+import project.logManager.exception.SeverityNotFoundException;
+import project.logManager.exception.UserNotFoundException;
+import project.logManager.model.entity.User;
+import project.logManager.model.repository.UserRepository;
 
 /** @author - EugenFriesen 13.02.2021 */
 @Service
@@ -17,6 +21,8 @@ import project.logManager.exception.ParameterNotPresentException;
 public class LogValidationService {
 
   private static final Logger LOGGER = LogManager.getLogger(LogValidationService.class);
+
+  private final UserRepository userRepository;
 
   public void checkIfAnyEntriesAreNull(LogRequestDto allParameters) {
     if (allParameters.severity == null
@@ -28,16 +34,18 @@ public class LogValidationService {
       LOGGER.warn(ErrorMessages.PARAMETER_IS_MISSING);
       throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
     }
-    LOGGER.info(InfoMessages.PARAMETERS_ARE_VALID);
   }
 
-  public boolean validateSeverity(String severity) {
+  public String validateSeverity(String severity) {
     for (SeverityEnum severityEnum : SeverityEnum.values()) {
       if (severity.equals(severityEnum.name())) {
-        return true;
+        LOGGER.info(InfoMessages.SEVERITY_VALID);
+        return InfoMessages.SEVERITY_VALID;
       }
     }
-    return false;
+
+    LOGGER.error(ErrorMessages.SEVERITY_NOT_REGISTERED, severity);
+    throw new SeverityNotFoundException(severity);
   }
 
   public LogMessageDto validateMessage(String message) {
@@ -49,5 +57,19 @@ public class LogValidationService {
           .build();
     }
     return LogMessageDto.builder().message(message).returnMessage("").build();
+  }
+
+  public User checkActor(String userName) {
+    try {
+      User user = userRepository.findUserByName(userName);
+      if (user == null) {
+        throw new RuntimeException();
+      }
+      LOGGER.info(String.format(InfoMessages.USER_FOUND, userName));
+      return user;
+    } catch (RuntimeException ex) {
+      LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
+      throw new UserNotFoundException(userName);
+    }
   }
 }

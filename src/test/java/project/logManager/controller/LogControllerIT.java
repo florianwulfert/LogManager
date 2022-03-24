@@ -236,7 +236,7 @@ class LogControllerIT {
         Arguments.of(
             "UserIsFalse",
             "{\"message\":\"Test\", \"severity\":\"INFO\",\"user\":\"Alex\"}",
-            status().isInternalServerError(),
+            status().isBadRequest(),
             String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Alex")),
         Arguments.of(
             "KatzeToHund",

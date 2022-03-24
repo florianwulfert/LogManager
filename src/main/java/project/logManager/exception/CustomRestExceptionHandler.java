@@ -17,7 +17,7 @@ public class CustomRestExceptionHandler {
   @ExceptionHandler(DateFormatException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   String dateFormatExceptionHandler(DateFormatException ex) {
-    LOGGER.info(ex.getMessage());
+    LOGGER.warn(ex.getMessage());
     return ex.getMessage();
   }
 
@@ -25,7 +25,7 @@ public class CustomRestExceptionHandler {
   @ExceptionHandler(ParameterNotPresentException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   String parameterNotPresentExceptionHandler(ParameterNotPresentException ex) {
-    LOGGER.info(ex.getMessage());
+    LOGGER.warn(ex.getMessage());
     return ex.getMessage();
   }
 
@@ -33,7 +33,15 @@ public class CustomRestExceptionHandler {
   @ExceptionHandler(IllegalColorException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   String illegalColorExceptionHandler(IllegalColorException ex) {
-    LOGGER.info(ex.getMessage());
+    LOGGER.warn(ex.getMessage());
+    return ex.getMessage();
+  }
+
+  @ResponseBody
+  @ExceptionHandler(UserNotFoundException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  String userNotFoundExceptionHandler(UserNotFoundException ex) {
+    LOGGER.warn(ex.getMessage());
     return ex.getMessage();
   }
 }
