@@ -34,6 +34,7 @@ public class ErrorMessages {
   public static final String PARAMETER_WRONG_FORMAT = "One of the parameters has wrong format.";
   public static final String PARAMETER_MISSING_OR_WRONG_FORMAT =
       "Required path variable was not found or request param has wrong format! ";
-  public static final String NO_BOOKS_FOUNDS="no books with title %s found";    
-
+  public static final String NO_BOOKS_FOUNDS="no books with title %s found";
+  public static final String USER_NOT_ALLOWED_DELETE = "User %s has no authority to delete logs/user.";
+  public static final String USER_NOT_ALLOWED_CREATE = "User %s has no authority to create logs/user.";
 }

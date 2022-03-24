@@ -9,6 +9,7 @@ import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.exception.SeverityNotFoundException;
+import project.logManager.exception.UserNotAllowedException;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
@@ -74,8 +75,8 @@ public class LogService {
   private User checkActor(String userName) {
     User user = userRepository.findUserByName(userName);
     if (user == null) {
-      LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
-      throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
+      LOGGER.error(String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE, userName));
+      throw new UserNotAllowedException(String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE, userName));
     }
     return user;
   }

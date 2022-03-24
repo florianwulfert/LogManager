@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.dto.UserRequestDto;
+import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
@@ -43,7 +44,9 @@ public class UserService {
     if (userValidationService.checkIfUsersListIsEmpty(userRequestDto.actor, user, true)) {
       saveUser(user, userRequestDto.actor);
     } else {
-      User activeUser = userValidationService.checkIfNameExists(userRequestDto.actor, true);
+      User activeUser =
+          userValidationService.checkIfNameExists(
+              userRequestDto.actor, true, ErrorMessages.USER_NOT_ALLOWED_CREATE);
       saveUser(user, activeUser.getName());
     }
     return bmiService.calculateBmiAndGetBmiMessage(
@@ -60,7 +63,9 @@ public class UserService {
 
   public String deleteById(Integer id, String actorName) {
     User userToDelete = userValidationService.checkIfIdExists(id);
-    User actor = userValidationService.checkIfNameExists(actorName, false);
+    User actor =
+        userValidationService.checkIfNameExists(
+            actorName, false, ErrorMessages.USER_NOT_ALLOWED_DELETE);
     userValidationService.checkIfUserToDeleteIdEqualsActorId(id, actor.getId());
     userValidationService.checkIfUsersListIsEmpty(actor.getName(), userToDelete, false);
     userValidationService.checkIfExistLogByUserToDelete(userToDelete);
@@ -72,9 +77,11 @@ public class UserService {
   }
 
   public String deleteByName(String name, String actorName) {
-    User user = userValidationService.checkIfNameExists(name, false);
+    User user =
+        userValidationService.checkIfNameExists(name, false, ErrorMessages.USER_NOT_ALLOWED_DELETE);
     userValidationService.checkIfExistLogByUserToDelete(user);
-    userValidationService.checkIfNameExists(actorName, false);
+    userValidationService.checkIfNameExists(
+        actorName, false, ErrorMessages.USER_NOT_ALLOWED_DELETE);
     userValidationService.checkIfUserToDeleteEqualsActor(name, actorName);
 
     userRepository.deleteById(user.getId());
@@ -95,7 +102,7 @@ public class UserService {
     String bmi =
         bmiService.calculateBmiAndGetBmiMessage(
             user.getBirthdate(), user.getWeight(), user.getHeight());
-    saveLog(String.format(InfoMessages.USER_CREATED + "%s", user, bmi),"INFO", actor);
+    saveLog(String.format(InfoMessages.USER_CREATED + "%s", user, bmi), "INFO", actor);
     LOGGER.info(
         String.format(
             InfoMessages.USER_CREATED
@@ -106,11 +113,7 @@ public class UserService {
 
   private void saveLog(String message, String severity, String actor) {
     LogRequestDto logRequestDto =
-            LogRequestDto.builder()
-                    .message(message)
-                    .severity(severity)
-                    .user(actor)
-                    .build();
+        LogRequestDto.builder().message(message).severity(severity).user(actor).build();
     logService.addLog(logRequestDto);
   }
 }

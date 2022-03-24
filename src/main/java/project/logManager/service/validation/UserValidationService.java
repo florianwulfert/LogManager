@@ -10,7 +10,7 @@ import project.logManager.common.enums.UserColorEnum;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.exception.FirstUserUnequalActorException;
 import project.logManager.exception.ParameterNotPresentException;
-import project.logManager.exception.UserNotFoundException;
+import project.logManager.exception.UserNotAllowedException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
@@ -87,12 +87,12 @@ public class UserValidationService {
     }
   }
 
-  public User checkIfNameExists(String name, boolean isCreate) {
+  public User checkIfNameExists(String name, boolean isCreate, String action) {
     try {
       User activeUser = userRepository.findUserByName(name);
       if (activeUser == null) {
-        LOGGER.info(String.format(ErrorMessages.USER_NOT_IDENTIFIED, name));
-        throw new UserNotFoundException(name);
+        LOGGER.info(String.format(action, name));
+        throw new UserNotAllowedException(String.format(action, name));
       }
       return activeUser;
     } catch (RuntimeException rex) {
