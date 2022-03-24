@@ -22,8 +22,9 @@ export class UserComponent implements OnInit, OnDestroy {
   featureManager = new FeatureManager(this._snackBar);
   returnUserMessage: string | undefined;
 
-  displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
-  dataSource: any;
+  displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete']
+  dataSource: any
+  colors: string[] = ['blue', 'red', 'orange', 'yellow', 'black']
 
   ngOnInit(): void {
     this.userFacade.getUser();
