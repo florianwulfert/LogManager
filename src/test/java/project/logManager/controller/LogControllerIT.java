@@ -237,7 +237,7 @@ class LogControllerIT {
             "UserIsFalse",
             "{\"message\":\"Test\", \"severity\":\"INFO\",\"user\":\"Alex\"}",
             status().isBadRequest(),
-            String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE, "Alex")),
+            String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_LOGS, "Alex")),
         Arguments.of(
             "KatzeToHund",
             "{\"message\":\"Katze\", \"severity\":\"INFO\",\"user\":\"Petra\"}",

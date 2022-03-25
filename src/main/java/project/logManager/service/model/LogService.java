@@ -58,7 +58,8 @@ public class LogService {
             + String.format(
                 InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
     LOGGER.info(
-        String.format(InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
+        String.format(
+            InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
     return logMessage.getReturnMessage();
   }
 
@@ -75,8 +76,9 @@ public class LogService {
   private User checkActor(String userName) {
     User user = userRepository.findUserByName(userName);
     if (user == null) {
-      LOGGER.error(String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE, userName));
-      throw new UserNotAllowedException(String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE, userName));
+      LOGGER.error(String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_LOGS, userName));
+      throw new UserNotAllowedException(
+          String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_LOGS, userName));
     }
     return user;
   }

@@ -84,7 +84,7 @@ class UserControllerIT {
             false,
             "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
             status().isBadRequest(),
-            String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE, "UnknownActor")),
+            String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "UnknownActor")),
         Arguments.of(
             "Actor not given",
             false,
@@ -242,7 +242,7 @@ class UserControllerIT {
             "/user/delete/1",
             "Paul",
             status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE, "Paul")),
+            String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "Paul")),
         Arguments.of(
             false, "/user/delete/1", null, status().isBadRequest(), TestMessages.ACTOR_NOT_PRESENT),
         Arguments.of(
@@ -319,14 +319,14 @@ class UserControllerIT {
             "/user/delete/name/Petra",
             "ActorName",
             status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE, "ActorName")),
+            String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "ActorName")),
         Arguments.of(
             "User to delete not in database ",
             false,
             "/user/delete/name/UserToDeleteNichtBekannt",
             "Torsten",
             status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE, "UserToDeleteNichtBekannt")),
+            String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "UserToDeleteNichtBekannt")),
         Arguments.of(
             "User to delete not present",
             false,

@@ -74,12 +74,12 @@ public class UserValidationService {
       }
       return false;
     } catch (FirstUserUnequalActorException ex) {
-      handleErsterUserUngleichActor(actor, ex);
+      handleFirstUserUnequalActor(actor, ex);
       return false;
     }
   }
 
-  private void handleErsterUserUngleichActor(String actor, FirstUserUnequalActorException er) {
+  private void handleFirstUserUnequalActor(String actor, FirstUserUnequalActorException er) {
     try {
       saveUserNotCreatedLog(actor);
     } catch (RuntimeException rex) {
