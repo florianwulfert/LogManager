@@ -83,13 +83,18 @@ export class UserService {
       observe: 'response'
     }).pipe(
       map((r) => {
+        console.log("User with ID " + i + " was successfully deleted.")
         this.featureManager.openSnackbar("User with ID " + i + " was successfully deleted.");
         return r.body || {
           result: []
         }
       }),
-      catchError(() => {
-        this.featureManager.openSnackbar("User with ID " + i + " could not be deleted.");
+      catchError((err) => {
+        if(err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text);
+        } else {
+          this.featureManager.openSnackbar(err.error);
+        }
         return throwError('Due to technical issues it is currently not possible to delete this user.');
       })
     );
