@@ -101,8 +101,12 @@ class UserServiceTest {
 
   @Test
   void testDeleteById() {
+    Mockito.when(userValidationService.checkIfIdExists(Mockito.anyInt()))
+        .thenReturn(users.get(0));
     Mockito.when(userValidationService.checkIfNameExists(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(users.get(1));
+    systemUnderTest.deleteById(1, "Florian");
+    Mockito.verify(userRepository).deleteById(1);
     Mockito.verify(logService).addLog(any());
   }
 
