@@ -1,4 +1,4 @@
-import {UserDto} from 'src/app/modules/user/getUser/dto/user.dto'
+import {UserDto} from 'src/app/modules/user/getUser/user.dto'
 
 export interface GetUserResponse {
   result: UserDto[];

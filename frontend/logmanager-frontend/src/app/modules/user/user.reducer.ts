@@ -1,7 +1,12 @@
 import {createReducer, on} from "@ngrx/store";
 import {USER_GET_INITIAL_STATE, UserState} from "./user.state";
-import {addUserResponseAction, deleteUserResponseAction, deleteUsersResponseAction, getUserResponseAction} from "../../user.actions";
-import {GetUserResponse} from "../dto/get-user-response";
+import {
+  addUserResponseAction,
+  deleteUserResponseAction,
+  deleteUsersResponseAction,
+  getUserResponseAction
+} from "./user.actions";
+import {GetUserResponse} from "./getUser/get-user-response";
 
 const handleUserResponse = (state: UserState, resp: GetUserResponse): UserState => {
   return {

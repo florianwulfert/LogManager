@@ -1,4 +1,4 @@
-import {UserDto} from "../getUser/dto/user.dto";
+import {UserDto} from "../getUser/user.dto";
 
 export interface AddUserResponse {
   result: UserDto[];

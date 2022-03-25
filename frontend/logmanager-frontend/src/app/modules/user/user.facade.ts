@@ -3,7 +3,7 @@ import {Store} from "@ngrx/store";
 import {getUsers} from "./user.selector";
 import {addUserAction, deleteUserAction, deleteUsersAction, getUsersAction} from "./user.actions";
 import {AddUserRequest} from "./addUser/add-user-request";
-import {UserState} from "./getUser/store/user.state";
+import {UserState} from "./user.state";
 import {DeleteUserRequest} from "./deleteUser/delete-user-request";
 
 @Injectable({providedIn: 'root'})

@@ -1,5 +1,5 @@
 import {createAction, props} from '@ngrx/store';
-import {GetUserErrorResponse, GetUserResponse} from "./getUser/dto/get-user-response";
+import {GetUserErrorResponse, GetUserResponse} from "./getUser/get-user-response";
 import {AddUserErrorResponse, AddUserResponse} from "./addUser/add-user-response";
 import {AddUserRequest} from "./addUser/add-user-request";
 import {DeleteUserErrorResponse, DeleteUserResponse} from "./deleteUser/delete-user-response";
