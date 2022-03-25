@@ -24,9 +24,9 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping("/user")
-  public String addUser(@RequestBody UserRequestDto allParameters) {
-    return String.format(
-        "User %s was created. " + userService.addUser(allParameters), allParameters.name);
+  public UserResponseDto addUser(@RequestBody UserRequestDto allParameters) {
+        userService.addUser(allParameters);
+        return new UserResponseDto(userService.findUserList());
   }
 
   @GetMapping("/users")
