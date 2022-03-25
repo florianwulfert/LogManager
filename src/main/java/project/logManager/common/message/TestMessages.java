@@ -17,6 +17,7 @@ public class TestMessages {
   public static final String PETRA =
       "{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\","
           + "\"weight\":65.0,\"height\":1.6,\"favouriteColor\":\"Red\",\"bmi\":25.39}";
+  public static final String EMPTY_LIST ="{\"result\":[]}";
   public static final String USER_TO_DELETE_NOT_PRESENT =
       "Required path variable was not found or request param has wrong format! "
           + "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; "

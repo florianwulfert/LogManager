@@ -391,7 +391,7 @@ class UserControllerIT {
               .andReturn();
 
       Assertions.assertEquals(
-          InfoMessages.ALL_USERS_DELETED, result.getResponse().getContentAsString());
+          TestMessages.EMPTY_LIST, result.getResponse().getContentAsString());
     }
 
     @Test
