@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable, throwError} from 'rxjs';
-import {GetUserResponse} from 'src/app/modules/user/getUser/dto/get-user-response';
+import {GetUserResponse} from 'src/app/modules/user/getUser/get-user-response';
 import {catchError, map} from "rxjs/operators";
 import {AddUserResponse} from "./addUser/add-user-response";
 import {AddUserRequest} from "./addUser/add-user-request";
