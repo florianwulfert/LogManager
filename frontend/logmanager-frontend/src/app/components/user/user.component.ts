@@ -71,11 +71,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
   deleteUsers(): void {
     this.userFacade.deleteUsers();
-    this.subscriptionManager.add(this.userFacade.stateDeleteUsers$).subscribe(result => {
-      this.returnUserMessage = result
-    })
-    this.featureManager.openSnackbar(this.returnUserMessage);
-    this.getUserList()
   }
 
   deleteUser(element: any): void {

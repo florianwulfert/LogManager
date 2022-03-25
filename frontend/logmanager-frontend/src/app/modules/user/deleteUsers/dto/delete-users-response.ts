@@ -1,5 +1,7 @@
+import {UserDto} from "../../getUser/dto/user.dto";
+
 export interface DeleteUsersResponse {
-  result: string;
+  result: UserDto[];
 }
 
 export interface DeleteUsersErrorResponse {
