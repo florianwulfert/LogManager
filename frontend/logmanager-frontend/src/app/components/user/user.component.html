@@ -147,10 +147,11 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Favourite Color</mat-label>
-                <input matInput formControlName="favouriteColor">
-                <button *ngIf="form.controls['favouriteColor'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['favouriteColor'].reset()">
-                  <mat-icon>close</mat-icon>
-                </button>
+                <mat-select formControlName="favouriteColor">
+                  <mat-option *ngFor="let favouriteColor of colors" [value]="favouriteColor">
+                    {{favouriteColor}}
+                  </mat-option>
+                </mat-select>
                 <mat-error *ngIf="form.controls['favouriteColor'].hasError('required')">
                   Favourite color is <strong>required</strong>
                 </mat-error>
