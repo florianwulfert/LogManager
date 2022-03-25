@@ -241,7 +241,7 @@ class UserControllerIT {
             "/user/delete/1",
             "Hans",
             status().isOk(),
-            String.format(InfoMessages.USER_DELETED_ID, 1)),
+            TestMessages.TORSTEN_HANS),
         Arguments.of(
             false,
             "/user/delete/1",
