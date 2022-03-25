@@ -8,8 +8,6 @@ import {GET_USER_FEATURE_NAME} from "./getUser/store/user-get.state";
 import {ADD_USER_FEATURE_NAME} from "./addUser/store/user-add.state";
 import {UserGetReducer} from "./getUser/store/user-get.reducer";
 import {UserAddReducer} from "./addUser/store/user-add.reducer";
-import {DELETE_USERS_FEATURE_NAME} from "./deleteUsers/store/user-delete.state";
-import {UsersDeleteReducer} from "./deleteUsers/store/users-delete.reducer";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 
 @NgModule({
@@ -18,7 +16,6 @@ import {FeatureManager} from "../../../assets/utils/feature.manager";
     CommonModule, StoreModule.forRoot({}),
     StoreModule.forFeature(GET_USER_FEATURE_NAME, UserGetReducer),
     StoreModule.forFeature(ADD_USER_FEATURE_NAME, UserAddReducer),
-    StoreModule.forFeature(DELETE_USERS_FEATURE_NAME, UsersDeleteReducer),
     EffectsModule.forRoot(), EffectsModule.forFeature([UserEffects])],
   providers: [UserFacade, FeatureManager]
 })

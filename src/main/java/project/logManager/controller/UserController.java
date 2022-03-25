@@ -52,7 +52,8 @@ public class UserController {
   }
 
   @DeleteMapping("/user/delete")
-  public String deleteAll() {
-    return userService.deleteAll();
+  public UserResponseDto deleteAll() {
+    userService.deleteAll();
+    return new UserResponseDto(userService.findUserList());
   }
 }
