@@ -88,7 +88,6 @@ class UserValidationServiceTest {
 
   @Test
   void testIfUserNotEqualActorAndNoUsersYet() {
-    Mockito.when(logService.addLog(any())).thenThrow(RuntimeException.class);
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class,
@@ -117,7 +116,9 @@ class UserValidationServiceTest {
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class,
-            () -> systemUnderTest.checkIfNameExists(users.get(0).getName(), true, ErrorMessages.USER_NOT_ALLOWED_CREATE_USER));
+            () ->
+                systemUnderTest.checkIfNameExists(
+                    users.get(0).getName(), true, ErrorMessages.USER_NOT_ALLOWED_CREATE_USER));
     Assertions.assertEquals(
         String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "Peter"), ex.getMessage());
     Mockito.verify(logService).addLog(any());
@@ -129,7 +130,9 @@ class UserValidationServiceTest {
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class,
-            () -> systemUnderTest.checkIfNameExists(users.get(0).getName(), false, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER));
+            () ->
+                systemUnderTest.checkIfNameExists(
+                    users.get(0).getName(), false, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER));
     Assertions.assertEquals(
         String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "Peter"), ex.getMessage());
   }
@@ -138,7 +141,9 @@ class UserValidationServiceTest {
   void testIfActorExists() {
     Mockito.when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
     Assertions.assertEquals(
-        users.get(0), systemUnderTest.checkIfNameExists(users.get(0).getName(), false, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER));
+        users.get(0),
+        systemUnderTest.checkIfNameExists(
+            users.get(0).getName(), false, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER));
   }
 
   @Test

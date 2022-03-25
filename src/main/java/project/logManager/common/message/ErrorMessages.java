@@ -38,4 +38,5 @@ public class ErrorMessages {
   public static final String USER_NOT_ALLOWED_DELETE_USER = "User %s has no authority to delete user.";
   public static final String USER_NOT_ALLOWED_CREATE_LOGS = "User %s has no authority to create logs.";
   public static final String USER_NOT_ALLOWED_CREATE_USER = "User %s has no authority to create user.";
+  public static final String CANNOT_DELETE_USER = "User cannot be deleted.";
 }

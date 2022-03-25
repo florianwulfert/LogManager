@@ -65,7 +65,7 @@ public class UserService {
     User userToDelete = userValidationService.checkIfIdExists(id);
     User actor =
         userValidationService.checkIfNameExists(
-            actorName, false, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
+            actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
     userValidationService.checkIfUserToDeleteIdEqualsActorId(id, actor.getId());
     userValidationService.checkIfUsersListIsEmpty(actor.getName(), userToDelete, false);
     userValidationService.checkIfExistLogByUserToDelete(userToDelete);
@@ -78,10 +78,10 @@ public class UserService {
 
   public String deleteByName(String name, String actorName) {
     User user =
-        userValidationService.checkIfNameExists(name, false, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
+        userValidationService.checkIfNameExists(name, false, ErrorMessages.CANNOT_DELETE_USER);
     userValidationService.checkIfExistLogByUserToDelete(user);
     userValidationService.checkIfNameExists(
-        actorName, false, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
+        actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
     userValidationService.checkIfUserToDeleteEqualsActor(name, actorName);
 
     userRepository.deleteById(user.getId());
