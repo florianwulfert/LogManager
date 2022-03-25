@@ -3,12 +3,12 @@ import {Injectable} from '@angular/core';
 import {Observable, throwError} from 'rxjs';
 import {GetUserResponse} from 'src/app/modules/user/getUser/dto/get-user-response';
 import {catchError, map} from "rxjs/operators";
-import {AddUserResponse} from "./addUser/dto/add-user-response";
-import {AddUserRequest} from "./addUser/dto/add-user-request";
-import {DeleteUserResponse} from "./deleteUser/dto/delete-user-response";
+import {AddUserResponse} from "./addUser/add-user-response";
+import {AddUserRequest} from "./addUser/add-user-request";
+import {DeleteUserResponse} from "./deleteUser/delete-user-response";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {ActorFacade} from "../actor/actor.facade";
-import {DeleteUsersResponse} from "./deleteUsers/dto/delete-users-response";
+import {DeleteUsersResponse} from "./deleteUsers/delete-users-response";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 
 const API_BASE = 'http://localhost:8081/users';
@@ -45,15 +45,21 @@ export class UserService {
     this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
       this.name = r
     })
-    return this.http.post<any>(API_ADD_USER, {...addUserRequest, actor: this.name}, {
+    return this.http.post<AddUserResponse>(API_ADD_USER, {...addUserRequest, actor: this.name}, {
       observe: 'response'
     }).pipe(
       map((r) => {
-        return {
-          result: r.body ? r.body : ''
+        this.featureManager.openSnackbar("Successfully added user \"" + addUserRequest.name + "\".");
+        return r.body || {
+          result: []
         }
       }),
-      catchError(() => {
+      catchError((err) => {
+        if(err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text);
+        } else {
+          this.featureManager.openSnackbar(err.error);
+        }
         return throwError('Due to technical issues it is currently not possible to add users.');
       })
     );

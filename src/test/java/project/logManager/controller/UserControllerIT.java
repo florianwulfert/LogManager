@@ -69,8 +69,7 @@ class UserControllerIT {
             false,
             "{\"actor\":\"Petra\",\"name\":\"Hugo\",\"birthdate\":\"1999-12-13\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
             status().isOk(),
-            String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Hugo", 24.07)
-                + InfoMessages.NORMAL_WEIGHT),
+            TestMessages.PETRA_TORSTEN_HANS_HUGO,
         Arguments.of(
             "First user has to create himself",
             true,
@@ -155,7 +154,7 @@ class UserControllerIT {
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":\"1.8\"}",
             status().isBadRequest(),
-            ErrorMessages.PARAMETER_IS_MISSING));
+            ErrorMessages.PARAMETER_IS_MISSING)));
   }
 
   @ParameterizedTest(name = "{0}")

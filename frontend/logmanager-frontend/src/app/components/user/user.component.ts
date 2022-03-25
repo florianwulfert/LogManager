@@ -4,9 +4,9 @@ import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {AddUserRequest} from "../../modules/user/addUser/dto/add-user-request";
+import {AddUserRequest} from "../../modules/user/addUser/add-user-request";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
-import {DeleteUserRequest} from "../../modules/user/deleteUser/dto/delete-user-request";
+import {DeleteUserRequest} from "../../modules/user/deleteUser/delete-user-request";
 
 @Component({
   selector: 'app-user',
@@ -62,11 +62,6 @@ export class UserComponent implements OnInit, OnDestroy {
     let request = new AddUserRequest
     request = this.prepareAddUserRequest(request)
     this.userFacade.addUser(request);
-    this.subscriptionManager.add(this.userFacade.stateAddUser$).subscribe(result => {
-      this.returnUserMessage = result
-    })
-    this.featureManager.openSnackbar(this.returnUserMessage);
-    this.getUserList()
   }
 
   deleteUsers(): void {

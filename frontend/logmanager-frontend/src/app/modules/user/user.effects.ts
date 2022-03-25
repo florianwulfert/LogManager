@@ -18,8 +18,8 @@ import {
 import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {UserService} from "./user.service";
-import {AddUserRequest} from "./addUser/dto/add-user-request";
-import {DeleteUserRequest} from "./deleteUser/dto/delete-user-request";
+import {AddUserRequest} from "./addUser/add-user-request";
+import {DeleteUserRequest} from "./deleteUser/delete-user-request";
 
 @Injectable({providedIn: 'root'})
 export class UserEffects {
