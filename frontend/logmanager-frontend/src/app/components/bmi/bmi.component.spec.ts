@@ -8,9 +8,9 @@ describe('BmiComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BmiComponent ]
+      declarations: [BmiComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

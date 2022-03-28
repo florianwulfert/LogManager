@@ -1,20 +1,14 @@
 package project.logManager.controller;
 
-import java.time.LocalDate;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.dto.UserResponseDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
+
+import java.util.Optional;
 
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
@@ -24,17 +18,9 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping("/user")
-  public String addUser(
-      @RequestParam String actor,
-      @RequestParam String name,
-      @RequestParam @DateTimeFormat(pattern = "dd.MM.yyyy") LocalDate birthdate,
-      @RequestParam double weight,
-      @RequestParam double height,
-      @RequestParam String favouriteColor) {
+  public String addUser(@RequestBody UserRequestDto allParameters) {
     return String.format(
-        "User %s was created. "
-            + userService.addUser(actor, name, birthdate, weight, height, favouriteColor),
-        name);
+        "User %s was created. " + userService.addUser(allParameters), allParameters.name);
   }
 
   @GetMapping("/users")

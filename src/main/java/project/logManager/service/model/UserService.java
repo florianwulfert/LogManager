@@ -4,13 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import project.logManager.common.dto.LogRequestDto;
+import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.UserValidationService;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,33 +26,28 @@ public class UserService {
 
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
-  public String addUser(
-      String actor,
-      String name,
-      LocalDate birthdate,
-      double weight,
-      double height,
-      String favouriteColor) {
-
+  public String addUser(UserRequestDto userRequestDto) {
+    userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
     User user =
         User.builder()
-            .name(name)
-            .birthdate(birthdate)
-            .weight(weight)
-            .height(height)
-            .favouriteColor(favouriteColor.toLowerCase())
-            .bmi(bmiService.calculateBMI(weight, height))
+            .name(userRequestDto.name)
+            .birthdate(userRequestDto.getBirthdateAsLocalDate())
+            .weight(userRequestDto.weight)
+            .height(userRequestDto.height)
+            .favouriteColor(userRequestDto.favouriteColor.toLowerCase())
+            .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
             .build();
 
-    userValidationService.validateFarbenEnum(favouriteColor.toLowerCase());
-    userValidationService.checkIfUserToPostExists(name);
-    if (userValidationService.checkIfUsersListIsEmpty(actor, user, true)) {
-      saveUser(user, actor);
+    userValidationService.validateFarbenEnum(userRequestDto.favouriteColor.toLowerCase());
+    userValidationService.checkIfUserToPostExists(userRequestDto.name);
+    if (userValidationService.checkIfUsersListIsEmpty(userRequestDto.actor, user, true)) {
+      saveUser(user, userRequestDto.actor);
     } else {
-      User activeUser = userValidationService.checkIfNameExists(actor, true);
+      User activeUser = userValidationService.checkIfNameExists(userRequestDto.actor, true);
       saveUser(user, activeUser.getName());
     }
-    return bmiService.calculateBmiAndGetBmiMessage(birthdate, weight, height);
+    return bmiService.calculateBmiAndGetBmiMessage(
+        userRequestDto.getBirthdateAsLocalDate(), userRequestDto.weight, userRequestDto.height);
   }
 
   public List<User> findUserList() {
@@ -70,8 +66,7 @@ public class UserService {
     userValidationService.checkIfExistLogByUserToDelete(userToDelete);
 
     userRepository.deleteById(id);
-
-    logService.addLog(String.format(InfoMessages.USER_DELETED_ID, id), "WARNING", actorName);
+    saveLog(String.format(InfoMessages.USER_DELETED_ID, id), "WARNING", actorName);
     LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, id));
     return String.format(InfoMessages.USER_DELETED_ID, id);
   }
@@ -83,8 +78,7 @@ public class UserService {
     userValidationService.checkIfUserToDeleteEqualsActor(name, actorName);
 
     userRepository.deleteById(user.getId());
-
-    logService.addLog(String.format(InfoMessages.USER_DELETED_NAME, name), "WARNING", actorName);
+    saveLog(String.format(InfoMessages.USER_DELETED_NAME, name), "WARNING", actorName);
     LOGGER.info(String.format(InfoMessages.USER_DELETED_NAME, name));
     return String.format(InfoMessages.USER_DELETED_NAME, name);
   }
@@ -101,13 +95,22 @@ public class UserService {
     String bmi =
         bmiService.calculateBmiAndGetBmiMessage(
             user.getBirthdate(), user.getWeight(), user.getHeight());
-    logService.addLog(
-        String.format(InfoMessages.USER_CREATED + "%s", user.getName(), bmi), "INFO", actor);
+    saveLog(String.format(InfoMessages.USER_CREATED + "%s", user, bmi),"INFO", actor);
     LOGGER.info(
         String.format(
             InfoMessages.USER_CREATED
                 + bmiService.calculateBmiAndGetBmiMessage(
                     user.getBirthdate(), user.getWeight(), user.getHeight()),
             user.getName()));
+  }
+
+  private void saveLog(String message, String severity, String actor) {
+    LogRequestDto logRequestDto =
+            LogRequestDto.builder()
+                    .message(message)
+                    .severity(severity)
+                    .user(actor)
+                    .build();
+    logService.addLog(logRequestDto);
   }
 }

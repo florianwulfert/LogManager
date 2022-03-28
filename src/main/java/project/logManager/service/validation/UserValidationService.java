@@ -4,9 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
+import project.logManager.common.dto.LogRequestDto;
+import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.enums.UserColorEnum;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.exception.FirstUserUnequalActorException;
+import project.logManager.exception.ParameterNotPresentException;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -26,6 +29,22 @@ public class UserValidationService {
   private final LogRepository logRepository;
 
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
+
+  public void checkIfAnyEntriesAreNull(UserRequestDto allParameters) {
+    if (allParameters.actor == null
+        || allParameters.actor.equals("")
+        || allParameters.name == null
+        || allParameters.name.equals("")
+        || allParameters.birthdate == null
+        || allParameters.birthdate.equals("")
+        || allParameters.favouriteColor == null
+        || allParameters.favouriteColor.equals("")
+        || allParameters.weight == null
+        || allParameters.height == null) {
+      LOGGER.info(ErrorMessages.PARAMETER_IS_MISSING);
+      throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
+    }
+  }
 
   public void validateFarbenEnum(String userFarben) {
     for (UserColorEnum farbenEnum : UserColorEnum.values()) {
@@ -62,7 +81,7 @@ public class UserValidationService {
 
   private void handleErsterUserUngleichActor(String actor, FirstUserUnequalActorException er) {
     try {
-      logService.addLog(ErrorMessages.USER_NOT_CREATED, "ERROR", actor);
+      saveUserNotCreatedLog(actor);
     } catch (RuntimeException rex) {
       throw new RuntimeException(er.getMessage());
     }
@@ -87,7 +106,7 @@ public class UserValidationService {
 
   private String handleUserKonnteNichtAngelegtWerden(String actor, RuntimeException ex) {
     LOGGER.error(ErrorMessages.USER_NOT_CREATED);
-    logService.addLog(ErrorMessages.USER_NOT_CREATED, "ERROR", actor);
+    saveUserNotCreatedLog(actor);
     return ex.getMessage();
   }
 
@@ -140,5 +159,15 @@ public class UserValidationService {
       LOGGER.warn(ErrorMessages.USERS_REFERENCED);
       throw new RuntimeException(ErrorMessages.USERS_REFERENCED);
     }
+  }
+
+  private void saveUserNotCreatedLog(String actor) {
+    LogRequestDto logRequestDto =
+            LogRequestDto.builder()
+                    .message(ErrorMessages.USER_NOT_CREATED)
+                    .severity("ERROR")
+                    .user(actor)
+                    .build();
+    logService.addLog(logRequestDto);
   }
 }

@@ -23,25 +23,17 @@ public class ErrorMessages {
           + "First user has to create himself! ";
   public static final String USER_NOT_CREATED = "User could not be created.";
   public static final String USER_EXISTS = "User %s already exists.";
-  public static final String HEIGHT_NOT_PRESENT =
-      "Required double parameter 'height' is not present";
-  public static final String WEIGHT_NOT_PRESENT =
-      "Required double parameter 'weight' is not present";
-  public static final String BIRTHDATE_NOT_PRESENT =
-      "Required LocalDate parameter 'birthdate' is not present";
-  public static final String MESSAGE_NOT_PRESENT =
-      "Required String parameter 'message' is not present";
-  public static final String SEVERITY_NOT_PRESENT =
-      "Required String parameter 'severity' is not present";
   public static final String ID_NOT_PRESENT = "Required Integer parameter 'id' is not present";
-  public static final String NAME_NOT_PRESENT = "Required String parameter 'name' is not present";
-  public static final String FAVOURITE_COLOR_NOT_PRESENT =
-      "Required String parameter 'favouriteColor' is not present";
-  public static final String ACTOR_NOT_PRESENT = "Required String parameter 'actor' is not present";
-  public static final String NAME_USER_NOT_PRESENT =
-      "Required String parameter 'nameUser' is not present";
   public static final String SEVERITY_NOT_REGISTERED_CHOICE =
       "Severity %s not registered. Please choose one of the following options:"
           + " TRACE, DEBUG, INFO, WARNING, ERROR, FATAL";
   public static final String INFINITE_OR_NAN = "Infinite or NaN";
+  public static final String ILLEGAL_BIRTHDATE_FORMAT =
+      "Illegal format for birthdate! Use format: YYYY-MM-DD";
+  public static final String PARAMETER_IS_MISSING = "One of the parameters is missing.";
+  public static final String PARAMETER_WRONG_FORMAT = "One of the parameters has wrong format.";
+  public static final String PARAMETER_MISSING_OR_WRONG_FORMAT =
+      "Required path variable was not found or request param has wrong format! ";
+  public static final String NO_BOOKS_FOUNDS="no books with title %s found";    
+
 }

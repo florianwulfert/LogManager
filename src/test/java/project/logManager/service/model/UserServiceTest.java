@@ -1,5 +1,10 @@
 package project.logManager.service.model;
 
+import static org.mockito.ArgumentMatchers.any;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,14 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.UserValidationService;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -39,43 +41,44 @@ class UserServiceTest {
 
   @Test
   void testAddUser() {
-    Mockito.when(
-            bmiService.calculateBmiAndGetBmiMessage(Mockito.any(), Mockito.any(), Mockito.any()))
+    Mockito.when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
         .thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
-    Mockito.when(
-            userValidationService.checkIfUsersListIsEmpty(
-                Mockito.any(), Mockito.any(), Mockito.anyBoolean()))
+    Mockito.when(userValidationService.checkIfUsersListIsEmpty(any(), any(), Mockito.anyBoolean()))
         .thenReturn(false);
     Mockito.when(userValidationService.checkIfNameExists(Mockito.anyString(), Mockito.anyBoolean()))
         .thenReturn(users.get(1));
     systemUnderTest.addUser(
-        users.get(0).getName(), "Florian", LocalDate.of(1988, 12, 12), 90.0, 1.85, "YELLOW");
-    Mockito.verify(logService)
-        .addLog(
-            String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Florian", 24.07)
-                + InfoMessages.NORMAL_WEIGHT,
-            "INFO",
-            "Florian");
-    Mockito.verify(userRepository).save(Mockito.any());
+        UserRequestDto.builder()
+            .actor("Torsten")
+            .name("Hugo")
+            .birthdate("1994-10-05")
+            .weight(75.0)
+            .height(1.65)
+            .favouriteColor("red")
+            .build());
+    Mockito.verify(logService).addLog(any());
+    Mockito.verify(userRepository).save(any());
   }
 
   @Test
   void testUsersListIsEmpty() {
-    Mockito.when(
-            bmiService.calculateBmiAndGetBmiMessage(Mockito.any(), Mockito.any(), Mockito.any()))
+    Mockito.when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
         .thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
     Mockito.when(
             userValidationService.checkIfUsersListIsEmpty(
-                Mockito.anyString(), Mockito.any(), Mockito.anyBoolean()))
+                Mockito.anyString(), any(), Mockito.anyBoolean()))
         .thenReturn(true);
-    systemUnderTest.addUser("Florian", "Florian", LocalDate.of(2000, 11, 18), 80, 1.85, "blau");
-    Mockito.verify(logService)
-        .addLog(
-            String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Florian", 24.07)
-                + InfoMessages.NORMAL_WEIGHT,
-            "INFO",
-            "Florian");
-    Mockito.verify(userRepository).save(Mockito.any());
+    systemUnderTest.addUser(
+        UserRequestDto.builder()
+            .actor("Torsten")
+            .name("Hugo")
+            .birthdate("1994-10-05")
+            .weight(75.0)
+            .height(1.65)
+            .favouriteColor("red")
+            .build());
+    Mockito.verify(logService).addLog(any());
+    Mockito.verify(userRepository).save(any());
   }
 
   @Test
@@ -103,8 +106,7 @@ class UserServiceTest {
     Assertions.assertEquals(
         String.format(InfoMessages.USER_DELETED_ID, 1),
         systemUnderTest.deleteById(1, users.get(0).getName()));
-    Mockito.verify(logService)
-        .addLog(String.format(InfoMessages.USER_DELETED_ID, 1), "WARNING", "Peter");
+    Mockito.verify(logService).addLog(any());
   }
 
   @Test
@@ -114,8 +116,7 @@ class UserServiceTest {
     Assertions.assertEquals(
         String.format(InfoMessages.USER_DELETED_NAME, "Florian"),
         systemUnderTest.deleteByName("Florian", "Peter"));
-    Mockito.verify(logService)
-        .addLog(String.format(InfoMessages.USER_DELETED_NAME, "Florian"), "WARNING", "Peter");
+    Mockito.verify(logService).addLog(any());
   }
 
   @Test

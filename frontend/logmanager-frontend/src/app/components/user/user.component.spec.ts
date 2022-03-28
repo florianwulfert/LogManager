@@ -1,6 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
+import {StoreModule} from '@ngrx/store';
 import {UserComponent} from './user.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 describe('UserComponent', () => {
   let component: UserComponent;
@@ -8,6 +9,10 @@ describe('UserComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [
+        StoreModule.forRoot({}),
+        MatSnackBarModule
+      ],
       declarations: [UserComponent]
     })
       .compileComponents();

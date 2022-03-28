@@ -9,10 +9,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.dto.LogMessageDto;
+import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
+import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
+import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.LogValidationService;
@@ -23,6 +26,8 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static project.logManager.common.message.TestMessages.ENTRIES_DELETED;
 
@@ -38,8 +43,11 @@ class LogServiceTest {
 
   @Mock UserRepository userRepository;
 
+  @Mock LogDTOMapper logDTOMapper;
+
   List<LogMessageDto> customLogMessageDto;
   List<User> users;
+  List<LogDTO> logs;
 
   @BeforeEach
   void init() {
@@ -49,71 +57,68 @@ class LogServiceTest {
 
   @Test
   void testGetLogs() {
-    LocalDateTime timestamp = LocalDateTime.of(2020, Month.JANUARY, 25, 17, 0, 0);
-    List<Log> logs = new ArrayList<>();
-    Log log = createNewLog(1, "WARNING", "Das ist ein Test", timestamp);
-    logs.add(log);
-    Mockito.when(logValidationService.validateSeverity(Mockito.anyString())).thenReturn(true);
-    Mockito.when(logRepository.findLogs(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+    Mockito.when(logDTOMapper.logsToLogDTOs(logRepository.findLogs(any(), any(), any(), any())))
         .thenReturn(logs);
     LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
     LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
     systemUnderTest.getLogs("WARNING", "Test", startDate, endDate);
-    Mockito.verify(logRepository, Mockito.times(1))
-        .findLogs(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any());
+    Mockito.verify(logDTOMapper).logsToLogDTOs(logRepository.findLogs(any(), any(), any(), any()));
   }
 
   @Test
   void testSeverityIsFalseAtGetLogs() {
     LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
     LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
-    Assertions.assertThrows(
-        IllegalArgumentException.class,
-        () -> systemUnderTest.getLogs("Hallo", "Test", startDate, endDate));
+    assertEquals(new ArrayList<>(), systemUnderTest.getLogs("Hallo", "Test", startDate, endDate));
   }
 
   @Test
   void testAddLog() {
-    Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(true);
+    LogRequestDto logRequestDto =
+        LogRequestDto.builder().message("Banane").severity("INFO").user("Paul").build();
+    Mockito.when(logValidationService.validateSeverity(any())).thenReturn(true);
     Mockito.when(logValidationService.validateMessage(Mockito.anyString()))
         .thenReturn(customLogMessageDto.get(1));
     Mockito.when(userRepository.findUserByName("Paul")).thenReturn(users.get(0));
-    Assertions.assertEquals(
-        "Message \"Banane\" saved as INFO!", systemUnderTest.addLog("Banane", "INFO", "Paul"));
-    Mockito.verify(logRepository, Mockito.times(1)).save(Mockito.any());
+    assertEquals("Message \"Banane\" saved as INFO!", systemUnderTest.addLog(logRequestDto));
+    Mockito.verify(logRepository, Mockito.times(1)).save(any());
   }
 
   @Test
   void testAddLogWrongSeverity() {
-    Mockito.when(logValidationService.validateSeverity(Mockito.any())).thenReturn(false);
+    LogRequestDto logRequestDto =
+        LogRequestDto.builder().message("Ein Test").severity("KATZE").user("Peter").build();
+    Mockito.when(logValidationService.validateSeverity(any())).thenReturn(false);
     RuntimeException ex =
         Assertions.assertThrows(
-            IllegalArgumentException.class,
-            () -> systemUnderTest.addLog("Ein Test", "KATZE", "Peter"));
-    Assertions.assertEquals(
+            IllegalArgumentException.class, () -> systemUnderTest.addLog(logRequestDto));
+    assertEquals(
         String.format(ErrorMessages.SEVERITY_NOT_REGISTERED_CHOICE, "KATZE"), ex.getMessage());
   }
 
   @Test
   void testKatzeReturnMessage() {
+    LogRequestDto logRequestDto =
+        LogRequestDto.builder().message("Katze").severity("INFO").user("Peter").build();
     Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
     Mockito.when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
     Mockito.when(logValidationService.validateMessage(Mockito.anyString()))
         .thenReturn(customLogMessageDto.get(0));
-    Assertions.assertEquals(
+    assertEquals(
         customLogMessageDto.get(0).getReturnMessage() + InfoMessages.HUND_SAVED,
-        systemUnderTest.addLog("Katze", "INFO", "Peter"));
+        systemUnderTest.addLog(logRequestDto));
   }
 
   @Test
   void testIfUserIsNull() {
+    LogRequestDto logRequestDto =
+        LogRequestDto.builder().message("Hallo").severity("INFO").user("Hans").build();
     Mockito.when(logValidationService.validateSeverity(anyString())).thenReturn(true);
-    Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(Mockito.any());
+    Mockito.when(userRepository.findUserByName(Mockito.anyString())).thenReturn(any());
     RuntimeException ex =
         Assertions.assertThrows(
-            RuntimeException.class, () -> systemUnderTest.addLog("Hallo", "INFO", "Hans"));
-    Assertions.assertEquals(
-        String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Hans"), ex.getMessage());
+            RuntimeException.class, () -> systemUnderTest.addLog(logRequestDto));
+    assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Hans"), ex.getMessage());
   }
 
   @Test
@@ -124,15 +129,14 @@ class LogServiceTest {
 
   @Test
   void testDeleteById() {
-    Assertions.assertEquals(
-        String.format(InfoMessages.ENTRY_DELETED_ID, 2), systemUnderTest.deleteById(2));
+    assertEquals(String.format(InfoMessages.ENTRY_DELETED_ID, 2), systemUnderTest.deleteById(2));
     Mockito.verify(logRepository).deleteById(2);
   }
 
   @Test
   void testSearchLogByActorId() {
-    systemUnderTest.existLogByUserToDelete(Mockito.any());
-    Mockito.verify(logRepository).findByUser(Mockito.any());
+    systemUnderTest.existLogByUserToDelete(any());
+    Mockito.verify(logRepository).findByUser(any());
   }
 
   @Test
@@ -155,14 +159,13 @@ class LogServiceTest {
             .build());
 
     Mockito.when(logRepository.deleteBySeverity(Mockito.anyString())).thenReturn(logs);
-    Assertions.assertEquals(ENTRIES_DELETED, systemUnderTest.deleteBySeverity("INFO"));
+    assertEquals(ENTRIES_DELETED, systemUnderTest.deleteBySeverity("INFO"));
     Mockito.verify(logRepository).deleteBySeverity("INFO");
   }
 
   @Test
   void testNoEntriesFound() {
-    Assertions.assertEquals(
-        ErrorMessages.NO_ENTRIES_FOUND, systemUnderTest.deleteBySeverity("INFO"));
+    assertEquals(ErrorMessages.NO_ENTRIES_FOUND, systemUnderTest.deleteBySeverity("INFO"));
     Mockito.verify(logRepository).deleteBySeverity("INFO");
   }
 

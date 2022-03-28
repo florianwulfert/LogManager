@@ -3,6 +3,8 @@ package project.logManager.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import project.logManager.common.dto.LogRequestDto;
+import project.logManager.common.dto.LogResponseDto;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
 import project.logManager.model.mapper.LogDTOMapper;
@@ -15,13 +17,14 @@ import java.util.List;
 /** @author - EugenFriesen 12.02.2021 */
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin
 public class LogController {
 
   private final LogService logService;
   private final LogDTOMapper logDTOMapper;
 
   @GetMapping("/logs")
-  public List<LogDTO> getLogs(
+  public LogResponseDto getLogs(
       @RequestParam(required = false) final String severity,
       @RequestParam(required = false) final String message,
       @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
@@ -29,25 +32,20 @@ public class LogController {
       @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
           final LocalDateTime endDateTime) {
 
-    List<Log> logs = logService.getLogs(severity, message, startDateTime, endDateTime);
-    return logDTOMapper.logsToLogDTOs(logs);
+    return new LogResponseDto(logService.getLogs(severity, message, startDateTime, endDateTime));
   }
 
   @PostMapping("/log")
-  public String addLog(
-      @RequestParam final String severity,
-      @RequestParam final String message,
-      @RequestParam final String nameUser) {
-
-    return logService.addLog(message, severity, nameUser);
+  public String addLog(@RequestBody LogRequestDto allParameters) {
+    return logService.addLog(allParameters);
   }
 
   @GetMapping("/logs/{id}")
   public List<LogDTO> getLogsByID(@PathVariable final Integer id) {
     Log logs = logService.searchLogsByID(id);
-    List<Log> returnlist = new ArrayList<>();
-    returnlist.add(logs);
-    return logDTOMapper.logsToLogDTOs(returnlist);
+    List<Log> returnList = new ArrayList<>();
+    returnList.add(logs);
+    return logDTOMapper.logsToLogDTOs(returnList);
   }
 
   @DeleteMapping("/logs/delete/{id}")
