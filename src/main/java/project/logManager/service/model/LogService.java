@@ -104,12 +104,12 @@ public class LogService {
     }
 
     StringBuilder sb = new StringBuilder();
-    String iDs = "";
+    StringBuilder iDs = new StringBuilder();
 
     for (Log log : deletedLogs) {
-      iDs += log.getId();
+      iDs.append(log.getId());
       if (deletedLogs.lastIndexOf(log) < deletedLogs.size() - 1) {
-        iDs += ", ";
+        iDs.append(", ");
       }
     }
 

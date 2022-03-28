@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.enums.UserColorEnum;
 import project.logManager.common.message.ErrorMessages;
+import project.logManager.common.message.InfoMessages;
 import project.logManager.exception.FirstUserUnequalActorException;
 import project.logManager.exception.ParameterNotPresentException;
 import project.logManager.exception.UserNotAllowedException;
@@ -57,27 +58,22 @@ public class UserValidationService {
   }
 
   public boolean checkIfUsersListIsEmpty(String actor, User user, boolean onCreate) {
-    try {
-      List<User> usersList = userRepository.findAll();
-      handleUsersListIsEmpty(usersList, actor, user, onCreate);
-      return false;
-    } catch (RuntimeException ex) {
-      LOGGER.warn(ErrorMessages.NO_USERS_YET + user.getName() + " ungleich " + actor);
-      throw new FirstUserUnequalActorException(actor, user.getName());
-    }
+    List<User> usersList = userRepository.findAll();
+    handleUsersListIsEmpty(usersList, actor, user, onCreate);
+    return true;
   }
 
   private void handleUsersListIsEmpty(
       List<User> usersList, String actor, User user, boolean onCreate) {
     if (usersList.isEmpty()) {
+      LOGGER.info(InfoMessages.LIST_IS_EMPTY);
       if (!user.getName().equals(actor)) {
         if (onCreate) {
           LOGGER.warn(ErrorMessages.NO_USERS_YET + user.getName() + " ungleich " + actor);
-          throw new RuntimeException();
-        } else {
-          LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_ID, user.getId()));
-          throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_ID, user.getId()));
+          throw new FirstUserUnequalActorException(actor, user.getName());
         }
+        LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_ID, user.getId()));
+        throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_ID, user.getId()));
       }
     }
   }
@@ -98,14 +94,13 @@ public class UserValidationService {
     if (isCreate) {
       LOGGER.info(String.format(action, name));
       throw new UserNotAllowedException(String.format(action, name));
-    } else {
-      throw new UserNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
     }
+    LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
+    throw new UserNotFoundException(name);
   }
 
   public void checkIfUserToPostExists(String name) {
-    userRepository.findUserByName(name);
-    {
+    if (userRepository.findUserByName(name) != null) {
       LOGGER.warn(String.format(ErrorMessages.USER_EXISTS, name));
       throw new RuntimeException(String.format(ErrorMessages.USER_EXISTS, name));
     }
