@@ -79,18 +79,14 @@ public class UserValidationService {
   }
 
   public User checkIfNameExists(String name, boolean isCreate, String action) {
-    try {
-      User activeUser = userRepository.findUserByName(name);
-      if (activeUser == null) {
-        throw new RuntimeException();
-      }
-      return activeUser;
-    } catch (RuntimeException ex) {
-      return handleRuntimeExceptionIfNameNotExist(isCreate, action, name);
+    User user = userRepository.findUserByName(name);
+    if (user == null) {
+      handleNameNotExist(isCreate, action, name);
     }
+    return user;
   }
 
-  private User handleRuntimeExceptionIfNameNotExist(boolean isCreate, String action, String name) {
+  private void handleNameNotExist(boolean isCreate, String action, String name) {
     if (isCreate) {
       LOGGER.info(String.format(action, name));
       throw new UserNotAllowedException(String.format(action, name));
@@ -131,9 +127,8 @@ public class UserValidationService {
   }
 
   public void checkIfUserToDeleteEqualsActor(String name, String actorName) {
-    User userToDelete = userRepository.findUserByName(name);
     User actor = userRepository.findUserByName(actorName);
-    if (userToDelete.equals(actor)) {
+    if (userRepository.findUserByName(name).equals(actor)) {
       LOGGER.error(ErrorMessages.USER_DELETE_HIMSELF);
       throw new RuntimeException(ErrorMessages.USER_DELETE_HIMSELF);
     }

@@ -39,14 +39,16 @@ public class UserService {
             .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
             .build();
 
-    userValidationService.validateFarbenEnum(userRequestDto.favouriteColor.toLowerCase());
-    userValidationService.checkIfUserToPostExists(userRequestDto.name);
+    userValidationService.validateFarbenEnum(user.getFavouriteColor().toLowerCase());
+    userValidationService.checkIfUserToPostExists(user.getName());
     if (userValidationService.checkIfUsersListIsEmpty(userRequestDto.actor, user, true)) {
       saveUser(user, userRequestDto.actor);
     } else {
       User activeUser =
           userValidationService.checkIfNameExists(
-              userRequestDto.actor, true, ErrorMessages.USER_NOT_ALLOWED_CREATE_USER);
+              userRequestDto.actor,
+              true,
+              String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, userRequestDto.actor));
       saveUser(user, activeUser.getName());
     }
     return bmiService.calculateBmiAndGetBmiMessage(
@@ -77,11 +79,9 @@ public class UserService {
   }
 
   public String deleteByName(String name, String actorName) {
-    User user =
-        userValidationService.checkIfNameExists(name, false, ErrorMessages.CANNOT_DELETE_USER);
+    User user = userValidationService.checkIfNameExists(name, false, ErrorMessages.CANNOT_DELETE_USER);
     userValidationService.checkIfExistLogByUserToDelete(user);
-    userValidationService.checkIfNameExists(
-        actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
+    userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
     userValidationService.checkIfUserToDeleteEqualsActor(name, actorName);
 
     userRepository.deleteById(user.getId());
