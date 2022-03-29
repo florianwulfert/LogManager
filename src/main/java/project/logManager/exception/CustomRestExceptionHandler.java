@@ -24,7 +24,7 @@ public class CustomRestExceptionHandler {
 
   @ResponseBody
   @ExceptionHandler(UserNotAllowedException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
   String userNotAllowedExceptionHandler(UserNotAllowedException ex) {
     return ex.getMessage();
   }

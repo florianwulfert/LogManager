@@ -77,16 +77,16 @@ public class UserValidationService {
     }
   }
 
-  public User checkIfNameExists(String name, boolean isCreate, String action) {
+  public User checkIfNameExists(String name, boolean isActor, String action) {
     User user = userRepository.findUserByName(name);
     if (user == null) {
-      handleNameNotExist(isCreate, action, name);
+      handleNameNotExist(isActor, action, name);
     }
     return user;
    }
 
-  private void handleNameNotExist(boolean isCreate, String action, String name) {
-    if (isCreate) {
+  private void handleNameNotExist(boolean isActor, String action, String name) {
+    if (isActor) {
       LOGGER.info(String.format(action, name));
       throw new UserNotAllowedException(String.format(action, name));
     }
