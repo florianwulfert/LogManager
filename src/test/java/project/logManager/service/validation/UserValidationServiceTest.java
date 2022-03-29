@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.ErrorMessages;
+import project.logManager.exception.IllegalColorException;
 import project.logManager.exception.ParameterNotPresentException;
 import project.logManager.exception.UserNotAllowedException;
 import project.logManager.exception.UserNotFoundException;
@@ -117,7 +118,7 @@ class UserValidationServiceTest {
                     "Heinrich",
                     false,
                     String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Heinrich")));
-    assertEquals(String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Heinrich"), ex.getMessage());
+    assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Heinrich"), ex.getMessage());
   }
 
   @Test

@@ -8,13 +8,11 @@ import project.logManager.common.dto.LogMessageDto;
 import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
-import project.logManager.exception.SeverityNotFoundException;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.model.repository.LogRepository;
-import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.LogValidationService;
 
 import javax.transaction.Transactional;
@@ -74,17 +72,20 @@ public class LogService {
 
   public String deleteById(Integer id) {
     logRepository.deleteById(id);
+    LOGGER.info(String.format(InfoMessages.ENTRY_DELETED_ID, id));
     return String.format(InfoMessages.ENTRY_DELETED_ID, id);
   }
 
   public boolean existLogByUserToDelete(User actor) {
     List<Log> logs = logRepository.findByUser(actor);
+    LOGGER.info(String.format(InfoMessages.LOGS_BY_USER, actor));
     return !logs.isEmpty();
   }
 
   public String deleteBySeverity(String severity) {
     List<Log> deletedLogs = logRepository.deleteBySeverity(severity);
     if (deletedLogs.isEmpty()) {
+      LOGGER.info(ErrorMessages.NO_ENTRIES_FOUND);
       return ErrorMessages.NO_ENTRIES_FOUND;
     }
 

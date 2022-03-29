@@ -44,7 +44,7 @@ public class LogValidationService {
       }
     }
 
-    LOGGER.error(ErrorMessages.SEVERITY_NOT_REGISTERED, severity);
+    LOGGER.warn(ErrorMessages.SEVERITY_NOT_REGISTERED, severity);
     throw new SeverityNotFoundException(severity);
   }
 
@@ -63,6 +63,7 @@ public class LogValidationService {
     try {
       User user = userRepository.findUserByName(userName);
       if (user == null) {
+        LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
         throw new RuntimeException();
       }
       LOGGER.info(String.format(InfoMessages.USER_FOUND, userName));

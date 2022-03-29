@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.dto.UserRequestDto;
+import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
@@ -56,11 +57,15 @@ public class UserService {
   }
 
   public List<User> findUserList() {
-    return userRepository.findAll();
+    List<User> users = userRepository.findAll();
+    LOGGER.info(users);
+    return users;
   }
 
   public Optional<User> findUserById(Integer id) {
-    return userRepository.findById(id).isPresent() ? userRepository.findById(id) : Optional.empty();
+    Optional<User> user = userRepository.findById(id).isPresent() ? userRepository.findById(id) : Optional.empty();
+    LOGGER.info(user);
+    return user;
   }
 
   public String deleteById(Integer id, String actorName) {

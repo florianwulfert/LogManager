@@ -4,13 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
-import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.enums.UserColorEnum;
 import project.logManager.common.message.ErrorMessages;
-import project.logManager.exception.FirstUserUnequalActorException;
-import project.logManager.exception.ParameterNotPresentException;
-import project.logManager.exception.UserNotFoundException;
+import project.logManager.common.message.InfoMessages;
+import project.logManager.exception.*;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
@@ -55,7 +53,7 @@ public class UserValidationService {
       }
     }
     LOGGER.error(ErrorMessages.COLOR_ILLEGAL, userFarben);
-    throw new IllegalArgumentException(ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE);
+    throw new IllegalColorException(ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE);
   }
 
   public boolean checkIfUsersListIsEmpty() {
@@ -73,7 +71,7 @@ public class UserValidationService {
         LOGGER.warn(ErrorMessages.NO_USERS_YET + user.getName() + " ungleich " + actor);
         throw new FirstUserUnequalActorException(actor, user.getName());
       }
-      LOGGER.error(String.format(ErrorMessages.USER_NOT_IDENTIFIED, user.getName()));
+      LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_NAME, user.getName()));
       throw new UserNotFoundException(user.getName());
     }
   }

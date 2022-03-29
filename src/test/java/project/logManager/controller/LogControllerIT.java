@@ -236,8 +236,8 @@ class LogControllerIT {
         Arguments.of(
             "UserIsFalse",
             "{\"message\":\"Test\", \"severity\":\"INFO\",\"user\":\"Alex\"}",
-            status().isForbidden(),
-            String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_LOGS, "Alex")),
+            status().isBadRequest(),
+            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Alex")),
         Arguments.of(
             "KatzeToHund",
             "{\"message\":\"Katze\", \"severity\":\"INFO\",\"user\":\"Petra\"}",
