@@ -1,21 +1,15 @@
 package project.logManager.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.dto.UserResponseDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
+
+import java.util.Optional;
 
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
@@ -27,13 +21,13 @@ public class UserController {
 
   @PostMapping("/user")
   public UserResponseDto addUser(@RequestBody UserRequestDto allParameters) {
-        userService.addUser(allParameters);
-        return new UserResponseDto(userService.findUserList());
+        String returnMessage = userService.addUser(allParameters);
+        return new UserResponseDto(userService.findUserList(), returnMessage);
   }
 
   @GetMapping("/users")
   public UserResponseDto findUsers() {
-    return new UserResponseDto(userService.findUserList());
+    return new UserResponseDto(userService.findUserList(), null);
   }
 
   @GetMapping("/user/id")
@@ -44,7 +38,7 @@ public class UserController {
   @DeleteMapping("/user/delete/{id}")
   public UserResponseDto deleteUserByID(@PathVariable final Integer id, @RequestParam final String actor) {
     userService.deleteById(id, actor);
-    return new UserResponseDto(userService.findUserList());
+    return new UserResponseDto(userService.findUserList(), null);
   }
 
   @DeleteMapping("/user/delete/name/{name}")
@@ -55,7 +49,7 @@ public class UserController {
 
   @DeleteMapping("/user/delete")
   public UserResponseDto deleteAll() {
-    userService.deleteAll();
-    return new UserResponseDto(userService.findUserList());
+    String returnMessage = userService.deleteAll();
+    return new UserResponseDto(userService.findUserList(), returnMessage);
   }
 }

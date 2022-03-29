@@ -1,17 +1,11 @@
 package project.logManager.service.model;
 
-import static org.mockito.ArgumentMatchers.any;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.InfoMessages;
@@ -108,7 +102,7 @@ class UserServiceTest {
   void testDeleteById() {
     when(userValidationService.checkIfIdExists(anyInt()))
         .thenReturn(users.get(0));
-    when(userValidationService.checkIfNameExists(anyString(), anyBoolean()))
+    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString()))
         .thenReturn(users.get(1));
     systemUnderTest.deleteById(1, "Florian");
     verify(userRepository).deleteById(1);
