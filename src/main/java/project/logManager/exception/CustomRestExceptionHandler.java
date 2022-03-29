@@ -21,4 +21,11 @@ public class CustomRestExceptionHandler {
   String parameterNotPresentExceptionHandler(ParameterNotPresentException ex) {
     return ex.getMessage();
   }
+
+  @ResponseBody
+  @ExceptionHandler(UserNotAllowedException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  String userNotAllowedExceptionHandler(UserNotAllowedException ex) {
+    return ex.getMessage();
+  }
 }

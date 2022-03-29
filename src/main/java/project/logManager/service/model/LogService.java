@@ -9,6 +9,7 @@ import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.exception.SeverityNotFoundException;
+import project.logManager.exception.UserNotAllowedException;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
@@ -57,7 +58,8 @@ public class LogService {
             + String.format(
                 InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
     LOGGER.info(
-        String.format(InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
+        String.format(
+            InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
     return logMessage.getReturnMessage();
   }
 
@@ -74,8 +76,9 @@ public class LogService {
   private User checkActor(String userName) {
     User user = userRepository.findUserByName(userName);
     if (user == null) {
-      LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
-      throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
+      LOGGER.error(String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_LOGS, userName));
+      throw new UserNotAllowedException(
+          String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_LOGS, userName));
     }
     return user;
   }
@@ -101,12 +104,12 @@ public class LogService {
     }
 
     StringBuilder sb = new StringBuilder();
-    String iDs = "";
+    StringBuilder iDs = new StringBuilder();
 
     for (Log log : deletedLogs) {
-      iDs += log.getId();
+      iDs.append(log.getId());
       if (deletedLogs.lastIndexOf(log) < deletedLogs.size() - 1) {
-        iDs += ", ";
+        iDs.append(", ");
       }
     }
 

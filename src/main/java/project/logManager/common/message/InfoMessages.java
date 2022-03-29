@@ -23,4 +23,5 @@ public class InfoMessages {
   public static final String ALL_BOOKS_DELETED = "All BOOKS were deleted from database!";
   public static final String BOOK_CAN_NOT_BE_IDENTIFIED = "There are more books with the title %s. Please identify by yourself and delete with the id out of the following list.\n %s";
   public static final String ALL_BOOKS_FOUNDS="all Books founds";
+  public static final String LIST_IS_EMPTY = "List is empty.";
 }

@@ -118,7 +118,7 @@ class LogServiceTest {
     RuntimeException ex =
         Assertions.assertThrows(
             RuntimeException.class, () -> systemUnderTest.addLog(logRequestDto));
-    assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Hans"), ex.getMessage());
+    assertEquals(String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_LOGS, "Hans"), ex.getMessage());
   }
 
   @Test
