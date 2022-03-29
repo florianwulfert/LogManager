@@ -57,7 +57,7 @@ class LogValidationServiceTest {
 
   @Test
   void validateSeverity() {
-    assertEquals(InfoMessages.SEVERITY_VALID, systemUnderTest.validateSeverity("INFO"));
+    systemUnderTest.validateSeverity("INFO");
   }
 
   @Test

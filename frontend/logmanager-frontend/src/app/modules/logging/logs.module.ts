@@ -2,7 +2,7 @@ import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
-import {GET_LOGS_FEATURE_NAME} from "./getLogs/store/logs-get.state";
+import {GET_LOGS_FEATURE_NAME} from "./logs.state";
 import {LogsGetReducer} from "./getLogs/store/logs-get.reducer";
 import {LogEffects} from "./logs.effects";
 import {LogFacade} from "./logs.facade";

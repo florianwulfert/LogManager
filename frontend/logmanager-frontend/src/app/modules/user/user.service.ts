@@ -71,9 +71,10 @@ export class UserService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("Successfully deleted all users.");
+        this.featureManager.openSnackbar(r.body?.returnMessage);
         return r.body || {
-          result: []
+          result: [],
+          returnMessage: ""
         }
       }),
       catchError((err) => {
@@ -95,7 +96,7 @@ export class UserService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("User with ID " + i + " was successfully deleted.");
+        this.featureManager.openSnackbar("User with the ID " + i + " was deleted.");
         return r.body || {
           result: []
         }

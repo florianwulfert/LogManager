@@ -1,7 +1,7 @@
 import {UserDto} from "../getUser/user.dto";
 
 export interface DeleteUserResponse {
-  result: UserDto[];
+  result: UserDto[]
 }
 
 export interface DeleteUserErrorResponse {

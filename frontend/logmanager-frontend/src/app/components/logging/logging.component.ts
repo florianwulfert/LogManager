@@ -42,12 +42,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   deleteLogs(): void {
-    this.logsFacade.deleteLogs();
-    this.subscriptionManager.add(this.logsFacade.stateDeleteLogs$).subscribe(result => {
-      this.returnUserMessage = result
-    })
-    this.featureManager.openSnackbar(this.returnUserMessage);
-    this.getLogs()
+    this.logsFacade.deleteLogs()
   }
 
   public form: FormGroup = new FormGroup({
