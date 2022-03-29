@@ -6,17 +6,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
+import project.logManager.service.validation.BmiValidationService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BmiServiceTest {
@@ -24,6 +26,9 @@ class BmiServiceTest {
   @InjectMocks BmiService systemUnderTest;
 
   @Mock UserRepository userRepository;
+
+  @Mock
+  BmiValidationService bmiValidationService;
 
   List<User> users;
 
@@ -79,7 +84,7 @@ class BmiServiceTest {
 
   @Test
   void testFindUserAndCalculateBMI() {
-    Mockito.when(userRepository.findUserByName(users.get(1).getName())).thenReturn(users.get(1));
+    when(userRepository.findUserByName(users.get(1).getName())).thenReturn(users.get(1));
     systemUnderTest.findUserAndGetBMI(users.get(1).getName());
   }
 
@@ -89,7 +94,7 @@ class BmiServiceTest {
         Assertions.assertThrows(
             UserNotFoundException.class, () -> systemUnderTest.findUserAndGetBMI("Paul"));
     Assertions.assertEquals(
-        String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Paul"), ex.getMessage());
+        String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Paul"), ex.getMessage());
   }
 
   private List<User> addTestUser() {

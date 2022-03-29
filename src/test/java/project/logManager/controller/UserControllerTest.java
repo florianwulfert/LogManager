@@ -16,12 +16,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.verify;
+
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
-  @InjectMocks UserController systemUnderTest;
+  @InjectMocks
+  UserController systemUnderTest;
 
-  @Mock UserService userService;
+  @Mock
+  UserService userService;
 
   List<User> users;
 
@@ -33,15 +37,15 @@ class UserControllerTest {
   @Test
   void testAddUser() {
     Mockito.when(
-            systemUnderTest.addUser(
-                UserRequestDto.builder()
-                    .actor("Torsten")
-                    .name("Hugo")
-                    .birthdate("05.10.1994")
-                    .weight(75.0)
-                    .height(1.65)
-                    .favouriteColor("red")
-                    .build()))
+        systemUnderTest.addUser(
+            UserRequestDto.builder()
+                .actor("Torsten")
+                .name("Hugo")
+                .birthdate("05.10.1994")
+                .weight(75.0)
+                .height(1.65)
+                .favouriteColor("red")
+                .build()))
         .thenReturn("Test");
     Assertions.assertEquals(
         "User Hugo was created. Test",
@@ -54,7 +58,7 @@ class UserControllerTest {
                 .height(1.65)
                 .favouriteColor("red")
                 .build()));
-    Mockito.verify(userService)
+    verify(userService)
         .addUser(
             UserRequestDto.builder()
                 .actor("Torsten")
@@ -69,31 +73,31 @@ class UserControllerTest {
   @Test
   void testFindUsers() {
     systemUnderTest.findUsers();
-    Mockito.verify(userService).findUserList();
+    verify(userService).findUserList();
   }
 
   @Test
   void testFindUserById() {
     systemUnderTest.findUserByID(1);
-    Mockito.verify(userService).findUserById(1);
+    verify(userService).findUserById(1);
   }
 
   @Test
   void testDeleteUserById() {
     systemUnderTest.deleteUserByID(users.get(0).getId(), users.get(1).getName());
-    Mockito.verify(userService).deleteById(1, users.get(1).getName());
+    verify(userService).deleteById(1, users.get(1).getName());
   }
 
   @Test
   void testDeleteUserByName() {
     systemUnderTest.deleteUserByName("Peter", "Hans");
-    Mockito.verify(userService).deleteByName("Peter", "Hans");
+    verify(userService).deleteByName("Peter", "Hans");
   }
 
   @Test
   void testDeleteAll() {
     systemUnderTest.deleteAll();
-    Mockito.verify(userService).deleteAll();
+    verify(userService).deleteAll();
   }
 
   private List<User> addTestUser() {

@@ -38,7 +38,7 @@ Aufgabe 5:
 
 * [x] a) Die Entity User soll wie folgt aussehen:
     * id, name, geburtsdatum, gewicht, groesse, lieblingsfarbe
-* [x] b) Im UserService soll eine Methode saveUser(User) aufgerufen werden, die aus dem Repository kommt.
+* [x] b) Im BmiService soll eine Methode saveUser(User) aufgerufen werden, die aus dem Repository kommt.
 * [x] c) Erstelle einen Endpunkt im UserController, der zuvor erzeugt werden muss, mit dem ein User angelegt werden
   kann.
 
@@ -51,10 +51,10 @@ Aufgabe 7:
 
 - [x] Dokumentiere das Hinzufügen eines Users, indem du die Tabelle Log verwendest.
 
-* [x] a) Im UserService soll in der Methode addUser der LogService aufgerufen werden. Dabei soll die Methode addLog
+* [x] a) Im BmiService soll in der Methode addUser der LogService aufgerufen werden. Dabei soll die Methode addLog
   verwendet werden.
 * [x] b) Es sollen die Nachricht "Der User <username> wurde angelegt" und die Severity INFO hinterlegt werden.
-* [x] c) Erweitere die Methode im UserService um ein try/catch und fange die Exception ab (catch (RuntimeException ex)
+* [x] c) Erweitere die Methode im BmiService um ein try/catch und fange die Exception ab (catch (RuntimeException ex)
   {...}).
 * [x] d) Konnte der User nicht angelegt werden und du landest in dem catch, dann soll die Nachricht "Der User <username>
   konnte nicht angelegt werden. Grund: <exception>" mit der Severity "ERROR" abgespeichert werden.
@@ -63,7 +63,7 @@ Aufgabe 8:
 
 - [x] Erzeuge die Möglichkeit nach Nutzern zu suchen und sie zu löschen.
 
-* [x] a) erweitere UserService und UserController mit den entsprechenden Methoden. Verwende die Interfaces von denen das
+* [x] a) erweitere BmiService und UserController mit den entsprechenden Methoden. Verwende die Interfaces von denen das
   UserRepository erbt.
 * [x] b) schreibe Tests
 * [x] c) erweitere die Dokumentation um die hinzugefügten Endpunkte.
@@ -74,9 +74,9 @@ Aufgabe 9:
 
 * [x] a) Erweitere die Entity Log um ein User-Attribut.
 * [x] b) Der User soll in der Methode addLog im LogController namentlich mit übergeben werden.
-    * Im UserService soll der User gefunden werden.
+    * Im BmiService soll der User gefunden werden.
     * Anschließend soll der User mit übergeben werden, um einen Logeintrag anzulegen.
-* [x] c) Durch diese Änderung wird die Methode addUser nicht mehr funktionieren, da nach Aufgabe 7 im UserService die
+* [x] c) Durch diese Änderung wird die Methode addUser nicht mehr funktionieren, da nach Aufgabe 7 im BmiService die
   Methode addLog aufgerufen wird. Hierfür ist es notwendig auch den Endpunkt addUser um einen User zu erweitern.
 
 Aufgabe 10:
@@ -85,7 +85,7 @@ Aufgabe 10:
 
 * [x] a) LogService - DeleteBySeverity - Rückgabe bei einer leeren Liste: "Keine Einträge gefunden"
 * [x] b) LogService - DeleteBySeverity - Die Strings sollen mit einem StringBuilder verkettet werden.
-* [x] c) UserService - AddLog - Stringformatter verwenden (der user wurde angelegt)
+* [x] c) BmiService - AddLog - Stringformatter verwenden (der user wurde angelegt)
 * [x] d) LogRepository leeren, aus anderen Repositories erben
 * [x] e) Verwende im LogDTOMapper Mapstruct - im POM hinzufügen
 * [x] f) Enum Farben erstellen (User darf nur diese Farben benutzen)
@@ -94,7 +94,7 @@ Aufgabe 11:
 
 - [x] BMI Rechner erstellen
 
-* [x] a) BMI ausrechnen im UserService
+* [x] a) BMI ausrechnen im BmiService
 * [x] b) anhand des Geburtsdatums Alter berechnen und zurückgeben
 * [x] c) mit switch case: übergewichtig, untergewichtig, normalgewichtig
 * [x] d) Endpoint erstellen und dokumentieren
@@ -106,7 +106,7 @@ Aufgabe 11:
         3. Gar kein User, nur Angaben zu Alter, Gewicht und Größe - kein User wird gespeichert, nur der BMI wird
            berechnet.
 
-    4. Eine Methode im UserService erstellen dafür
+    4. Eine Methode im BmiService erstellen dafür
 * [x] Entity um bmi erweitern
 * [x] Log Ausgaben auf Deutsch übersetzen
 * [x] In postman user erstellt + bmi
