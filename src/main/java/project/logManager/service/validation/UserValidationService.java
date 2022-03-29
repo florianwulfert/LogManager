@@ -65,15 +65,16 @@ public class UserValidationService {
     return false;
   }
 
-  public void checkIfActorEqualsUserToCreate(String actor, User user, boolean onCreate) {
+  public void checkIfActorEqualsUserToCreate(String actor, User user, boolean isActor) {
     if (!user.getName().equals(actor)) {
-      if (onCreate) {
-        LOGGER.warn(ErrorMessages.NO_USERS_YET + user.getName() + " ungleich " + actor);
+      if (isActor) {
+        LOGGER.warn(ErrorMessages.NO_USERS_YET + user.getName() + " unequal " + actor);
         throw new FirstUserUnequalActorException(actor, user.getName());
       }
       LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_NAME, user.getName()));
       throw new UserNotFoundException(user.getName());
     }
+    LOGGER.info(InfoMessages.ACTOR_EQUALS_USER);
   }
 
   public User checkIfNameExists(String name, boolean isActor, String action) {
