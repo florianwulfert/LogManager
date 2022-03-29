@@ -42,9 +42,10 @@ public class UserController {
   }
 
   @DeleteMapping("/user/delete/name/{name}")
-  public String deleteUserByName(
+  public UserResponseDto deleteUserByName(
       @PathVariable final String name, @RequestParam final String actor) {
-    return userService.deleteByName(name, actor);
+    String returnMessage = userService.deleteByName(name, actor);
+    return new UserResponseDto(userService.findUserList(), returnMessage);
   }
 
   @DeleteMapping("/user/delete")

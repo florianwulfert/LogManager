@@ -36,14 +36,13 @@ public class LogValidationService {
     }
   }
 
-  public String validateSeverity(String severity) {
+  public void validateSeverity(String severity) {
     for (SeverityEnum severityEnum : SeverityEnum.values()) {
       if (severity.equals(severityEnum.name())) {
-        LOGGER.info(InfoMessages.SEVERITY_VALID);
-        return InfoMessages.SEVERITY_VALID;
+        LOGGER.debug(InfoMessages.SEVERITY_VALID);
+        return;
       }
     }
-
     LOGGER.warn(ErrorMessages.SEVERITY_NOT_REGISTERED, severity);
     throw new SeverityNotFoundException(severity);
   }

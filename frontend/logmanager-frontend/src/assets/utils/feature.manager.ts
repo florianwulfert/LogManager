@@ -11,6 +11,7 @@ export class FeatureManager {
     let verticalPosition: MatSnackBarVerticalPosition = 'bottom';
     if (message != null && message != '') {
       this._snackBar.open(message, 'Close', {
+        duration: 10000,
         horizontalPosition: horizontalPosition,
         verticalPosition: verticalPosition
       });
