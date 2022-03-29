@@ -57,11 +57,15 @@ public class UserService {
   }
 
   public List<User> findUserList() {
-    return userRepository.findAll();
+    List<User> users = userRepository.findAll();
+    LOGGER.info(users);
+    return users;
   }
 
   public Optional<User> findUserById(Integer id) {
-    return userRepository.findById(id).isPresent() ? userRepository.findById(id) : Optional.empty();
+    Optional<User> user = userRepository.findById(id).isPresent() ? userRepository.findById(id) : Optional.empty();
+    LOGGER.info(user);
+    return user;
   }
 
   public String deleteById(Integer id, String actorName) {
@@ -114,7 +118,12 @@ public class UserService {
 
   private void saveLog(String message, String severity, String actor) {
     LogRequestDto logRequestDto =
-        LogRequestDto.builder().message(message).severity(severity).user(actor).build();
+            LogRequestDto.builder()
+                    .message(message)
+                    .severity(severity)
+                    .user(actor)
+                    .build();
+    LOGGER.info("Log " + logRequestDto + String.format(" was saved as %s", severity));
     logService.addLog(logRequestDto);
   }
 }

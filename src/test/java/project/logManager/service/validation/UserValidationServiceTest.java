@@ -9,9 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.ErrorMessages;
-import project.logManager.exception.ParameterNotPresentException;
-import project.logManager.exception.UserNotAllowedException;
-import project.logManager.exception.UserNotFoundException;
+import project.logManager.exception.*;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -69,33 +67,69 @@ class UserValidationServiceTest {
   }
 
   @Test
+  void AllParametersAreCorrect() {
+    systemUnderTest.checkIfAnyEntriesAreNull(
+        UserRequestDto.builder()
+            .actor("Peter")
+            .name("Hans")
+            .birthdate("19.02.1995")
+            .weight(75.0)
+            .height(1.80)
+            .favouriteColor("blue")
+            .build());
+  }
+
+  @Test
   void testIfColorIsNotCorrect() {
-    RuntimeException ex =
-        assertThrows(
-            IllegalArgumentException.class, () -> systemUnderTest.validateFarbenEnum("gold"));
+    IllegalColorException ex =
+        Assertions.assertThrows(
+            IllegalColorException.class, () -> systemUnderTest.validateFarbenEnum("gold"));
     Assertions.assertEquals(ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE, ex.getMessage());
   }
 
   @Test
-  void testCheckIfUsersListIsEmpty() {
-    assertTrue(systemUnderTest.checkIfUsersListIsEmpty(), "Test");
+  void ColorIsCorrect() {
+    systemUnderTest.validateFarbenEnum("blue");
   }
 
   @Test
-  void testCheckIfUsersListIsNotEmpty() {
-    when(userRepository.findAll()).thenReturn(users);
-    systemUnderTest.checkIfUsersListIsEmpty();
-  }
-
-  @Test
-  void whenUsersListIsEmpty_ThenReturnTrue() {
+  void whenUsersListIsNotEmpty_ThenReturnFalse() {
     when(userRepository.findAll()).thenReturn(users);
     assertFalse(systemUnderTest.checkIfUsersListIsEmpty());
   }
 
   @Test
-  void whenUsersListIsEmpty_ThenReturnFalse() {
+  void whenUsersListIsEmpty_ThenReturnTrue() {
     assertTrue(systemUnderTest.checkIfUsersListIsEmpty());
+  }
+
+  @Test
+  void userIsEqualToActor() {
+    systemUnderTest.checkIfActorEqualsUserToCreate(users.get(0).getName(), users.get(0), true);
+  }
+
+  @Test
+  void ActorIsNotEqualUserButWantsToAct() {
+    FirstUserUnequalActorException ex =
+        assertThrows(
+            FirstUserUnequalActorException.class,
+            () ->
+                systemUnderTest.checkIfActorEqualsUserToCreate(
+                    users.get(0).getName(), users.get(1), true));
+
+    assertEquals(
+        ErrorMessages.NO_USERS_YET + users.get(1).getName() + " unequal " + users.get(0).getName(),
+        ex.getMessage());
+  }
+
+  @Test
+  void ActorIsNotEqualUserAndOneWasNotFound() {
+    UserNotFoundException ex =
+            assertThrows(
+                    UserNotFoundException.class,
+                    () -> systemUnderTest.checkIfActorEqualsUserToCreate("Heinrich", users.get(0), false));
+
+    assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_NAME, users.get(0).getName()), ex.getMessage());
   }
 
   @Test
@@ -117,7 +151,7 @@ class UserValidationServiceTest {
                     "Heinrich",
                     false,
                     String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Heinrich")));
-    assertEquals(String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Heinrich"), ex.getMessage());
+    assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Heinrich"), ex.getMessage());
   }
 
   @Test
@@ -158,6 +192,11 @@ class UserValidationServiceTest {
         assertThrows(
             RuntimeException.class, () -> systemUnderTest.checkIfUserToDeleteIdEqualsActorId(1, 1));
     assertEquals(ErrorMessages.USER_DELETE_HIMSELF, ex.getMessage());
+  }
+
+  @Test
+  void UserToDeleteIdNotEqualActorId() {
+    systemUnderTest.checkIfUserToDeleteIdEqualsActorId(5, 1);
   }
 
   @Test

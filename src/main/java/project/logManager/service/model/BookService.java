@@ -1,17 +1,16 @@
 package project.logManager.service.model;
 
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import lombok.RequiredArgsConstructor;
 import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.Book;
 import project.logManager.model.repository.BookRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -81,6 +80,7 @@ public class BookService {
                 listString = listString + "{Titel:" + b.getTitel() + ", Erscheinungsjahr:" + b.getErscheinungsjahr()
                         + ",ID:" + b.getId() + "}";
             }
+            LOGGER.info(String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel, listString));
             return String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel, listString);
         }
 

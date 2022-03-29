@@ -95,7 +95,7 @@ class UserControllerIT {
             "Color illegal",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"purple\"}",
-            status().isInternalServerError(),
+            status().isBadRequest(),
             ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE),
         Arguments.of(
             "Date has wrong format",
@@ -325,8 +325,8 @@ class UserControllerIT {
             false,
             "/user/delete/name/UserToDeleteNichtBekannt",
             "Torsten",
-            status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_IDENTIFIED, "UserToDeleteNichtBekannt")),
+            status().isBadRequest(),
+            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "UserToDeleteNichtBekannt")),
         Arguments.of(
             "User to delete not present",
             false,

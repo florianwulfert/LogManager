@@ -46,42 +46,52 @@ class BmiControllerIT {
   private static Stream<Arguments> getBmiArguments() {
     return Stream.of(
         Arguments.of(
+            "Normal Weight",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"75.7\",\"height\":\"1.85\"}",
             status().isOk(),
             String.format(InfoMessages.BMI_MESSAGE, 22.11) + InfoMessages.NORMAL_WEIGHT),
         Arguments.of(
+            "Overweight",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"100.5\",\"height\":\"1.85\"}",
             status().isOk(),
             String.format(InfoMessages.BMI_MESSAGE, 29.36) + InfoMessages.OVERWEIGHT),
         Arguments.of(
+            "Underweight",
             "{\"birthdate\":\"2000-01-01\",\"weight\":\"45.1\",\"height\":\"1.85\"}",
             status().isOk(),
             String.format(InfoMessages.BMI_MESSAGE, 13.17) + InfoMessages.UNDERWEIGHT),
         Arguments.of(
+            "InfiniteOrNan",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"0\",\"height\":\"0\"}",
             status().isInternalServerError(),
             ErrorMessages.INFINITE_OR_NAN),
         Arguments.of(
+            "Cannot calculate",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"-1\",\"height\":\"1\"}",
             status().isInternalServerError(),
             ErrorMessages.COULD_NOT_CALCULATE),
         Arguments.of(
+            "Height is missing",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"75.7\"}",
             status().isBadRequest(),
             ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
+            "Weight is missing",
             "{\"birthdate\":\"2003-01-01\",\"height\":\"1.85\"}",
             status().isBadRequest(),
             ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
+            "Birthdate is missing",
             "{\"weight\":\"75.7\",\"height\":\"1.85\"}",
             status().isBadRequest(),
             ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
+            "Parameter has wrong format",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"hi\",\"height\":\"1.85\"}",
             status().isBadRequest(),
             ErrorMessages.PARAMETER_WRONG_FORMAT),
         Arguments.of(
+            "User too young",
             "{\"birthdate\":\"2009-01-01\",\"weight\":\"75.7\",\"height\":\"1.85\"}",
             status().isOk(),
             ErrorMessages.USER_TOO_YOUNG));
@@ -89,7 +99,8 @@ class BmiControllerIT {
 
   @ParameterizedTest
   @MethodSource("getBmiArguments")
-  void testGetBmi(String testData, ResultMatcher status, String message) throws Exception {
+  void testGetBmi(String testName, String testData, ResultMatcher status, String message)
+      throws Exception {
     MvcResult result =
         mockMvc
             .perform(
@@ -124,8 +135,8 @@ class BmiControllerIT {
         Arguments.of(
             "userNotIdentified",
             "/bmi/ActorNichtVorhanden",
-            status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_IDENTIFIED, "ActorNichtVorhanden")));
+            status().isBadRequest(),
+            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "ActorNichtVorhanden")));
   }
 
   @ParameterizedTest(name = "{3}")

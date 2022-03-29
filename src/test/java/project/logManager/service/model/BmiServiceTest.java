@@ -94,7 +94,7 @@ class BmiServiceTest {
         Assertions.assertThrows(
             UserNotFoundException.class, () -> systemUnderTest.findUserAndGetBMI("Paul"));
     Assertions.assertEquals(
-        String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Paul"), ex.getMessage());
+        String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Paul"), ex.getMessage());
   }
 
   private List<User> addTestUser() {

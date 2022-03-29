@@ -29,6 +29,7 @@ public class BmiService extends DateUtil {
   public String calculateBmiAndGetBmiMessage(LocalDate birthdate, Double weight, Double height) {
     bmiValidationService.checkIfEntriesAreNull(weight, height);
     Double bmi = calculateBMI(weight, height);
+    LOGGER.info(getBmiMessage(birthdate, bmi));
     return getBmiMessage(birthdate, bmi);
   }
 
@@ -61,6 +62,7 @@ public class BmiService extends DateUtil {
   public String findUserAndGetBMI(String userName) {
     User user = userRepository.findUserByName(userName);
     if (user == null) {
+      LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
       throw new UserNotFoundException(userName);
     }
     return getBmiMessage(user.getBirthdate(), user.getBmi());

@@ -7,5 +7,5 @@ public enum SeverityEnum {
   INFO,
   WARNING,
   ERROR,
-  FATAL;
+  FATAL
 }
