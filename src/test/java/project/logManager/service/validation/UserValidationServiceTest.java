@@ -78,32 +78,24 @@ class UserValidationServiceTest {
 
   @Test
   void testCheckIfUsersListIsEmpty() {
-    assertTrue(systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(0), true), "Test");
+    assertTrue(systemUnderTest.checkIfUsersListIsEmpty(), "Test");
   }
 
   @Test
   void testCheckIfUsersListIsNotEmpty() {
     when(userRepository.findAll()).thenReturn(users);
-    systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(0), false);
+    systemUnderTest.checkIfUsersListIsEmpty();
   }
 
   @Test
-  void testIfUserNotEqualActorAndOnCreateIsTrue() {
-    RuntimeException ex =
-        assertThrows(
-            RuntimeException.class,
-            () -> systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(1), true));
-    assertEquals(ErrorMessages.NO_USERS_YET + "Florian unequal Peter", ex.getMessage());
+  void whenUsersListIsEmpty_ThenReturnTrue() {
+    when(userRepository.findAll()).thenReturn(users);
+    assertFalse(systemUnderTest.checkIfUsersListIsEmpty());
   }
 
   @Test
-  void testIfUserNotEqualActorAndOnCreateIsFalse() {
-    RuntimeException ex =
-        assertThrows(
-            RuntimeException.class,
-            () -> systemUnderTest.checkIfUsersListIsEmpty("Peter", users.get(1), false));
-    assertEquals(
-        String.format(ErrorMessages.USER_NOT_FOUND_ID, users.get(1).getId()), ex.getMessage());
+  void whenUsersListIsEmpty_ThenReturnFalse() {
+    assertTrue(systemUnderTest.checkIfUsersListIsEmpty());
   }
 
   @Test
@@ -125,7 +117,7 @@ class UserValidationServiceTest {
                     "Heinrich",
                     false,
                     String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Heinrich")));
-    assertEquals(String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Heinrich"),ex.getMessage());
+    assertEquals(String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Heinrich"), ex.getMessage());
   }
 
   @Test
@@ -138,7 +130,8 @@ class UserValidationServiceTest {
                     "Heinrich",
                     true,
                     String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "Heinrich")));
-    assertEquals(String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "Heinrich"),ex.getMessage());
+    assertEquals(
+        String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "Heinrich"), ex.getMessage());
   }
 
   @Test

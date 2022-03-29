@@ -57,24 +57,23 @@ public class UserValidationService {
     throw new IllegalArgumentException(ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE);
   }
 
-  public boolean checkIfUsersListIsEmpty(String actor, User user, boolean onCreate) {
+  public boolean checkIfUsersListIsEmpty() {
     List<User> usersList = userRepository.findAll();
-    handleUsersListIsEmpty(usersList, actor, user, onCreate);
-    return true;
-  }
-
-  private void handleUsersListIsEmpty(
-      List<User> usersList, String actor, User user, boolean onCreate) {
     if (usersList.isEmpty()) {
       LOGGER.info(InfoMessages.LIST_IS_EMPTY);
-      if (!user.getName().equals(actor)) {
-        if (onCreate) {
-          LOGGER.warn(ErrorMessages.NO_USERS_YET + user.getName() + " ungleich " + actor);
-          throw new FirstUserUnequalActorException(actor, user.getName());
-        }
-        LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_ID, user.getId()));
-        throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_ID, user.getId()));
+      return true;
+    }
+    return false;
+  }
+
+  public void checkIfActorEqualsUserToCreate(String actor, User user, boolean onCreate) {
+    if (!user.getName().equals(actor)) {
+      if (onCreate) {
+        LOGGER.warn(ErrorMessages.NO_USERS_YET + user.getName() + " ungleich " + actor);
+        throw new FirstUserUnequalActorException(actor, user.getName());
       }
+      LOGGER.error(String.format(ErrorMessages.USER_NOT_IDENTIFIED, user.getName()));
+      throw new UserNotFoundException(user.getName());
     }
   }
 
@@ -84,7 +83,7 @@ public class UserValidationService {
       handleNameNotExist(isCreate, action, name);
     }
     return user;
-  }
+   }
 
   private void handleNameNotExist(boolean isCreate, String action, String name) {
     if (isCreate) {

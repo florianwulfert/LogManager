@@ -84,7 +84,7 @@ class UserControllerIT {
             false,
             "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
             status().isBadRequest(),
-            String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_LOGS, "UnknownActor")),
+            String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "UnknownActor")),
         Arguments.of(
             "Actor not given",
             false,

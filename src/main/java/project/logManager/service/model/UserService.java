@@ -41,7 +41,8 @@ public class UserService {
 
     userValidationService.validateFarbenEnum(user.getFavouriteColor().toLowerCase());
     userValidationService.checkIfUserToPostExists(user.getName());
-    if (userValidationService.checkIfUsersListIsEmpty(userRequestDto.actor, user, true)) {
+    if (userValidationService.checkIfUsersListIsEmpty()) {
+      userValidationService.checkIfActorEqualsUserToCreate(userRequestDto.actor, user,true);
       saveUser(user, userRequestDto.actor);
     } else {
       User activeUser =
@@ -69,7 +70,7 @@ public class UserService {
         userValidationService.checkIfNameExists(
             actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
     userValidationService.checkIfUserToDeleteIdEqualsActorId(id, actor.getId());
-    userValidationService.checkIfUsersListIsEmpty(actor.getName(), userToDelete, false);
+    userValidationService.checkIfUsersListIsEmpty();
     userValidationService.checkIfExistLogByUserToDelete(userToDelete);
 
     userRepository.deleteById(id);

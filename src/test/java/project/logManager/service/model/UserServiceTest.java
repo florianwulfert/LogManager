@@ -45,7 +45,7 @@ class UserServiceTest {
   void testAddUser() {
     when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
         .thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
-    when(userValidationService.checkIfUsersListIsEmpty(any(), any(), anyBoolean()))
+    when(userValidationService.checkIfUsersListIsEmpty())
         .thenReturn(false);
     when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString()))
         .thenReturn(users.get(1));
@@ -66,9 +66,7 @@ class UserServiceTest {
   void testUsersListIsEmpty() {
     when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
         .thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
-    when(userValidationService.checkIfUsersListIsEmpty(
-            anyString(), any(), anyBoolean()))
-        .thenReturn(true);
+    when(userValidationService.checkIfUsersListIsEmpty()).thenReturn(true);
     systemUnderTest.addUser(
         UserRequestDto.builder()
             .actor("Torsten")
