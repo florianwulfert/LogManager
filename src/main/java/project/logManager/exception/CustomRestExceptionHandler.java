@@ -44,4 +44,11 @@ public class CustomRestExceptionHandler {
     LOGGER.warn(ex.getMessage());
     return ex.getMessage();
   }
+
+  @ResponseBody
+  @ExceptionHandler(UserNotAllowedException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  String userNotAllowedExceptionHandler(UserNotAllowedException ex) {
+    return ex.getMessage();
+  }
 }

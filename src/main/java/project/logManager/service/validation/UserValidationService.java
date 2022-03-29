@@ -8,9 +8,7 @@ import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.enums.UserColorEnum;
 import project.logManager.common.message.ErrorMessages;
-import project.logManager.common.message.InfoMessages;
 import project.logManager.exception.FirstUserUnequalActorException;
-import project.logManager.exception.IllegalColorException;
 import project.logManager.exception.ParameterNotPresentException;
 import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
@@ -56,74 +54,51 @@ public class UserValidationService {
         return;
       }
     }
-    LOGGER.info(ErrorMessages.COLOR_ILLEGAL, userFarben);
-    throw new IllegalColorException(ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE);
+    LOGGER.error(ErrorMessages.COLOR_ILLEGAL, userFarben);
+    throw new IllegalArgumentException(ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE);
   }
 
-  public boolean checkIfUsersListIsEmpty(String actor, User user, boolean onCreate) {
-    try {
-      List<User> users = userRepository.findAll();
-      if (users.isEmpty()) {
-        if (!user.getName().equals(actor)) {
-          if (onCreate) {
-            LOGGER.warn(ErrorMessages.NO_USERS_YET + user.getName() + " ungleich " + actor);
-            throw new FirstUserUnequalActorException(actor, user.getName());
-          } else {
-            LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_ID, user.getId()));
-            throw new RuntimeException(
-                String.format(ErrorMessages.USER_NOT_FOUND_ID, user.getId()));
-          }
-        }
-        LOGGER.info("User equals Actor!");
-        return true;
+  public boolean checkIfUsersListIsEmpty() {
+    List<User> usersList = userRepository.findAll();
+    if (usersList.isEmpty()) {
+      LOGGER.info(InfoMessages.LIST_IS_EMPTY);
+      return true;
+    }
+    return false;
+  }
+
+  public void checkIfActorEqualsUserToCreate(String actor, User user, boolean onCreate) {
+    if (!user.getName().equals(actor)) {
+      if (onCreate) {
+        LOGGER.warn(ErrorMessages.NO_USERS_YET + user.getName() + " ungleich " + actor);
+        throw new FirstUserUnequalActorException(actor, user.getName());
       }
-      LOGGER.info("List of users is empty!");
-      return false;
-    } catch (FirstUserUnequalActorException ex) {
-      handleErsterUserUngleichActor(actor, ex);
-      return false;
+      LOGGER.error(String.format(ErrorMessages.USER_NOT_IDENTIFIED, user.getName()));
+      throw new UserNotFoundException(user.getName());
     }
   }
 
-  private void handleErsterUserUngleichActor(String actor, FirstUserUnequalActorException er) {
-    try {
-      saveUserNotCreatedLog(actor);
-    } catch (RuntimeException rex) {
-      throw new RuntimeException(er.getMessage());
+  public User checkIfNameExists(String name, boolean isActor, String action) {
+    User user = userRepository.findUserByName(name);
+    if (user == null) {
+      handleNameNotExist(isActor, action, name);
     }
-  }
+    return user;
+   }
 
-  public User checkIfNameExists(String name, boolean isCreate) {
-    try {
-      User activeUser = userRepository.findUserByName(name);
-      if (activeUser == null) {
-        LOGGER.info(String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
-        throw new UserNotFoundException(name);
-      }
-      return activeUser;
-    } catch (RuntimeException rex) {
-      if (isCreate) {
-        throw new RuntimeException(handleUserKonnteNichtAngelegtWerden(name, rex));
-      } else {
-        throw new RuntimeException(rex.getMessage());
-      }
+  private void handleNameNotExist(boolean isActor, String action, String name) {
+    if (isActor) {
+      LOGGER.info(String.format(action, name));
+      throw new UserNotAllowedException(String.format(action, name));
     }
-  }
-
-  private String handleUserKonnteNichtAngelegtWerden(String actor, RuntimeException ex) {
-    LOGGER.error(ErrorMessages.USER_NOT_CREATED);
-    saveUserNotCreatedLog(actor);
-    return ex.getMessage();
+    LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
+    throw new UserNotFoundException(name);
   }
 
   public void checkIfUserToPostExists(String name) {
-    try {
-      if (userRepository.findUserByName(name) != null) {
-        LOGGER.warn(String.format(ErrorMessages.USER_EXISTS, name));
-        throw new RuntimeException(String.format(ErrorMessages.USER_EXISTS, name));
-      }
-    } catch (RuntimeException rex) {
-      throw new RuntimeException(rex.getMessage());
+    if (userRepository.findUserByName(name) != null) {
+      LOGGER.warn(String.format(ErrorMessages.USER_EXISTS, name));
+      throw new RuntimeException(String.format(ErrorMessages.USER_EXISTS, name));
     }
   }
 
@@ -153,9 +128,8 @@ public class UserValidationService {
   }
 
   public void checkIfUserToDeleteEqualsActor(String name, String actorName) {
-    User userToDelete = userRepository.findUserByName(name);
     User actor = userRepository.findUserByName(actorName);
-    if (userToDelete.equals(actor)) {
+    if (userRepository.findUserByName(name).equals(actor)) {
       LOGGER.error(ErrorMessages.USER_DELETE_HIMSELF);
       throw new RuntimeException(ErrorMessages.USER_DELETE_HIMSELF);
     }
@@ -166,15 +140,5 @@ public class UserValidationService {
       LOGGER.warn(ErrorMessages.USERS_REFERENCED);
       throw new RuntimeException(ErrorMessages.USERS_REFERENCED);
     }
-  }
-
-  private void saveUserNotCreatedLog(String actor) {
-    LogRequestDto logRequestDto =
-            LogRequestDto.builder()
-                    .message(ErrorMessages.USER_NOT_CREATED)
-                    .severity("ERROR")
-                    .user(actor)
-                    .build();
-    logService.addLog(logRequestDto);
   }
 }

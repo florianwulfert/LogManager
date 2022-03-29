@@ -1,5 +1,6 @@
 package project.logManager.service.model;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.model.repository.LogRepository;
+import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.LogValidationService;
 
 import java.time.LocalDate;
@@ -27,8 +29,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static project.logManager.common.message.TestMessages.ENTRIES_DELETED;
 
 /** @author - EugenFriesen 13.02.2021 */
@@ -40,6 +40,8 @@ class LogServiceTest {
   @Mock LogRepository logRepository;
 
   @Mock LogValidationService logValidationService;
+
+  @Mock UserRepository userRepository;
 
   @Mock LogDTOMapper logDTOMapper;
 

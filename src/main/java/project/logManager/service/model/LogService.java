@@ -8,11 +8,13 @@ import project.logManager.common.dto.LogMessageDto;
 import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
+import project.logManager.exception.SeverityNotFoundException;
 import project.logManager.model.dto.LogDTO;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.model.repository.LogRepository;
+import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.LogValidationService;
 
 import javax.transaction.Transactional;
@@ -87,12 +89,12 @@ public class LogService {
     }
 
     StringBuilder sb = new StringBuilder();
-    String iDs = "";
+    StringBuilder iDs = new StringBuilder();
 
     for (Log log : deletedLogs) {
-      iDs += log.getId();
+      iDs.append(log.getId());
       if (deletedLogs.lastIndexOf(log) < deletedLogs.size() - 1) {
-        iDs += ", ";
+        iDs.append(", ");
       }
     }
 
