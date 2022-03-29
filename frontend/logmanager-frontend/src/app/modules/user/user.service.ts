@@ -32,7 +32,8 @@ export class UserService {
     }).pipe(
       map((r) => {
         return r.body || {
-          result: []
+          result: [],
+          returnMessage: ""
         }
       }),
       catchError(() => {
@@ -99,7 +100,8 @@ export class UserService {
       map((r) => {
         this.featureManager.openSnackbar("User with the ID " + i + " was deleted.");
         return r.body || {
-          result: []
+          result: [],
+          returnMessage: ""
         }
       }),
       catchError((err) => {
