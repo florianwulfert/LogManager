@@ -1,5 +1,6 @@
 package project.logManager.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import project.logManager.service.model.UserService;
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
 @CrossOrigin
+@Tag(name="User")
 public class UserController {
 
   private final UserService userService;

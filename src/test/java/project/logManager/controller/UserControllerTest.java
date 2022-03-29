@@ -1,8 +1,6 @@
 package project.logManager.controller;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +11,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
@@ -48,31 +52,31 @@ class UserControllerTest {
   @Test
   void testFindUsers() {
     systemUnderTest.findUsers();
-    Mockito.verify(userService).findUserList();
+    verify(userService).findUserList();
   }
 
   @Test
   void testFindUserById() {
     systemUnderTest.findUserByID(1);
-    Mockito.verify(userService).findUserById(1);
+    verify(userService).findUserById(1);
   }
 
   @Test
   void testDeleteUserById() {
     systemUnderTest.deleteUserByID(users.get(0).getId(), users.get(1).getName());
-    Mockito.verify(userService).deleteById(1, users.get(1).getName());
+    verify(userService).deleteById(1, users.get(1).getName());
   }
 
   @Test
   void testDeleteUserByName() {
     systemUnderTest.deleteUserByName("Peter", "Hans");
-    Mockito.verify(userService).deleteByName("Peter", "Hans");
+    verify(userService).deleteByName("Peter", "Hans");
   }
 
   @Test
   void testDeleteAll() {
     systemUnderTest.deleteAll();
-    Mockito.verify(userService).deleteAll();
+    verify(userService).deleteAll();
   }
 
   private List<User> addTestUser() {

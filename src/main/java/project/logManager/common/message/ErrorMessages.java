@@ -5,7 +5,6 @@ public class ErrorMessages {
   public static final String USER_TOO_YOUNG =
       "User is too young for an exact definition of the BMI.";
   public static final String COULD_NOT_CALCULATE = "BMI could not be calculated.";
-  public static final String USER_NOT_IDENTIFIED = "User %s not identified!";
   public static final String USER_DELETE_HIMSELF = "User cannot delete himself!";
   public static final String USER_NOT_FOUND_ID = "User with the ID %s not found.";
   public static final String USER_REFERENCED =
@@ -34,6 +33,9 @@ public class ErrorMessages {
   public static final String PARAMETER_WRONG_FORMAT = "One of the parameters has wrong format.";
   public static final String PARAMETER_MISSING_OR_WRONG_FORMAT =
       "Required path variable was not found or request param has wrong format! ";
-  public static final String NO_BOOKS_FOUNDS="no books with title %s found";    
-
+  public static final String NO_BOOKS_FOUNDS="no books with title %s found";
+  public static final String USER_NOT_ALLOWED_DELETE_USER = "User %s has no authority to delete user.";
+  public static final String USER_NOT_ALLOWED_CREATE_LOGS = "User %s has no authority to create logs.";
+  public static final String USER_NOT_ALLOWED_CREATE_USER = "User %s has no authority to create user.";
+  public static final String CANNOT_DELETE_USER = "User cannot be deleted.";
 }

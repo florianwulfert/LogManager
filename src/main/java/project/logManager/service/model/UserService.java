@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.dto.UserRequestDto;
+import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
@@ -37,12 +38,17 @@ public class UserService {
             .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
             .build();
 
-    userValidationService.validateFarbenEnum(userRequestDto.favouriteColor.toLowerCase());
-    userValidationService.checkIfUserToPostExists(userRequestDto.name);
-    if (userValidationService.checkIfUsersListIsEmpty(userRequestDto.actor, user, true)) {
+    userValidationService.validateFarbenEnum(user.getFavouriteColor().toLowerCase());
+    userValidationService.checkIfUserToPostExists(user.getName());
+    if (userValidationService.checkIfUsersListIsEmpty()) {
+      userValidationService.checkIfActorEqualsUserToCreate(userRequestDto.actor, user,true);
       saveUser(user, userRequestDto.actor);
     } else {
-      User activeUser = userValidationService.checkIfNameExists(userRequestDto.actor, true);
+      User activeUser =
+          userValidationService.checkIfNameExists(
+              userRequestDto.actor,
+              true,
+              String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, userRequestDto.actor));
       saveUser(user, activeUser.getName());
     }
     return bmiService.calculateBmiAndGetBmiMessage(
@@ -50,18 +56,24 @@ public class UserService {
   }
 
   public List<User> findUserList() {
-    return userRepository.findAll();
+    List<User> users = userRepository.findAll();
+    LOGGER.info(users);
+    return users;
   }
 
   public Optional<User> findUserById(Integer id) {
-    return userRepository.findById(id).isPresent() ? userRepository.findById(id) : Optional.empty();
+    Optional<User> user = userRepository.findById(id).isPresent() ? userRepository.findById(id) : Optional.empty();
+    LOGGER.info(user);
+    return user;
   }
 
   public void deleteById(Integer id, String actorName) {
     User userToDelete = userValidationService.checkIfIdExists(id);
-    User actor = userValidationService.checkIfNameExists(actorName, false);
+    User actor =
+        userValidationService.checkIfNameExists(
+            actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
     userValidationService.checkIfUserToDeleteIdEqualsActorId(id, actor.getId());
-    userValidationService.checkIfUsersListIsEmpty(actor.getName(), userToDelete, false);
+    userValidationService.checkIfUsersListIsEmpty();
     userValidationService.checkIfExistLogByUserToDelete(userToDelete);
 
     userRepository.deleteById(id);
@@ -70,9 +82,9 @@ public class UserService {
   }
 
   public String deleteByName(String name, String actorName) {
-    User user = userValidationService.checkIfNameExists(name, false);
+    User user = userValidationService.checkIfNameExists(name, false, ErrorMessages.CANNOT_DELETE_USER);
     userValidationService.checkIfExistLogByUserToDelete(user);
-    userValidationService.checkIfNameExists(actorName, false);
+    userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
     userValidationService.checkIfUserToDeleteEqualsActor(name, actorName);
 
     userRepository.deleteById(user.getId());
@@ -93,7 +105,7 @@ public class UserService {
     String bmi =
         bmiService.calculateBmiAndGetBmiMessage(
             user.getBirthdate(), user.getWeight(), user.getHeight());
-    saveLog(String.format(InfoMessages.USER_CREATED + "%s", user, bmi),"INFO", actor);
+    saveLog(String.format(InfoMessages.USER_CREATED + "%s", user, bmi), "INFO", actor);
     LOGGER.info(
         String.format(
             InfoMessages.USER_CREATED
@@ -109,6 +121,7 @@ public class UserService {
                     .severity(severity)
                     .user(actor)
                     .build();
+    LOGGER.info("Log " + logRequestDto + String.format(" was saved as %s", severity));
     logService.addLog(logRequestDto);
   }
 }

@@ -1,22 +1,6 @@
 package project.logManager.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-import javax.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,6 +23,17 @@ import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
+
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
@@ -87,8 +82,8 @@ class UserControllerIT {
             "Actor not known",
             false,
             "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
-            status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "UnknownActor")),
+            status().isForbidden(),
+            String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "UnknownActor")),
         Arguments.of(
             "Actor not given",
             false,
@@ -99,7 +94,7 @@ class UserControllerIT {
             "Color illegal",
             false,
             "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"purple\"}",
-            status().isInternalServerError(),
+            status().isBadRequest(),
             ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE),
         Arguments.of(
             "Date has wrong format",
@@ -245,8 +240,8 @@ class UserControllerIT {
             false,
             "/user/delete/1",
             "Paul",
-            status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Paul")),
+            status().isForbidden(),
+            String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "Paul")),
         Arguments.of(
             false, "/user/delete/1", null, status().isBadRequest(), TestMessages.ACTOR_NOT_PRESENT),
         Arguments.of(
@@ -322,15 +317,15 @@ class UserControllerIT {
             false,
             "/user/delete/name/Petra",
             "ActorName",
-            status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_IDENTIFIED, "ActorName")),
+            status().isForbidden(),
+            String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "ActorName")),
         Arguments.of(
             "User to delete not in database ",
             false,
             "/user/delete/name/UserToDeleteNichtBekannt",
             "Torsten",
-            status().isInternalServerError(),
-            String.format(ErrorMessages.USER_NOT_IDENTIFIED, "UserToDeleteNichtBekannt")),
+            status().isBadRequest(),
+            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "UserToDeleteNichtBekannt")),
         Arguments.of(
             "User to delete not present",
             false,
