@@ -1,23 +1,25 @@
 package project.logManager.service.model;
 
-import static org.mockito.ArgumentMatchers.any;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.UserValidationService;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -41,11 +43,11 @@ class UserServiceTest {
 
   @Test
   void testAddUser() {
-    Mockito.when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
+    when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
         .thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
-    Mockito.when(userValidationService.checkIfUsersListIsEmpty(any(), any(), Mockito.anyBoolean()))
+    when(userValidationService.checkIfUsersListIsEmpty())
         .thenReturn(false);
-    Mockito.when(userValidationService.checkIfNameExists(Mockito.anyString(), Mockito.anyBoolean()))
+    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString()))
         .thenReturn(users.get(1));
     systemUnderTest.addUser(
         UserRequestDto.builder()
@@ -56,18 +58,15 @@ class UserServiceTest {
             .height(1.65)
             .favouriteColor("red")
             .build());
-    Mockito.verify(logService).addLog(any());
-    Mockito.verify(userRepository).save(any());
+    verify(logService).addLog(any());
+    verify(userRepository).save(any());
   }
 
   @Test
   void testUsersListIsEmpty() {
-    Mockito.when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
+    when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
         .thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
-    Mockito.when(
-            userValidationService.checkIfUsersListIsEmpty(
-                Mockito.anyString(), any(), Mockito.anyBoolean()))
-        .thenReturn(true);
+    when(userValidationService.checkIfUsersListIsEmpty()).thenReturn(true);
     systemUnderTest.addUser(
         UserRequestDto.builder()
             .actor("Torsten")
@@ -77,53 +76,53 @@ class UserServiceTest {
             .height(1.65)
             .favouriteColor("red")
             .build());
-    Mockito.verify(logService).addLog(any());
-    Mockito.verify(userRepository).save(any());
+    verify(logService).addLog(any());
+    verify(userRepository).save(any());
   }
 
   @Test
   void testFindUserList() {
     systemUnderTest.findUserList();
-    Mockito.verify(userRepository).findAll();
+    verify(userRepository).findAll();
   }
 
   @Test
   void testFindUserById() {
     systemUnderTest.findUserById(1);
-    Mockito.verify(userRepository).findById(1);
+    verify(userRepository).findById(1);
   }
 
   @Test
   void testFindUserByName() {
-    userRepository.findUserByName(Mockito.anyString());
-    Mockito.verify(userRepository).findUserByName(Mockito.anyString());
+    userRepository.findUserByName(anyString());
+    verify(userRepository).findUserByName(anyString());
   }
 
   @Test
   void testDeleteById() {
-    Mockito.when(userValidationService.checkIfIdExists(Mockito.anyInt()))
+    when(userValidationService.checkIfIdExists(anyInt()))
         .thenReturn(users.get(0));
-    Mockito.when(userValidationService.checkIfNameExists(Mockito.anyString(), Mockito.anyBoolean()))
+    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString()))
         .thenReturn(users.get(1));
     systemUnderTest.deleteById(1, "Florian");
-    Mockito.verify(userRepository).deleteById(1);
-    Mockito.verify(logService).addLog(any());
+    verify(userRepository).deleteById(1);
+    verify(logService).addLog(any());
   }
 
   @Test
   void testDeleteByName() {
-    Mockito.when(userValidationService.checkIfNameExists(Mockito.anyString(), Mockito.anyBoolean()))
+    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString()))
         .thenReturn(users.get(1));
     Assertions.assertEquals(
         String.format(InfoMessages.USER_DELETED_NAME, "Florian"),
         systemUnderTest.deleteByName("Florian", "Peter"));
-    Mockito.verify(logService).addLog(any());
+    verify(logService).addLog(any());
   }
 
   @Test
   void testDeleteAll() {
     Assertions.assertEquals(InfoMessages.ALL_USERS_DELETED, systemUnderTest.deleteAll());
-    Mockito.verify(userRepository).deleteAll();
+    verify(userRepository).deleteAll();
   }
 
   private List<User> addTestUser() {

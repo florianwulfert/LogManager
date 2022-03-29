@@ -49,9 +49,10 @@ export class UserService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("Successfully added user \"" + addUserRequest.name + "\".");
+        this.featureManager.openSnackbar(r.body?.returnMessage);
         return r.body || {
-          result: []
+          result: [],
+          returnMessage: ""
         }
       }),
       catchError((err) => {

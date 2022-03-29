@@ -14,4 +14,5 @@ import java.util.List;
 @AllArgsConstructor
 public class UserResponseDto {
   List<User> result;
+  String returnMessage;
 }
