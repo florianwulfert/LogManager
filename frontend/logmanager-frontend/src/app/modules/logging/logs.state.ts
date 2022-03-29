@@ -4,10 +4,10 @@ export const LOGS_FEATURE_NAME = 'logs'
 
 export interface LogsState {
   logsList: LogsDto[]
-  error: string
+  returnMessage: string;
 }
 
 export const LOGS_GET_INITIAL_STATE: LogsState = {
   logsList: [],
-  error: ''
+  returnMessage: ""
 }

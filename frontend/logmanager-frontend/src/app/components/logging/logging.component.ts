@@ -67,10 +67,5 @@ export class LoggingComponent implements OnInit, OnDestroy {
     let request = new AddLogRequest
     this.prepareAddLogRequest(request)
     this.logsFacade.addLog(request);
-    this.subscriptionManager.add(this.logsFacade.stateAddLog$).subscribe(result => {
-      this.returnUserMessage = result
-    })
-    this.featureManager.openSnackbar(this.returnUserMessage);
-    this.getLogs()
   }
 }

@@ -44,7 +44,8 @@ export class LogService {
     }).pipe(
       map((r) => {
         return r.body || {
-          result: ''
+          logsList: [],
+          returnMessage: ''
         }
       }),
       catchError(() => {
