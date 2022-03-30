@@ -4,8 +4,8 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -88,8 +88,9 @@ class UserControllerIT {
                                                 "Actor not known",
                                                 false,
                                                 "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
-                                                status().isInternalServerError(),
-                                                String.format(ErrorMessages.USER_NOT_FOUND_NAME, "UnknownActor")),
+                                                status().isForbidden(),
+                                                String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER,
+                                                                "UnknownActor")),
                                 Arguments.of(
                                                 "Actor not given",
                                                 false,
@@ -100,7 +101,7 @@ class UserControllerIT {
                                                 "Color illegal",
                                                 false,
                                                 "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"purple\"}",
-                                                status().isInternalServerError(),
+                                                status().isBadRequest(),
                                                 ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE),
                                 Arguments.of(
                                                 "Date has wrong format",
@@ -229,7 +230,6 @@ class UserControllerIT {
                 }
         }
 
-
         private static Stream<Arguments> getDeleteUserByIdArguments() {
                 return Stream.of(
                                 Arguments.of(
@@ -242,8 +242,8 @@ class UserControllerIT {
                                                 false,
                                                 "/user/delete/1",
                                                 "Paul",
-                                                status().isInternalServerError(),
-                                                String.format(ErrorMessages.USER_NOT_IDENTIFIED, "Paul")),
+                                                status().isForbidden(),
+                                                String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "Paul")),
                                 Arguments.of(
                                                 false, "/user/delete/1", null, status().isBadRequest(),
                                                 TestMessages.ACTOR_NOT_PRESENT),
@@ -291,61 +291,59 @@ class UserControllerIT {
                 Assertions.assertEquals(message, result.getResponse().getContentAsString());
         }
 
-
-    
-  private static Stream<Arguments> getDeleteUserByNameArguments() {
-    return Stream.of(
-        Arguments.of(
-            "User successfully deleted by name",
-            false,
-            "/user/delete/name/Petra",
-            "Torsten",
-            status().isOk(),
-            String.format(InfoMessages.USER_DELETED_NAME, "Petra")),
-        Arguments.of(
-            "Actor wants to delete himself",
-            false,
-            "/user/delete/name/Torsten",
-            "Torsten",
-            status().isInternalServerError(),
-            ErrorMessages.USER_DELETE_HIMSELF),
-        Arguments.of(
-            "Actor not present",
-            false,
-            "/user/delete/name/Petra",
-            null,
-            status().isBadRequest(),
-            TestMessages.ACTOR_NOT_PRESENT),
-        Arguments.of(
-            "Actor not in database",
-            false,
-            "/user/delete/name/Petra",
-            "ActorName",
-            status().isForbidden(),
-            String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "ActorName")),
-        Arguments.of(
-            "User to delete not in database ",
-            false,
-            "/user/delete/name/UserToDeleteNichtBekannt",
-            "Torsten",
-            status().isBadRequest(),
-            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "UserToDeleteNichtBekannt")),
-        Arguments.of(
-            "User to delete not present",
-            false,
-            "/user/delete/name/",
-            "Torsten",
-            status().isBadRequest(),
-            TestMessages.USER_TO_DELETE_NOT_PRESENT),
-        Arguments.of(
-            "User is referenced in another table",
-            true,
-            "/user/delete/name/Petra",
-            "Torsten",
-            status().isInternalServerError(),
-            String.format(ErrorMessages.USER_REFERENCED, "Petra")));
-  }
-
+        private static Stream<Arguments> getDeleteUserByNameArguments() {
+                return Stream.of(
+                                Arguments.of(
+                                                "User successfully deleted by name",
+                                                false,
+                                                "/user/delete/name/Petra",
+                                                "Torsten",
+                                                status().isOk(),
+                                                String.format(InfoMessages.USER_DELETED_NAME, "Petra")),
+                                Arguments.of(
+                                                "Actor wants to delete himself",
+                                                false,
+                                                "/user/delete/name/Torsten",
+                                                "Torsten",
+                                                status().isInternalServerError(),
+                                                ErrorMessages.USER_DELETE_HIMSELF),
+                                Arguments.of(
+                                                "Actor not present",
+                                                false,
+                                                "/user/delete/name/Petra",
+                                                null,
+                                                status().isBadRequest(),
+                                                TestMessages.ACTOR_NOT_PRESENT),
+                                Arguments.of(
+                                                "Actor not in database",
+                                                false,
+                                                "/user/delete/name/Petra",
+                                                "ActorName",
+                                                status().isForbidden(),
+                                                String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "ActorName")),
+                                Arguments.of(
+                                                "User to delete not in database ",
+                                                false,
+                                                "/user/delete/name/UserToDeleteNichtBekannt",
+                                                "Torsten",
+                                                status().isBadRequest(),
+                                                String.format(ErrorMessages.USER_NOT_FOUND_NAME,
+                                                                "UserToDeleteNichtBekannt")),
+                                Arguments.of(
+                                                "User to delete not present",
+                                                false,
+                                                "/user/delete/name/",
+                                                "Torsten",
+                                                status().isBadRequest(),
+                                                TestMessages.USER_TO_DELETE_NOT_PRESENT),
+                                Arguments.of(
+                                                "User is referenced in another table",
+                                                true,
+                                                "/user/delete/name/Petra",
+                                                "Torsten",
+                                                status().isInternalServerError(),
+                                                String.format(ErrorMessages.USER_REFERENCED, "Petra")));
+        }
 
         @ParameterizedTest(name = "{0}")
         @MethodSource("getDeleteUserByNameArguments")
