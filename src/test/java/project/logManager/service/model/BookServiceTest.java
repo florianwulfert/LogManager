@@ -68,7 +68,7 @@ public class BookServiceTest {
     }
 
     @Test
-    void testBooksListIsEmptyReturnNoBokksFounds() {
+    void testDeleteByTitelWhenBooksListIsEmptyReturnNoBooksFounds() {
 
         if (books.isEmpty()) {
             assertEquals(String.format(InfoMessages.NO_BOOKS_FOUNDS, books.get(0).getTitel()),
