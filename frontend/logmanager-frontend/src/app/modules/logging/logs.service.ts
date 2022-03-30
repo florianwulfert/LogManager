@@ -8,6 +8,7 @@ import {AddLogResponse} from "./addLogs/dto/add-log-response";
 import {AddLogRequest} from "./addLogs/dto/add-log-request";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {ActorFacade} from "../actor/actor.facade";
+import {FeatureManager} from "../../../assets/utils/feature.manager";
 
 const API_GET_LOGS = 'http://localhost:8081/logs';
 const API_DELETE_LOGS = 'http://localhost:8081/logs/delete';
@@ -17,7 +18,7 @@ const API_ADD_LOG = 'http://localhost:8081/log';
   providedIn: 'root'
 })
 export class LogService {
-  constructor(private readonly http: HttpClient, private readonly actorFacade: ActorFacade) {
+  constructor(private readonly http: HttpClient, private readonly actorFacade: ActorFacade, private featureManager: FeatureManager) {
   }
 
   name: string | undefined
@@ -28,8 +29,10 @@ export class LogService {
       observe: 'response'
     }).pipe(
       map((r) => {
+        console.log(r.body)
         return r.body || {
-          result: []
+          logsList: [],
+          returnMessage: ""
         }
       }),
       catchError(() => {
@@ -43,12 +46,18 @@ export class LogService {
       observe: 'response'
     }).pipe(
       map((r) => {
+        this.featureManager.openSnackbar(r.body?.returnMessage);
         return r.body || {
           logsList: [],
           returnMessage: ''
         }
       }),
-      catchError(() => {
+      catchError((err) => {
+        if(err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text);
+        } else {
+          this.featureManager.openSnackbar(err.error);
+        }
         return throwError('Due to technical issues it is currently not possible to delete logs.');
       })
     );
@@ -62,8 +71,10 @@ export class LogService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        return {
-          result: r.body ? r.body : ''
+        this.featureManager.openSnackbar(r.body?.returnMessage);
+        return r.body || {
+          logsList: [],
+          returnMessage: ''
         }
       }),
       catchError(() => {

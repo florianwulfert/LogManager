@@ -48,7 +48,7 @@ public class UserValidationService {
   public void validateFarbenEnum(String userFarben) {
     for (UserColorEnum farbenEnum : UserColorEnum.values()) {
       if (userFarben.equals(farbenEnum.getColor())) {
-        LOGGER.info("Color is valid!");
+        LOGGER.debug("Color is valid!");
         return;
       }
     }

@@ -19,7 +19,6 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   subscriptionManager = new SubscriptionManager();
-  returnUserMessage: string | undefined;
   featureManager = new FeatureManager(this._snackBar);
 
   displayedColumns: string[] = ['message', 'severity', 'timestamp', 'user', 'delete'];
@@ -53,6 +52,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   getLogs(): void {
     this.logsFacade.getLogs()
     this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
+      console.log(result)
       this.dataSource = new MatTableDataSource(result)
     })
   }

@@ -10,7 +10,7 @@ export class LogFacade {
   stateGetLogsResponse$ = this.logsState.select(getLogs)
 
   constructor(
-    private readonly logsState: Store<LogsState>,
+    private readonly logsState: Store<LogsState>
   ) {}
 
   getLogs(): void {
