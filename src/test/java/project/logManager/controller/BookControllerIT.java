@@ -86,14 +86,14 @@ class BookControllerIT {
         private static Stream<Arguments> getAddBookArguments() {
                 return Stream.of(
                                 Arguments.of(
-                                                "1",
+                                                "16",
                                                 "haya",
                                                 "1998",
                                                 "Torsten",
                                                 status().isOk(),
                                                 String.format(TestMessages.HAYA, "haya")),
                                 Arguments.of(
-                                                "2",
+                                                "25",
                                                 "petra",
                                                 "1999",
                                                 "Torsten",
@@ -222,7 +222,7 @@ class BookControllerIT {
                                                 "peter",
                                                 "Torsten",
                                                 status().isOk(),
-                                                String.format(InfoMessages.BOOK_DELETED_TITLE, "peter")),
+                                                String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, "peter")),
                                 Arguments.of(
                                                 "Book was succussfuly deleted",
                                                 "omar",
@@ -240,7 +240,13 @@ class BookControllerIT {
                                                 "BookoToDeleteIsNotBekannt",
                                                 "Torsten",
                                                 status().isOk(),
-                                                InfoMessages.NO_BOOKS_FOUNDS));
+                                                InfoMessages.NO_BOOKS_FOUNDS),
+                                Arguments.of(
+                                                "There are more books with the title paul",
+                                                "paul",
+                                                "Torsten",
+                                                status().isOk(),
+                                                String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, "paul")));
         }
 
         @ParameterizedTest(name = "{0}")
@@ -312,11 +318,32 @@ class BookControllerIT {
                                 .titel("omar")
                                 .build();
                 bookRepository.saveAndFlush(omar);
+                Book paul = Book.builder()
+                                .id(14)
+                                .erscheinungsjahr(2002)
+                                .titel("paul")
+                                .build();
+                bookRepository.saveAndFlush(paul);
+                Book paul1 = Book.builder()
+                                .id(15)
+                                .erscheinungsjahr(2008)
+                                .titel("paul")
+                                .build();
+                bookRepository.saveAndFlush(paul1);
                 books.add(haya);
                 books.add(petra);
                 books.add(peter);
                 books.add(lina);
                 books.add(omar);
+                books.add(paul);
+                books.add(paul1);
+                bookRepository.save(paul);
+                bookRepository.save(paul1);
+                bookRepository.save(omar);
+                bookRepository.save(lina);
+                bookRepository.save(peter);
+                bookRepository.save(petra);
+                bookRepository.save(haya);
                 return books;
         }
 

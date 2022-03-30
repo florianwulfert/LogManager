@@ -20,8 +20,8 @@ public class TestMessages {
         public static final String ID_NOT_EXISTS = "No class project.logManager.model.entity.Log entity with id 20 exists!";
         public static final String ENTRIES_DELETED = "Entries with the ID(s) 1, 2 were deleted from database.";
         public static final String ACTOR_NOT_PRESENT = "Required String parameter 'actor' is not present";
-        public static final String HAYA = "{\"id\":10,\"titel\":\"haya\",\"erscheinungsjahr\":1998}";
-        public static final String PETRA_BOOK = "{\"id\":14,\"titel\":\"petra\",\"erscheinungsjahr\":1999}";
+        public static final String HAYA = "{\"id\":16,\"titel\":\"haya\",\"erscheinungsjahr\":1998}";
+        public static final String PETRA_BOOK = "{\"id\":25,\"titel\":\"petra\",\"erscheinungsjahr\":1999}";
         public static final String ID_FOR_BOOK_HAS_WRONG_FORMAT = "Required path variable was not found or request param has wrong format! "
                         + "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; "
                         + "nested exception is java.lang.NumberFormatException: For input string: \"kevin\"";
