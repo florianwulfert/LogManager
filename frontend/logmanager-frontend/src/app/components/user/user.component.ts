@@ -20,7 +20,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
   subscriptionManager = new SubscriptionManager();
   featureManager = new FeatureManager(this._snackBar);
-  returnUserMessage: string | undefined;
 
   displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
   dataSource: any;

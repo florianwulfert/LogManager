@@ -1,23 +1,18 @@
 import {createReducer, on} from "@ngrx/store";
-import {DeleteLogsResponse} from "./deleteLogs/dto/delete-logs-response";
-import {deleteLogsAction, deleteLogsResponseAction} from "./logs.actions";
+import {addLogResponseAction, deleteLogsResponseAction, getLogsResponseAction} from "./logs.actions";
 import {LOGS_GET_INITIAL_STATE, LogsState} from "./logs.state";
+import {GetLogsResponse} from "./getLogs/dto/get-logs-response";
 
-const handleDeleteLogsResponse = (state: LogsState, resp: DeleteLogsResponse): LogsState => {
+const handleLogsResponse = (state: LogsState, resp: GetLogsResponse): LogsState => {
   return {
     ...state,
     logsList: resp.logsList,
   };
 }
 
-const handleDeleteLogs = (state: LogsState): LogsState => {
-  return {
-    ...state,
-  };
-};
-
 export const LogsReducer = createReducer(
   LOGS_GET_INITIAL_STATE,
-  on(deleteLogsResponseAction, handleDeleteLogsResponse),
-  on(deleteLogsAction, handleDeleteLogs)
+  on(deleteLogsResponseAction, handleLogsResponse),
+  on(getLogsResponseAction, handleLogsResponse),
+  on(addLogResponseAction, handleLogsResponse)
 )
