@@ -36,7 +36,12 @@ export class UserService {
           returnMessage: ""
         }
       }),
-      catchError(() => {
+      catchError((err) => {
+        if(err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text);
+        } else {
+          this.featureManager.openSnackbar(err.error);
+        }
         return throwError('Due to technical issues it is currently not possible to request users.');
       })
     );

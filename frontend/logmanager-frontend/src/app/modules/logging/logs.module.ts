@@ -6,6 +6,7 @@ import {LogEffects} from "./logs.effects";
 import {LogFacade} from "./logs.facade";
 import {LogsReducer} from "./logs.reducer";
 import {LOGS_FEATURE_NAME} from "./logs.state";
+import {FeatureManager} from "../../../assets/utils/feature.manager";
 
 @NgModule({
   declarations: [],
@@ -13,7 +14,7 @@ import {LOGS_FEATURE_NAME} from "./logs.state";
     CommonModule, StoreModule.forRoot({}),
     StoreModule.forFeature(LOGS_FEATURE_NAME, LogsReducer),
     EffectsModule.forRoot(), EffectsModule.forFeature([LogEffects])],
-  providers: [LogFacade]
+  providers: [LogFacade, FeatureManager]
 })
 export class LogModule {
 }

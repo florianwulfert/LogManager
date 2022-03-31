@@ -1,6 +1,5 @@
 import {LogsDto} from "./logs.dto";
 
-
 export interface GetLogsResponse {
   logsList: LogsDto[]
   returnMessage: string
