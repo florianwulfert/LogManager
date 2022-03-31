@@ -1,4 +1,4 @@
-package project.logManager.common.dto;
+package project.logManager.common.dto.bmi;
 
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class BmiRequestDto {
         return getLocalDate(this.birthdate);
     }
 
-    static LocalDate getLocalDate(String birthdate) {
+    public static LocalDate getLocalDate(String birthdate) {
         try {
             String[] bd = birthdate.split("-");
             return LocalDate.of(

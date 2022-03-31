@@ -54,17 +54,17 @@ export class UserComponent implements OnInit, OnDestroy {
     request.weight = this.form.get("weight")?.value
     request.height = this.form.get("height")?.value
     request.favouriteColor = this.form.get("favouriteColor")?.value
-    return request;
+    return request
   }
 
   createUser(): void {
     let request = new AddUserRequest
     request = this.prepareAddUserRequest(request)
-    this.userFacade.addUser(request);
+    this.userFacade.addUser(request)
   }
 
   deleteUsers(): void {
-    this.userFacade.deleteUsers();
+    this.userFacade.deleteUsers()
   }
 
   deleteUser(element: any): void {

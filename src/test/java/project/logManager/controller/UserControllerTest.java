@@ -1,6 +1,5 @@
 package project.logManager.controller;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.logManager.common.dto.UserRequestDto;
+import project.logManager.common.dto.user.UserRequestDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
 

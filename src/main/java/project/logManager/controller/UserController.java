@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import project.logManager.common.dto.UserRequestDto;
-import project.logManager.common.dto.UserResponseDto;
+import project.logManager.common.dto.user.UserRequestDto;
+import project.logManager.common.dto.user.UserResponseDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
 

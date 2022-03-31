@@ -5,6 +5,7 @@ import {map} from "rxjs/internal/operators";
 import {catchError} from "rxjs/operators";
 import {CalculateBmiRequest} from "./calculate-bmi/dto/calculate-bmi-request";
 import {CalculateBmiResponse} from "./calculate-bmi/dto/calc-bmi-response";
+import {FeatureManager} from "../../../assets/utils/feature.manager";
 
 const API_CALC_BMI = 'http://localhost:8081/bmi';
 
@@ -12,7 +13,7 @@ const API_CALC_BMI = 'http://localhost:8081/bmi';
   providedIn: 'root'
 })
 export class BmiService {
-  constructor(private readonly http: HttpClient) {
+  constructor(private readonly http: HttpClient, private featureManager: FeatureManager) {
   }
 
 
@@ -21,11 +22,19 @@ export class BmiService {
       observe: 'response'
     }).pipe(
       map((r) => {
+        console.log(r.body)
+        this.featureManager.openSnackbar(r.body?.resultMessage);
+        console.log(r.body?.resultMessage)
         return r.body || {
-          result: r.body ? r.body : ''
+          resultMessage: ""
         }
       }),
-      catchError(() => {
+      catchError((err) => {
+        if(err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text);
+        } else {
+          this.featureManager.openSnackbar(err.error);
+        }
         return throwError('Due to technical issues it is currently not possible to calculate the BMI.');
       })
     );

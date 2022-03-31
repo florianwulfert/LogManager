@@ -1,4 +1,4 @@
-package project.logManager.common.dto;
+package project.logManager.common.dto.log;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
