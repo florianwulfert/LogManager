@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.logManager.common.dto.BmiRequestDto;
+import project.logManager.common.dto.bmi.BmiRequestDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.BmiService;
 

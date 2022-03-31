@@ -1,5 +1,6 @@
 export interface CalculateBmiResponse {
-  result: string;
+
+  resultMessage: string
 }
 
 export interface CalculateBmiErrorResponse {

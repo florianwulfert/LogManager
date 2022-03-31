@@ -5,7 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.logManager.common.dto.LogRequestDto;
+import project.logManager.common.dto.log.LogRequestDto;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.Book;
 import project.logManager.model.repository.BookRepository;

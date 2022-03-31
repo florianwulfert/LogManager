@@ -1,4 +1,4 @@
-package project.logManager.common.dto;
+package project.logManager.common.dto.user;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,11 +1,11 @@
-package project.logManager.common.dto;
+package project.logManager.common.dto.user;
 
-import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Data;
-import project.logManager.model.entity.Book;
 
-import static project.logManager.common.dto.BmiRequestDto.getLocalDate;
+import java.time.LocalDate;
+
+import static project.logManager.common.dto.bmi.BmiRequestDto.getLocalDate;
 
 @Builder
 @Data
@@ -16,7 +16,6 @@ public class UserRequestDto {
   public Double weight;
   public Double height;
   public String favouriteColor;
-  public Book favouriteBook;
 
   public LocalDate getBirthdateAsLocalDate() {
     return getLocalDate(this.birthdate);
