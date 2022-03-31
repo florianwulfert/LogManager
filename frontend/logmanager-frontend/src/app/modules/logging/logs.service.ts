@@ -8,10 +8,12 @@ import {AddLogResponse} from "./addLogs/dto/add-log-response";
 import {AddLogRequest} from "./addLogs/dto/add-log-request";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {ActorFacade} from "../actor/actor.facade";
+import {DeleteLogResponse} from "./deleteLog/dto/delete-log-response";
 
 const API_GET_LOGS = 'http://localhost:8081/logs';
 const API_DELETE_LOGS = 'http://localhost:8081/logs/delete';
 const API_ADD_LOG = 'http://localhost:8081/log';
+const API_DELETE_LOG = 'http://localhost:8081/logs/delete/'
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +69,23 @@ export class LogService {
       }),
       catchError(() => {
         return throwError('Due to technical issues it is currently not possible to add logs.');
+      })
+    );
+  }
+
+  deleteLog(i: number | undefined): Observable<DeleteLogResponse> {
+
+    console.log(i)
+    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + i, {
+      observe: 'response'
+    }).pipe(
+      map((r) => {
+        return r.body || {
+          result: ''
+        }
+      }),
+      catchError(() => {
+        return throwError('Due to technical issues it is currently not possible to delete this log.')
       })
     );
   }
