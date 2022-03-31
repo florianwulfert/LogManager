@@ -52,7 +52,6 @@ export class LoggingComponent implements OnInit, OnDestroy {
   getLogs(): void {
     this.logsFacade.getLogs()
     this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
-      console.log(result)
       this.dataSource = new MatTableDataSource(result)
     })
   }
