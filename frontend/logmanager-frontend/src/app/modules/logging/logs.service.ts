@@ -29,9 +29,8 @@ export class LogService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r.body)
         return r.body || {
-          logsList: [],
+          result: [],
           returnMessage: ""
         }
       }),
@@ -53,7 +52,7 @@ export class LogService {
       map((r) => {
         this.featureManager.openSnackbar(r.body?.returnMessage);
         return r.body || {
-          logsList: [],
+          result: [],
           returnMessage: ''
         }
       }),
@@ -76,10 +75,9 @@ export class LogService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r.body)
         this.featureManager.openSnackbar(r.body?.returnMessage);
         return r.body || {
-          logsList: [],
+          result: [],
           returnMessage: ''
         }
       }),

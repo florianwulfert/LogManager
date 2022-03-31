@@ -7,7 +7,7 @@ const handleLogsResponse = (state: LogsState, resp: GetLogsResponse): LogsState 
   console.log(resp)
   return {
     ...state,
-    logsList: resp.logsList,
+    logsList: resp.result,
   };
 }
 
