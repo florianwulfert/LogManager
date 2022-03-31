@@ -1,7 +1,7 @@
 import {LogsDto} from "../../getLogs/dto/logs.dto";
 
 export interface AddLogResponse {
-  logsList: LogsDto[]
+  result: LogsDto[]
   returnMessage: string
 }
 
