@@ -81,7 +81,8 @@ public class LogController {
 
   @DeleteMapping("/logs/delete")
   @Operation(summary="Delete all Logs")
-  public String deleteAll() {
-    return logService.deleteAll();
+  public LogResponseDto deleteAll() {
+    String returnMessage = logService.deleteAll();
+    return new LogResponseDto(logService.getLogs(null, null,null, null), returnMessage);
   }
 }
