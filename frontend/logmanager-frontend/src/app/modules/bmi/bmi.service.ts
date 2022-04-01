@@ -16,13 +16,11 @@ export class BmiService {
   constructor(private readonly http: HttpClient, private featureManager: FeatureManager) {
   }
 
-
   calcBmi(calcBmiRequest: CalculateBmiRequest): Observable<CalculateBmiResponse> {
     return this.http.post<CalculateBmiResponse>(API_CALC_BMI, {...calcBmiRequest}, {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r.body)
         this.featureManager.openSnackbar(r.body?.resultMessage);
         return r.body || {
           resultMessage: ""
