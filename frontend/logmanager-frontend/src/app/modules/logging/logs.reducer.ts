@@ -4,7 +4,6 @@ import {LOGS_GET_INITIAL_STATE, LogsState} from "./logs.state";
 import {GetLogsResponse} from "./getLogs/dto/get-logs-response";
 
 const handleLogsResponse = (state: LogsState, resp: GetLogsResponse): LogsState => {
-  console.log(resp)
   return {
     ...state,
     logsList: resp.result,
