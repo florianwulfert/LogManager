@@ -1,5 +1,12 @@
 package project.logManager.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDate;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,14 +29,6 @@ import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 
-import java.time.LocalDate;
-import java.util.stream.Stream;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BmiController.class)
 @AutoConfigureDataJpa
@@ -49,17 +48,22 @@ class BmiControllerIT {
             "Normal Weight",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"75.7\",\"height\":\"1.85\"}",
             status().isOk(),
-            String.format(InfoMessages.BMI_MESSAGE, 22.11) + InfoMessages.NORMAL_WEIGHT),
+            "{\"resultMessage\":\"" + String.format(InfoMessages.BMI_MESSAGE, 22.11) + InfoMessages.NORMAL_WEIGHT + "\"}"),
         Arguments.of(
             "Overweight",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"100.5\",\"height\":\"1.85\"}",
             status().isOk(),
-            String.format(InfoMessages.BMI_MESSAGE, 29.36) + InfoMessages.OVERWEIGHT),
+            "{\"resultMessage\":\"" + String.format(InfoMessages.BMI_MESSAGE, 29.36) + InfoMessages.OVERWEIGHT + "\"}"),
         Arguments.of(
             "Underweight",
             "{\"birthdate\":\"2000-01-01\",\"weight\":\"45.1\",\"height\":\"1.85\"}",
             status().isOk(),
-            String.format(InfoMessages.BMI_MESSAGE, 13.17) + InfoMessages.UNDERWEIGHT),
+            "{\"resultMessage\":\"" + String.format(InfoMessages.BMI_MESSAGE, 13.17) + InfoMessages.UNDERWEIGHT + "\"}"),
+        Arguments.of(
+            "User too young",
+            "{\"birthdate\":\"2009-01-01\",\"weight\":\"75.7\",\"height\":\"1.85\"}",
+            status().isOk(),
+            "{\"resultMessage\":\"" + ErrorMessages.USER_TOO_YOUNG + "\"}"),
         Arguments.of(
             "InfiniteOrNan",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"0\",\"height\":\"0\"}",
@@ -89,12 +93,7 @@ class BmiControllerIT {
             "Parameter has wrong format",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"hi\",\"height\":\"1.85\"}",
             status().isBadRequest(),
-            ErrorMessages.PARAMETER_WRONG_FORMAT),
-        Arguments.of(
-            "User too young",
-            "{\"birthdate\":\"2009-01-01\",\"weight\":\"75.7\",\"height\":\"1.85\"}",
-            status().isOk(),
-            ErrorMessages.USER_TOO_YOUNG));
+            ErrorMessages.PARAMETER_WRONG_FORMAT));
   }
 
   @ParameterizedTest
