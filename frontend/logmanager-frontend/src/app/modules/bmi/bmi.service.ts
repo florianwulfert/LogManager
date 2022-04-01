@@ -24,7 +24,6 @@ export class BmiService {
       map((r) => {
         console.log(r.body)
         this.featureManager.openSnackbar(r.body?.resultMessage);
-        console.log(r.body?.resultMessage)
         return r.body || {
           resultMessage: ""
         }

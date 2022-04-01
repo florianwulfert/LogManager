@@ -10,5 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BmiResponseDto {
-  String returnMessage;
+  String resultMessage;
 }
