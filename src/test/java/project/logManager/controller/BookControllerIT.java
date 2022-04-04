@@ -69,7 +69,6 @@ class BookControllerIT {
                 userRepository.save(user);
         }
 
-        @Nested
         class getAllBooksTest {
                 @Test
                 void testGetBooks() throws Exception {
@@ -154,6 +153,8 @@ class BookControllerIT {
                                         .andDo(print())
                                         .andExpect(status().isOk())
                                         .andReturn();
+                        assertEquals(String.format(InfoMessages.Book_FOUND_TITLE, "haya"),
+                                        result.getResponse().getContentAsString());
                 }
 
                 @Test
@@ -267,7 +268,6 @@ class BookControllerIT {
 
         }
 
-        @Nested
         class DeleteAllTest {
                 @Test
                 void testDeleteAll() throws Exception {

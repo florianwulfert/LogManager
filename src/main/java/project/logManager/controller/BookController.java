@@ -15,7 +15,7 @@ import project.logManager.service.model.BookService;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name="Book")
+@Tag(name = "Book")
 public class BookController {
 
     @Autowired
@@ -33,7 +33,7 @@ public class BookController {
     }
 
     @GetMapping("/searchbook")
-    public List<Book> findBooksBytitel(@RequestParam String titel) {
+    public String findBooksBytitel(@RequestParam String titel) {
         return bookService.searchBooksByTitel(titel);
     }
 

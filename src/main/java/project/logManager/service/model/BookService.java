@@ -49,9 +49,10 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public List<Book> searchBooksByTitel(String titel) {
+    public String searchBooksByTitel(String titel) {
         LOGGER.info(String.format(InfoMessages.Book_FOUND_TITLE, titel));
-        return bookRepository.findByTitel(titel);
+        bookRepository.findByTitel(titel);
+        return String.format(InfoMessages.Book_FOUND_TITLE, titel);
     }
 
     public String deleteById(Integer id, String actor) {
