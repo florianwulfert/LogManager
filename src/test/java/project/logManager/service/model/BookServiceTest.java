@@ -2,6 +2,7 @@ package project.logManager.service.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 
@@ -44,9 +45,9 @@ public class BookServiceTest {
     void testAddBook() {
         books.add(
                 Book.builder()
-                        .id(88)
+                        .id(1)
                         .titel("haya")
-                        .erscheinungsjahr(1700)
+                        .erscheinungsjahr(1998)
                         .build());
         bookService.addBook(books.get(0).getErscheinungsjahr(), books.get(0).getTitel(), "Torsten");
         verify(logService).addLog(any());
@@ -67,8 +68,27 @@ public class BookServiceTest {
     }
 
     @Test
+    void testDeleteByTitelWhenBooksListIsEmptyReturnNoBooksFounds() {
+        Mockito.when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(new ArrayList<>());
+        assertEquals(String.format(InfoMessages.NO_BOOKS_FOUNDS, books.get(0).getTitel()),
+                bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
+    }
+
+    @Test
     void testDeleteByTitel() {
-        bookService.deleteByTitel(books.get(0).getTitel(), "Torsten");
+        ArrayList bookz = new ArrayList<Book>();
+        bookz.add(books.get(0));
+        Mockito.when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(bookz);
+        assertEquals(String.format(InfoMessages.BOOK_DELETED_TITLE, books.get(0).getTitel()),
+                bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
+        verify(logService).addLog(any());
+    }
+
+    @Test
+    void testDeleteByTitelWhenMoreBooksWithSameTitelExistent() {
+        Mockito.when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(books);
+        assertEquals(String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, books.get(anyInt()).getTitel()),
+                bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
     }
 
     @Test
@@ -95,13 +115,13 @@ public class BookServiceTest {
         List<Book> books = new ArrayList<>();
         books.add(
                 Book.builder()
-                        .id(5)
-                        .erscheinungsjahr(1998)
+                        .id(6)
+                        .erscheinungsjahr(1999)
                         .titel("peter")
                         .build());
         books.add(
                 Book.builder()
-                        .id(8)
+                        .id(7)
                         .erscheinungsjahr(1234)
                         .titel("petra")
                         .build());
@@ -115,26 +135,32 @@ public class BookServiceTest {
         List<Book> books = new ArrayList<>();
         books.add(
                 Book.builder()
-                        .id(3)
+                        .id(1)
                         .erscheinungsjahr(1998)
                         .titel("haya")
                         .build());
 
         books.add(
                 Book.builder()
-                        .id(7)
+                        .id(2)
                         .erscheinungsjahr(1900)
                         .titel("peter")
                         .build());
         books.add(
                 Book.builder()
-                        .id(8)
+                        .id(3)
                         .erscheinungsjahr(1800)
                         .titel("petra")
                         .build());
         books.add(
                 Book.builder()
-                        .id(6)
+                        .id(4)
+                        .erscheinungsjahr(1888)
+                        .titel("chris")
+                        .build());
+        books.add(
+                Book.builder()
+                        .id(5)
                         .erscheinungsjahr(1888)
                         .titel("chris")
                         .build());

@@ -49,9 +49,10 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public List<Book> searchBooksByTitel(String titel) {
+    public String searchBooksByTitel(String titel) {
         LOGGER.info(String.format(InfoMessages.Book_FOUND_TITLE, titel));
-        return bookRepository.findByTitel(titel);
+        bookRepository.findByTitel(titel);
+        return String.format(InfoMessages.Book_FOUND_TITLE, titel);
     }
 
     public String deleteById(Integer id, String actor) {
@@ -66,7 +67,7 @@ public class BookService {
         List<Book> deleteBooks = bookRepository.findByTitel(titel);
         if (deleteBooks.isEmpty()) {
             LOGGER.info(InfoMessages.NO_BOOKS_FOUNDS, titel);
-            return InfoMessages.NO_BOOKS_FOUNDS;
+            return String.format(InfoMessages.NO_BOOKS_FOUNDS, titel);
         } else if (deleteBooks.size() == 1) {
             bookRepository.deleteById(deleteBooks.get(0).getId());
             saveLog(String.format(InfoMessages.BOOK_DELETED_TITLE, titel), "INFO", actor);
