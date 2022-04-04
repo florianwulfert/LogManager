@@ -1,3 +1,3 @@
 export class DeleteLogRequest {
-  id: number | undefined
+  id: string | undefined
 }
