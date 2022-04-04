@@ -48,7 +48,6 @@ export class UserService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r);
         return {
           result: r.body ? r.body : ''
         }
@@ -75,6 +74,7 @@ export class UserService {
   }
 
   deleteUser(i: number | undefined): Observable<DeleteUserResponse> {
+    console.log(i)
     this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
       this.name = r
     })

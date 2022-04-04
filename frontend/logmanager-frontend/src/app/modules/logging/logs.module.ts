@@ -11,6 +11,7 @@ import {DELETE_LOGS_FEATURE_NAME} from "./deleteLogs/store/delete-logs.state";
 import {ADD_LOG_FEATURE_NAME} from "./addLogs/store/log-add.state";
 import {LogAddReducer} from "./addLogs/store/log-add.reducer";
 import {DELETE_LOG_FEATURE_NAME} from "./deleteLog/store/log-delete.state";
+import {LogDeleteReducer} from "./deleteLog/store/log-delete.reducer";
 
 @NgModule({
   declarations: [],
@@ -19,7 +20,7 @@ import {DELETE_LOG_FEATURE_NAME} from "./deleteLog/store/log-delete.state";
     StoreModule.forFeature(GET_LOGS_FEATURE_NAME, LogsGetReducer),
     StoreModule.forFeature(DELETE_LOGS_FEATURE_NAME, LogsDeleteReducer),
     StoreModule.forFeature(ADD_LOG_FEATURE_NAME, LogAddReducer),
-    StoreModule.forFeature(DELETE_LOG_FEATURE_NAME, LogAddReducer),
+    StoreModule.forFeature(DELETE_LOG_FEATURE_NAME, LogDeleteReducer),
     EffectsModule.forRoot(), EffectsModule.forFeature([LogEffects])],
   providers: [LogFacade]
 })

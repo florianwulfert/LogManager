@@ -73,10 +73,10 @@ export class LogService {
     );
   }
 
-  deleteLog(i: number | undefined): Observable<DeleteLogResponse> {
+  deleteLog(i: string | undefined): Observable<DeleteLogResponse> {
 
     console.log(i)
-    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + i, {
+    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + "?severity=" + i, {
       observe: 'response'
     }).pipe(
       map((r) => {
