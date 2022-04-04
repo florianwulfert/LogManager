@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="book")
+@Table(name = "book")
 public class Book {
 
     @Id
@@ -25,7 +25,9 @@ public class Book {
     @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
-   @Column private String titel;
-   @Column private Integer erscheinungsjahr;
+    @Column
+    private String titel;
+    @Column
+    private Integer erscheinungsjahr;
 
 }
