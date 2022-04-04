@@ -162,7 +162,7 @@ class LogControllerIT {
               .andExpect(status().isOk())
               .andReturn();
 
-      assertEquals("{\"result\":[]}", result.getResponse().getContentAsString());
+      assertEquals("{\"result\":[],\"returnMessage\":null}", result.getResponse().getContentAsString());
     }
 
     @Test
@@ -212,7 +212,18 @@ class LogControllerIT {
             "PostLog",
             "{\"message\":\"Test\",\"severity\":\"INFO\",\"user\":\"Petra\"}",
             status().isOk(),
-            "Message \"Test\" saved as INFO!"),
+            "{\"result\":[{\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\",\"user\":null},"
+                + "{\"severity\":\"INFO\",\"message\":\"Info\",\"timestamp\":\"2001-12-12T12:12:12\",\"user\":null},"
+                + "{\"severity\":\"WARNING\",\"message\":\"Warning\",\"timestamp\":\"2002-12-12T12:12:12\",\"user\":null},"
+                + "{\"severity\":\"WARNING\",\"message\":\"Test\",\"timestamp\":\"2003-12-12T12:12:12\",\"user\":null},"
+                + "{\"severity\":\"DEBUG\",\"message\":\"Debug\",\"timestamp\":\"2004-12-12T12:12:12\",\"user\":null},"
+                + "{\"severity\":\"DEBUG\",\"message\":\"Test\",\"timestamp\":\"2005-12-12T12:12:12\",\"user\":null},"
+                + "{\"severity\":\"ERROR\",\"message\":\"Error\",\"timestamp\":\"2006-12-12T12:12:12\",\"user\":null},"
+                + "{\"severity\":\"ERROR\",\"message\":\"Test\",\"timestamp\":\"2007-12-12T12:12:12\",\"user\":null},"
+                + "{\"severity\":\"TRACE\",\"message\":\"Trace\",\"timestamp\":\"2008-12-12T12:12:12\",\"user\":null},"
+                + "{\"severity\":\"TRACE\",\"message\":\"Test\",\"timestamp\":\"2009-12-12T12:12:12\",\"user\":null},"
+                + "{\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2022-04-04T10:28:16.253\",\"user\":\"Petra\"}],"
+                + "\"returnMessage\":\"Message \\\"Test\\\" saved as INFO!\"}"),
         Arguments.of(
             "MessageIsMissing",
             "{\"severity\":\"INFO\",\"user\":\"Petra\"}",
@@ -242,7 +253,18 @@ class LogControllerIT {
             "KatzeToHund",
             "{\"message\":\"Katze\", \"severity\":\"INFO\",\"user\":\"Petra\"}",
             status().isOk(),
-            InfoMessages.KATZE_TO_HUND + "\n" + InfoMessages.HUND_SAVED));
+                "{\"result\":[{\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\",\"user\":null},"
+                        + "{\"severity\":\"INFO\",\"message\":\"Info\",\"timestamp\":\"2001-12-12T12:12:12\",\"user\":null},"
+                        + "{\"severity\":\"WARNING\",\"message\":\"Warning\",\"timestamp\":\"2002-12-12T12:12:12\",\"user\":null},"
+                        + "{\"severity\":\"WARNING\",\"message\":\"Test\",\"timestamp\":\"2003-12-12T12:12:12\",\"user\":null},"
+                        + "{\"severity\":\"DEBUG\",\"message\":\"Debug\",\"timestamp\":\"2004-12-12T12:12:12\",\"user\":null},"
+                        + "{\"severity\":\"DEBUG\",\"message\":\"Test\",\"timestamp\":\"2005-12-12T12:12:12\",\"user\":null},"
+                        + "{\"severity\":\"ERROR\",\"message\":\"Error\",\"timestamp\":\"2006-12-12T12:12:12\",\"user\":null},"
+                        + "{\"severity\":\"ERROR\",\"message\":\"Test\",\"timestamp\":\"2007-12-12T12:12:12\",\"user\":null},"
+                        + "{\"severity\":\"TRACE\",\"message\":\"Trace\",\"timestamp\":\"2008-12-12T12:12:12\",\"user\":null},"
+                        + "{\"severity\":\"TRACE\",\"message\":\"Test\",\"timestamp\":\"2009-12-12T12:12:12\",\"user\":null},"
+                        + "{\"severity\":\"INFO\",\"message\":\"Hund\",\"timestamp\":\"2022-04-04T10:28:16.253\",\"user\":\"Petra\"}],"
+                        + "\"returnMessage\":\"Katze was translated to Hund!\\nMessage \\\"Hund\\\" saved as INFO!\"}"));
   }
 
   @ParameterizedTest(name = "{0}")
@@ -370,7 +392,9 @@ class LogControllerIT {
               .andExpect(status().isOk())
               .andReturn();
 
-      assertEquals(InfoMessages.ALL_LOGS_DELETED, result.getResponse().getContentAsString());
+      assertEquals(
+          "{\"result\":[],\"returnMessage\":\"All logs were deleted from database!\"}",
+          result.getResponse().getContentAsString());
     }
   }
 
