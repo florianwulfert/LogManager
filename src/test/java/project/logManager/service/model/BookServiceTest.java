@@ -69,31 +69,26 @@ public class BookServiceTest {
 
     @Test
     void testDeleteByTitelWhenBooksListIsEmptyReturnNoBooksFounds() {
-
-        if (books.isEmpty()) {
-            assertEquals(String.format(InfoMessages.NO_BOOKS_FOUNDS, books.get(0).getTitel()),
-                    bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
-        }
+        Mockito.when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(new ArrayList<>());
+        assertEquals(String.format(InfoMessages.NO_BOOKS_FOUNDS, books.get(0).getTitel()),
+                bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
     }
 
     @Test
     void testDeleteByTitel() {
-
-        if (!books.isEmpty() & books.size() == 1) {
-            assertEquals(String.format(InfoMessages.BOOK_DELETED_TITLE, books.get(0).getTitel()),
-                    bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
-            verify(logService).addLog(any());
-        }
+        ArrayList bookz = new ArrayList<Book>();
+        bookz.add(books.get(0));
+        Mockito.when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(bookz);
+        assertEquals(String.format(InfoMessages.BOOK_DELETED_TITLE, books.get(0).getTitel()),
+                bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
+        verify(logService).addLog(any());
     }
 
     @Test
     void testDeleteByTitelWhenMoreBooksWithSameTitelExistent() {
-
         Mockito.when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(books);
-        if (!books.isEmpty() & books.size() != 1) {
-            assertEquals(String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, books.get(anyInt()).getTitel()),
-                    bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
-        }
+        assertEquals(String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, books.get(anyInt()).getTitel()),
+                bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
     }
 
     @Test

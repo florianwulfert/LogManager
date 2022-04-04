@@ -237,10 +237,10 @@ class BookControllerIT {
                                                 ErrorMessages.TITLE_IS_NOT_PRESENT),
                                 Arguments.of(
                                                 "Book to delete is not in database ",
-                                                "BookoToDeleteIsNotBekannt",
+                                                "hajer",
                                                 "Torsten",
                                                 status().isOk(),
-                                                InfoMessages.NO_BOOKS_FOUNDS),
+                                                String.format(InfoMessages.NO_BOOKS_FOUNDS, "hajer")),
                                 Arguments.of(
                                                 "There are more books with the title paul",
                                                 "paul",
