@@ -1,13 +1,13 @@
 package project.logManager.common.dto.log;
 
+import java.util.Locale;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.Locale;
 
 @Builder
 @Data
 public class LogRequestDto {
+
   public String message;
   public String severity;
   public String user;

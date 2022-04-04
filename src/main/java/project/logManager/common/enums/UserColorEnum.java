@@ -11,5 +11,6 @@ public enum UserColorEnum {
   YELLOW("yellow"),
   BLACK("black");
 
-  @Getter public final String color;
+  @Getter
+  public final String color;
 }

@@ -1,5 +1,7 @@
 package project.logManager.service.validation;
 
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,25 +10,25 @@ import project.logManager.common.dto.user.UserRequestDto;
 import project.logManager.common.enums.UserColorEnum;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
-import project.logManager.exception.*;
+import project.logManager.exception.FirstUserUnequalActorException;
+import project.logManager.exception.IllegalColorException;
+import project.logManager.exception.ParameterNotPresentException;
+import project.logManager.exception.UserNotAllowedException;
+import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.model.LogService;
 import project.logManager.service.model.UserService;
 
-import java.util.List;
-import java.util.Optional;
-
 @Component
 @RequiredArgsConstructor
 public class UserValidationService {
 
+  private static final Logger LOGGER = LogManager.getLogger(UserService.class);
   private final UserRepository userRepository;
   private final LogService logService;
   private final LogRepository logRepository;
-
-  private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
   public void checkIfAnyEntriesAreNull(UserRequestDto allParameters) {
     if (allParameters.actor == null
@@ -83,7 +85,7 @@ public class UserValidationService {
       handleNameNotExist(isActor, action, name);
     }
     return user;
-   }
+  }
 
   private void handleNameNotExist(boolean isActor, String action, String name) {
     if (isActor) {

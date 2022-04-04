@@ -1,5 +1,8 @@
 package project.logManager.service.validation;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,13 +10,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.exception.ParameterNotPresentException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 @ExtendWith(MockitoExtension.class)
 class BmiValidationServiceTest {
 
-  @InjectMocks BmiValidationService systemUnderTest;
+  @InjectMocks
+  BmiValidationService systemUnderTest;
 
   @Test
   void entriesAreNull() {

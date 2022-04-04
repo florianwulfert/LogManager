@@ -1,5 +1,18 @@
 package project.logManager.service.validation;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +22,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.dto.user.UserRequestDto;
 import project.logManager.common.message.ErrorMessages;
-import project.logManager.exception.*;
+import project.logManager.exception.FirstUserUnequalActorException;
+import project.logManager.exception.IllegalColorException;
+import project.logManager.exception.ParameterNotPresentException;
+import project.logManager.exception.UserNotAllowedException;
+import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -17,29 +34,23 @@ import project.logManager.model.repository.UserRepository;
 import project.logManager.service.model.LogService;
 import project.logManager.service.model.UserService;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class UserValidationServiceTest {
 
-  @InjectMocks UserValidationService systemUnderTest;
+  @InjectMocks
+  UserValidationService systemUnderTest;
 
-  @Mock UserService userService;
+  @Mock
+  UserService userService;
 
-  @Mock UserRepository userRepository;
+  @Mock
+  UserRepository userRepository;
 
-  @Mock LogService logService;
+  @Mock
+  LogService logService;
 
-  @Mock LogRepository logRepository;
+  @Mock
+  LogRepository logRepository;
 
   List<User> users;
 
@@ -125,9 +136,9 @@ class UserValidationServiceTest {
   @Test
   void ActorIsNotEqualUserAndOneWasNotFound() {
     UserNotFoundException ex =
-            assertThrows(
-                    UserNotFoundException.class,
-                    () -> systemUnderTest.checkIfActorEqualsUserToCreate("Heinrich", users.get(0), false));
+        assertThrows(
+            UserNotFoundException.class,
+            () -> systemUnderTest.checkIfActorEqualsUserToCreate("Heinrich", users.get(0), false));
 
     assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_NAME, users.get(0).getName()), ex.getMessage());
   }

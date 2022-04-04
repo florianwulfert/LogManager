@@ -1,6 +1,22 @@
 package project.logManager.controller;
 
-import org.junit.jupiter.api.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+import javax.transaction.Transactional;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,17 +40,6 @@ import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 
-import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
 @AutoConfigureDataJpa
@@ -44,18 +49,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(Lifecycle.PER_CLASS)
 class UserControllerIT {
 
-  @Autowired private MockMvc mockMvc;
-
-  @Autowired private UserRepository userRepository;
-
-  @Autowired private LogRepository logRepository;
-
   List<User> userList = new ArrayList<>();
-
-  @BeforeAll
-  public void setup() {
-    userList = createUser();
-  }
+  @Autowired
+  private MockMvc mockMvc;
+  @Autowired
+  private UserRepository userRepository;
+  @Autowired
+  private LogRepository logRepository;
 
   private static Stream<Arguments> getAddUserArguments() {
     return Stream.of(
@@ -152,82 +152,6 @@ class UserControllerIT {
                 ErrorMessages.PARAMETER_IS_MISSING)));
   }
 
-  @ParameterizedTest(name = "{0}")
-  @MethodSource("getAddUserArguments")
-  void testAddUser(
-      String testName,
-      Boolean isEmptyUserList,
-      String content,
-      ResultMatcher status,
-      String message)
-      throws Exception {
-    if (isEmptyUserList) {
-      userRepository.deleteAll();
-    }
-
-    MvcResult result =
-        mockMvc
-            .perform(
-                post("/user")
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .content(content)
-                    .accept(MediaType.APPLICATION_JSON_VALUE))
-            .andDo(print())
-            .andExpect(status)
-            .andReturn();
-
-    Assertions.assertEquals(message, result.getResponse().getContentAsString());
-  }
-
-  @Test
-  void testFindUsers() throws Exception {
-    MvcResult result =
-        mockMvc.perform(get("/users")).andDo(print()).andExpect(status().isOk()).andReturn();
-
-    Assertions.assertEquals(
-        TestMessages.PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
-  }
-
-  @Nested
-  class FindUserByIdTests {
-    @Test
-    void testFindUserById() throws Exception {
-      MvcResult result =
-          mockMvc
-              .perform(get("/user/id").param("id", "1"))
-              .andDo(print())
-              .andExpect(status().isOk())
-              .andReturn();
-
-      Assertions.assertEquals(TestMessages.PETRA, result.getResponse().getContentAsString());
-    }
-
-    @Test
-    void whenIdToFindIsNullThenReturnBadRequest() throws Exception {
-      MvcResult result =
-          mockMvc
-              .perform(get("/user/id"))
-              .andDo(print())
-              .andExpect(status().isBadRequest())
-              .andReturn();
-
-      Assertions.assertEquals(
-          ErrorMessages.ID_NOT_PRESENT, result.getResponse().getContentAsString());
-    }
-
-    @Test
-    void whenIdToFindNotFoundThenReturnNull() throws Exception {
-      MvcResult result =
-          mockMvc
-              .perform(get("/user/id").param("id", "50"))
-              .andDo(print())
-              .andExpect(status().isOk())
-              .andReturn();
-
-      Assertions.assertEquals("null", result.getResponse().getContentAsString());
-    }
-  }
-
   private static Stream<Arguments> getDeleteUserByIdArguments() {
     return Stream.of(
         Arguments.of(
@@ -262,31 +186,6 @@ class UserControllerIT {
             "Torsten",
             status().isInternalServerError(),
             String.format(ErrorMessages.USER_REFERENCED, "Petra")));
-  }
-
-  @ParameterizedTest(name = "{4}")
-  @MethodSource("getDeleteUserByIdArguments")
-  void testDeleteUserById(
-      Boolean userIsReferenced, String url, String actor, ResultMatcher status, String message)
-      throws Exception {
-    if (userIsReferenced) {
-      logRepository.save(
-          Log.builder()
-              .id(1)
-              .user(userList.get(0))
-              .message("Test")
-              .severity("INFO")
-              .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
-              .build());
-    }
-    MvcResult result =
-        mockMvc
-            .perform(delete(url).param("actor", actor))
-            .andDo(print())
-            .andExpect(status)
-            .andReturn();
-
-    Assertions.assertEquals(message, result.getResponse().getContentAsString());
   }
 
   private static Stream<Arguments> getDeleteUserByNameArguments() {
@@ -342,6 +241,72 @@ class UserControllerIT {
             String.format(ErrorMessages.USER_REFERENCED, "Petra")));
   }
 
+  @BeforeAll
+  public void setup() {
+    userList = createUser();
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("getAddUserArguments")
+  void testAddUser(
+      String testName,
+      Boolean isEmptyUserList,
+      String content,
+      ResultMatcher status,
+      String message)
+      throws Exception {
+    if (isEmptyUserList) {
+      userRepository.deleteAll();
+    }
+
+    MvcResult result =
+        mockMvc
+            .perform(
+                post("/user")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(content)
+                    .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(print())
+            .andExpect(status)
+            .andReturn();
+
+    Assertions.assertEquals(message, result.getResponse().getContentAsString());
+  }
+
+  @Test
+  void testFindUsers() throws Exception {
+    MvcResult result =
+        mockMvc.perform(get("/users")).andDo(print()).andExpect(status().isOk()).andReturn();
+
+    Assertions.assertEquals(
+        TestMessages.PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
+  }
+
+  @ParameterizedTest(name = "{4}")
+  @MethodSource("getDeleteUserByIdArguments")
+  void testDeleteUserById(
+      Boolean userIsReferenced, String url, String actor, ResultMatcher status, String message)
+      throws Exception {
+    if (userIsReferenced) {
+      logRepository.save(
+          Log.builder()
+              .id(1)
+              .user(userList.get(0))
+              .message("Test")
+              .severity("INFO")
+              .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
+              .build());
+    }
+    MvcResult result =
+        mockMvc
+            .perform(delete(url).param("actor", actor))
+            .andDo(print())
+            .andExpect(status)
+            .andReturn();
+
+    Assertions.assertEquals(message, result.getResponse().getContentAsString());
+  }
+
   @ParameterizedTest(name = "{0}")
   @MethodSource("getDeleteUserByNameArguments")
   void testDeleteUserByName(
@@ -370,43 +335,6 @@ class UserControllerIT {
             .andReturn();
 
     Assertions.assertEquals(message, result.getResponse().getContentAsString());
-  }
-
-  @Nested
-  class DeleteAllTests {
-    @Test
-    void testDeleteAll() throws Exception {
-      logRepository.deleteAll();
-      MvcResult result =
-          mockMvc
-              .perform(delete("/user/delete"))
-              .andDo(print())
-              .andExpect(status().isOk())
-              .andReturn();
-
-      Assertions.assertEquals(TestMessages.EMPTY_LIST, result.getResponse().getContentAsString());
-    }
-
-    @Test
-    void whenUserIsUsedSomewhereThenReturnCouldNotDelete() throws Exception {
-      logRepository.save(
-          Log.builder()
-              .id(1)
-              .user(userList.get(0))
-              .message("Test")
-              .severity("INFO")
-              .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
-              .build());
-      MvcResult result =
-          mockMvc
-              .perform(delete("/user/delete"))
-              .andDo(print())
-              .andExpect(status().isInternalServerError())
-              .andReturn();
-
-      Assertions.assertEquals(
-          ErrorMessages.USERS_REFERENCED, result.getResponse().getContentAsString());
-    }
   }
 
   private List<User> createUser() {
@@ -450,5 +378,84 @@ class UserControllerIT {
     userRepository.save(torsten);
     userRepository.save(hans);
     return userList;
+  }
+
+  @Nested
+  class FindUserByIdTests {
+
+    @Test
+    void testFindUserById() throws Exception {
+      MvcResult result =
+          mockMvc
+              .perform(get("/user/id").param("id", "1"))
+              .andDo(print())
+              .andExpect(status().isOk())
+              .andReturn();
+
+      Assertions.assertEquals(TestMessages.PETRA, result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void whenIdToFindIsNullThenReturnBadRequest() throws Exception {
+      MvcResult result =
+          mockMvc
+              .perform(get("/user/id"))
+              .andDo(print())
+              .andExpect(status().isBadRequest())
+              .andReturn();
+
+      Assertions.assertEquals(
+          ErrorMessages.ID_NOT_PRESENT, result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void whenIdToFindNotFoundThenReturnNull() throws Exception {
+      MvcResult result =
+          mockMvc
+              .perform(get("/user/id").param("id", "50"))
+              .andDo(print())
+              .andExpect(status().isOk())
+              .andReturn();
+
+      Assertions.assertEquals("null", result.getResponse().getContentAsString());
+    }
+  }
+
+  @Nested
+  class DeleteAllTests {
+
+    @Test
+    void testDeleteAll() throws Exception {
+      logRepository.deleteAll();
+      MvcResult result =
+          mockMvc
+              .perform(delete("/user/delete"))
+              .andDo(print())
+              .andExpect(status().isOk())
+              .andReturn();
+
+      Assertions.assertEquals(TestMessages.EMPTY_LIST, result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void whenUserIsUsedSomewhereThenReturnCouldNotDelete() throws Exception {
+      logRepository.save(
+          Log.builder()
+              .id(1)
+              .user(userList.get(0))
+              .message("Test")
+              .severity("INFO")
+              .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
+              .build());
+      MvcResult result =
+          mockMvc
+              .perform(delete("/user/delete"))
+              .andDo(print())
+              .andExpect(status().isInternalServerError())
+              .andReturn();
+
+      Assertions.assertEquals(
+          ErrorMessages.USERS_REFERENCED, result.getResponse().getContentAsString());
+    }
   }
 }

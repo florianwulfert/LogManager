@@ -13,7 +13,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.service.model.UserService;
 
-/** @author - EugenFriesen 14.02.2021 */
+/**
+ * @author - EugenFriesen 14.02.2021
+ */
 @RestControllerAdvice
 public class RestExceptionHandler {
 

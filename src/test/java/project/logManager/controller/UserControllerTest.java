@@ -1,5 +1,10 @@
 package project.logManager.controller;
 
+import static org.mockito.Mockito.verify;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,12 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.dto.user.UserRequestDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {

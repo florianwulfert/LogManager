@@ -1,15 +1,15 @@
 package project.logManager.common.dto.user;
 
-import lombok.Builder;
-import lombok.Data;
+import static project.logManager.common.dto.bmi.BmiRequestDto.getLocalDate;
 
 import java.time.LocalDate;
-
-import static project.logManager.common.dto.bmi.BmiRequestDto.getLocalDate;
+import lombok.Builder;
+import lombok.Data;
 
 @Builder
 @Data
 public class UserRequestDto {
+
   public String actor;
   public String name;
   public String birthdate;
