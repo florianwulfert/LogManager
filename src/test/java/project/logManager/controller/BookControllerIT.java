@@ -69,17 +69,14 @@ class BookControllerIT {
                 userRepository.save(user);
         }
 
-        class getAllBooksTest {
-                @Test
-                void testGetBooks() throws Exception {
-                        bookRepository.findAll();
-                        MvcResult result = mockMvc
-                                        .perform(get("/books").param("actor", "Torsten"))
-                                        .andDo(print())
-                                        .andExpect(status().isOk())
-                                        .andReturn();
-
-                }
+        @Test
+        void testGetBooks() throws Exception {
+                bookRepository.findAll();
+                MvcResult result = mockMvc
+                                .perform(get("/books").param("actor", "Torsten"))
+                                .andDo(print())
+                                .andExpect(status().isOk())
+                                .andReturn();
         }
 
         private static Stream<Arguments> getAddBookArguments() {
@@ -265,22 +262,19 @@ class BookControllerIT {
                                 .andReturn();
 
                 assertEquals(message, result.getResponse().getContentAsString());
-
         }
 
-        class DeleteAllTest {
-                @Test
-                void testDeleteAll() throws Exception {
+        @Test
+        void testDeleteAll() throws Exception {
 
-                        MvcResult result = mockMvc
-                                        .perform(delete("/allBooksdelete"))
-                                        .andDo(print())
-                                        .andExpect(status().isOk())
-                                        .andReturn();
+                MvcResult result = mockMvc
+                                .perform(delete("/allBooksdelete"))
+                                .andDo(print())
+                                .andExpect(status().isOk())
+                                .andReturn();
 
-                        assertEquals(InfoMessages.ALL_BOOKS_DELETED, result.getResponse().getContentAsString());
+                assertEquals(InfoMessages.ALL_BOOKS_DELETED, result.getResponse().getContentAsString());
 
-                }
         }
 
         private List<Book> creatBook() {
