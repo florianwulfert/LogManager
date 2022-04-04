@@ -1,4 +1,4 @@
-package project.logManager.common.message;
+package project.logManager;
 
 public class TestMessages {
 
