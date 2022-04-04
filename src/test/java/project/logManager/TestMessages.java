@@ -2,12 +2,13 @@ package project.logManager;
 
 public class TestMessages {
 
-  public static final String PETRA_TORSTEN_HANS = "{\"result\":[{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\","
-      + "\"weight\":65.0,\"height\":1.6,\"favouriteColor\":\"Red\",\"bmi\":25.39}"
-      + ",{\"id\":2,\"name\":\"Torsten\",\"birthdate\":\"1985-12-05\",\"weight\":61.3,\"height\":1.83,"
-      + "\"favouriteColor\":\"Blue\",\"bmi\":18.3},"
-      + "{\"id\":3,\"name\":\"Hans\",\"birthdate\":\"1993-02-03\",\"weight\":75.7,\"height\":1.85,"
-      + "\"favouriteColor\":\"Red\",\"bmi\":22.11}]}";
+  public static final String PETRA_TORSTEN_HANS =
+      "{\"result\":[{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\","
+          + "\"weight\":65.0,\"height\":1.6,\"favouriteColor\":\"Red\",\"bmi\":25.39}"
+          + ",{\"id\":2,\"name\":\"Torsten\",\"birthdate\":\"1985-12-05\",\"weight\":61.3,\"height\":1.83,"
+          + "\"favouriteColor\":\"Blue\",\"bmi\":18.3},"
+          + "{\"id\":3,\"name\":\"Hans\",\"birthdate\":\"1993-02-03\",\"weight\":75.7,\"height\":1.85,"
+          + "\"favouriteColor\":\"Red\",\"bmi\":22.11}],\"returnMessage\":null}";
   public static final String PETRA = "{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\","
       + "\"weight\":65.0,\"height\":1.6,\"favouriteColor\":\"Red\",\"bmi\":25.39}";
   public static final String USER_TO_DELETE_NOT_PRESENT = "Required path variable was not found or request param has wrong format! "
