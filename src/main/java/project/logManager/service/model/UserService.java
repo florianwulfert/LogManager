@@ -106,7 +106,7 @@ public class UserService {
     String bmi =
         bmiService.calculateBmiAndGetBmiMessage(
             user.getBirthdate(), user.getWeight(), user.getHeight());
-    saveLog(String.format(InfoMessages.USER_CREATED + "%s", user, bmi), "INFO", actor);
+    saveLog(String.format(InfoMessages.USER_CREATED + "%s", user.getName(), bmi), "INFO", actor);
     LOGGER.info(
         String.format(
             InfoMessages.USER_CREATED
