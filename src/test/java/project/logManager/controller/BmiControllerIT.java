@@ -38,9 +38,11 @@ import project.logManager.model.repository.UserRepository;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BmiControllerIT {
 
-  @Autowired private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-  @Autowired private UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
 
   private static Stream<Arguments> getBmiArguments() {
     return Stream.of(
@@ -96,24 +98,6 @@ class BmiControllerIT {
             ErrorMessages.PARAMETER_WRONG_FORMAT));
   }
 
-  @ParameterizedTest
-  @MethodSource("getBmiArguments")
-  void testGetBmi(String testName, String testData, ResultMatcher status, String message)
-      throws Exception {
-    MvcResult result =
-        mockMvc
-            .perform(
-                post("/bmi")
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .content(testData)
-                    .accept(MediaType.APPLICATION_JSON_VALUE))
-            .andDo(print())
-            .andExpect(status)
-            .andReturn();
-
-    Assertions.assertEquals(message, result.getResponse().getContentAsString());
-  }
-
   private static Stream<Arguments> findUserAndCalculateBmiArguments() {
     return Stream.of(
         Arguments.of(
@@ -136,6 +120,24 @@ class BmiControllerIT {
             "/bmi/ActorNichtVorhanden",
             status().isBadRequest(),
             String.format(ErrorMessages.USER_NOT_FOUND_NAME, "ActorNichtVorhanden")));
+  }
+
+  @ParameterizedTest
+  @MethodSource("getBmiArguments")
+  void testGetBmi(String testName, String testData, ResultMatcher status, String message)
+      throws Exception {
+    MvcResult result =
+        mockMvc
+            .perform(
+                post("/bmi")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(testData)
+                    .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(print())
+            .andExpect(status)
+            .andReturn();
+
+    Assertions.assertEquals(message, result.getResponse().getContentAsString());
   }
 
   @ParameterizedTest(name = "{3}")

@@ -15,7 +15,9 @@ import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 
-/** @author - EugenFriesen 13.02.2021 */
+/**
+ * @author - EugenFriesen 13.02.2021
+ */
 @Service
 @Data
 public class LogValidationService {

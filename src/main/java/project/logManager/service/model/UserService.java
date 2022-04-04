@@ -1,5 +1,8 @@
 package project.logManager.service.model;
 
+import java.util.List;
+import java.util.Optional;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,20 +15,16 @@ import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.UserValidationService;
 
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-
 @Transactional
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
+  private static final Logger LOGGER = LogManager.getLogger(UserService.class);
   private final LogService logService;
   private final UserRepository userRepository;
   private final BmiService bmiService;
   private final UserValidationService userValidationService;
-
-  private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
   public String addUser(UserRequestDto userRequestDto) {
     userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
@@ -42,7 +41,7 @@ public class UserService {
     userValidationService.validateFarbenEnum(user.getFavouriteColor().toLowerCase());
     userValidationService.checkIfUserToPostExists(user.getName());
     if (userValidationService.checkIfUsersListIsEmpty()) {
-      userValidationService.checkIfActorEqualsUserToCreate(userRequestDto.actor, user,true);
+      userValidationService.checkIfActorEqualsUserToCreate(userRequestDto.actor, user, true);
       saveUser(user, userRequestDto.actor);
     } else {
       User activeUser =
@@ -111,17 +110,17 @@ public class UserService {
         String.format(
             InfoMessages.USER_CREATED
                 + bmiService.calculateBmiAndGetBmiMessage(
-                    user.getBirthdate(), user.getWeight(), user.getHeight()),
+                user.getBirthdate(), user.getWeight(), user.getHeight()),
             user.getName()));
   }
 
   private void saveLog(String message, String severity, String actor) {
     LogRequestDto logRequestDto =
-            LogRequestDto.builder()
-                    .message(message)
-                    .severity(severity)
-                    .user(actor)
-                    .build();
+        LogRequestDto.builder()
+            .message(message)
+            .severity(severity)
+            .user(actor)
+            .build();
     LOGGER.info("Log " + logRequestDto + String.format(" was saved as %s", severity));
     logService.addLog(logRequestDto);
   }

@@ -1,14 +1,19 @@
 package project.logManager.model.entity;
 
+import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.time.LocalDate;
-
-/** @author - Florian Wulfert 25.11.2021 */
+/**
+ * @author - Florian Wulfert 25.11.2021
+ */
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +21,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "user")
 public class User {
+
   @Id
   @GeneratedValue
   @Column(name = "id", unique = true, nullable = false)

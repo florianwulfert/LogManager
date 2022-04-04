@@ -1,5 +1,10 @@
 package project.logManager.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+
+import java.time.LocalDateTime;
+import java.time.Month;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,21 +14,20 @@ import project.logManager.common.dto.log.LogRequestDto;
 import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.service.model.LogService;
 
-import java.time.LocalDateTime;
-import java.time.Month;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-
-/** @author - EugenFriesen 14.02.2021 */
+/**
+ * @author - EugenFriesen 14.02.2021
+ */
 @ExtendWith(MockitoExtension.class)
 class LogControllerTest {
 
-  @InjectMocks LogController systemUnderTest;
+  @InjectMocks
+  LogController systemUnderTest;
 
-  @Mock LogService logService;
+  @Mock
+  LogService logService;
 
-  @Mock LogDTOMapper logDTOMapper;
+  @Mock
+  LogDTOMapper logDTOMapper;
 
   @Test
   void testGetLogs() {

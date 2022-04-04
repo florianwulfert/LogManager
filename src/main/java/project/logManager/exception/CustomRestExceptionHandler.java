@@ -11,6 +11,7 @@ import project.logManager.service.model.UserService;
 
 @RestControllerAdvice
 public class CustomRestExceptionHandler {
+
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
   @ResponseBody

@@ -6,6 +6,7 @@ import lombok.Data;
 @Builder
 @Data
 public class LogMessageDto {
+
   String message;
   String returnMessage;
 }
