@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static project.logManager.common.message.TestMessages.ENTRIES_DELETED;
+import static project.logManager.TestMessages.ENTRIES_DELETED;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
