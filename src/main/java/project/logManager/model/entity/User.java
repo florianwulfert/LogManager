@@ -21,6 +21,9 @@ public class User {
   @Column(name = "id", unique = true, nullable = false)
   Integer id;
 
+  @Column(name = "favouriteBook", nullable = true)
+  Book favouriteBook;
+
   @Column(name = "name", unique = true, nullable = false)
   String name;
 
