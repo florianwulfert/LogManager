@@ -4,9 +4,9 @@ import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {AddUserRequest} from "../../modules/user/addUser/dto/add-user-request";
+import {AddUserRequest} from "../../modules/user/addUser/add-user-request";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
-import {DeleteUserRequest} from "../../modules/user/deleteUser/dto/delete-user-request";
+import {DeleteUserRequest} from "../../modules/user/deleteUser/delete-user-request";
 
 @Component({
   selector: 'app-user',
@@ -20,17 +20,13 @@ export class UserComponent implements OnInit, OnDestroy {
 
   subscriptionManager = new SubscriptionManager();
   featureManager = new FeatureManager(this._snackBar);
-  returnUserMessage: string | undefined;
 
   displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete']
   dataSource: any
   colors: string[] = ['blue', 'red', 'orange', 'yellow', 'black']
 
   ngOnInit(): void {
-    this.userFacade.getUser();
-    this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
-      this.dataSource = new MatTableDataSource(result)
-    });
+    this.getUserList()
   }
 
   ngOnDestroy(): void {
@@ -58,25 +54,17 @@ export class UserComponent implements OnInit, OnDestroy {
     request.weight = this.form.get("weight")?.value
     request.height = this.form.get("height")?.value
     request.favouriteColor = this.form.get("favouriteColor")?.value
-    return request;
+    return request
   }
 
   createUser(): void {
     let request = new AddUserRequest
     request = this.prepareAddUserRequest(request)
-    this.userFacade.addUser(request);
-    this.subscriptionManager.add(this.userFacade.stateAddUser$).subscribe(result => {
-      this.returnUserMessage = result
-    })
-    this.featureManager.openSnackbar(this.returnUserMessage);
+    this.userFacade.addUser(request)
   }
 
   deleteUsers(): void {
-    this.userFacade.deleteUsers();
-    this.subscriptionManager.add(this.userFacade.stateDeleteUsers$).subscribe(result => {
-      this.returnUserMessage = result
-    })
-    this.featureManager.openSnackbar(this.returnUserMessage);
+    this.userFacade.deleteUsers()
   }
 
   deleteUser(element: any): void {
@@ -84,9 +72,12 @@ export class UserComponent implements OnInit, OnDestroy {
     let elementValues = Object.keys(element).map(key => element[key])
     request.id = elementValues[0]
     this.userFacade.deleteUser(request);
-    this.subscriptionManager.add(this.userFacade.stateDeleteUser$).subscribe(result => {
-      this.returnUserMessage = result
-    })
-    this.featureManager.openSnackbar(this.returnUserMessage);
+  }
+
+  getUserList(): void {
+    this.userFacade.getUser();
+    this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
+      this.dataSource = new MatTableDataSource(result)
+    });
   }
 }

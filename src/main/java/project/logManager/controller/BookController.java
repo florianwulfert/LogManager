@@ -15,40 +15,40 @@ import project.logManager.service.model.BookService;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name="Book")
+@Tag(name = "Book")
 public class BookController {
 
-    @Autowired
-    private final BookService bookService;
+  @Autowired
+  private final BookService bookService;
 
-    @GetMapping("/books")
-    public List<Book> getAllBooks(@RequestParam String actor) {
-        return bookService.getAllBooks(actor);
-    }
+  @GetMapping("/books")
+  public List<Book> getAllBooks(@RequestParam String actor) {
+    return bookService.getAllBooks(actor);
+  }
 
-    @PostMapping("/book")
-    public Book addBook(@RequestParam String titel, @RequestParam Integer erscheinungsjahr,
-            @RequestParam String actor) {
-        return bookService.addBook(erscheinungsjahr, titel, actor);
-    }
+  @PostMapping("/book")
+  public Book addBook(@RequestParam String titel, @RequestParam Integer erscheinungsjahr,
+      @RequestParam String actor) {
+    return bookService.addBook(erscheinungsjahr, titel, actor);
+  }
 
-    @GetMapping("/searchbook")
-    public List<Book> findBooksBytitel(@RequestParam String titel) {
-        return bookService.searchBooksByTitel(titel);
-    }
+  @GetMapping("/searchbook")
+  public String findBooksBytitel(@RequestParam String titel) {
+    return bookService.searchBooksByTitel(titel);
+  }
 
-    @DeleteMapping("/deletebookById/{id}")
-    public String deleteBooksById(@PathVariable Integer id, @RequestParam String actor) {
-        return bookService.deleteById(id, actor);
-    }
+  @DeleteMapping("/deletebookById/{id}")
+  public String deleteBooksById(@PathVariable Integer id, @RequestParam String actor) {
+    return bookService.deleteById(id, actor);
+  }
 
-    @DeleteMapping("/deletebooksByTitel")
-    public String deleteBooksByTitel(@RequestParam String titel, @RequestParam String actor) {
-        return bookService.deleteByTitel(titel, actor);
-    }
+  @DeleteMapping("/deletebooksByTitel")
+  public String deleteBooksByTitel(@RequestParam String titel, @RequestParam String actor) {
+    return bookService.deleteByTitel(titel, actor);
+  }
 
-    @DeleteMapping("allBooksdelete")
-    public String deleteAll() {
-        return bookService.deleteBooks();
-    }
+  @DeleteMapping("allBooksdelete")
+  public String deleteAll() {
+    return bookService.deleteBooks();
+  }
 }

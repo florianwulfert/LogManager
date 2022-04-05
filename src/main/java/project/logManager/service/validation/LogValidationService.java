@@ -4,8 +4,8 @@ import lombok.Data;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import project.logManager.common.dto.LogMessageDto;
-import project.logManager.common.dto.LogRequestDto;
+import project.logManager.common.dto.log.LogMessageDto;
+import project.logManager.common.dto.log.LogRequestDto;
 import project.logManager.common.enums.SeverityEnum;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
@@ -15,7 +15,9 @@ import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 
-/** @author - EugenFriesen 13.02.2021 */
+/**
+ * @author - EugenFriesen 13.02.2021
+ */
 @Service
 @Data
 public class LogValidationService {
@@ -36,14 +38,13 @@ public class LogValidationService {
     }
   }
 
-  public String validateSeverity(String severity) {
+  public void validateSeverity(String severity) {
     for (SeverityEnum severityEnum : SeverityEnum.values()) {
       if (severity.equals(severityEnum.name())) {
-        LOGGER.info(InfoMessages.SEVERITY_VALID);
-        return InfoMessages.SEVERITY_VALID;
+        LOGGER.debug(InfoMessages.SEVERITY_VALID);
+        return;
       }
     }
-
     LOGGER.warn(ErrorMessages.SEVERITY_NOT_REGISTERED, severity);
     throw new SeverityNotFoundException(severity);
   }

@@ -6,7 +6,7 @@ import {CALC_BMI_INITIAL_STATE, CalcBmiState} from "./calc-bmi.state";
 const handleCalcBmiResponse = (state: CalcBmiState, resp: CalculateBmiResponse): CalcBmiState => {
   return {
     ...state,
-    response: resp.result,
+    response: resp.resultMessage,
   };
 }
 

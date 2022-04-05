@@ -1,5 +1,17 @@
 package project.logManager.service.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static project.logManager.TestMessages.ENTRIES_DELETED;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,8 +19,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.logManager.common.dto.LogMessageDto;
-import project.logManager.common.dto.LogRequestDto;
+import project.logManager.common.dto.log.LogMessageDto;
+import project.logManager.common.dto.log.LogRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.dto.LogDTO;
@@ -19,32 +31,26 @@ import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.LogValidationService;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static project.logManager.common.message.TestMessages.ENTRIES_DELETED;
-
-/** @author - EugenFriesen 13.02.2021 */
+/**
+ * @author - EugenFriesen 13.02.2021
+ */
 @ExtendWith(MockitoExtension.class)
 class LogServiceTest {
 
-  @InjectMocks LogService systemUnderTest;
+  @InjectMocks
+  LogService systemUnderTest;
 
-  @Mock LogRepository logRepository;
+  @Mock
+  LogRepository logRepository;
 
-  @Mock LogValidationService logValidationService;
+  @Mock
+  LogValidationService logValidationService;
 
-  @Mock UserRepository userRepository;
+  @Mock
+  UserRepository userRepository;
 
-  @Mock LogDTOMapper logDTOMapper;
+  @Mock
+  LogDTOMapper logDTOMapper;
 
   List<LogMessageDto> customLogMessageDto;
   List<User> users;

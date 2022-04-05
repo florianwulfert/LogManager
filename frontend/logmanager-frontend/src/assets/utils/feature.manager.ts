@@ -1,5 +1,7 @@
 import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
+import {Injectable} from "@angular/core";
 
+@Injectable({providedIn: 'root'})
 export class FeatureManager {
   constructor(private _snackBar: MatSnackBar) {
   }
@@ -9,13 +11,10 @@ export class FeatureManager {
     let verticalPosition: MatSnackBarVerticalPosition = 'bottom';
     if (message != null && message != '') {
       this._snackBar.open(message, 'Close', {
+        duration: 7000,
         horizontalPosition: horizontalPosition,
         verticalPosition: verticalPosition
       });
     }
-  }
-
-  refreshPage(): void {
-    window.location.reload()
   }
 }

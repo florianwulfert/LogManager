@@ -1,31 +1,30 @@
 package project.logManager.service.model;
 
+import java.util.List;
+import java.util.Optional;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import project.logManager.common.dto.LogRequestDto;
-import project.logManager.common.dto.UserRequestDto;
+import project.logManager.common.dto.log.LogRequestDto;
+import project.logManager.common.dto.user.UserRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.UserValidationService;
 
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-
 @Transactional
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
+  private static final Logger LOGGER = LogManager.getLogger(UserService.class);
   private final LogService logService;
   private final UserRepository userRepository;
   private final BmiService bmiService;
   private final UserValidationService userValidationService;
-
-  private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
   public String addUser(UserRequestDto userRequestDto) {
     userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
@@ -42,7 +41,7 @@ public class UserService {
     userValidationService.validateFarbenEnum(user.getFavouriteColor().toLowerCase());
     userValidationService.checkIfUserToPostExists(user.getName());
     if (userValidationService.checkIfUsersListIsEmpty()) {
-      userValidationService.checkIfActorEqualsUserToCreate(userRequestDto.actor, user,true);
+      userValidationService.checkIfActorEqualsUserToCreate(userRequestDto.actor, user, true);
       saveUser(user, userRequestDto.actor);
     } else {
       User activeUser =
@@ -68,7 +67,7 @@ public class UserService {
     return user;
   }
 
-  public String deleteById(Integer id, String actorName) {
+  public void deleteById(Integer id, String actorName) {
     User userToDelete = userValidationService.checkIfIdExists(id);
     User actor =
         userValidationService.checkIfNameExists(
@@ -80,7 +79,6 @@ public class UserService {
     userRepository.deleteById(id);
     saveLog(String.format(InfoMessages.USER_DELETED_ID, id), "WARNING", actorName);
     LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, id));
-    return String.format(InfoMessages.USER_DELETED_ID, id);
   }
 
   public String deleteByName(String name, String actorName) {
@@ -107,22 +105,22 @@ public class UserService {
     String bmi =
         bmiService.calculateBmiAndGetBmiMessage(
             user.getBirthdate(), user.getWeight(), user.getHeight());
-    saveLog(String.format(InfoMessages.USER_CREATED + "%s", user, bmi), "INFO", actor);
+    saveLog(String.format(InfoMessages.USER_CREATED + "%s", user.getName(), bmi), "INFO", actor);
     LOGGER.info(
         String.format(
             InfoMessages.USER_CREATED
                 + bmiService.calculateBmiAndGetBmiMessage(
-                    user.getBirthdate(), user.getWeight(), user.getHeight()),
+                user.getBirthdate(), user.getWeight(), user.getHeight()),
             user.getName()));
   }
 
   private void saveLog(String message, String severity, String actor) {
     LogRequestDto logRequestDto =
-            LogRequestDto.builder()
-                    .message(message)
-                    .severity(severity)
-                    .user(actor)
-                    .build();
+        LogRequestDto.builder()
+            .message(message)
+            .severity(severity)
+            .user(actor)
+            .build();
     LOGGER.info("Log " + logRequestDto + String.format(" was saved as %s", severity));
     logService.addLog(logRequestDto);
   }

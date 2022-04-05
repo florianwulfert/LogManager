@@ -1,4 +1,3 @@
-import {UserAddState} from "../user/addUser/store/user-add.state";
 import {createReducer, on} from "@ngrx/store";
 import {changeActorAction, changeActorResponseAction} from "./actor.action";
 import {ACTOR_INITIAL_STATE, ActorState} from "./actor.state";
@@ -11,7 +10,7 @@ const handleActorResponse = (state: ActorState, resp: ActorDto): ActorState => {
   };
 }
 
-const handleActor = (state: UserAddState): UserAddState => {
+const handleActor = (state: ActorState): ActorState => {
   return {
     ...state,
   };

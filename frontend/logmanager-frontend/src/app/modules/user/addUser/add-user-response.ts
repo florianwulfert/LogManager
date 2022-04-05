@@ -1,5 +1,8 @@
+import {UserDto} from "../getUser/user.dto";
+
 export interface AddUserResponse {
-  result: string;
+  result: UserDto[];
+  returnMessage: string
 }
 
 export interface AddUserErrorResponse {

@@ -1,6 +1,22 @@
 package project.logManager.controller;
 
-import org.junit.jupiter.api.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+import javax.transaction.Transactional;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,24 +32,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
+import project.logManager.TestMessages;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
-import project.logManager.common.message.TestMessages;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
-
-import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
@@ -44,18 +49,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(Lifecycle.PER_CLASS)
 class UserControllerIT {
 
-  @Autowired private MockMvc mockMvc;
-
-  @Autowired private UserRepository userRepository;
-
-  @Autowired private LogRepository logRepository;
-
   List<User> userList = new ArrayList<>();
-
-  @BeforeAll
-  public void setup() {
-    userList = createUser();
-  }
+  @Autowired
+  private MockMvc mockMvc;
+  @Autowired
+  private UserRepository userRepository;
+  @Autowired
+  private LogRepository logRepository;
 
   private static Stream<Arguments> getAddUserArguments() {
     return Stream.of(
@@ -64,169 +64,92 @@ class UserControllerIT {
             false,
             "{\"actor\":\"Petra\",\"name\":\"Hugo\",\"birthdate\":\"1999-12-13\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
             status().isOk(),
-            String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Hugo", 24.07)
-                + InfoMessages.NORMAL_WEIGHT),
-        Arguments.of(
-            "First user has to create himself",
-            true,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
-            status().isInternalServerError(),
-            ErrorMessages.NO_USERS_YET + "Hugo unequal Torsten"),
-        Arguments.of(
-            "First user created himself",
-            true,
-            "{\"actor\":\"Petra\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
-            status().isOk(),
-            String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Petra", 24.07)
-                + InfoMessages.NORMAL_WEIGHT),
-        Arguments.of(
-            "Actor not known",
-            false,
-            "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
-            status().isForbidden(),
-            String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "UnknownActor")),
-        Arguments.of(
-            "Actor not given",
-            false,
-            "{\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
-            status().isBadRequest(),
-            ErrorMessages.PARAMETER_IS_MISSING),
-        Arguments.of(
-            "Color illegal",
-            false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"purple\"}",
-            status().isBadRequest(),
-            ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE),
-        Arguments.of(
-            "Date has wrong format",
-            false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"hallo\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
-            status().isBadRequest(),
-            ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT),
-        Arguments.of(
-            "weight has wrong format",
-            false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"hi\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
-            status().isBadRequest(),
-            ErrorMessages.PARAMETER_WRONG_FORMAT),
-        Arguments.of(
-            "height has wrong format",
-            false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":\"hi\",\"favouriteColor\":\"blue\"}",
-            status().isBadRequest(),
-            ErrorMessages.PARAMETER_WRONG_FORMAT),
-        Arguments.of(
-            "User to create already exists",
-            false,
-            "{\"actor\":\"Torsten\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
-            status().isInternalServerError(),
-            String.format(ErrorMessages.USER_EXISTS, "Petra")),
-        Arguments.of(
-            "UserNameNull",
-            false,
-            "{\"actor\":\"Torsten\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
-            status().isBadRequest(),
-            ErrorMessages.PARAMETER_IS_MISSING),
-        Arguments.of(
-            "birthdateIsNull",
-            false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
-            status().isBadRequest(),
-            ErrorMessages.PARAMETER_IS_MISSING),
-        Arguments.of(
-            "weightIsNull",
-            false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
-            status().isBadRequest(),
-            ErrorMessages.PARAMETER_IS_MISSING),
-        Arguments.of(
-            "heightIsNull",
-            false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"favouriteColor\":\"blue\"}",
-            status().isBadRequest(),
-            ErrorMessages.PARAMETER_IS_MISSING),
-        Arguments.of(
-            "favouriteColorIsNull",
-            false,
-            "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":\"1.8\"}",
-            status().isBadRequest(),
-            ErrorMessages.PARAMETER_IS_MISSING));
-  }
-
-  @ParameterizedTest(name = "{0}")
-  @MethodSource("getAddUserArguments")
-  void testAddUser(
-      String testName,
-      Boolean isEmptyUserList,
-      String content,
-      ResultMatcher status,
-      String message)
-      throws Exception {
-    if (isEmptyUserList) {
-      userRepository.deleteAll();
-    }
-
-    MvcResult result =
-        mockMvc
-            .perform(
-                post("/user")
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .content(content)
-                    .accept(MediaType.APPLICATION_JSON_VALUE))
-            .andDo(print())
-            .andExpect(status)
-            .andReturn();
-
-    Assertions.assertEquals(message, result.getResponse().getContentAsString());
-  }
-
-  @Test
-  void testFindUsers() throws Exception {
-    MvcResult result =
-        mockMvc.perform(get("/users")).andDo(print()).andExpect(status().isOk()).andReturn();
-
-    Assertions.assertEquals(
-        TestMessages.PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
-  }
-
-  @Nested
-  class FindUserByIdTests {
-    @Test
-    void testFindUserById() throws Exception {
-      MvcResult result =
-          mockMvc
-              .perform(get("/user/id").param("id", "1"))
-              .andDo(print())
-              .andExpect(status().isOk())
-              .andReturn();
-
-      Assertions.assertEquals(TestMessages.PETRA, result.getResponse().getContentAsString());
-    }
-
-    @Test
-    void whenIdToFindIsNullThenReturnBadRequest() throws Exception {
-      MvcResult result =
-          mockMvc
-              .perform(get("/user/id"))
-              .andDo(print())
-              .andExpect(status().isBadRequest())
-              .andReturn();
-
-      Assertions.assertEquals(
-          ErrorMessages.ID_NOT_PRESENT, result.getResponse().getContentAsString());
-    }
-
-    @Test
-    void whenIdToFindNotFoundThenReturnNull() throws Exception {
-      MvcResult result =
-          mockMvc
-              .perform(get("/user/id").param("id", "50"))
-              .andDo(print())
-              .andExpect(status().isOk())
-              .andReturn();
-
-      Assertions.assertEquals("null", result.getResponse().getContentAsString());
-    }
+            TestMessages.USER_CREATED_MESSAGE,
+            Arguments.of(
+                "First user has to create himself",
+                true,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                status().isInternalServerError(),
+                ErrorMessages.NO_USERS_YET + "Hugo unequal Torsten"),
+            Arguments.of(
+                "First user created himself",
+                true,
+                "{\"actor\":\"Petra\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                status().isOk(),
+                String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Petra", 24.07)
+                    + InfoMessages.NORMAL_WEIGHT),
+            Arguments.of(
+                "Actor not known",
+                false,
+                "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
+                status().isForbidden(),
+                String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "UnknownActor")),
+            Arguments.of(
+                "Actor not given",
+                false,
+                "{\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_IS_MISSING),
+            Arguments.of(
+                "Color illegal",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"purple\"}",
+                status().isBadRequest(),
+                ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE),
+            Arguments.of(
+                "Date has wrong format",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"hallo\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                status().isBadRequest(),
+                ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT),
+            Arguments.of(
+                "weight has wrong format",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"hi\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_WRONG_FORMAT),
+            Arguments.of(
+                "height has wrong format",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":\"hi\",\"favouriteColor\":\"blue\"}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_WRONG_FORMAT),
+            Arguments.of(
+                "User to create already exists",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                status().isInternalServerError(),
+                String.format(ErrorMessages.USER_EXISTS, "Petra")),
+            Arguments.of(
+                "UserNameNull",
+                false,
+                "{\"actor\":\"Torsten\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_IS_MISSING),
+            Arguments.of(
+                "birthdateIsNull",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_IS_MISSING),
+            Arguments.of(
+                "weightIsNull",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_IS_MISSING),
+            Arguments.of(
+                "heightIsNull",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"favouriteColor\":\"blue\"}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_IS_MISSING),
+            Arguments.of(
+                "favouriteColorIsNull",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":\"1.8\"}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_IS_MISSING)));
   }
 
   private static Stream<Arguments> getDeleteUserByIdArguments() {
@@ -236,7 +159,7 @@ class UserControllerIT {
             "/user/delete/1",
             "Hans",
             status().isOk(),
-            String.format(InfoMessages.USER_DELETED_ID, 1)),
+            TestMessages.USER_DELETED_BY_ID),
         Arguments.of(
             false,
             "/user/delete/1",
@@ -265,31 +188,6 @@ class UserControllerIT {
             String.format(ErrorMessages.USER_REFERENCED, "Petra")));
   }
 
-  @ParameterizedTest(name = "{4}")
-  @MethodSource("getDeleteUserByIdArguments")
-  void testDeleteUserById(
-      Boolean userIsReferenced, String url, String actor, ResultMatcher status, String message)
-      throws Exception {
-    if (userIsReferenced) {
-      logRepository.save(
-          Log.builder()
-              .id(1)
-              .user(userList.get(0))
-              .message("Test")
-              .severity("INFO")
-              .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
-              .build());
-    }
-    MvcResult result =
-        mockMvc
-            .perform(delete(url).param("actor", actor))
-            .andDo(print())
-            .andExpect(status)
-            .andReturn();
-
-    Assertions.assertEquals(message, result.getResponse().getContentAsString());
-  }
-
   private static Stream<Arguments> getDeleteUserByNameArguments() {
     return Stream.of(
         Arguments.of(
@@ -298,7 +196,7 @@ class UserControllerIT {
             "/user/delete/name/Petra",
             "Torsten",
             status().isOk(),
-            String.format(InfoMessages.USER_DELETED_NAME, "Petra")),
+            TestMessages.USER_PETRA_DELETED_BY_NAME),
         Arguments.of(
             "Actor wants to delete himself",
             false,
@@ -343,6 +241,72 @@ class UserControllerIT {
             String.format(ErrorMessages.USER_REFERENCED, "Petra")));
   }
 
+  @BeforeAll
+  public void setup() {
+    userList = createUser();
+  }
+
+  @ParameterizedTest(name = "{0}")
+  @MethodSource("getAddUserArguments")
+  void testAddUser(
+      String testName,
+      Boolean isEmptyUserList,
+      String content,
+      ResultMatcher status,
+      String message)
+      throws Exception {
+    if (isEmptyUserList) {
+      userRepository.deleteAll();
+    }
+
+    MvcResult result =
+        mockMvc
+            .perform(
+                post("/user")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(content)
+                    .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(print())
+            .andExpect(status)
+            .andReturn();
+
+    Assertions.assertEquals(message, result.getResponse().getContentAsString());
+  }
+
+  @Test
+  void testFindUsers() throws Exception {
+    MvcResult result =
+        mockMvc.perform(get("/users")).andDo(print()).andExpect(status().isOk()).andReturn();
+
+    Assertions.assertEquals(
+        TestMessages.PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
+  }
+
+  @ParameterizedTest(name = "{4}")
+  @MethodSource("getDeleteUserByIdArguments")
+  void testDeleteUserById(
+      Boolean userIsReferenced, String url, String actor, ResultMatcher status, String message)
+      throws Exception {
+    if (userIsReferenced) {
+      logRepository.save(
+          Log.builder()
+              .id(1)
+              .user(userList.get(0))
+              .message("Test")
+              .severity("INFO")
+              .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
+              .build());
+    }
+    MvcResult result =
+        mockMvc
+            .perform(delete(url).param("actor", actor))
+            .andDo(print())
+            .andExpect(status)
+            .andReturn();
+
+    Assertions.assertEquals(message, result.getResponse().getContentAsString());
+  }
+
   @ParameterizedTest(name = "{0}")
   @MethodSource("getDeleteUserByNameArguments")
   void testDeleteUserByName(
@@ -371,44 +335,6 @@ class UserControllerIT {
             .andReturn();
 
     Assertions.assertEquals(message, result.getResponse().getContentAsString());
-  }
-
-  @Nested
-  class DeleteAllTests {
-    @Test
-    void testDeleteAll() throws Exception {
-      logRepository.deleteAll();
-      MvcResult result =
-          mockMvc
-              .perform(delete("/user/delete"))
-              .andDo(print())
-              .andExpect(status().isOk())
-              .andReturn();
-
-      Assertions.assertEquals(
-          InfoMessages.ALL_USERS_DELETED, result.getResponse().getContentAsString());
-    }
-
-    @Test
-    void whenUserIsUsedSomewhereThenReturnCouldNotDelete() throws Exception {
-      logRepository.save(
-          Log.builder()
-              .id(1)
-              .user(userList.get(0))
-              .message("Test")
-              .severity("INFO")
-              .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
-              .build());
-      MvcResult result =
-          mockMvc
-              .perform(delete("/user/delete"))
-              .andDo(print())
-              .andExpect(status().isInternalServerError())
-              .andReturn();
-
-      Assertions.assertEquals(
-          ErrorMessages.USERS_REFERENCED, result.getResponse().getContentAsString());
-    }
   }
 
   private List<User> createUser() {
@@ -452,5 +378,84 @@ class UserControllerIT {
     userRepository.save(torsten);
     userRepository.save(hans);
     return userList;
+  }
+
+  @Nested
+  class FindUserByIdTests {
+
+    @Test
+    void testFindUserById() throws Exception {
+      MvcResult result =
+          mockMvc
+              .perform(get("/user/id").param("id", "1"))
+              .andDo(print())
+              .andExpect(status().isOk())
+              .andReturn();
+
+      Assertions.assertEquals(TestMessages.PETRA, result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void whenIdToFindIsNullThenReturnBadRequest() throws Exception {
+      MvcResult result =
+          mockMvc
+              .perform(get("/user/id"))
+              .andDo(print())
+              .andExpect(status().isBadRequest())
+              .andReturn();
+
+      Assertions.assertEquals(
+          ErrorMessages.ID_NOT_PRESENT, result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void whenIdToFindNotFoundThenReturnNull() throws Exception {
+      MvcResult result =
+          mockMvc
+              .perform(get("/user/id").param("id", "50"))
+              .andDo(print())
+              .andExpect(status().isOk())
+              .andReturn();
+
+      Assertions.assertEquals("null", result.getResponse().getContentAsString());
+    }
+  }
+
+  @Nested
+  class DeleteAllTests {
+
+    @Test
+    void testDeleteAll() throws Exception {
+      logRepository.deleteAll();
+      MvcResult result =
+          mockMvc
+              .perform(delete("/user/delete"))
+              .andDo(print())
+              .andExpect(status().isOk())
+              .andReturn();
+
+      Assertions.assertEquals(TestMessages.EMPTY_LIST, result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void whenUserIsUsedSomewhereThenReturnCouldNotDelete() throws Exception {
+      logRepository.save(
+          Log.builder()
+              .id(1)
+              .user(userList.get(0))
+              .message("Test")
+              .severity("INFO")
+              .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
+              .build());
+      MvcResult result =
+          mockMvc
+              .perform(delete("/user/delete"))
+              .andDo(print())
+              .andExpect(status().isInternalServerError())
+              .andReturn();
+
+      Assertions.assertEquals(
+          ErrorMessages.USERS_REFERENCED, result.getResponse().getContentAsString());
+    }
   }
 }

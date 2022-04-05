@@ -1,11 +1,16 @@
 package project.logManager.service.model;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import project.logManager.common.dto.LogMessageDto;
-import project.logManager.common.dto.LogRequestDto;
+import project.logManager.common.dto.log.LogMessageDto;
+import project.logManager.common.dto.log.LogRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.dto.LogDTO;
@@ -15,17 +20,14 @@ import project.logManager.model.mapper.LogDTOMapper;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.service.validation.LogValidationService;
 
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-
-/** @author - EugenFriesen 12.02.2021 */
+/**
+ * @author - EugenFriesen 12.02.2021
+ */
 @Transactional
 @Service
 @RequiredArgsConstructor
 public class LogService {
+
   private static final Logger LOGGER = LogManager.getLogger(LogService.class);
 
   private final LogRepository logRepository;
@@ -49,7 +51,7 @@ public class LogService {
     logMessage.setReturnMessage(
         logMessage.getReturnMessage()
             + String.format(
-                InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
+            InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
     LOGGER.info(
         String.format(
             InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
