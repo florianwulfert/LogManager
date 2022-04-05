@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import project.logManager.TestMessages;
 import project.logManager.common.message.ErrorMessages;
-import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
@@ -358,7 +357,16 @@ class LogControllerIT {
               .andReturn();
 
       assertEquals(
-          String.format(InfoMessages.ENTRY_DELETED_ID, 2),
+          "{\"result\":[{\"id\":1,\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":3,\"severity\":\"WARNING\",\"message\":\"Warning\",\"timestamp\":\"2002-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":4,\"severity\":\"WARNING\",\"message\":\"Test\",\"timestamp\":\"2003-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":5,\"severity\":\"DEBUG\",\"message\":\"Debug\",\"timestamp\":\"2004-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":6,\"severity\":\"DEBUG\",\"message\":\"Test\",\"timestamp\":\"2005-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":7,\"severity\":\"ERROR\",\"message\":\"Error\",\"timestamp\":\"2006-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":8,\"severity\":\"ERROR\",\"message\":\"Test\",\"timestamp\":\"2007-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":9,\"severity\":\"TRACE\",\"message\":\"Trace\",\"timestamp\":\"2008-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":10,\"severity\":\"TRACE\",\"message\":\"Test\",\"timestamp\":\"2009-12-12T12:12:12\",\"user\":null}],"
+              + "\"returnMessage\":\"Entry with the ID 2 was deleted from database.\"}",
           result.getResponse().getContentAsString());
     }
 

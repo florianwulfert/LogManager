@@ -94,18 +94,23 @@ export class LogService {
     );
   }
 
-  deleteLog(i: string | undefined): Observable<DeleteLogResponse> {
-
-    console.log(i)
-    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + "?severity=" + i, {
+  deleteLog(i: number | undefined): Observable<DeleteLogResponse> {
+    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + i, {
       observe: 'response'
     }).pipe(
       map((r) => {
+        this.featureManager.openSnackbar("Log with the ID " + i + " was deleted.");
         return r.body || {
-          result: ''
+          result: [],
+          returnMessage: ""
         }
       }),
-      catchError(() => {
+      catchError((err) => {
+        if(err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text);
+        } else {
+          this.featureManager.openSnackbar(err.error);
+        }
         return throwError('Due to technical issues it is currently not possible to delete this log.')
       })
     );
