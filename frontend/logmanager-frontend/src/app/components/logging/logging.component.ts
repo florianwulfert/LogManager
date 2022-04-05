@@ -6,6 +6,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
+import {DeleteLogRequest} from "../../modules/logging/deleteLog/dto/delete-log-request";
 
 
 @Component({
@@ -21,7 +22,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   subscriptionManager = new SubscriptionManager();
   featureManager = new FeatureManager(this._snackBar);
 
-  displayedColumns: string[] = ['message', 'severity', 'timestamp', 'user', 'delete'];
+  displayedColumns: string[] = ['id', 'message', 'severity', 'timestamp', 'user', 'delete'];
   severities: string[] = ['TRACE', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'FATAL'];
   dataSource: any;
 
@@ -66,5 +67,12 @@ export class LoggingComponent implements OnInit, OnDestroy {
     let request = new AddLogRequest
     this.prepareAddLogRequest(request)
     this.logsFacade.addLog(request);
+  }
+
+  deleteLog(element: any): void {
+    let request = new DeleteLogRequest
+    let elementValues = Object.keys(element).map(key => element[key])
+    request.id = elementValues[0]
+    this.logsFacade.deleteLog(request)
   }
 }

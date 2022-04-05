@@ -1,18 +1,5 @@
 package project.logManager.controller;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.stream.Stream;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,11 +20,22 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import project.logManager.TestMessages;
 import project.logManager.common.message.ErrorMessages;
-import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
+
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.stream.Stream;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
@@ -48,33 +46,19 @@ import project.logManager.model.repository.UserRepository;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LogControllerIT {
 
-  @Autowired
-  private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-  @Autowired
-  private LogRepository logRepository;
+  @Autowired private LogRepository logRepository;
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
+
+  @BeforeAll
+  void setup() {
+    createLogs();
+  }
 
   private static Stream<Arguments> addLogArguments() {
     return Stream.of(
-        Arguments.of(
-            "PostLog",
-            "{\"message\":\"Test\",\"severity\":\"INFO\",\"user\":\"Petra\"}",
-            status().isOk(),
-            "{\"result\":[{\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"INFO\",\"message\":\"Info\",\"timestamp\":\"2001-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"WARNING\",\"message\":\"Warning\",\"timestamp\":\"2002-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"WARNING\",\"message\":\"Test\",\"timestamp\":\"2003-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"DEBUG\",\"message\":\"Debug\",\"timestamp\":\"2004-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"DEBUG\",\"message\":\"Test\",\"timestamp\":\"2005-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"ERROR\",\"message\":\"Error\",\"timestamp\":\"2006-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"ERROR\",\"message\":\"Test\",\"timestamp\":\"2007-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"TRACE\",\"message\":\"Trace\",\"timestamp\":\"2008-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"TRACE\",\"message\":\"Test\",\"timestamp\":\"2009-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2022-04-04T10:28:16.253\",\"user\":\"Petra\"}],"
-                + "\"returnMessage\":\"Message \\\"Test\\\" saved as INFO!\"}"),
         Arguments.of(
             "MessageIsMissing",
             "{\"severity\":\"INFO\",\"user\":\"Petra\"}",
@@ -99,28 +83,7 @@ class LogControllerIT {
             "UserIsFalse",
             "{\"message\":\"Test\", \"severity\":\"INFO\",\"user\":\"Alex\"}",
             status().isBadRequest(),
-            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Alex")),
-        Arguments.of(
-            "KatzeToHund",
-            "{\"message\":\"Katze\", \"severity\":\"INFO\",\"user\":\"Petra\"}",
-            status().isOk(),
-            "{\"result\":[{\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"INFO\",\"message\":\"Info\",\"timestamp\":\"2001-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"WARNING\",\"message\":\"Warning\",\"timestamp\":\"2002-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"WARNING\",\"message\":\"Test\",\"timestamp\":\"2003-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"DEBUG\",\"message\":\"Debug\",\"timestamp\":\"2004-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"DEBUG\",\"message\":\"Test\",\"timestamp\":\"2005-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"ERROR\",\"message\":\"Error\",\"timestamp\":\"2006-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"ERROR\",\"message\":\"Test\",\"timestamp\":\"2007-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"TRACE\",\"message\":\"Trace\",\"timestamp\":\"2008-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"TRACE\",\"message\":\"Test\",\"timestamp\":\"2009-12-12T12:12:12\",\"user\":null},"
-                + "{\"severity\":\"INFO\",\"message\":\"Hund\",\"timestamp\":\"2022-04-04T10:28:16.253\",\"user\":\"Petra\"}],"
-                + "\"returnMessage\":\"Katze was translated to Hund!\\nMessage \\\"Hund\\\" saved as INFO!\"}"));
-  }
-
-  @BeforeAll
-  void setup() {
-    createLogs();
+            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Alex")));
   }
 
   private Stream<Arguments> getLogsArgument() {
@@ -235,6 +198,30 @@ class LogControllerIT {
     assertEquals(returnMessage, result.getResponse().getContentAsString());
   }
 
+  @Test
+  void testSuccessfullyAddedLog() throws Exception{
+    createUser();
+    mockMvc.perform(post("/log")
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content("{\"message\":\"Test\",\"severity\":\"INFO\",\"user\":\"Petra\"}")
+            .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+  }
+
+  @Test
+  void testKatzeToHund() throws Exception {
+    createUser();
+    mockMvc.perform(post("/log")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content("{\"message\":\"Katze\", \"severity\":\"INFO\",\"user\":\"Petra\"}")
+                    .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+  }
+
   private void createLog(Integer id, String severity, String message, LocalDateTime timestamp) {
     logRepository.save(
         Log.builder().id(id).severity(severity).message(message).timestamp(timestamp).build());
@@ -279,7 +266,8 @@ class LogControllerIT {
               .andExpect(status().isOk())
               .andReturn();
 
-      assertEquals("{\"result\":[],\"returnMessage\":null}", result.getResponse().getContentAsString());
+      assertEquals(
+          "{\"result\":[],\"returnMessage\":null}", result.getResponse().getContentAsString());
     }
 
     @Test
@@ -369,7 +357,16 @@ class LogControllerIT {
               .andReturn();
 
       assertEquals(
-          String.format(InfoMessages.ENTRY_DELETED_ID, 2),
+          "{\"result\":[{\"id\":1,\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":3,\"severity\":\"WARNING\",\"message\":\"Warning\",\"timestamp\":\"2002-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":4,\"severity\":\"WARNING\",\"message\":\"Test\",\"timestamp\":\"2003-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":5,\"severity\":\"DEBUG\",\"message\":\"Debug\",\"timestamp\":\"2004-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":6,\"severity\":\"DEBUG\",\"message\":\"Test\",\"timestamp\":\"2005-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":7,\"severity\":\"ERROR\",\"message\":\"Error\",\"timestamp\":\"2006-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":8,\"severity\":\"ERROR\",\"message\":\"Test\",\"timestamp\":\"2007-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":9,\"severity\":\"TRACE\",\"message\":\"Trace\",\"timestamp\":\"2008-12-12T12:12:12\",\"user\":null},"
+              + "{\"id\":10,\"severity\":\"TRACE\",\"message\":\"Test\",\"timestamp\":\"2009-12-12T12:12:12\",\"user\":null}],"
+              + "\"returnMessage\":\"Entry with the ID 2 was deleted from database.\"}",
           result.getResponse().getContentAsString());
     }
 

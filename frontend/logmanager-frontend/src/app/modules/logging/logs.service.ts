@@ -9,10 +9,12 @@ import {AddLogRequest} from "./addLogs/dto/add-log-request";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {ActorFacade} from "../actor/actor.facade";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
+import {DeleteLogResponse} from "./deleteLog/dto/delete-log-response";
 
 const API_GET_LOGS = 'http://localhost:8081/logs';
 const API_DELETE_LOGS = 'http://localhost:8081/logs/delete';
 const API_ADD_LOG = 'http://localhost:8081/log';
+const API_DELETE_LOG = 'http://localhost:8081/logs/delete/'
 
 @Injectable({
   providedIn: 'root'
@@ -88,6 +90,28 @@ export class LogService {
           this.featureManager.openSnackbar(err.error);
         }
         return throwError('Due to technical issues it is currently not possible to add logs.');
+      })
+    );
+  }
+
+  deleteLog(i: number | undefined): Observable<DeleteLogResponse> {
+    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + i, {
+      observe: 'response'
+    }).pipe(
+      map((r) => {
+        this.featureManager.openSnackbar("Log with the ID " + i + " was deleted.");
+        return r.body || {
+          result: [],
+          returnMessage: ""
+        }
+      }),
+      catchError((err) => {
+        if(err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text);
+        } else {
+          this.featureManager.openSnackbar(err.error);
+        }
+        return throwError('Due to technical issues it is currently not possible to delete this log.')
       })
     );
   }

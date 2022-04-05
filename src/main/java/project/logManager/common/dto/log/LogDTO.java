@@ -1,14 +1,15 @@
-package project.logManager.model.dto;
+package project.logManager.common.dto.log;
+
+import lombok.Data;
 
 import java.time.LocalDateTime;
-import lombok.Data;
 
 /**
  * @author - EugenFriesen 12.02.2021
  */
 @Data
 public class LogDTO {
-
+  Integer id;
   String severity;
   String message;
   LocalDateTime timestamp;

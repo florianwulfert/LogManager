@@ -6,16 +6,20 @@ import {catchError, map, switchMap} from "rxjs/operators";
 import {
   addLogAction,
   addLogResponseAction,
+  deleteLogAction,
+  deleteLogResponseAction,
   deleteLogsAction,
   deleteLogsResponseAction,
   getLogsAction,
   getLogsResponseAction,
   loadAddLogErrorAction,
+  loadDeleteLogErrorAction,
   loadDeleteLogsErrorAction,
   loadGetLogsErrorAction
 } from "./logs.actions";
 import {LogService} from "./logs.service";
 import {AddLogRequest} from "./addLogs/dto/add-log-request";
+import {DeleteLogRequest} from "./deleteLog/dto/delete-log-request";
 
 
 @Injectable({providedIn: 'root'})
@@ -51,6 +55,18 @@ export class LogEffects {
         this.logService.addLog(addLogRequest).pipe(
           map((addLogResponse) => addLogResponseAction(addLogResponse)),
           catchError((error: string) => of(loadAddLogErrorAction({error})))
+        )
+      )
+    )
+  );
+
+  deleteLog$: Observable<Action> = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteLogAction),
+      switchMap((deleteLogRequest: DeleteLogRequest) =>
+        this.logService.deleteLog(deleteLogRequest.id).pipe(
+          map((deleteLogResponse) => deleteLogResponseAction(deleteLogResponse)),
+          catchError((error: string) => of(loadDeleteLogErrorAction({error})))
         )
       )
     )

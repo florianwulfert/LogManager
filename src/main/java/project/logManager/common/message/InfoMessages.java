@@ -14,7 +14,6 @@ public class InfoMessages {
   public static final String ENTRY_DELETED_ID = "Entry with the ID %s was deleted from database.";
   public static final String ALL_LOGS_DELETED = "All logs were deleted from database!";
   public static final String KATZE_TO_HUND = "Katze was translated to Hund!";
-  public static final String HUND_SAVED = "Message \"Hund\" saved as INFO!";
   public static final String Book_FOUND_TITLE = "Books with the title %s were found.";
   public static final String BOOK_CREATED = "Book %s was created.";
   public static final String BOOK_DELETED_ID = "Book with the ID %s was deleted.";
