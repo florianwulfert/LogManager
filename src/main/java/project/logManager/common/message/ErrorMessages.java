@@ -18,11 +18,6 @@ public class ErrorMessages {
   public static final String NO_USERS_YET = "User cannot be created because there are no users in the database yet. "
       + "First user has to create himself! ";
   public static final String USER_NOT_CREATED = "User could not be created.";
-  public static final String COLOR_ILLEGAL_PLUS_CHOICE =
-      "Color illegal! Choose from the following options: " + "blue, red, orange, yellow, black";
-  public static final String NO_USERS_YET =
-      "User cannot be created because there are no users in the database yet. "
-          + "First user has to create himself! ";
   public static final String USER_EXISTS = "User %s already exists.";
   public static final String HEIGHT_NOT_PRESENT = "Required double parameter 'height' is not present";
   public static final String WEIGHT_NOT_PRESENT = "Required double parameter 'weight' is not present";
