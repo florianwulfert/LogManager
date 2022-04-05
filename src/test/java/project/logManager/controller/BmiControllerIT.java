@@ -1,5 +1,12 @@
 package project.logManager.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDate;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,14 +29,6 @@ import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 
-import java.time.LocalDate;
-import java.util.stream.Stream;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BmiController.class)
 @AutoConfigureDataJpa
@@ -39,9 +38,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BmiControllerIT {
 
-  @Autowired private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-  @Autowired private UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
 
   private static Stream<Arguments> getBmiArguments() {
     return Stream.of(
@@ -49,17 +50,22 @@ class BmiControllerIT {
             "Normal Weight",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"75.7\",\"height\":\"1.85\"}",
             status().isOk(),
-            String.format(InfoMessages.BMI_MESSAGE, 22.11) + InfoMessages.NORMAL_WEIGHT),
+            "{\"resultMessage\":\"" + String.format(InfoMessages.BMI_MESSAGE, 22.11) + InfoMessages.NORMAL_WEIGHT + "\"}"),
         Arguments.of(
             "Overweight",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"100.5\",\"height\":\"1.85\"}",
             status().isOk(),
-            String.format(InfoMessages.BMI_MESSAGE, 29.36) + InfoMessages.OVERWEIGHT),
+            "{\"resultMessage\":\"" + String.format(InfoMessages.BMI_MESSAGE, 29.36) + InfoMessages.OVERWEIGHT + "\"}"),
         Arguments.of(
             "Underweight",
             "{\"birthdate\":\"2000-01-01\",\"weight\":\"45.1\",\"height\":\"1.85\"}",
             status().isOk(),
-            String.format(InfoMessages.BMI_MESSAGE, 13.17) + InfoMessages.UNDERWEIGHT),
+            "{\"resultMessage\":\"" + String.format(InfoMessages.BMI_MESSAGE, 13.17) + InfoMessages.UNDERWEIGHT + "\"}"),
+        Arguments.of(
+            "User too young",
+            "{\"birthdate\":\"2009-01-01\",\"weight\":\"75.7\",\"height\":\"1.85\"}",
+            status().isOk(),
+            "{\"resultMessage\":\"" + ErrorMessages.USER_TOO_YOUNG + "\"}"),
         Arguments.of(
             "InfiniteOrNan",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"0\",\"height\":\"0\"}",
@@ -89,30 +95,7 @@ class BmiControllerIT {
             "Parameter has wrong format",
             "{\"birthdate\":\"2003-01-01\",\"weight\":\"hi\",\"height\":\"1.85\"}",
             status().isBadRequest(),
-            ErrorMessages.PARAMETER_WRONG_FORMAT),
-        Arguments.of(
-            "User too young",
-            "{\"birthdate\":\"2009-01-01\",\"weight\":\"75.7\",\"height\":\"1.85\"}",
-            status().isOk(),
-            ErrorMessages.USER_TOO_YOUNG));
-  }
-
-  @ParameterizedTest
-  @MethodSource("getBmiArguments")
-  void testGetBmi(String testName, String testData, ResultMatcher status, String message)
-      throws Exception {
-    MvcResult result =
-        mockMvc
-            .perform(
-                post("/bmi")
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .content(testData)
-                    .accept(MediaType.APPLICATION_JSON_VALUE))
-            .andDo(print())
-            .andExpect(status)
-            .andReturn();
-
-    Assertions.assertEquals(message, result.getResponse().getContentAsString());
+            ErrorMessages.PARAMETER_WRONG_FORMAT));
   }
 
   private static Stream<Arguments> findUserAndCalculateBmiArguments() {
@@ -137,6 +120,24 @@ class BmiControllerIT {
             "/bmi/ActorNichtVorhanden",
             status().isBadRequest(),
             String.format(ErrorMessages.USER_NOT_FOUND_NAME, "ActorNichtVorhanden")));
+  }
+
+  @ParameterizedTest
+  @MethodSource("getBmiArguments")
+  void testGetBmi(String testName, String testData, ResultMatcher status, String message)
+      throws Exception {
+    MvcResult result =
+        mockMvc
+            .perform(
+                post("/bmi")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(testData)
+                    .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(print())
+            .andExpect(status)
+            .andReturn();
+
+    Assertions.assertEquals(message, result.getResponse().getContentAsString());
   }
 
   @ParameterizedTest(name = "{3}")

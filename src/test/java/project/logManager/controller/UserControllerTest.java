@@ -1,6 +1,10 @@
 package project.logManager.controller;
 
-import org.junit.jupiter.api.Assertions;
+import static org.mockito.Mockito.verify;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,15 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.logManager.common.dto.UserRequestDto;
+import project.logManager.common.dto.user.UserRequestDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
@@ -36,38 +34,17 @@ class UserControllerTest {
 
   @Test
   void testAddUser() {
-    Mockito.when(
-        systemUnderTest.addUser(
-            UserRequestDto.builder()
-                .actor("Torsten")
-                .name("Hugo")
-                .birthdate("05.10.1994")
-                .weight(75.0)
-                .height(1.65)
-                .favouriteColor("red")
-                .build()))
-        .thenReturn("Test");
-    Assertions.assertEquals(
-        "User Hugo was created. Test",
-        systemUnderTest.addUser(
-            UserRequestDto.builder()
-                .actor("Torsten")
-                .name("Hugo")
-                .birthdate("05.10.1994")
-                .weight(75.0)
-                .height(1.65)
-                .favouriteColor("red")
-                .build()));
-    verify(userService)
-        .addUser(
-            UserRequestDto.builder()
-                .actor("Torsten")
-                .name("Hugo")
-                .birthdate("05.10.1994")
-                .weight(75.0)
-                .height(1.65)
-                .favouriteColor("red")
-                .build());
+    UserRequestDto request = UserRequestDto.builder()
+        .actor("Torsten")
+        .name("Hugo")
+        .birthdate("05.10.1994")
+        .weight(75.0)
+        .height(1.65)
+        .favouriteColor("red")
+        .build();
+
+    systemUnderTest.addUser(request);
+    Mockito.verify(userService).addUser(request);
   }
 
   @Test

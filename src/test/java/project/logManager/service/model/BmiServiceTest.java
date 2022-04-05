@@ -1,5 +1,10 @@
 package project.logManager.service.model;
 
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,18 +19,14 @@ import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.BmiValidationService;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class BmiServiceTest {
 
-  @InjectMocks BmiService systemUnderTest;
+  @InjectMocks
+  BmiService systemUnderTest;
 
-  @Mock UserRepository userRepository;
+  @Mock
+  UserRepository userRepository;
 
   @Mock
   BmiValidationService bmiValidationService;

@@ -1,5 +1,9 @@
 package project.logManager.service.model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,19 +16,14 @@ import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.BmiValidationService;
 
-import javax.transaction.Transactional;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
-
 @Transactional
 @Service
 @RequiredArgsConstructor
 public class BmiService extends DateUtil {
-  private final UserRepository userRepository;
-  private final BmiValidationService bmiValidationService;
 
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
+  private final UserRepository userRepository;
+  private final BmiValidationService bmiValidationService;
 
   public String calculateBmiAndGetBmiMessage(LocalDate birthdate, Double weight, Double height) {
     bmiValidationService.checkIfEntriesAreNull(weight, height);

@@ -1,10 +1,10 @@
 import {createAction, props} from '@ngrx/store';
-import {GetUserErrorResponse, GetUserResponse} from "./getUser/dto/get-user-response";
-import {AddUserErrorResponse, AddUserResponse} from "./addUser/dto/add-user-response";
-import {AddUserRequest} from "./addUser/dto/add-user-request";
-import {DeleteUserErrorResponse, DeleteUserResponse} from "./deleteUser/dto/delete-user-response";
-import {DeleteUsersErrorResponse, DeleteUsersResponse} from "./deleteUsers/dto/delete-users-response";
-import {DeleteUserRequest} from "./deleteUser/dto/delete-user-request";
+import {GetUserErrorResponse, GetUserResponse} from "./getUser/get-user-response";
+import {AddUserErrorResponse, AddUserResponse} from "./addUser/add-user-response";
+import {AddUserRequest} from "./addUser/add-user-request";
+import {DeleteUserErrorResponse, DeleteUserResponse} from "./deleteUser/delete-user-response";
+import {DeleteUsersErrorResponse, DeleteUsersResponse} from "./deleteUsers/delete-users-response";
+import {DeleteUserRequest} from "./deleteUser/delete-user-request";
 
 export const getUsersAction = createAction('Get users');
 export const getUserResponseAction = createAction('Get list of users', props<GetUserResponse>());

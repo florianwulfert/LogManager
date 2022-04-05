@@ -1,13 +1,20 @@
 package project.logManager.service.validation;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.logManager.common.dto.LogMessageDto;
-import project.logManager.common.dto.LogRequestDto;
+import project.logManager.common.dto.log.LogMessageDto;
+import project.logManager.common.dto.log.LogRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.exception.ParameterNotPresentException;
@@ -16,19 +23,14 @@ import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-/** @author - EugenFriesen 13.02.2021 */
+/**
+ * @author - EugenFriesen 13.02.2021
+ */
 @ExtendWith(MockitoExtension.class)
 class LogValidationServiceTest {
 
-  @InjectMocks LogValidationService systemUnderTest;
+  @InjectMocks
+  LogValidationService systemUnderTest;
 
   @Mock
   UserRepository userRepository;
@@ -57,7 +59,7 @@ class LogValidationServiceTest {
 
   @Test
   void validateSeverity() {
-    assertEquals(InfoMessages.SEVERITY_VALID, systemUnderTest.validateSeverity("INFO"));
+    systemUnderTest.validateSeverity("INFO");
   }
 
   @Test
@@ -90,21 +92,21 @@ class LogValidationServiceTest {
   @Test
   void actorIsNull() {
     UserNotFoundException ex = assertThrows(UserNotFoundException.class,
-            () -> systemUnderTest.checkActor("Heinrich"));
+        () -> systemUnderTest.checkActor("Heinrich"));
     assertEquals("User named Heinrich not found!", ex.getMessage());
   }
 
   @Test
   void actorIsNotNull() {
     User testUser = User.builder()
-            .id(1)
-            .name("Peter")
-            .birthdate(LocalDate.of(1999, 12, 13))
-            .bmi(25.39)
-            .weight(65)
-            .height(1.60)
-            .favouriteColor("Red")
-            .build();
+        .id(1)
+        .name("Peter")
+        .birthdate(LocalDate.of(1999, 12, 13))
+        .bmi(25.39)
+        .weight(65)
+        .height(1.60)
+        .favouriteColor("Red")
+        .build();
     when(userRepository.findUserByName(anyString())).thenReturn(testUser);
     systemUnderTest.checkActor("Heinrich");
     verify(userRepository).findUserByName("Heinrich");

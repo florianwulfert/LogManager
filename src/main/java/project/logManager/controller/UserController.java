@@ -12,28 +12,28 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import project.logManager.common.dto.UserRequestDto;
-import project.logManager.common.dto.UserResponseDto;
+import project.logManager.common.dto.user.UserRequestDto;
+import project.logManager.common.dto.user.UserResponseDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
 
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
 @CrossOrigin
-@Tag(name="User")
+@Tag(name = "User")
 public class UserController {
 
   private final UserService userService;
 
   @PostMapping("/user")
-  public String addUser(@RequestBody UserRequestDto allParameters) {
-    return String.format(
-        "User %s was created. " + userService.addUser(allParameters), allParameters.name);
+  public UserResponseDto addUser(@RequestBody UserRequestDto allParameters) {
+    String returnMessage = userService.addUser(allParameters);
+    return new UserResponseDto(userService.findUserList(), returnMessage);
   }
 
   @GetMapping("/users")
   public UserResponseDto findUsers() {
-    return new UserResponseDto(userService.findUserList());
+    return new UserResponseDto(userService.findUserList(), null);
   }
 
   @GetMapping("/user/id")
@@ -42,18 +42,21 @@ public class UserController {
   }
 
   @DeleteMapping("/user/delete/{id}")
-  public String deleteUserByID(@PathVariable final Integer id, @RequestParam final String actor) {
-    return userService.deleteById(id, actor);
+  public UserResponseDto deleteUserByID(@PathVariable final Integer id, @RequestParam final String actor) {
+    userService.deleteById(id, actor);
+    return new UserResponseDto(userService.findUserList(), null);
   }
 
   @DeleteMapping("/user/delete/name/{name}")
-  public String deleteUserByName(
+  public UserResponseDto deleteUserByName(
       @PathVariable final String name, @RequestParam final String actor) {
-    return userService.deleteByName(name, actor);
+    String returnMessage = userService.deleteByName(name, actor);
+    return new UserResponseDto(userService.findUserList(), returnMessage);
   }
 
   @DeleteMapping("/user/delete")
-  public String deleteAll() {
-    return userService.deleteAll();
+  public UserResponseDto deleteAll() {
+    String returnMessage = userService.deleteAll();
+    return new UserResponseDto(userService.findUserList(), returnMessage);
   }
 }

@@ -20,6 +20,6 @@ public class BmiValidationService {
       LOGGER.warn(ErrorMessages.PARAMETER_IS_MISSING);
       throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
     }
-    LOGGER.info(InfoMessages.PARAMETERS_ARE_VALID);
+    LOGGER.debug(InfoMessages.PARAMETERS_ARE_VALID);
   }
 }

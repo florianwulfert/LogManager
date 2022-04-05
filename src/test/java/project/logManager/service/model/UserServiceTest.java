@@ -1,6 +1,11 @@
 package project.logManager.service.model;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,34 +16,30 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.logManager.common.dto.UserRequestDto;
+import project.logManager.common.dto.user.UserRequestDto;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.UserValidationService;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-  @InjectMocks UserService systemUnderTest;
+  @InjectMocks
+  UserService systemUnderTest;
 
-  @Mock UserRepository userRepository;
+  @Mock
+  UserRepository userRepository;
 
-  @Mock BmiService bmiService;
+  @Mock
+  BmiService bmiService;
 
-  @Mock UserValidationService userValidationService;
+  @Mock
+  UserValidationService userValidationService;
 
-  @Mock LogService logService;
+  @Mock
+  LogService logService;
 
   List<User> users;
 
@@ -106,11 +107,12 @@ class UserServiceTest {
 
   @Test
   void testDeleteById() {
+    when(userValidationService.checkIfIdExists(anyInt()))
+        .thenReturn(users.get(0));
     when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString()))
         .thenReturn(users.get(1));
-    Assertions.assertEquals(
-        String.format(InfoMessages.USER_DELETED_ID, 1),
-        systemUnderTest.deleteById(1, users.get(0).getName()));
+    systemUnderTest.deleteById(1, "Florian");
+    verify(userRepository).deleteById(1);
     verify(logService).addLog(any());
   }
 

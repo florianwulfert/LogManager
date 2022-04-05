@@ -1,25 +1,26 @@
 package project.logManager.controller;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.logManager.common.dto.BmiRequestDto;
+import project.logManager.common.dto.bmi.BmiRequestDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.BmiService;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class BmiControllerTest {
 
-  @InjectMocks BmiController systemUnderTest;
+  @InjectMocks
+  BmiController systemUnderTest;
 
-  @Mock BmiService bmiService;
+  @Mock
+  BmiService bmiService;
 
   @Test
   void testGetBmi() {

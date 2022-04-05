@@ -40,7 +40,6 @@ export class BmiComponent {
     this.subscriptionManager.add(this.bmiFacade.stateCalcBmi$).subscribe(result => {
       this.returnUserMessage = result
     })
-    this.featureManager.openSnackbar(this.returnUserMessage);
   }
 
 }
