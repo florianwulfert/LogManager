@@ -49,7 +49,7 @@
             <mat-icon> delete</mat-icon>
           </button>
         </th>
-        <td mat-cell *matCellDef="let element; let i = index" [attr.id]="element.id">
+        <td mat-cell *matCellDef="let element">
           <button mat-icon-button class="deleteButton" (click)="deleteLog(element)" id="remove">
             <mat-icon>delete</mat-icon>
           </button>
