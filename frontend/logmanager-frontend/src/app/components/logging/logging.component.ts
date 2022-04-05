@@ -20,10 +20,9 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   subscriptionManager = new SubscriptionManager();
-  returnLogMessage: string | undefined;
   featureManager = new FeatureManager(this._snackBar);
 
-  displayedColumns: string[] = ['message', 'severity', 'timestamp', 'user', 'delete'];
+  displayedColumns: string[] = ['id', 'message', 'severity', 'timestamp', 'user', 'delete'];
   severities: string[] = ['TRACE', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'FATAL'];
   dataSource: any;
 
@@ -75,9 +74,5 @@ export class LoggingComponent implements OnInit, OnDestroy {
     let elementValues = Object.keys(element).map(key => element[key])
     request.id = elementValues[0]
     this.logsFacade.deleteLog(request)
-    this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
-      this.returnLogMessage = result
-    })
-    this.featureManager.openSnackbar(this.returnLogMessage)
   }
 }

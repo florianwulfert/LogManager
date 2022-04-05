@@ -1,10 +1,11 @@
 package project.logManager.model.mapper;
 
-import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import project.logManager.model.dto.LogDTO;
+import project.logManager.common.dto.log.LogDTO;
 import project.logManager.model.entity.Log;
+
+import java.util.List;
 
 /**
  * @author - EugenFriesen 13.02.2021
