@@ -2,8 +2,7 @@ package project.logManager.common.message;
 
 public class ErrorMessages {
 
-  public static final String USER_TOO_YOUNG =
-      "User is too young for an exact definition of the BMI.";
+  public static final String USER_TOO_YOUNG = "User is too young for an exact definition of the BMI.";
   public static final String COULD_NOT_CALCULATE = "BMI could not be calculated.";
   public static final String USER_DELETE_HIMSELF = "User cannot delete himself!";
   public static final String USER_NOT_FOUND_ID = "User with the ID %s not found.";
