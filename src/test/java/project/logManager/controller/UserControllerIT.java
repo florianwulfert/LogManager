@@ -1,18 +1,5 @@
 package project.logManager.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-import javax.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -39,6 +26,18 @@ import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
+
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
@@ -270,7 +269,7 @@ class UserControllerIT {
             .andExpect(status)
             .andReturn();
 
-    Assertions.assertEquals(message, result.getResponse().getContentAsString());
+    assertEquals(message, result.getResponse().getContentAsString());
   }
 
   @Test
@@ -278,8 +277,14 @@ class UserControllerIT {
     MvcResult result =
         mockMvc.perform(get("/users")).andDo(print()).andExpect(status().isOk()).andReturn();
 
-    Assertions.assertEquals(
+    assertEquals(
         TestMessages.PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
+  }
+
+  @Test
+  void testFindUserByName() throws Exception {
+    mockMvc.perform(get("/user/")
+            .param("name", "Torsten")).andDo(print()).andExpect(status().isOk()).andReturn();
   }
 
   @ParameterizedTest(name = "{4}")
@@ -304,7 +309,7 @@ class UserControllerIT {
             .andExpect(status)
             .andReturn();
 
-    Assertions.assertEquals(message, result.getResponse().getContentAsString());
+    assertEquals(message, result.getResponse().getContentAsString());
   }
 
   @ParameterizedTest(name = "{0}")
@@ -334,7 +339,7 @@ class UserControllerIT {
             .andExpect(status)
             .andReturn();
 
-    Assertions.assertEquals(message, result.getResponse().getContentAsString());
+    assertEquals(message, result.getResponse().getContentAsString());
   }
 
   private List<User> createUser() {
@@ -392,7 +397,7 @@ class UserControllerIT {
               .andExpect(status().isOk())
               .andReturn();
 
-      Assertions.assertEquals(TestMessages.PETRA, result.getResponse().getContentAsString());
+      assertEquals(TestMessages.PETRA, result.getResponse().getContentAsString());
     }
 
     @Test
@@ -404,7 +409,7 @@ class UserControllerIT {
               .andExpect(status().isBadRequest())
               .andReturn();
 
-      Assertions.assertEquals(
+      assertEquals(
           ErrorMessages.ID_NOT_PRESENT, result.getResponse().getContentAsString());
     }
 
@@ -417,7 +422,7 @@ class UserControllerIT {
               .andExpect(status().isOk())
               .andReturn();
 
-      Assertions.assertEquals("null", result.getResponse().getContentAsString());
+      assertEquals("null", result.getResponse().getContentAsString());
     }
   }
 
@@ -434,7 +439,7 @@ class UserControllerIT {
               .andExpect(status().isOk())
               .andReturn();
 
-      Assertions.assertEquals(TestMessages.EMPTY_LIST, result.getResponse().getContentAsString());
+      assertEquals(TestMessages.EMPTY_LIST, result.getResponse().getContentAsString());
     }
 
     @Test
@@ -454,7 +459,7 @@ class UserControllerIT {
               .andExpect(status().isInternalServerError())
               .andReturn();
 
-      Assertions.assertEquals(
+      assertEquals(
           ErrorMessages.USERS_REFERENCED, result.getResponse().getContentAsString());
     }
   }
