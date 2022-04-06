@@ -1,21 +1,16 @@
 package project.logManager.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import project.logManager.common.dto.user.FindUserResponseDto;
 import project.logManager.common.dto.user.UserRequestDto;
 import project.logManager.common.dto.user.UserResponseDto;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
+
+import java.util.Optional;
 
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
@@ -39,6 +34,11 @@ public class UserController {
   @GetMapping("/user/id")
   public Optional<User> findUserByID(@RequestParam final Integer id) {
     return userService.findUserById(id);
+  }
+
+  @GetMapping("/user/")
+  public FindUserResponseDto findUserByName(@RequestParam final String name) {
+    return new FindUserResponseDto(userService.findUserByName(name));
   }
 
   @DeleteMapping("/user/delete/{id}")
