@@ -16,8 +16,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
-      if (r !== '' && r !== undefined) {
+    this.subscriptionManager.add(this.actorFacade.stateActorIsValid$).subscribe(r => {
+      if (r === true && r !== undefined) {
         this.userAvailable = true
       }
     })

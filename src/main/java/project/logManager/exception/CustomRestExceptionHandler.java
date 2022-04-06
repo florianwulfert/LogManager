@@ -40,7 +40,7 @@ public class CustomRestExceptionHandler {
 
   @ResponseBody
   @ExceptionHandler(UserNotFoundException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
   String userNotFoundExceptionHandler(UserNotFoundException ex) {
     LOGGER.warn(ex.getMessage());
     return ex.getMessage();

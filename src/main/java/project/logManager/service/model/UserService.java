@@ -8,7 +8,6 @@ import project.logManager.common.dto.log.LogRequestDto;
 import project.logManager.common.dto.user.UserRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
-import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.UserValidationService;
@@ -72,7 +71,7 @@ public class UserService {
   public boolean findUserByName(String name) {
     User user = userRepository.findUserByName(name);
     if (user == null) {
-      throw new UserNotFoundException(name);
+     return false;
     }
     LOGGER.debug(String.format(InfoMessages.USER_FOUND, name));
     return true;

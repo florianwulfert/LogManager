@@ -36,7 +36,7 @@ public class UserController {
     return userService.findUserById(id);
   }
 
-  @GetMapping("/user/")
+  @GetMapping("/user")
   public FindUserResponseDto findUserByName(@RequestParam final String name) {
     return new FindUserResponseDto(userService.findUserByName(name));
   }
