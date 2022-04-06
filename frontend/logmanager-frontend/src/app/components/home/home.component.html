@@ -13,7 +13,8 @@
       </a>
     </mat-card>
 
-    <mat-card class="col cardFormat zoom">
+    <mat-card class="col cardFormat zoom" *ngIf="userAvailable">
+
       <a routerLink="/user">
         <mat-card-title-group>
           <mat-card-title>User</mat-card-title>
@@ -26,7 +27,7 @@
       </a>
     </mat-card>
 
-    <mat-card class="col cardFormat zoom">
+    <mat-card class="col cardFormat zoom" *ngIf="userAvailable">
       <a routerLink="/logging">
         <mat-card-title-group>
           <mat-card-title>Logging</mat-card-title>

@@ -40,6 +40,7 @@ export class HeaderComponent implements OnInit {
       restoreFocus: false,
       data: {name: this.name},
     });
+
     dialogRef.afterClosed().subscribe((result) => {
       this.actorDto.actor = result
       this.actorFacade.saveActor(this.actorDto)

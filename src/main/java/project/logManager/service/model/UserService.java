@@ -74,7 +74,6 @@ public class UserService {
     if (user == null) {
       throw new UserNotFoundException(name);
     }
-    userValidationService.checkIfNameExists(name,false, "");
     LOGGER.debug(String.format(InfoMessages.USER_FOUND, name));
     return true;
   }
