@@ -1,4 +1,5 @@
 <h1 mat-dialog-title>Sign in</h1>
+
 <div mat-dialog-content>
   <mat-form-field appearance="fill">
     <mat-label>Username</mat-label>
@@ -9,8 +10,6 @@
   Please contact an administrator.</p>
 <div mat-dialog-actions>
 
-  <button mat-button (click)="validateLogin()" >Apply</button>
+  <button mat-button (click)="validateLogin()" class="apply-button">Apply</button>
+  <button mat-button (click)="cancel()" class="lite-version-button"> Continue with lite version</button>
 </div>
-
-
-<!-- TODO: Button-Design anpassen + 'contiue with other version statt cancel-->
