@@ -10,6 +10,8 @@ import {Profile} from "./profile.interface";
 })
 export class ProfileMenuComponent {
 
+  errorMessage: string = ''
+
   constructor(
     public dialogRef: MatDialogRef<HeaderComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Profile,
@@ -17,5 +19,13 @@ export class ProfileMenuComponent {
 
   cancel(): void {
     this.dialogRef.close();
+  }
+
+  validateLogin(): void {
+    console.log(this.data)
+    if (this.data.name === 'Flo') {
+      this.dialogRef.close(this.data.name)
+    }
+    this.errorMessage = 'User not registered yet!\nPlease contact an administrator.'
   }
 }
