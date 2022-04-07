@@ -17,29 +17,25 @@ import {ActorFacade} from "../../../modules/actor/actor.facade";
   providedIn: 'root'
 })
 export class ProfileMenuComponent {
-
   errorMessage: string = ''
   actorDto: ActorDto = new ActorDto()
-
   subscriptionManager = new SubscriptionManager();
 
   constructor(
     public dialogRef: MatDialogRef<HeaderComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Profile,
-    private readonly actorFacade: ActorFacade
+    private readonly actorFacade: ActorFacade,
   ) {
   }
 
   cancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close("not registered user");
   }
-
 
   validateLogin(): void {
     this.actorDto.actor = this.data.name
     this.actorFacade.getUserByName(this.actorDto)
     this.subscriptionManager.add(this.actorFacade.stateActorIsValid$).subscribe(r => {
-      console.log(r)
       if (r === true) {
         this.dialogRef.close(this.data.name)
       }
