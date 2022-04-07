@@ -6,9 +6,11 @@
     <input matInput [(ngModel)]="data.name">
   </mat-form-field>
 </div>
-<p *ngIf="errorMessage !== ''">User not registered yet!<br>
+<p *ngIf="errorMessage !== ''" align="center">User not registered yet!<br>
   Please contact an administrator.</p>
 <div mat-dialog-actions>
-  <button mat-button (click)="cancel()" class="lite-version-button"> Continue with lite version</button>
+  <button mat-button (click)="cancel()" class="lite-version-button">
+    Continue with lite version
+  </button>
   <button mat-button (click)="validateLogin()" class="apply-button">Apply</button>
 </div>
