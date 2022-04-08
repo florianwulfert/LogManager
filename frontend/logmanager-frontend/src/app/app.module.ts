@@ -33,6 +33,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {ProfileMenuComponent} from './components/navigation/profile-menu/profile-menu.component';
 import {ActorModule} from "./modules/actor/actor.module"
 import {ActorIsValidModule} from "./modules/actor/actorIsValid.module";
+import {BookComponent} from "./components/book/book.component";
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import {ActorIsValidModule} from "./modules/actor/actorIsValid.module";
     LoggingComponent,
     HomeComponent,
     ProfileMenuComponent,
+    BookComponent
   ],
   imports: [
     BrowserModule,
@@ -76,7 +78,7 @@ import {ActorIsValidModule} from "./modules/actor/actorIsValid.module";
     FormsModule,
     LogModule,
     BmiModule,
-    ActorIsValidModule
+    ActorIsValidModule,
   ],
   exports: [
     BrowserModule,
