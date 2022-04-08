@@ -1,13 +1,26 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
+import {ActorFacade} from "../../modules/actor/actor.facade";
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
-  constructor() {
+  subscriptionManager = new SubscriptionManager();
+  userAvailable: boolean = false
+
+  constructor(private readonly actorFacade: ActorFacade) {
+  }
+
+  ngOnInit() {
+    this.subscriptionManager.add(this.actorFacade.stateActorIsValid$).subscribe(r => {
+      if (r === true && r !== undefined) {
+        this.userAvailable = true
+      }
+    })
   }
 
   bmiDescription = 'Click here to calculate your BMI according to your weight and height or see the BMI of another user.'

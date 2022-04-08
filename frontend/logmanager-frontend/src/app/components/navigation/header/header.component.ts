@@ -40,7 +40,13 @@ export class HeaderComponent implements OnInit {
       restoreFocus: false,
       data: {name: this.name},
     });
+
     dialogRef.afterClosed().subscribe((result) => {
+      this.subscriptionManager.add(this.actorFacade.stateActorIsValid$).subscribe(r => {
+        if (r === false && result !== "not registered user") {
+          window.location.assign('http://localhost:4200/home');
+        }
+      })
       this.actorDto.actor = result
       this.actorFacade.saveActor(this.actorDto)
       this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {

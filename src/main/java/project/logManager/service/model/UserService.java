@@ -1,8 +1,5 @@
 package project.logManager.service.model;
 
-import java.util.List;
-import java.util.Optional;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +11,10 @@ import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.UserValidationService;
+
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -65,6 +66,15 @@ public class UserService {
     Optional<User> user = userRepository.findById(id).isPresent() ? userRepository.findById(id) : Optional.empty();
     LOGGER.info(user);
     return user;
+  }
+
+  public boolean findUserByName(String name) {
+    User user = userRepository.findUserByName(name);
+    if (user == null) {
+     return false;
+    }
+    LOGGER.debug(String.format(InfoMessages.USER_FOUND, name));
+    return true;
   }
 
   public void deleteById(Integer id, String actorName) {

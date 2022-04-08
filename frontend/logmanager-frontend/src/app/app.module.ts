@@ -32,6 +32,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatDialogModule} from "@angular/material/dialog";
 import {ProfileMenuComponent} from './components/navigation/profile-menu/profile-menu.component';
 import {ActorModule} from "./modules/actor/actor.module"
+import {ActorIsValidModule} from "./modules/actor/actorIsValid.module";
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import {ActorModule} from "./modules/actor/actor.module"
     MatSelectModule,
     FormsModule,
     LogModule,
-    BmiModule
+    BmiModule,
+    ActorIsValidModule
   ],
   exports: [
     BrowserModule,

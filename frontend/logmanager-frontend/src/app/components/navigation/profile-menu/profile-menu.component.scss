@@ -2,6 +2,19 @@ h1 {
   text-align: center;
 }
 
-button {
+.lite-version-button {
+  background-color: #efebeb;
+}
 
+.apply-button {
+  background-color: #180c65;
+  color: white;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+p {
+  color: red
 }
