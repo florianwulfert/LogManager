@@ -21,8 +21,8 @@ public class BookService {
 
     private static final Logger LOGGER = LogManager.getLogger(BookService.class);
 
-    public Book saveBook(Book book) {
-        return bookRepository.save(book);
+    public void saveBook(Book book) {
+        bookRepository.save(book);
     }
 
     public Book addBook(Integer erscheinungsjahr, String titel, String actor) {
