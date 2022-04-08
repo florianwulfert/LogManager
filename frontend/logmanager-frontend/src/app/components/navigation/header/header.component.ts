@@ -44,7 +44,7 @@ export class HeaderComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       this.subscriptionManager.add(this.actorFacade.stateActorIsValid$).subscribe(r => {
         if (r === false && result !== "not registered user") {
-          window.location.reload();
+          window.location.assign('http://localhost:4200/home');
         }
       })
       this.actorDto.actor = result
