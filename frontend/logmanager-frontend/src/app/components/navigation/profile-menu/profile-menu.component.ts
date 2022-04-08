@@ -1,4 +1,4 @@
-import {Component, Inject, Injectable, OnInit} from '@angular/core';
+import {Component, Inject, Injectable} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {HeaderComponent} from "../header/header.component";
 import {Profile} from "./profile.interface";
@@ -16,7 +16,7 @@ import {ActorFacade} from "../../../modules/actor/actor.facade";
 @Injectable({
   providedIn: 'root'
 })
-export class ProfileMenuComponent implements OnInit {
+export class ProfileMenuComponent {
 
   errorMessage: string = ''
   actorDto: ActorDto = new ActorDto()
@@ -29,9 +29,6 @@ export class ProfileMenuComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: Profile,
     private readonly actorFacade: ActorFacade,
   ) {
-  }
-
-  ngOnInit() {
     this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
       if(r !== "" && r !== "not registered user") {
         this.isLoggedIn = true
