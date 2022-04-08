@@ -8,9 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.dto.user.UserRequestDto;
-import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
-import project.logManager.exception.UserNotFoundException;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.UserValidationService;
@@ -19,7 +17,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -114,9 +113,7 @@ class UserServiceTest {
 
   @Test
   void FindUserByNameIsFalse() {
-    UserNotFoundException ex = assertThrows(UserNotFoundException.class, () ->
-            systemUnderTest.findUserByName("Paris"));
-    assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_NAME,"Paris"),ex.getMessage());
+    assertFalse(systemUnderTest.findUserByName("Peter"));
   }
 
   @Test

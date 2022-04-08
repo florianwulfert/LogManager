@@ -82,7 +82,7 @@ class LogControllerIT {
         Arguments.of(
             "UserIsFalse",
             "{\"message\":\"Test\", \"severity\":\"INFO\",\"user\":\"Alex\"}",
-            status().isBadRequest(),
+            status().isNotFound(),
             String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Alex")));
   }
 
