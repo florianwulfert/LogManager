@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.logManager.common.dto.UserRequestDto;
+import project.logManager.model.entity.Book;
 import project.logManager.model.entity.User;
 import project.logManager.service.model.UserService;
 
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,6 +30,7 @@ class UserControllerTest {
   UserService userService;
 
   List<User> users;
+  List<Book> books;
 
   @BeforeEach
   void init() {
@@ -71,6 +74,12 @@ class UserControllerTest {
   }
 
   @Test
+  void tsetAddFavouriteBookToUser() {
+    systemUnderTest.addFavouritBookToUser(anyInt(), anyInt());
+    verify(userService).addFavouriteBookToUser(anyInt(), anyInt());
+  }
+
+  @Test
   void testFindUsers() {
     systemUnderTest.findUsers();
     verify(userService).findUserList();
@@ -110,6 +119,11 @@ class UserControllerTest {
             .weight(90.0)
             .height(1.85)
             .favouriteColor("yellow")
+            .favouriteBook(Book.builder()
+                .id(1)
+                .titel("haya")
+                .erscheinungsjahr(1998)
+                .build())
             .bmi(26.29)
             .build());
 
@@ -121,6 +135,11 @@ class UserControllerTest {
             .weight(70.0)
             .height(1.85)
             .favouriteColor("yellow")
+            .favouriteBook(Book.builder()
+                .id(2)
+                .titel("omar")
+                .erscheinungsjahr(1999)
+                .build())
             .bmi(20.45)
             .build());
     return users;

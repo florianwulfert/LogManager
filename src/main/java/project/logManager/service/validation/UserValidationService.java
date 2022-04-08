@@ -9,7 +9,9 @@ import project.logManager.common.enums.UserColorEnum;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.exception.*;
+import project.logManager.model.entity.Book;
 import project.logManager.model.entity.User;
+import project.logManager.model.repository.BookRepository;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.model.LogService;
@@ -25,6 +27,7 @@ public class UserValidationService {
   private final UserRepository userRepository;
   private final LogService logService;
   private final LogRepository logRepository;
+  private final BookRepository bookRepository;
 
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
@@ -83,7 +86,16 @@ public class UserValidationService {
       handleNameNotExist(isActor, action, name);
     }
     return user;
-   }
+  }
+
+  public Book checkIfBookExists(Integer bookId) {
+    Optional<Book> book = bookRepository.findById(bookId);
+    if (!book.isPresent()) {
+      LOGGER.warn(String.format(ErrorMessages.BOOK_NOT_FOUND_ID, bookId));
+      throw new RuntimeException(String.format(ErrorMessages.BOOK_NOT_FOUND_ID, bookId));
+    }
+    return book.get();
+  }
 
   private void handleNameNotExist(boolean isActor, String action, String name) {
     if (isActor) {

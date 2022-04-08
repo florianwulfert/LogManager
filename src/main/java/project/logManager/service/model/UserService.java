@@ -8,6 +8,7 @@ import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.dto.UserRequestDto;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
+import project.logManager.model.entity.Book;
 import project.logManager.model.entity.User;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.validation.UserValidationService;
@@ -29,31 +30,38 @@ public class UserService {
 
   public String addUser(UserRequestDto userRequestDto) {
     userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
-    User user =
-        User.builder()
-            .name(userRequestDto.name)
-            .birthdate(userRequestDto.getBirthdateAsLocalDate())
-            .weight(userRequestDto.weight)
-            .height(userRequestDto.height)
-            .favouriteColor(userRequestDto.favouriteColor.toLowerCase())
-            .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
-            .build();
+    User user = User.builder()
+        .name(userRequestDto.name)
+        .birthdate(userRequestDto.getBirthdateAsLocalDate())
+        .weight(userRequestDto.weight)
+        .height(userRequestDto.height)
+        .favouriteColor(userRequestDto.favouriteColor.toLowerCase())
+        .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
+        .build();
 
     userValidationService.validateFarbenEnum(user.getFavouriteColor().toLowerCase());
     userValidationService.checkIfUserToPostExists(user.getName());
     if (userValidationService.checkIfUsersListIsEmpty()) {
-      userValidationService.checkIfActorEqualsUserToCreate(userRequestDto.actor, user,true);
+      userValidationService.checkIfActorEqualsUserToCreate(userRequestDto.actor, user, true);
       saveUser(user, userRequestDto.actor);
     } else {
-      User activeUser =
-          userValidationService.checkIfNameExists(
-              userRequestDto.actor,
-              true,
-              String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, userRequestDto.actor));
+      User activeUser = userValidationService.checkIfNameExists(
+          userRequestDto.actor,
+          true,
+          String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, userRequestDto.actor));
       saveUser(user, activeUser.getName());
     }
     return bmiService.calculateBmiAndGetBmiMessage(
         userRequestDto.getBirthdateAsLocalDate(), userRequestDto.weight, userRequestDto.height);
+  }
+
+  public String addFavouriteBookToUser(Integer bookId, int userId) {
+    Book book = userValidationService.checkIfBookExists(bookId);
+    User actor = userValidationService.checkIfIdExists(userId);
+    actor.setFavouriteBook(book);
+    userRepository.save(actor);
+    LOGGER.info(InfoMessages.BOOK_BY_USER);
+    return InfoMessages.BOOK_BY_USER;
   }
 
   public List<User> findUserList() {
@@ -70,9 +78,8 @@ public class UserService {
 
   public String deleteById(Integer id, String actorName) {
     User userToDelete = userValidationService.checkIfIdExists(id);
-    User actor =
-        userValidationService.checkIfNameExists(
-            actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
+    User actor = userValidationService.checkIfNameExists(
+        actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
     userValidationService.checkIfUserToDeleteIdEqualsActorId(id, actor.getId());
     userValidationService.checkIfUsersListIsEmpty();
     userValidationService.checkIfExistLogByUserToDelete(userToDelete);
@@ -104,9 +111,8 @@ public class UserService {
 
   private void saveUser(User user, String actor) {
     userRepository.save(user);
-    String bmi =
-        bmiService.calculateBmiAndGetBmiMessage(
-            user.getBirthdate(), user.getWeight(), user.getHeight());
+    String bmi = bmiService.calculateBmiAndGetBmiMessage(
+        user.getBirthdate(), user.getWeight(), user.getHeight());
     saveLog(String.format(InfoMessages.USER_CREATED + "%s", user, bmi), "INFO", actor);
     LOGGER.info(
         String.format(
@@ -117,12 +123,11 @@ public class UserService {
   }
 
   private void saveLog(String message, String severity, String actor) {
-    LogRequestDto logRequestDto =
-            LogRequestDto.builder()
-                    .message(message)
-                    .severity(severity)
-                    .user(actor)
-                    .build();
+    LogRequestDto logRequestDto = LogRequestDto.builder()
+        .message(message)
+        .severity(severity)
+        .user(actor)
+        .build();
     LOGGER.info("Log " + logRequestDto + String.format(" was saved as %s", severity));
     logService.addLog(logRequestDto);
   }

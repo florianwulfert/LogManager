@@ -21,9 +21,6 @@ public class User {
   @Column(name = "id", unique = true, nullable = false)
   Integer id;
 
-  @Column(name = "favouriteBook", nullable = true)
-  Book favouriteBook;
-
   @Column(name = "name", unique = true, nullable = false)
   String name;
 
@@ -35,6 +32,10 @@ public class User {
 
   @Column(name = "height", nullable = false)
   double height;
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "book")
+  Book favouriteBook;
 
   @Column(name = "favouriteColor", nullable = false)
   String favouriteColor;

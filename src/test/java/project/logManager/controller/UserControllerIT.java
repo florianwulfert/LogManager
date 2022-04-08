@@ -19,8 +19,10 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import project.logManager.common.message.ErrorMessages;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.common.message.TestMessages;
+import project.logManager.model.entity.Book;
 import project.logManager.model.entity.Log;
 import project.logManager.model.entity.User;
+import project.logManager.model.repository.BookRepository;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 
@@ -52,6 +54,9 @@ class UserControllerIT {
 
         @Autowired
         private LogRepository logRepository;
+
+        @Autowired
+        private BookRepository bookRepository;
 
         List<User> userList = new ArrayList<>();
 
@@ -183,6 +188,19 @@ class UserControllerIT {
                                 .andReturn();
 
                 Assertions.assertEquals(message, result.getResponse().getContentAsString());
+        }
+
+        @Test
+        void testAddBookToUser() throws Exception {
+                createBook();
+                MvcResult result = mockMvc
+                                .perform(post("/user/favouriteBook").param("bookId", "1").param("userId", "2"))
+                                .andDo(print())
+                                .andExpect(status().isOk())
+                                .andReturn();
+                Assertions.assertEquals(InfoMessages.BOOK_BY_USER, result.getResponse().getContentAsString());
+                ;
+
         }
 
         @Test
@@ -408,6 +426,15 @@ class UserControllerIT {
                         Assertions.assertEquals(
                                         ErrorMessages.USERS_REFERENCED, result.getResponse().getContentAsString());
                 }
+        }
+
+        private void createBook() {
+                Book haya = Book.builder()
+                                .id(1)
+                                .erscheinungsjahr(1998)
+                                .titel("haya")
+                                .build();
+                bookRepository.save(haya);
         }
 
         private List<User> createUser() {
