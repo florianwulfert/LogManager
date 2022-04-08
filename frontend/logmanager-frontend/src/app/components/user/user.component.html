@@ -74,6 +74,12 @@
         <td *ngIf="input.value!==''" class="mat-cell" colspan="4">No data matching filter "{{input.value}}"</td>
       </tr>
     </table>
+
+    <mat-paginator
+      [pageSize]=10
+      [hidePageSize]="true"
+      showFirstLastButtons>
+    </mat-paginator>
   </div>
 
   <div class="col-12 col-lg-4">
