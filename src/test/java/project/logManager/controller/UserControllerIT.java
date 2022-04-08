@@ -222,7 +222,7 @@ class UserControllerIT {
             false,
             "/user/delete/name/UserToDeleteNichtBekannt",
             "Torsten",
-            status().isBadRequest(),
+            status().isNotFound(),
             String.format(ErrorMessages.USER_NOT_FOUND_NAME, "UserToDeleteNichtBekannt")),
         Arguments.of(
             "User to delete not present",

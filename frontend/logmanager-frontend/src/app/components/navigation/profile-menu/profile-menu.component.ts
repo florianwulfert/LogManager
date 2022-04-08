@@ -17,8 +17,10 @@ import {ActorFacade} from "../../../modules/actor/actor.facade";
   providedIn: 'root'
 })
 export class ProfileMenuComponent {
+
   errorMessage: string = ''
   actorDto: ActorDto = new ActorDto()
+
   subscriptionManager = new SubscriptionManager();
 
   constructor(
