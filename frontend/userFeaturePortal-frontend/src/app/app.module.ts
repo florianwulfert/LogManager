@@ -33,6 +33,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {ProfileMenuComponent} from './components/navigation/profile-menu/profile-menu.component';
 import {ActorModule} from "./modules/actor/actor.module"
 import {ActorIsValidModule} from "./modules/actor/actorIsValid.module";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import {ActorIsValidModule} from "./modules/actor/actorIsValid.module";
     FormsModule,
     LogModule,
     BmiModule,
-    ActorIsValidModule
+    ActorIsValidModule,
+    MatPaginatorModule
   ],
   exports: [
     BrowserModule,

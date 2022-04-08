@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {LogFacade} from "../../modules/logging/logs.facade";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
@@ -7,6 +7,7 @@ import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
 import {DeleteLogRequest} from "../../modules/logging/deleteLog/dto/delete-log-request";
+import {MatPaginator} from "@angular/material/paginator";
 
 
 @Component({
@@ -25,6 +26,8 @@ export class LoggingComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'message', 'severity', 'timestamp', 'user', 'delete'];
   severities: string[] = ['TRACE', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'FATAL'];
   dataSource: any;
+
+  @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit(): void {
     this.getLogs()
@@ -54,6 +57,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
     this.logsFacade.getLogs()
     this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
+      this.dataSource.paginator = this.paginator;
     })
   }
 
