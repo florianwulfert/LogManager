@@ -47,7 +47,7 @@
     * Geforderte Parameter:
         * id: Integer
     * Mögliche Fehler:
-        * No class project.logManager.model.entity.Log entity with id 1 exists!
+        * No class project.userFeaturePortal.model.entity.Log entity with id 1 exists!
         * Required path variable was not found or request param has wrong format! Failed to convert value of type '
           java.lang.String' to required type 'java.lang.Integer'; nested exception is java.lang.NumberFormatException:
           For input string: ""
