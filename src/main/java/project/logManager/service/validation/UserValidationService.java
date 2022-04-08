@@ -15,7 +15,9 @@ import project.logManager.exception.IllegalColorException;
 import project.logManager.exception.ParameterNotPresentException;
 import project.logManager.exception.UserNotAllowedException;
 import project.logManager.exception.UserNotFoundException;
+import project.logManager.model.entity.Book;
 import project.logManager.model.entity.User;
+import project.logManager.model.repository.BookRepository;
 import project.logManager.model.repository.LogRepository;
 import project.logManager.model.repository.UserRepository;
 import project.logManager.service.model.LogService;
@@ -29,6 +31,7 @@ public class UserValidationService {
   private final UserRepository userRepository;
   private final LogService logService;
   private final LogRepository logRepository;
+  private final BookRepository bookRepository;
 
   public void checkIfAnyEntriesAreNull(UserRequestDto allParameters) {
     if (allParameters.actor == null
@@ -77,6 +80,15 @@ public class UserValidationService {
       throw new UserNotFoundException(user.getName());
     }
     LOGGER.info(InfoMessages.ACTOR_EQUALS_USER);
+  }
+
+  public Book checkIfBookExists(Integer bookId) {
+    Optional<Book> book = bookRepository.findById(bookId);
+    if (!book.isPresent()) {
+      LOGGER.warn(String.format(ErrorMessages.BOOK_NOT_FOUND_ID, bookId));
+      throw new RuntimeException(String.format(ErrorMessages.BOOK_NOT_FOUND_ID, bookId));
+    }
+    return book.get();
   }
 
   public User checkIfNameExists(String name, boolean isActor, String action) {

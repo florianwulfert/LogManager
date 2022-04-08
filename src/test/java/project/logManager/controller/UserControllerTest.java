@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,6 +47,12 @@ class UserControllerTest {
 
     systemUnderTest.addUser(request);
     Mockito.verify(userService).addUser(request);
+  }
+
+  @Test
+  void tsetAddFavouriteBookToUser() {
+    systemUnderTest.addFavouritBookToUser(anyInt(), anyInt());
+    verify(userService).addFavouriteBookToUser(anyInt(), anyInt());
   }
 
   @Test
