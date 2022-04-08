@@ -9,10 +9,10 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>project</groupId>
-  <artifactId>logManager</artifactId>
+  <artifactId>UserFeaturePortal</artifactId>
   <version>1.0.0</version>
-  <name>logManager</name>
-  <description>Persistent Logging</description>
+  <name>User Feature Portal</name>
+  <description>Features for User to use</description>
   <properties>
     <java.version>11</java.version>
     <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
