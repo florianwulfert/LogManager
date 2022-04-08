@@ -1,4 +1,4 @@
-# Logmanager API
+# User Feature Portal -  API
 
 ### Service port
 
@@ -144,7 +144,7 @@
 
 ### Datenbank
 
-* Der Logmanager besitzt eine H2-Datenbank
+* Das Portal besitzt eine H2-Datenbank
 * Hierfür ist notwendig unter D: ein Ordner data hinzuzufügen
 * Über die URL "http://localhost:8081/h2-console" startet die Datenbank lokal
 * Der Username für die Datenbank ist "blogger"
