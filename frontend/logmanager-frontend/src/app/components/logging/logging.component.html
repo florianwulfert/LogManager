@@ -6,6 +6,7 @@
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter" #input>
     </mat-form-field>
+
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
       <!-- ID Column -->
@@ -62,6 +63,13 @@
         <td *ngIf="input.value!==''" class="mat-cell" colspan="4">No data matching filter "{{input.value}}"</td>
       </tr>
     </table>
+
+    <mat-paginator
+      [pageSize]=10
+      [hidePageSize]="true"
+      showFirstLastButtons>
+    </mat-paginator>
+
   </div>
   <div class="col-12 col-lg-4">
     <div class="rightSide"></div>
