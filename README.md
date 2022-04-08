@@ -1,4 +1,4 @@
-# Logmanager API
+# User Feature Portal -  API
 
 ### Service port
 
@@ -47,7 +47,7 @@
     * Geforderte Parameter:
         * id: Integer
     * Mögliche Fehler:
-        * No class project.logManager.model.entity.Log entity with id 1 exists!
+        * No class project.userFeaturePortal.model.entity.Log entity with id 1 exists!
         * Required path variable was not found or request param has wrong format! Failed to convert value of type '
           java.lang.String' to required type 'java.lang.Integer'; nested exception is java.lang.NumberFormatException:
           For input string: ""
@@ -144,7 +144,7 @@
 
 ### Datenbank
 
-* Der Logmanager besitzt eine H2-Datenbank
+* Das Portal besitzt eine H2-Datenbank
 * Hierfür ist notwendig unter D: ein Ordner data hinzuzufügen
 * Über die URL "http://localhost:8081/h2-console" startet die Datenbank lokal
 * Der Username für die Datenbank ist "blogger"
