@@ -123,13 +123,13 @@ class BookControllerIT {
   private static Stream<Arguments> getDeleteBookByTitelArguments() {
     return Stream.of(
         Arguments.of(
-            "Book was succussfuly deleted",
+            "BookComponent was succussfuly deleted",
             "peter",
             "Torsten",
             status().isOk(),
             String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, "peter")),
         Arguments.of(
-            "Book was succussfuly deleted",
+            "BookComponent was succussfuly deleted",
             "omar",
             "Torsten",
             status().isOk(),
@@ -141,7 +141,7 @@ class BookControllerIT {
             status().isBadRequest(),
             ErrorMessages.TITLE_IS_NOT_PRESENT),
         Arguments.of(
-            "Book to delete is not in database ",
+            "BookComponent to delete is not in database ",
             "hajer",
             "Torsten",
             status().isOk(),

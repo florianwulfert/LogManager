@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Book")
+@Tag(name = "BookComponent")
 public class BookController {
 
   @Autowired

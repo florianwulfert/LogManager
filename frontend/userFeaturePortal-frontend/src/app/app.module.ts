@@ -79,7 +79,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     FormsModule,
     LogModule,
     BmiModule,
-    MatPaginatorModule
+    MatPaginatorModule,
     ActorIsValidModule,
   ],
   exports: [
