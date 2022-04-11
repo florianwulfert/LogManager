@@ -1,12 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {UserFacade} from "../../modules/user/user.facade";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
-import {MatTableDataSource} from "@angular/material/table";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {AddUserRequest} from "../../modules/user/addUser/add-user-request";
-import {FeatureManager} from "../../../assets/utils/feature.manager";
-import {DeleteUserRequest} from "../../modules/user/deleteUser/delete-user-request";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { UserFacade } from "../../modules/user/user.facade";
+import { SubscriptionManager } from "../../../assets/utils/subscription.manager";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { AddUserRequest } from "../../modules/user/addUser/add-user-request";
+import { FeatureManager } from "../../../assets/utils/feature.manager";
+import { DeleteUserRequest } from "../../modules/user/deleteUser/delete-user-request";
 
 @Component({
   selector: 'app-user',
@@ -23,6 +23,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete'];
   dataSource: any;
+  colors: string[] = ['blue', 'red', 'orange', 'yellow', 'black'];
 
   ngOnInit(): void {
     this.getUserList()
