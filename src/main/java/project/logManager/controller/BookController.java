@@ -1,7 +1,6 @@
 package project.logManager.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +21,7 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping("/books")
-    public List<Book> getAllBooks(@RequestParam String actor) {
+    public String getAllBooks(@RequestParam String actor) {
         return bookService.getAllBooks(actor);
     }
 

@@ -64,7 +64,11 @@ class BookControllerIT {
         @BeforeAll
         public void setup() {
                 books = creatBook();
-                User user = User.builder().name("Torsten").birthdate(LocalDate.now()).height(1.8).weight(90)
+                User user = User.builder()
+                                .name("Torsten")
+                                .birthdate(LocalDate.now())
+                                .height(1.8)
+                                .weight(90)
                                 .favouriteColor("green").build();
                 userRepository.save(user);
         }
@@ -77,6 +81,7 @@ class BookControllerIT {
                                 .andDo(print())
                                 .andExpect(status().isOk())
                                 .andReturn();
+                assertEquals(InfoMessages.ALL_BOOKS_FOUNDS, result.getResponse().getContentAsString());
         }
 
         private static Stream<Arguments> getAddBookArguments() {
@@ -87,14 +92,14 @@ class BookControllerIT {
                                                 "1998",
                                                 "Torsten",
                                                 status().isOk(),
-                                                String.format(TestMessages.HAYA, "haya")),
+                                                TestMessages.HAYA),
                                 Arguments.of(
                                                 "25",
                                                 "petra",
                                                 "1999",
                                                 "Torsten",
                                                 status().isOk(),
-                                                String.format(TestMessages.PETRA_BOOK, "petra")),
+                                                TestMessages.PETRA_BOOK),
                                 Arguments.of(
                                                 "3",
                                                 "peter",

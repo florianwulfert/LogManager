@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import project.logManager.common.dto.LogRequestDto;
 import project.logManager.common.message.InfoMessages;
 import project.logManager.model.entity.Book;
@@ -39,14 +40,15 @@ public class BookService {
         return book;
     }
 
-    public List<Book> getAllBooks(String actor) {
+    public String getAllBooks(String actor) {
         logService.addLog(LogRequestDto.builder()
                 .message("All books founds.")
                 .severity("INFO")
                 .user(actor)
                 .build());
         LOGGER.info("All books founds");
-        return bookRepository.findAll();
+        bookRepository.findAll();
+        return InfoMessages.ALL_BOOKS_FOUNDS;
     }
 
     public String searchBooksByTitel(String titel) {
@@ -66,7 +68,7 @@ public class BookService {
     public String deleteByTitel(String titel, String actor) {
         List<Book> deleteBooks = bookRepository.findByTitel(titel);
         if (deleteBooks.isEmpty()) {
-            LOGGER.info(InfoMessages.NO_BOOKS_FOUNDS, titel);
+            LOGGER.info(String.format(InfoMessages.NO_BOOKS_FOUNDS, titel));
             return String.format(InfoMessages.NO_BOOKS_FOUNDS, titel);
         } else if (deleteBooks.size() == 1) {
             bookRepository.deleteById(deleteBooks.get(0).getId());
@@ -76,13 +78,13 @@ public class BookService {
             String listString = "";
             for (Book b : deleteBooks) {
                 if (!listString.equals("")) {
-                    listString = listString + ", ";
+                    listString.concat("");
                 }
                 listString = listString + "{Titel:" + b.getTitel() + ", Erscheinungsjahr:" + b.getErscheinungsjahr()
                         + ",ID:" + b.getId() + "}";
             }
-            LOGGER.info(String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel, listString));
-            return String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel, listString);
+            LOGGER.info(String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel));
+            return String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel);
         }
 
     }
