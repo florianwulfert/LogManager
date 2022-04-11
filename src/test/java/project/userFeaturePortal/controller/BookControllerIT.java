@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -46,48 +47,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class BookControllerIT {
 
   List<Book> books = new ArrayList<>();
-  @Autowired
-  private BookRepository bookRepository;
-  @Autowired
-  private UserRepository userRepository;
-  @Autowired
-  private MockMvc mockMvc;
+  @Autowired private BookRepository bookRepository;
+  @Autowired private UserRepository userRepository;
+  @Autowired private MockMvc mockMvc;
 
   private static Stream<Arguments> getAddBookArguments() {
     return Stream.of(
         Arguments.of(
-            "16",
-            "haya",
-            "1998",
-            "Torsten",
+            "{\"book\":{\"titel\":\"haya\",\"erscheinungsjahr\":1998,\"actor\":\"Torsten\"}}",
             status().isOk(),
             String.format(TestMessages.HAYA, "haya")),
         Arguments.of(
-            "25",
-            "petra",
-            "1999",
-            "Torsten",
+            "{\"book\":{\"titel\":\"petra\",\"erscheinungsjahr\":\"1999\",\"actor\":\"Torsten\"}}",
             status().isOk(),
             String.format(TestMessages.PETRA_BOOK, "petra")),
         Arguments.of(
-            "3",
-            "peter",
-            "1988",
-            null,
+            "{\"book\":{\"titel\":\"peter\",\"erscheinungsjahr\":\"1988\"}}",
             status().isBadRequest(),
             ErrorMessages.ACTOR_NOT_PRESENT),
         Arguments.of(
-            "4",
-            null,
-            "1977",
-            "Torsten",
+            "{\"book\":{\"book\":{\"erscheinungsjahr\":\"1977\",\"actor\":\"Torsten\"}}",
             status().isBadRequest(),
             ErrorMessages.TITLE_IS_NOT_PRESENT),
         Arguments.of(
-            "5",
-            "omar",
-            null,
-            "Torsten",
+            "{\"book\":{\"titel\":\"omar\",\"actor\":\"Torsten\"}}",
             status().isBadRequest(),
             ErrorMessages.RELEASE_YEAR_IS_NOT_PRESENT));
   }
@@ -112,12 +95,7 @@ class BookControllerIT {
             "Torsten",
             status().isBadRequest(),
             String.format(TestMessages.ID_FOR_BOOK_HAS_WRONG_FORMAT)),
-        Arguments.of(
-            "omar",
-            "/deletebookById/",
-            "Torsten",
-            status().isNotFound(),
-            ""));
+        Arguments.of("omar", "/deletebookById/", "Torsten", status().isNotFound(), ""));
   }
 
   private static Stream<Arguments> getDeleteBookByTitelArguments() {
@@ -157,40 +135,42 @@ class BookControllerIT {
   @BeforeAll
   public void setup() {
     books = creatBook();
-    User user = User.builder().name("Torsten").birthdate(LocalDate.now()).height(1.8).weight(90)
-        .favouriteColor("green").build();
+    User user =
+        User.builder()
+            .name("Torsten")
+            .birthdate(LocalDate.now())
+            .height(1.8)
+            .weight(90)
+            .favouriteColor("green")
+            .build();
     userRepository.save(user);
   }
 
   @Test
   void testGetBooks() throws Exception {
     bookRepository.findAll();
-    MvcResult result = mockMvc
-        .perform(get("/books").param("actor", "Torsten"))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andReturn();
+    MvcResult result =
+        mockMvc
+            .perform(get("/books").param("actor", "Torsten"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
   }
 
-  @ParameterizedTest(name = "{1}")
+  @ParameterizedTest(name = "{2}")
   @MethodSource("getAddBookArguments")
-  void testAddBook(
-      String id,
-      String titel,
-      String erscheinungsjahr,
-      String actor,
-      ResultMatcher status,
-      String message)
-      throws Exception {
+  void testAddBook(String content, ResultMatcher status, String message) throws Exception {
     creatBook();
-    MvcResult result = mockMvc
-        .perform(post("/book")
-            .param("titel", titel)
-            .param("erscheinungsjahr", erscheinungsjahr)
-            .param("actor", actor))
-        .andDo(print())
-        .andExpect(status)
-        .andReturn();
+    MvcResult result =
+        mockMvc
+            .perform(
+                post("/book")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(content)
+                    .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(print())
+            .andExpect(status)
+            .andReturn();
 
     assertEquals(message, result.getResponse().getContentAsString());
   }
@@ -198,34 +178,28 @@ class BookControllerIT {
   @ParameterizedTest(name = "{0}")
   @MethodSource("getDeleteBookById")
   void testDeleteBookById(
-      String titel,
-      String url,
-      String actor,
-      ResultMatcher status,
-      String message)
+      String titel, String url, String actor, ResultMatcher status, String message)
       throws Exception {
-    MvcResult result = mockMvc
-        .perform(delete(url).param("actor", actor))
-        .andDo(print())
-        .andExpect(status)
-        .andReturn();
+    MvcResult result =
+        mockMvc
+            .perform(delete(url).param("actor", actor))
+            .andDo(print())
+            .andExpect(status)
+            .andReturn();
     assertEquals(message, result.getResponse().getContentAsString());
-
   }
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("getDeleteBookByTitelArguments")
   void TestDeleteBookByTitel(
-      String zustand,
-      String titel,
-      String actor,
-      ResultMatcher status,
-      String message) throws Exception {
-    MvcResult result = mockMvc
-        .perform(delete("/deletebooksByTitel").param("titel", titel).param("actor", actor))
-        .andDo(print())
-        .andExpect(status)
-        .andReturn();
+      String zustand, String titel, String actor, ResultMatcher status, String message)
+      throws Exception {
+    MvcResult result =
+        mockMvc
+            .perform(delete("/deletebooksByTitel").param("titel", titel).param("actor", actor))
+            .andDo(print())
+            .andExpect(status)
+            .andReturn();
 
     assertEquals(message, result.getResponse().getContentAsString());
   }
@@ -233,62 +207,34 @@ class BookControllerIT {
   @Test
   void testDeleteAll() throws Exception {
 
-    MvcResult result = mockMvc
-        .perform(delete("/allBooksdelete"))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andReturn();
+    MvcResult result =
+        mockMvc
+            .perform(delete("/allBooksdelete"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
 
     assertEquals(InfoMessages.ALL_BOOKS_DELETED, result.getResponse().getContentAsString());
-
   }
 
   private List<Book> creatBook() {
 
     List<Book> books = new ArrayList<>();
-    Book haya = Book.builder()
-        .id(9)
-        .erscheinungsjahr(1998)
-        .titel("haya")
-        .build();
+    Book haya = Book.builder().id(9).erscheinungsjahr(1998).titel("haya").build();
     bookRepository.saveAndFlush(haya);
 
-    Book petra = Book.builder()
-        .id(4)
-        .erscheinungsjahr(1989)
-        .titel("petra")
-        .build();
+    Book petra = Book.builder().id(4).erscheinungsjahr(1989).titel("petra").build();
     bookRepository.saveAndFlush(petra);
 
-    Book peter = Book.builder()
-        .id(10)
-        .erscheinungsjahr(2010)
-        .titel("peter")
-        .build();
+    Book peter = Book.builder().id(10).erscheinungsjahr(2010).titel("peter").build();
     bookRepository.saveAndFlush(peter);
-    Book lina = Book.builder()
-        .id(12)
-        .erscheinungsjahr(2009)
-        .titel("lina")
-        .build();
+    Book lina = Book.builder().id(12).erscheinungsjahr(2009).titel("lina").build();
     bookRepository.saveAndFlush(lina);
-    Book omar = Book.builder()
-        .id(13)
-        .erscheinungsjahr(2002)
-        .titel("omar")
-        .build();
+    Book omar = Book.builder().id(13).erscheinungsjahr(2002).titel("omar").build();
     bookRepository.saveAndFlush(omar);
-    Book paul = Book.builder()
-        .id(14)
-        .erscheinungsjahr(2002)
-        .titel("paul")
-        .build();
+    Book paul = Book.builder().id(14).erscheinungsjahr(2002).titel("paul").build();
     bookRepository.saveAndFlush(paul);
-    Book paul1 = Book.builder()
-        .id(15)
-        .erscheinungsjahr(2008)
-        .titel("paul")
-        .build();
+    Book paul1 = Book.builder().id(15).erscheinungsjahr(2008).titel("paul").build();
     bookRepository.saveAndFlush(paul1);
     books.add(haya);
     books.add(petra);
@@ -312,26 +258,27 @@ class BookControllerIT {
 
     @Test
     void testFindBookBytitel() throws Exception {
-      MvcResult result = mockMvc
-          .perform(get("/searchbook").param("titel", "haya"))
-          .andDo(print())
-          .andExpect(status().isOk())
-          .andReturn();
-      assertEquals(String.format(InfoMessages.Book_FOUND_TITLE, "haya"),
+      MvcResult result =
+          mockMvc
+              .perform(get("/searchbook").param("titel", "haya"))
+              .andDo(print())
+              .andExpect(status().isOk())
+              .andReturn();
+      assertEquals(
+          String.format(InfoMessages.Book_FOUND_TITLE, "haya"),
           result.getResponse().getContentAsString());
     }
 
     @Test
     void whenTitleToFindNotFoundThenReturnIsNotFound() throws Exception {
-      MvcResult result = mockMvc
-          .perform(get("/book/title").param("title", "christina"))
-          .andDo(print())
-          .andExpect(status().isNotFound())
-          .andReturn();
+      MvcResult result =
+          mockMvc
+              .perform(get("/book/title").param("title", "christina"))
+              .andDo(print())
+              .andExpect(status().isNotFound())
+              .andReturn();
 
       assertEquals("", result.getResponse().getContentAsString());
-
     }
   }
-
 }

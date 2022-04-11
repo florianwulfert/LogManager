@@ -62,7 +62,7 @@ public class BookControllerTest {
 
   @Test
   void testFindBooksBytitel() {
-    bookController.findBooksBytitel("haya");
+    bookController.findBooksByTitel("haya");
     verify(bookService).searchBooksByTitel("haya");
   }
 
