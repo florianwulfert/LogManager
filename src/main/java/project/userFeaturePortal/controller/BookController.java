@@ -4,8 +4,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import project.userFeaturePortal.common.dto.books.AddBookResponseDto;
+import project.userFeaturePortal.common.dto.books.BookRequestDto;
 import project.userFeaturePortal.common.dto.books.BooksResponseDto;
-import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.service.model.BookService;
 
 @CrossOrigin
@@ -23,19 +24,19 @@ public class BookController {
   }
 
   @PostMapping("/book")
-  public Book addBook(@RequestParam String titel, @RequestParam Integer erscheinungsjahr,
-      @RequestParam String actor) {
-    return bookService.addBook(erscheinungsjahr, titel, actor);
+  public AddBookResponseDto addBook(@RequestBody BookRequestDto parameters) {
+    return new AddBookResponseDto(bookService.addBook(parameters.erscheinungsjahr, parameters.titel, parameters.actor));
   }
 
   @GetMapping("/searchbook")
-  public String findBooksBytitel(@RequestParam String titel) {
+  public String findBooksByTitel(@RequestParam String titel) {
     return bookService.searchBooksByTitel(titel);
   }
 
   @DeleteMapping("/deletebookById/{id}")
-  public String deleteBooksById(@PathVariable Integer id, @RequestParam String actor) {
-    return bookService.deleteById(id, actor);
+  public BooksResponseDto deleteBooksById(@PathVariable Integer id, @RequestParam String actor) {
+    String returnMessage = bookService.deleteById(id, actor);
+    return new BooksResponseDto(bookService.getAllBooks(actor), returnMessage);
   }
 
   @DeleteMapping("/deletebooksByTitel")

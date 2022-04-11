@@ -11,3 +11,33 @@ table {
 th {
    color: #180c65;
  }
+
+.create {
+  background-color: #180c65;
+  color: white;
+}
+
+.reset {
+  background-color: #efebeb;
+}
+
+.button-format {
+  margin-left: 10px;
+  width: 150px;
+  float: right;
+}
+
+mat-error {
+  color: red;
+}
+
+.truncated-cell {
+  max-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 10px;
+}
