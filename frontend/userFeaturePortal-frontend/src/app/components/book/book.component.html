@@ -1,10 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+<h1>Books</h1>
 
-</body>
-</html>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <!-- ID Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> ID</th>
+    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+  </ng-container>
+
+  <!-- Titel Column -->
+  <ng-container matColumnDef="titel">
+    <th mat-header-cell *matHeaderCellDef> Titel</th>
+    <td mat-cell *matCellDef="let element" class="truncated-cell"> {{element.titel}} </td>
+  </ng-container>
+
+  <!-- Erscheinungsjahr Column -->
+  <ng-container matColumnDef="erscheinungsjahr">
+    <th mat-header-cell *matHeaderCellDef> Erscheinungsjahr</th>
+    <td mat-cell *matCellDef="let element"> {{element.erscheinungsjahr}} </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

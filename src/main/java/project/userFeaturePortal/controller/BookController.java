@@ -4,11 +4,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import project.userFeaturePortal.common.dto.books.BooksResponseDto;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.service.model.BookService;
 
-import java.util.List;
-
+@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "BookComponent")
@@ -18,8 +18,8 @@ public class BookController {
   private final BookService bookService;
 
   @GetMapping("/books")
-  public List<Book> getAllBooks(@RequestParam String actor) {
-    return bookService.getAllBooks(actor);
+  public BooksResponseDto getAllBooks(@RequestParam String actor) {
+    return new BooksResponseDto(bookService.getAllBooks(actor), null);
   }
 
   @PostMapping("/book")
