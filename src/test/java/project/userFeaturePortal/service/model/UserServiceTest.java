@@ -111,7 +111,8 @@ class UserServiceTest {
 
   @Test
   void FindUserByNameIsFalse() {
-    assertFalse(systemUnderTest.findUserByName("Peter"));
+    when(userRepository.findAll()).thenReturn(users);
+    assertFalse(systemUnderTest.findUserByName("Heini"));
   }
 
   @Test

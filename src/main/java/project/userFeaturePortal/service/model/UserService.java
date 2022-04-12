@@ -69,7 +69,8 @@ public class UserService {
   public boolean findUserByName(String name) {
     User user = userRepository.findUserByName(name);
     if (user == null) {
-     return false;
+      List<User> users = findUserList();
+      return users.isEmpty();
     }
     LOGGER.debug(String.format(InfoMessages.USER_FOUND, name));
     return true;
