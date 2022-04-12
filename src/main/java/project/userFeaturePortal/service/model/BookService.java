@@ -6,7 +6,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
+import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
+import project.userFeaturePortal.exception.ParameterNotPresentException;
+import project.userFeaturePortal.exception.UserNotFoundException;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.repository.BookRepository;
 
@@ -17,8 +20,7 @@ import java.util.List;
 public class BookService {
 
   private static final Logger LOGGER = LogManager.getLogger(BookService.class);
-  @Autowired
-  private final BookRepository bookRepository;
+  @Autowired private final BookRepository bookRepository;
   private final LogService logService;
 
   public Book saveBook(Book book) {
@@ -26,25 +28,37 @@ public class BookService {
   }
 
   public Book addBook(Integer erscheinungsjahr, String titel, String actor) {
+    validateActor(actor);
+    validateErscheinungsjahrAndTitel(erscheinungsjahr,titel);
     Book book = new Book();
     book.setErscheinungsjahr(erscheinungsjahr);
     book.setTitel(titel);
     saveBook(book);
-    logService.addLog(LogRequestDto.builder()
-        .message("New book was added.")
-        .severity("INFO")
-        .user(actor)
-        .build());
+    logService.addLog(
+        LogRequestDto.builder()
+            .message("New book was added.")
+            .severity("INFO")
+            .user(actor)
+            .build());
     LOGGER.info(String.format(InfoMessages.BOOK_CREATED, titel));
     return book;
   }
 
+  private void validateActor(String actor) {
+    if (actor == null) {
+      throw new UserNotFoundException("notFoundUser");
+    }
+  }
+
+  private void validateErscheinungsjahrAndTitel(Integer erscheinungsjahr, String titel) {
+    if (erscheinungsjahr == null || titel == null) {
+      throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
+    }
+  }
+
   public List<Book> getAllBooks(String actor) {
-    logService.addLog(LogRequestDto.builder()
-        .message("All books founds.")
-        .severity("INFO")
-        .user(actor)
-        .build());
+    logService.addLog(
+        LogRequestDto.builder().message("All books founds.").severity("INFO").user(actor).build());
     LOGGER.info("All books founds");
     return bookRepository.findAll();
   }
@@ -78,13 +92,19 @@ public class BookService {
         if (!listString.equals("")) {
           listString = listString + ", ";
         }
-        listString = listString + "{Titel:" + b.getTitel() + ", Erscheinungsjahr:" + b.getErscheinungsjahr()
-            + ",ID:" + b.getId() + "}";
+        listString =
+            listString
+                + "{Titel:"
+                + b.getTitel()
+                + ", Erscheinungsjahr:"
+                + b.getErscheinungsjahr()
+                + ",ID:"
+                + b.getId()
+                + "}";
       }
       LOGGER.info(String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel, listString));
       return String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel, listString);
     }
-
   }
 
   public String deleteBooks() {
@@ -94,11 +114,8 @@ public class BookService {
   }
 
   public void saveLog(String message, String severity, String actor) {
-    LogRequestDto logRequestDto = LogRequestDto.builder()
-        .message(message)
-        .severity(severity)
-        .user(actor)
-        .build();
+    LogRequestDto logRequestDto =
+        LogRequestDto.builder().message(message).severity(severity).user(actor).build();
     LOGGER.info(message);
     logService.addLog(logRequestDto);
   }

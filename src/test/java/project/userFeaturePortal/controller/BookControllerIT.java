@@ -54,25 +54,25 @@ class BookControllerIT {
   private static Stream<Arguments> getAddBookArguments() {
     return Stream.of(
         Arguments.of(
-            "{\"book\":{\"titel\":\"haya\",\"erscheinungsjahr\":1998,\"actor\":\"Torsten\"}}",
+            "{\"titel\":\"haya\",\"erscheinungsjahr\":1998,\"actor\":\"Torsten\"}",
             status().isOk(),
             String.format(TestMessages.HAYA, "haya")),
         Arguments.of(
-            "{\"book\":{\"titel\":\"petra\",\"erscheinungsjahr\":\"1999\",\"actor\":\"Torsten\"}}",
+            "{\"titel\":\"petra\",\"erscheinungsjahr\":\"1999\",\"actor\":\"Torsten\"}",
             status().isOk(),
             String.format(TestMessages.PETRA_BOOK, "petra")),
         Arguments.of(
-            "{\"book\":{\"titel\":\"peter\",\"erscheinungsjahr\":\"1988\"}}",
-            status().isBadRequest(),
-            ErrorMessages.ACTOR_NOT_PRESENT),
+            "{\"titel\":\"peter\",\"erscheinungsjahr\":1988}",
+            status().isNotFound(),
+            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "notFoundUser")),
         Arguments.of(
-            "{\"book\":{\"book\":{\"erscheinungsjahr\":\"1977\",\"actor\":\"Torsten\"}}",
+            "{\"erscheinungsjahr\":1977,\"actor\":\"Torsten\"}",
             status().isBadRequest(),
-            ErrorMessages.TITLE_IS_NOT_PRESENT),
+            ErrorMessages.PARAMETER_IS_MISSING),
         Arguments.of(
-            "{\"book\":{\"titel\":\"omar\",\"actor\":\"Torsten\"}}",
+            "{\"titel\":\"omar\",\"actor\":\"Torsten\"}",
             status().isBadRequest(),
-            ErrorMessages.RELEASE_YEAR_IS_NOT_PRESENT));
+            ErrorMessages.PARAMETER_IS_MISSING));
   }
 
   private static Stream<Arguments> getDeleteBookById() {
@@ -82,13 +82,13 @@ class BookControllerIT {
             "/deletebookById/1",
             "Torsten",
             status().isOk(),
-            String.format(InfoMessages.BOOK_DELETED_ID, 1)),
+            TestMessages.BOOK_DELETED_PETRA),
         Arguments.of(
             "peter",
             "/deletebookById/4",
             "Torsten",
             status().isOk(),
-            String.format(InfoMessages.BOOK_DELETED_ID, 4)),
+            TestMessages.BOOK_DELETED_PETER),
         Arguments.of(
             "haya",
             "/deletebookById/kevin",
@@ -149,8 +149,7 @@ class BookControllerIT {
   @Test
   void testGetBooks() throws Exception {
     bookRepository.findAll();
-    MvcResult result =
-        mockMvc
+      mockMvc
             .perform(get("/books").param("actor", "Torsten"))
             .andDo(print())
             .andExpect(status().isOk())
