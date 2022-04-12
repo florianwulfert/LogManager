@@ -25,4 +25,8 @@ public class Book {
   @Column
   private Integer erscheinungsjahr;
 
+  public String toString() {
+    return "{\"id\":".concat(id.toString()).concat(",\"titel\":\"").concat(titel).concat("\",\"erscheinungsjahr\":")
+        .concat(erscheinungsjahr.toString()).concat("}");
+  }
 }
