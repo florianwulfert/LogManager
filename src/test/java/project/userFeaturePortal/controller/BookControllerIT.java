@@ -157,8 +157,7 @@ class BookControllerIT {
   @BeforeAll
   public void setup() {
     books = creatBook();
-    User user = User.builder().name("Torsten").birthdate(LocalDate.now()).height(1.8).weight(90)
-        .favouriteColor("green").build();
+    User user = User.builder().name("Torsten").birthdate(LocalDate.now()).height(1.8).weight(90).build();
     userRepository.save(user);
   }
 

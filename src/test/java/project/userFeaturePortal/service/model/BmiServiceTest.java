@@ -108,7 +108,6 @@ class BmiServiceTest {
             .birthdate(LocalDate.of(2005, 12, 12))
             .weight(90.0)
             .height(1.85)
-            .favouriteColor("yellow")
             .bmi(26.29)
             .build());
 
@@ -119,7 +118,6 @@ class BmiServiceTest {
             .birthdate(LocalDate.of(1988, 12, 12))
             .weight(70.0)
             .height(1.85)
-            .favouriteColor("yellow")
             .bmi(20.45)
             .build());
     return users;

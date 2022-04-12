@@ -4,6 +4,5 @@ export interface UserDto {
   birthdate: string,
   height: number,
   weight: number,
-  favouriteColor: string,
   bmi: number
 }

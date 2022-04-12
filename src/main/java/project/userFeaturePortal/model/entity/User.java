@@ -36,9 +36,6 @@ public class User {
   @Column(name = "height", nullable = false)
   double height;
 
-  @Column(name = "favouriteColor", nullable = false)
-  String favouriteColor;
-
   @Column(name = "bmi")
   double bmi;
 }

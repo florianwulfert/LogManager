@@ -61,92 +61,80 @@ class UserControllerIT {
         Arguments.of(
             "User created",
             false,
-            "{\"actor\":\"Petra\",\"name\":\"Hugo\",\"birthdate\":\"1999-12-13\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
+            "{\"actor\":\"Petra\",\"name\":\"Hugo\",\"birthdate\":\"1999-12-13\",\"weight\":78.0,\"height\":1.8}",
             status().isOk(),
             TestMessages.USER_CREATED_MESSAGE,
             Arguments.of(
                 "First user has to create himself",
                 true,
-                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
                 status().isInternalServerError(),
                 ErrorMessages.NO_USERS_YET + "Hugo unequal Torsten"),
             Arguments.of(
                 "First user created himself",
                 true,
-                "{\"actor\":\"Petra\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                "{\"actor\":\"Petra\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
                 status().isOk(),
                 String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Petra", 24.07)
                     + InfoMessages.NORMAL_WEIGHT),
             Arguments.of(
                 "Actor not known",
                 false,
-                "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
+                "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
                 status().isForbidden(),
                 String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "UnknownActor")),
             Arguments.of(
                 "Actor not given",
                 false,
-                "{\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
+                "{\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
                 status().isBadRequest(),
                 ErrorMessages.PARAMETER_IS_MISSING),
             Arguments.of(
-                "Color illegal",
-                false,
-                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"purple\"}",
-                status().isBadRequest(),
-                ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE),
-            Arguments.of(
                 "Date has wrong format",
                 false,
-                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"hallo\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"hallo\",\"weight\":78.0,\"height\":1.8}",
                 status().isBadRequest(),
                 ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT),
             Arguments.of(
                 "weight has wrong format",
                 false,
-                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"hi\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"hi\",\"height\":1.8}",
                 status().isBadRequest(),
                 ErrorMessages.PARAMETER_WRONG_FORMAT),
             Arguments.of(
                 "height has wrong format",
                 false,
-                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":\"hi\",\"favouriteColor\":\"blue\"}",
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":\"hi\"}",
                 status().isBadRequest(),
                 ErrorMessages.PARAMETER_WRONG_FORMAT),
             Arguments.of(
                 "User to create already exists",
                 false,
-                "{\"actor\":\"Torsten\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                "{\"actor\":\"Torsten\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8}",
                 status().isInternalServerError(),
                 String.format(ErrorMessages.USER_EXISTS, "Petra")),
             Arguments.of(
                 "UserNameNull",
                 false,
-                "{\"actor\":\"Torsten\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                "{\"actor\":\"Torsten\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8}",
                 status().isBadRequest(),
                 ErrorMessages.PARAMETER_IS_MISSING),
             Arguments.of(
                 "birthdateIsNull",
                 false,
-                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"weight\":\"78.0\",\"height\":1.8}",
                 status().isBadRequest(),
                 ErrorMessages.PARAMETER_IS_MISSING),
             Arguments.of(
                 "weightIsNull",
                 false,
-                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"height\":1.8}",
                 status().isBadRequest(),
                 ErrorMessages.PARAMETER_IS_MISSING),
             Arguments.of(
                 "heightIsNull",
                 false,
-                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"favouriteColor\":\"blue\"}",
-                status().isBadRequest(),
-                ErrorMessages.PARAMETER_IS_MISSING),
-            Arguments.of(
-                "favouriteColorIsNull",
-                false,
-                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":\"1.8\"}",
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\"}",
                 status().isBadRequest(),
                 ErrorMessages.PARAMETER_IS_MISSING)));
   }
@@ -352,7 +340,6 @@ class UserControllerIT {
             .bmi(25.39)
             .weight(65)
             .height(1.60)
-            .favouriteColor("Red")
             .build();
     userRepository.saveAndFlush(petra);
     User torsten =
@@ -363,7 +350,6 @@ class UserControllerIT {
             .weight(61.3)
             .height(1.83)
             .id(2)
-            .favouriteColor("Blue")
             .build();
     userRepository.saveAndFlush(torsten);
     User hans =
@@ -374,7 +360,6 @@ class UserControllerIT {
             .weight(75.7)
             .height(1.85)
             .id(3)
-            .favouriteColor("Red")
             .build();
     userList.add(petra);
     userList.add(torsten);
