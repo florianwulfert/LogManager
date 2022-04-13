@@ -2,6 +2,40 @@
   <h1>List of logs</h1>
 
   <div class="col-12 col-lg-8">
+    <div>
+      <form [formGroup]="formFilter">
+
+
+          <mat-form-field appearance="fill" class="filter-button">
+            <mat-label>Severity</mat-label>
+            <mat-select formControlName="severity">
+              <mat-option *ngFor="let severity of severities" [value]="severity">
+                {{severity}}
+              </mat-option>
+            </mat-select>
+            <button *ngIf="formFilter.controls['severity'].value" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="formFilter.controls['severity'].reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+
+
+          <mat-form-field appearance="fill" class="filter-button">
+            <mat-label>User</mat-label>
+            <mat-select formControlName="user">
+              <mat-option *ngFor="let user of users" [value]="user">
+                {{user}}
+              </mat-option>
+            </mat-select>
+            <button *ngIf="formFilter.controls['user'].value" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="formFilter.controls['user'].reset()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+
+
+      </form>
+    </div>
     <mat-form-field appearance="standard" class="filter">
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter" #input>
@@ -95,7 +129,9 @@
                         (click)="form.controls['message'].reset()">
                   <mat-icon>close</mat-icon>
                 </button>
-                <mat-hint *ngIf="form.controls['message'].value !== null" align="end">{{form.controls['message'].value.length}} / 250</mat-hint>
+                <mat-hint *ngIf="form.controls['message'].value !== null"
+                          align="end">{{form.controls['message'].value.length}} / 250
+                </mat-hint>
                 <mat-error *ngIf="form.controls['message'].hasError('required')">
                   Message is <strong>required</strong>
                 </mat-error>
@@ -118,7 +154,8 @@
 
           </div>
         </form>
-        <button mat-raised-button class="create button-format" (click)="createLog()" [disabled]="!form.valid">Create</button>
+        <button mat-raised-button class="create button-format" (click)="createLog()" [disabled]="!form.valid">Create
+        </button>
         <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
       </mat-expansion-panel>
     </mat-accordion>
