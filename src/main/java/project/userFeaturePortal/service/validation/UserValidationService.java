@@ -9,7 +9,9 @@ import project.userFeaturePortal.common.enums.UserColorEnum;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.exception.*;
+import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
+import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.LogRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.model.LogService;
@@ -26,6 +28,7 @@ public class UserValidationService {
   private final UserRepository userRepository;
   private final LogService logService;
   private final LogRepository logRepository;
+  private final BookRepository bookRepository;
 
   public void checkIfAnyEntriesAreNull(UserRequestDto allParameters) {
     if (allParameters.actor == null
@@ -82,6 +85,15 @@ public class UserValidationService {
       handleNameNotExist(isActor, action, name);
     }
     return user;
+  }
+
+  public Book checkIfBookExists(Integer bookId) {
+    Optional<Book> book = bookRepository.findById(bookId);
+    if (!book.isPresent()) {
+      LOGGER.warn(String.format(ErrorMessages.BOOK_NOT_FOUND_ID, bookId));
+      throw new RuntimeException(String.format(ErrorMessages.BOOK_NOT_FOUND_ID, bookId));
+    }
+    return book.get();
   }
 
   private void handleNameNotExist(boolean isActor, String action, String name) {
