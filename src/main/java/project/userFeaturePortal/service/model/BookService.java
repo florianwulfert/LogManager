@@ -21,8 +21,8 @@ public class BookService {
   private final BookRepository bookRepository;
   private final LogService logService;
 
-  public Book saveBook(Book book) {
-    return bookRepository.save(book);
+  public void saveBook(Book book) {
+    bookRepository.save(book);
   }
 
   public Book addBook(Integer erscheinungsjahr, String titel, String actor) {
@@ -66,7 +66,7 @@ public class BookService {
   public String deleteByTitel(String titel, String actor) {
     List<Book> deleteBooks = bookRepository.findByTitel(titel);
     if (deleteBooks.isEmpty()) {
-      LOGGER.info(InfoMessages.NO_BOOKS_FOUNDS, titel);
+      LOGGER.info(String.format(InfoMessages.NO_BOOKS_FOUNDS, titel));
       return String.format(InfoMessages.NO_BOOKS_FOUNDS, titel);
     } else if (deleteBooks.size() == 1) {
       bookRepository.deleteById(deleteBooks.get(0).getId());
@@ -76,13 +76,14 @@ public class BookService {
       String listString = "";
       for (Book b : deleteBooks) {
         if (!listString.equals("")) {
-          listString = listString + ", ";
+          listString = listString.concat(", ");
         }
-        listString = listString + "{Titel:" + b.getTitel() + ", Erscheinungsjahr:" + b.getErscheinungsjahr()
-            + ",ID:" + b.getId() + "}";
+        listString = listString.concat("{Titel:").concat(b.getTitel()).concat(", Erscheinungsjahr:")
+            .concat(b.getErscheinungsjahr().toString())
+            .concat(", Id:").concat(b.getId().toString());
       }
-      LOGGER.info(String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel, listString));
-      return String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel, listString);
+      LOGGER.info(String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel));
+      return String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel);
     }
 
   }
