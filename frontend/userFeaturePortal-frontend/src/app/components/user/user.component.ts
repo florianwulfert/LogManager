@@ -42,7 +42,7 @@ export class UserComponent implements OnInit, OnDestroy {
     birthdate: new FormControl('', [Validators.required]),
     height: new FormControl('', [Validators.required]),
     weight: new FormControl('', [Validators.required]),
-    favouriteColor: new FormControl('', [Validators.required])
+    favouriteColor: new FormControl('')
   })
 
   applyFilter(event: Event) {

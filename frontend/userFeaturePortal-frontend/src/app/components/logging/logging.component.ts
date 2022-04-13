@@ -7,6 +7,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
 import {DeleteLogRequest} from "../../modules/logging/deleteLog/dto/delete-log-request";
 import {MatPaginator} from "@angular/material/paginator";
+import {UserFacade} from "../../modules/user/user.facade";
 
 
 @Component({
@@ -16,7 +17,7 @@ import {MatPaginator} from "@angular/material/paginator";
 })
 export class LoggingComponent implements OnInit, OnDestroy {
 
-  constructor(private logsFacade: LogFacade, private _snackBar: MatSnackBar) {
+  constructor(private logsFacade: LogFacade, private _snackBar: MatSnackBar, private userFacade: UserFacade) {
   }
 
   subscriptionManager = new SubscriptionManager();
@@ -30,6 +31,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getLogs()
+    this.getUserList()
   }
 
   ngOnDestroy() {
@@ -83,4 +85,12 @@ export class LoggingComponent implements OnInit, OnDestroy {
     request.id = elementValues[0]
     this.logsFacade.deleteLog(request)
   }
+
+  getUserList(): void {
+    this.userFacade.getUser();
+    this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
+      this.users = result
+    });
+  }
+
 }
