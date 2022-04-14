@@ -361,6 +361,14 @@ class UserControllerIT {
                 assertEquals(message, result.getResponse().getContentAsString());
         }
 
+    private void createBook() {
+        Book haya = Book.builder()
+                .id(1)
+                .erscheinungsjahr(1998)
+                .titel("haya")
+                .build();
+        bookRepository.save(haya);
+    }
   private List<User> createUser() {
     List<User> userList = new ArrayList<>();
     User petra =
