@@ -36,6 +36,10 @@ public class User {
   @Column(name = "height", nullable = false)
   double height;
 
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "book")
+  Book favouriteBook;
+
   @Column(name = "bmi")
   double bmi;
 }
