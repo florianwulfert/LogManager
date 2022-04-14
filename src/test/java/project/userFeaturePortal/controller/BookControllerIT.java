@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BookController.class)
 @AutoConfigureDataJpa
-@ComponentScan(basePackages = {"project.userFeaturePortal"})
+@ComponentScan(basePackages = { "project.userFeaturePortal" })
 @Transactional
 @TestPropertySource("/application-test.properties")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -171,8 +171,8 @@ class BookControllerIT {
             .andExpect(status)
             .andReturn();
 
-    assertEquals(message, result.getResponse().getContentAsString());
-  }
+        assertEquals(message, result.getResponse().getContentAsString());
+    }
 
   @ParameterizedTest(name = "{0}")
   @MethodSource("getDeleteBookById")
@@ -200,11 +200,11 @@ class BookControllerIT {
             .andExpect(status)
             .andReturn();
 
-    assertEquals(message, result.getResponse().getContentAsString());
-  }
+        assertEquals(message, result.getResponse().getContentAsString());
+    }
 
-  @Test
-  void testDeleteAll() throws Exception {
+    @Test
+    void testDeleteAll() throws Exception {
 
     MvcResult result =
         mockMvc
@@ -216,7 +216,7 @@ class BookControllerIT {
     assertEquals(InfoMessages.ALL_BOOKS_DELETED, result.getResponse().getContentAsString());
   }
 
-  private List<Book> creatBook() {
+    private List<Book> creatBook() {
 
     List<Book> books = new ArrayList<>();
     Book haya = Book.builder().id(9).erscheinungsjahr(1998).titel("haya").build();
@@ -251,9 +251,61 @@ class BookControllerIT {
     bookRepository.save(haya);
     return books;
   }
+        List<Book> books = new ArrayList<>();
+        Book haya = Book.builder()
+                .id(1)
+                .erscheinungsjahr(1998)
+                .titel("haya")
+                .build();
+        books.add(haya);
+        bookRepository.save(haya);
+        Book petra = Book.builder()
+                .id(2)
+                .erscheinungsjahr(1989)
+                .titel("petra")
+                .build();
+        books.add(petra);
+        bookRepository.save(petra);
+        Book peter = Book.builder()
+                .id(3)
+                .erscheinungsjahr(2010)
+                .titel("peter")
+                .build();
+        books.add(peter);
+        bookRepository.save(peter);
+        Book lina = Book.builder()
+                .id(4)
+                .erscheinungsjahr(2009)
+                .titel("lina")
+                .build();
+        books.add(lina);
+        bookRepository.save(lina);
+        Book omar = Book.builder()
+                .id(5)
+                .erscheinungsjahr(2002)
+                .titel("omar")
+                .build();
+        books.add(omar);
+        bookRepository.save(omar);
+        Book paul = Book.builder()
+                .id(6)
+                .erscheinungsjahr(2002)
+                .titel("paul")
+                .build();
+        books.add(paul);
+        bookRepository.save(paul);
+        Book paul1 = Book.builder()
+                .id(7)
+                .erscheinungsjahr(2008)
+                .titel("paul")
+                .build();
+        books.add(paul1);
+        bookRepository.save(paul1);
+        return books;
+    }
 
-  @Nested
-  class FindBookBytitelTests {
+    @Nested
+    class FindBookBytitelTests {
 
     @Test
     void testFindBookBytitel() throws Exception {
