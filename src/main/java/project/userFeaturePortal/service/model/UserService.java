@@ -55,9 +55,9 @@ public class UserService {
         userRequestDto.getBirthdateAsLocalDate(), userRequestDto.weight, userRequestDto.height);
   }
 
-  public String addFavouriteBookToUser(Integer bookId, int userId) {
+  public String addFavouriteBookToUser(Integer bookId, int actorId) {
     Book book = userValidationService.checkIfBookExists(bookId);
-    User actor = userValidationService.checkIfIdExists(userId);
+    User actor = userValidationService.checkIfIdExists(actorId);
     actor.setFavouriteBook(book);
     userRepository.save(actor);
     LOGGER.info(InfoMessages.BOOK_BY_USER);
