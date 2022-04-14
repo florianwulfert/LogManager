@@ -105,7 +105,7 @@ class BookControllerIT {
             "peter",
             "Torsten",
             status().isOk(),
-            String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, "peter")),
+            String.format(InfoMessages.BOOK_DELETED_TITLE, "peter")),
         Arguments.of(
             "BookComponent was succussfuly deleted",
             "omar",
@@ -216,92 +216,59 @@ class BookControllerIT {
     assertEquals(InfoMessages.ALL_BOOKS_DELETED, result.getResponse().getContentAsString());
   }
 
-    private List<Book> creatBook() {
 
+  private List<Book> creatBook() {
     List<Book> books = new ArrayList<>();
-    Book haya = Book.builder().id(9).erscheinungsjahr(1998).titel("haya").build();
-    bookRepository.saveAndFlush(haya);
-
-    Book petra = Book.builder().id(4).erscheinungsjahr(1989).titel("petra").build();
-    bookRepository.saveAndFlush(petra);
-
-    Book peter = Book.builder().id(10).erscheinungsjahr(2010).titel("peter").build();
-    bookRepository.saveAndFlush(peter);
-    Book lina = Book.builder().id(12).erscheinungsjahr(2009).titel("lina").build();
-    bookRepository.saveAndFlush(lina);
-    Book omar = Book.builder().id(13).erscheinungsjahr(2002).titel("omar").build();
-    bookRepository.saveAndFlush(omar);
-    Book paul = Book.builder().id(14).erscheinungsjahr(2002).titel("paul").build();
-    bookRepository.saveAndFlush(paul);
-    Book paul1 = Book.builder().id(15).erscheinungsjahr(2008).titel("paul").build();
-    bookRepository.saveAndFlush(paul1);
+    Book haya = Book.builder()
+            .id(1)
+            .erscheinungsjahr(1998)
+            .titel("haya")
+            .build();
     books.add(haya);
-    books.add(petra);
-    books.add(peter);
-    books.add(lina);
-    books.add(omar);
-    books.add(paul);
-    books.add(paul1);
-    bookRepository.save(paul);
-    bookRepository.save(paul1);
-    bookRepository.save(omar);
-    bookRepository.save(lina);
-    bookRepository.save(peter);
-    bookRepository.save(petra);
     bookRepository.save(haya);
+    Book petra = Book.builder()
+            .id(2)
+            .erscheinungsjahr(1989)
+            .titel("petra")
+            .build();
+    books.add(petra);
+    bookRepository.save(petra);
+    Book peter = Book.builder()
+            .id(3)
+            .erscheinungsjahr(2010)
+            .titel("peter")
+            .build();
+    books.add(peter);
+    bookRepository.save(peter);
+    Book lina = Book.builder()
+            .id(4)
+            .erscheinungsjahr(2009)
+            .titel("lina")
+            .build();
+    books.add(lina);
+    bookRepository.save(lina);
+    Book omar = Book.builder()
+            .id(5)
+            .erscheinungsjahr(2002)
+            .titel("omar")
+            .build();
+    books.add(omar);
+    bookRepository.save(omar);
+    Book paul = Book.builder()
+            .id(6)
+            .erscheinungsjahr(2002)
+            .titel("paul")
+            .build();
+    books.add(paul);
+    bookRepository.save(paul);
+    Book paul1 = Book.builder()
+            .id(7)
+            .erscheinungsjahr(2008)
+            .titel("paul")
+            .build();
+    books.add(paul1);
+    bookRepository.save(paul1);
     return books;
-  }
-        List<Book> books = new ArrayList<>();
-        Book haya = Book.builder()
-                .id(1)
-                .erscheinungsjahr(1998)
-                .titel("haya")
-                .build();
-        books.add(haya);
-        bookRepository.save(haya);
-        Book petra = Book.builder()
-                .id(2)
-                .erscheinungsjahr(1989)
-                .titel("petra")
-                .build();
-        books.add(petra);
-        bookRepository.save(petra);
-        Book peter = Book.builder()
-                .id(3)
-                .erscheinungsjahr(2010)
-                .titel("peter")
-                .build();
-        books.add(peter);
-        bookRepository.save(peter);
-        Book lina = Book.builder()
-                .id(4)
-                .erscheinungsjahr(2009)
-                .titel("lina")
-                .build();
-        books.add(lina);
-        bookRepository.save(lina);
-        Book omar = Book.builder()
-                .id(5)
-                .erscheinungsjahr(2002)
-                .titel("omar")
-                .build();
-        books.add(omar);
-        bookRepository.save(omar);
-        Book paul = Book.builder()
-                .id(6)
-                .erscheinungsjahr(2002)
-                .titel("paul")
-                .build();
-        books.add(paul);
-        bookRepository.save(paul);
-        Book paul1 = Book.builder()
-                .id(7)
-                .erscheinungsjahr(2008)
-                .titel("paul")
-                .build();
-        books.add(paul1);
-        bookRepository.save(paul1);
-        return books;
     }
 
     @Nested
