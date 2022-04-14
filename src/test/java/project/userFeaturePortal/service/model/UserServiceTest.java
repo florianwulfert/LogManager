@@ -70,6 +70,13 @@ class UserServiceTest {
   }
 
   @Test
+  void tsetAddFavouriteBookToUser() {
+    when(userValidationService.checkIfIdExists(anyInt())).thenReturn(users.get(1));
+    systemUnderTest.addFavouriteBookToUser(anyInt(), users.get(1).getId());
+    verify(userRepository).save(any());
+  }
+
+  @Test
   void testUsersListIsEmpty() {
     when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
         .thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
