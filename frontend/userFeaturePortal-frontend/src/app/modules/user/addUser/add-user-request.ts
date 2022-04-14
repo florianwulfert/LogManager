@@ -5,4 +5,5 @@ export class AddUserRequest {
   height: number | undefined
   weight: number | undefined
   favouriteColor: string | undefined
+  favouriteBook: any | undefined
 }

@@ -50,6 +50,12 @@
         <td mat-cell *matCellDef="let element"> {{element.bmi}} </td>
       </ng-container>
 
+      <!-- FavouriteBook Column -->
+      <ng-container matColumnDef="favouriteBook">
+        <th mat-header-cell *matHeaderCellDef> Favourite Book</th>
+        <td mat-cell *matCellDef="let element"> {{element.favouriteBook}} </td>
+      </ng-container>
+
       <!-- Delete -->
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef>
@@ -161,6 +167,16 @@
                 <mat-error *ngIf="form.controls['favouriteColor'].hasError('required')">
                   Favourite color is <strong>required</strong>
                 </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Favourite Book</mat-label>
+                <input matInput formControlName="favouriteBook">
+                <button *ngIf="form.controls['favouriteBook'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['favouriteBook'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
               </mat-form-field>
             </div>
 

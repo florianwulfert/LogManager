@@ -6,4 +6,5 @@ export interface UserDto {
   weight: number,
   favouriteColor: string,
   bmi: number
+  favouriteBook: any
 }
