@@ -72,7 +72,7 @@ public class BookServiceTest {
 
   @Test
   void testDeleteByTitel() {
-    ArrayList bookz = new ArrayList<Book>();
+    ArrayList<Book> bookz = new ArrayList<Book>();
     bookz.add(books.get(0));
     Mockito.when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(bookz);
     assertEquals(String.format(InfoMessages.BOOK_DELETED_TITLE, books.get(0).getTitel()),
