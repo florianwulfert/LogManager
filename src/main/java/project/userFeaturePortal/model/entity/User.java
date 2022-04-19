@@ -40,9 +40,6 @@ public class User {
   @JoinColumn(name = "book")
   Book favouriteBook;
 
-  @Column(name = "favouriteColor", nullable = false)
-  String favouriteColor;
-
   @Column(name = "bmi")
   double bmi;
 }

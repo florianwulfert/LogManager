@@ -228,18 +228,18 @@ class LogControllerIT {
                 Log.builder().id(id).severity(severity).message(message).timestamp(timestamp).build());
     }
 
-    private void createUser() {
-        User petra = User.builder()
-                .id(1)
-                .name("Petra")
-                .birthdate(LocalDate.of(1999, 12, 13))
-                .bmi(25.39)
-                .weight(65)
-                .height(1.60)
-                .favouriteColor("Red")
-                .build();
-        userRepository.save(petra);
-    }
+  private void createUser() {
+    User petra =
+        User.builder()
+            .id(1)
+            .name("Petra")
+            .birthdate(LocalDate.of(1999, 12, 13))
+            .bmi(25.39)
+            .weight(65)
+            .height(1.60)
+            .build();
+    userRepository.save(petra);
+  }
 
     private void createLogs() {
         createLog(1, "INFO", "Test", LocalDateTime.of(2000, 12, 12, 12, 12, 12));

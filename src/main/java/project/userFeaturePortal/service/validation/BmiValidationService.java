@@ -18,7 +18,7 @@ public class BmiValidationService {
   public void checkIfEntriesAreNull(Double weight, Double height) {
     if (weight == null || height == null) {
       LOGGER.warn(ErrorMessages.PARAMETER_IS_MISSING);
-      throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
+      throw new ParameterNotPresentException();
     }
     LOGGER.debug(InfoMessages.PARAMETERS_ARE_VALID);
   }

@@ -30,16 +30,15 @@ public class UserService {
 
   public String addUser(UserRequestDto userRequestDto) {
     userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
-    User user = User.builder()
-        .name(userRequestDto.name)
-        .birthdate(userRequestDto.getBirthdateAsLocalDate())
-        .weight(userRequestDto.weight)
-        .height(userRequestDto.height)
-        .favouriteColor(userRequestDto.favouriteColor.toLowerCase())
-        .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
-        .build();
+    User user =
+        User.builder()
+            .name(userRequestDto.name)
+            .birthdate(userRequestDto.getBirthdateAsLocalDate())
+            .weight(userRequestDto.weight)
+            .height(userRequestDto.height)
+            .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
+            .build();
 
-    userValidationService.validateFarbenEnum(user.getFavouriteColor().toLowerCase());
     userValidationService.checkIfUserToPostExists(user.getName());
     if (userValidationService.checkIfUsersListIsEmpty()) {
       userValidationService.checkIfActorEqualsUserToCreate(userRequestDto.actor, user, true);

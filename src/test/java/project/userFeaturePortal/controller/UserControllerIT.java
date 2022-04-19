@@ -65,103 +65,88 @@ class UserControllerIT {
                 userList = createUser();
         }
 
-        private static Stream<Arguments> getAddUserArguments() {
-                return Stream.of(
-                                Arguments.of(
-                                                "User created",
-                                                false,
-                                                "{\"actor\":\"Petra\",\"name\":\"Hugo\",\"birthdate\":\"1999-12-13\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
-                                                status().isOk(),
-                                                TestMessages.USER_CREATED_MESSAGE,
-                                                Arguments.of(
-                                                                "First user has to create himself",
-                                                                true,
-                                                                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
-                                                                status().isInternalServerError(),
-                                                                ErrorMessages.NO_USERS_YET + "Hugo unequal Torsten"),
-                                                Arguments.of(
-                                                                "First user created himself",
-                                                                true,
-                                                                "{\"actor\":\"Petra\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
-                                                                status().isOk(),
-                                                                String.format(InfoMessages.USER_CREATED
-                                                                                + InfoMessages.BMI_MESSAGE, "Petra",
-                                                                                24.07)
-                                                                                + InfoMessages.NORMAL_WEIGHT),
-                                                Arguments.of(
-                                                                "Actor not known",
-                                                                false,
-                                                                "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
-                                                                status().isForbidden(),
-                                                                String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER,
-                                                                                "UnknownActor")),
-                                                Arguments.of(
-                                                                "Actor not given",
-                                                                false,
-                                                                "{\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"Red\"}",
-                                                                status().isBadRequest(),
-                                                                ErrorMessages.PARAMETER_IS_MISSING),
-                                                Arguments.of(
-                                                                "Color illegal",
-                                                                false,
-                                                                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"purple\"}",
-                                                                status().isBadRequest(),
-                                                                ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE),
-                                                Arguments.of(
-                                                                "Date has wrong format",
-                                                                false,
-                                                                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"hallo\",\"weight\":78.0,\"height\":1.8,\"favouriteColor\":\"blue\"}",
-                                                                status().isBadRequest(),
-                                                                ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT),
-                                                Arguments.of(
-                                                                "weight has wrong format",
-                                                                false,
-                                                                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"hi\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
-                                                                status().isBadRequest(),
-                                                                ErrorMessages.PARAMETER_WRONG_FORMAT),
-                                                Arguments.of(
-                                                                "height has wrong format",
-                                                                false,
-                                                                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":\"hi\",\"favouriteColor\":\"blue\"}",
-                                                                status().isBadRequest(),
-                                                                ErrorMessages.PARAMETER_WRONG_FORMAT),
-                                                Arguments.of(
-                                                                "User to create already exists",
-                                                                false,
-                                                                "{\"actor\":\"Torsten\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
-                                                                status().isInternalServerError(),
-                                                                String.format(ErrorMessages.USER_EXISTS, "Petra")),
-                                                Arguments.of(
-                                                                "UserNameNull",
-                                                                false,
-                                                                "{\"actor\":\"Torsten\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
-                                                                status().isBadRequest(),
-                                                                ErrorMessages.PARAMETER_IS_MISSING),
-                                                Arguments.of(
-                                                                "birthdateIsNull",
-                                                                false,
-                                                                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"weight\":\"78.0\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
-                                                                status().isBadRequest(),
-                                                                ErrorMessages.PARAMETER_IS_MISSING),
-                                                Arguments.of(
-                                                                "weightIsNull",
-                                                                false,
-                                                                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"height\":1.8,\"favouriteColor\":\"blue\"}",
-                                                                status().isBadRequest(),
-                                                                ErrorMessages.PARAMETER_IS_MISSING),
-                                                Arguments.of(
-                                                                "heightIsNull",
-                                                                false,
-                                                                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"favouriteColor\":\"blue\"}",
-                                                                status().isBadRequest(),
-                                                                ErrorMessages.PARAMETER_IS_MISSING),
-                                                Arguments.of(
-                                                                "favouriteColorIsNull",
-                                                                false,
-                                                                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":\"1.8\"}",
-                                                                status().isBadRequest(),
-                                                                ErrorMessages.PARAMETER_IS_MISSING)));
-        }
+  private static Stream<Arguments> getAddUserArguments() {
+    return Stream.of(
+        Arguments.of(
+            "User created",
+            false,
+            "{\"actor\":\"Petra\",\"name\":\"Hugo\",\"birthdate\":\"1999-12-13\",\"weight\":78.0,\"height\":1.8}",
+            status().isOk(),
+            TestMessages.USER_CREATED_MESSAGE,
+            Arguments.of(
+                "First user has to create himself",
+                true,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
+                status().isInternalServerError(),
+                ErrorMessages.NO_USERS_YET + "Hugo unequal Torsten"),
+            Arguments.of(
+                "First user created himself",
+                true,
+                "{\"actor\":\"Petra\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
+                status().isOk(),
+                String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Petra", 24.07)
+                    + InfoMessages.NORMAL_WEIGHT),
+            Arguments.of(
+                "Actor not known",
+                false,
+                "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
+                status().isForbidden(),
+                String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "UnknownActor")),
+            Arguments.of(
+                "Actor not given",
+                false,
+                "{\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_IS_MISSING),
+            Arguments.of(
+                "Date has wrong format",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"hallo\",\"weight\":78.0,\"height\":1.8}",
+                status().isBadRequest(),
+                ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT),
+            Arguments.of(
+                "weight has wrong format",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"hi\",\"height\":1.8}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_WRONG_FORMAT),
+            Arguments.of(
+                "height has wrong format",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":\"hi\"}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_WRONG_FORMAT),
+            Arguments.of(
+                "User to create already exists",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8}",
+                status().isInternalServerError(),
+                String.format(ErrorMessages.USER_EXISTS, "Petra")),
+            Arguments.of(
+                "UserNameNull",
+                false,
+                "{\"actor\":\"Torsten\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\",\"height\":1.8}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_IS_MISSING),
+            Arguments.of(
+                "birthdateIsNull",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"weight\":\"78.0\",\"height\":1.8}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_IS_MISSING),
+            Arguments.of(
+                "weightIsNull",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"height\":1.8}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_IS_MISSING),
+            Arguments.of(
+                "heightIsNull",
+                false,
+                "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"78.0\"}",
+                status().isBadRequest(),
+                ErrorMessages.PARAMETER_IS_MISSING)));
+  }
 
         @ParameterizedTest(name = "{0}")
         @MethodSource("getAddUserArguments")
@@ -376,54 +361,53 @@ class UserControllerIT {
                 assertEquals(message, result.getResponse().getContentAsString());
         }
 
-        private void createBook() {
-                Book haya = Book.builder()
-                                .id(1)
-                                .erscheinungsjahr(1998)
-                                .titel("haya")
-                                .build();
-                bookRepository.save(haya);
-        }
-
-        private List<User> createUser() {
-                List<User> userList = new ArrayList<>();
-                User petra = User.builder()
-                                .id(1)
-                                .name("Petra")
-                                .birthdate(LocalDate.of(1999, 12, 13))
-                                .bmi(25.39)
-                                .weight(65)
-                                .height(1.60)
-                                .favouriteColor("Red")
-                                .build();
-                userRepository.saveAndFlush(petra);
-                User torsten = User.builder()
-                                .name("Torsten")
-                                .birthdate(LocalDate.of(1985, 12, 5))
-                                .bmi(18.3)
-                                .weight(61.3)
-                                .height(1.83)
-                                .id(2)
-                                .favouriteColor("Blue")
-                                .build();
-                userRepository.saveAndFlush(torsten);
-                User hans = User.builder()
-                                .name("Hans")
-                                .birthdate(LocalDate.of(1993, 2, 3))
-                                .bmi(22.11)
-                                .weight(75.7)
-                                .height(1.85)
-                                .id(3)
-                                .favouriteColor("Red")
-                                .build();
-                userList.add(petra);
-                userList.add(torsten);
-                userList.add(hans);
-                userRepository.save(petra);
-                userRepository.save(torsten);
-                userRepository.save(hans);
-                return userList;
-        }
+    private void createBook() {
+        Book haya = Book.builder()
+                .id(1)
+                .erscheinungsjahr(1998)
+                .titel("haya")
+                .build();
+        bookRepository.save(haya);
+    }
+  private List<User> createUser() {
+    List<User> userList = new ArrayList<>();
+    User petra =
+        User.builder()
+            .id(1)
+            .name("Petra")
+            .birthdate(LocalDate.of(1999, 12, 13))
+            .bmi(25.39)
+            .weight(65)
+            .height(1.60)
+            .build();
+    userRepository.saveAndFlush(petra);
+    User torsten =
+        User.builder()
+            .name("Torsten")
+            .birthdate(LocalDate.of(1985, 12, 5))
+            .bmi(18.3)
+            .weight(61.3)
+            .height(1.83)
+            .id(2)
+            .build();
+    userRepository.saveAndFlush(torsten);
+    User hans =
+        User.builder()
+            .name("Hans")
+            .birthdate(LocalDate.of(1993, 2, 3))
+            .bmi(22.11)
+            .weight(75.7)
+            .height(1.85)
+            .id(3)
+            .build();
+    userList.add(petra);
+    userList.add(torsten);
+    userList.add(hans);
+    userRepository.save(petra);
+    userRepository.save(torsten);
+    userRepository.save(hans);
+    return userList;
+  }
 
         @Nested
         class FindUserByIdTests {

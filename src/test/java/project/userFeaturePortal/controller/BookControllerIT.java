@@ -154,13 +154,12 @@ class BookControllerIT {
                         String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, "paul")));
     }
 
-    @BeforeAll
-    public void setup() {
-        books = creatBook();
-        User user = User.builder().name("Torsten").birthdate(LocalDate.now()).height(1.8).weight(90)
-                .favouriteColor("green").build();
-        userRepository.save(user);
-    }
+  @BeforeAll
+  public void setup() {
+    books = creatBook();
+    User user = User.builder().name("Torsten").birthdate(LocalDate.now()).height(1.8).weight(90).build();
+    userRepository.save(user);
+  }
 
     @Test
     void testGetBooks() throws Exception {

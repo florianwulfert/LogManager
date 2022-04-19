@@ -42,7 +42,6 @@ class UserControllerTest {
         .birthdate("05.10.1994")
         .weight(75.0)
         .height(1.65)
-        .favouriteColor("red")
         .build();
 
     systemUnderTest.addUser(request);
@@ -100,7 +99,6 @@ class UserControllerTest {
             .birthdate(LocalDate.of(1988, 12, 12))
             .weight(90.0)
             .height(1.85)
-            .favouriteColor("yellow")
             .bmi(26.29)
             .build());
 
@@ -111,7 +109,6 @@ class UserControllerTest {
             .birthdate(LocalDate.of(1988, 12, 12))
             .weight(70.0)
             .height(1.85)
-            .favouriteColor("yellow")
             .bmi(20.45)
             .build());
     return users;
