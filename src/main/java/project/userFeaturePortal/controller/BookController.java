@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import project.userFeaturePortal.common.dto.books.AddBookResponseDto;
 import project.userFeaturePortal.common.dto.books.BookRequestDto;
 import project.userFeaturePortal.common.dto.books.BooksResponseDto;
+import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.service.model.BookService;
+
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -29,7 +32,7 @@ public class BookController {
   }
 
   @GetMapping("/searchbook")
-  public String findBooksByTitel(@RequestParam String titel) {
+  public List<Book> findBooksByTitel(@RequestParam String titel) {
     return bookService.searchBooksByTitel(titel);
   }
 

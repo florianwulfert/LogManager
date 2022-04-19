@@ -5,7 +5,6 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AddUserRequest} from "../../modules/user/addUser/add-user-request";
-import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {DeleteUserRequest} from "../../modules/user/deleteUser/delete-user-request";
 import {MatPaginator} from "@angular/material/paginator";
 
@@ -20,7 +19,6 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   subscriptionManager = new SubscriptionManager();
-  featureManager = new FeatureManager(this._snackBar);
 
   displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'bmi', 'favouriteBook', 'delete']
   dataSource: any

@@ -4,5 +4,5 @@ export class AddUserRequest {
   birthdate: string | undefined
   height: number | undefined
   weight: number | undefined
-  favouriteBook: any | undefined
+  favouriteBook: string | undefined
 }

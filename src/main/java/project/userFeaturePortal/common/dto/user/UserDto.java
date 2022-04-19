@@ -5,14 +5,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponseDto {
+public class UserDto {
 
-  List<UserDto> result;
-  String returnMessage;
+  Integer id;
+  String name;
+  LocalDate birthdate;
+  double weight;
+  double height;
+  String favouriteBookTitel;
+  double bmi;
 }

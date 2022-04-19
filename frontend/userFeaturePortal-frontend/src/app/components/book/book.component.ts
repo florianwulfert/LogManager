@@ -6,8 +6,8 @@ import {BooksFacade} from "../../modules/books/books.facade";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AddBookRequest} from "../../modules/books/addBooks/add-book-request";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {DeleteBookRequest} from "../../modules/books/deleteBook/delete-book-request";
+import {UserFacade} from "../../modules/user/user.facade";
 
 @Component({
   selector: 'app-book',
@@ -17,12 +17,13 @@ import {DeleteBookRequest} from "../../modules/books/deleteBook/delete-book-requ
 
 export class BookComponent implements OnInit, OnDestroy {
 
-  constructor(private booksFacade: BooksFacade, private _snackBar: MatSnackBar) {
+  constructor(private booksFacade: BooksFacade, private _snackBar: MatSnackBar, private usersFacade: UserFacade) {
   }
 
   subscriptionManager = new SubscriptionManager();
-  featureManager = new FeatureManager(this._snackBar);
   displayedColumns: string[] = ['id', 'titel', 'erscheinungsjahr', 'delete'];
+  books: any
+  users: any
 
   dataSource: any;
   position = new FormControl('above');
@@ -42,12 +43,26 @@ export class BookComponent implements OnInit, OnDestroy {
     this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
+      this.books = result
     })
+  }
+
+  getUsers(): void {
+    this.usersFacade.getUser()
+    this.subscriptionManager.add(this.usersFacade.stateGetUserResponse$).subscribe(result => {
+      this.users = result
+      console.log(this.users)
+    });
   }
 
   public form: FormGroup = new FormGroup({
     titel: new FormControl('', [Validators.required]),
     erscheinungsjahr: new FormControl('', [Validators.required]),
+  })
+
+  public formBookToUser: FormGroup = new FormGroup({
+    book: new FormControl('', [Validators.required]),
+    user: new FormControl('', [Validators.required])
   })
 
   prepareAddBookRequest(request: AddBookRequest) {

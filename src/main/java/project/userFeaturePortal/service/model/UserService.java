@@ -5,11 +5,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
+import project.userFeaturePortal.common.dto.user.UserDto;
 import project.userFeaturePortal.common.dto.user.UserRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
+import project.userFeaturePortal.model.mapper.UserDtoMapper;
 import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.validation.UserValidationService;
 
@@ -27,9 +29,16 @@ public class UserService {
   private final UserRepository userRepository;
   private final BmiService bmiService;
   private final UserValidationService userValidationService;
+  private final BookService bookService;
+  private final UserDtoMapper userDtoMapper;
 
   public String addUser(UserRequestDto userRequestDto) {
     userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
+    List<Book> books = bookService.searchBooksByTitel(userRequestDto.favouriteBook);
+    Book book = null;
+    if (!books.isEmpty()) {
+      book = books.get(0);
+    }
     User user =
         User.builder()
             .name(userRequestDto.name)
@@ -37,6 +46,7 @@ public class UserService {
             .weight(userRequestDto.weight)
             .height(userRequestDto.height)
             .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
+            .favouriteBook(book)
             .build();
 
     userValidationService.checkIfUserToPostExists(user.getName());
@@ -50,23 +60,22 @@ public class UserService {
           String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, userRequestDto.actor));
       saveUser(user, activeUser.getName());
     }
-    return bmiService.calculateBmiAndGetBmiMessage(
-        userRequestDto.getBirthdateAsLocalDate(), userRequestDto.weight, userRequestDto.height);
+    return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
   }
 
-  public String addFavouriteBookToUser(Integer bookId, int actorId) {
-    Book book = userValidationService.checkIfBookExists(bookId);
+  public String addFavouriteBookToUser(String titel, int actorId) {
+    List<Book> book = userValidationService.checkIfBookExists(titel);
     User actor = userValidationService.checkIfIdExists(actorId);
-    actor.setFavouriteBook(book);
+    actor.setFavouriteBook(book.get(0));
     userRepository.save(actor);
     LOGGER.info(InfoMessages.BOOK_BY_USER);
     return InfoMessages.BOOK_BY_USER;
   }
 
-  public List<User> findUserList() {
+  public List<UserDto> findUserList() {
     List<User> users = userRepository.findAll();
     LOGGER.info(users);
-    return users;
+    return userDtoMapper.usersToUserDtos(users);
   }
 
   public Optional<User> findUserById(Integer id) {
@@ -78,8 +87,10 @@ public class UserService {
   public boolean findUserByName(String name) {
     User user = userRepository.findUserByName(name);
     if (user == null) {
-      List<User> users = findUserList();
-      return users.isEmpty();
+      List<UserDto> users = findUserList();
+      if (users.isEmpty()) {
+        throw new RuntimeException("UsersList is empty");
+      }
     }
     LOGGER.debug(String.format(InfoMessages.USER_FOUND, name));
     return true;
