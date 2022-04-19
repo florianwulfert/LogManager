@@ -55,42 +55,27 @@ class BookControllerIT {
     private MockMvc mockMvc;
 
     private static Stream<Arguments> getAddBookArguments() {
-        return Stream.of(
-                Arguments.of(
-                        "16",
-                        "haya",
-                        "1998",
-                        "Torsten",
-                        status().isOk(),
-                        TestMessages.HAYA),
-                Arguments.of(
-                        "25",
-                        "petra",
-                        "1999",
-                        "Torsten",
-                        status().isOk(),
-                        TestMessages.PETRA_BOOK),
-                Arguments.of(
-                        "3",
-                        "peter",
-                        "1988",
-                        null,
-                        status().isBadRequest(),
-                        ErrorMessages.ACTOR_NOT_PRESENT),
-                Arguments.of(
-                        "4",
-                        null,
-                        "1977",
-                        "Torsten",
-                        status().isBadRequest(),
-                        ErrorMessages.TITLE_IS_NOT_PRESENT),
-                Arguments.of(
-                        "5",
-                        "omar",
-                        null,
-                        "Torsten",
-                        status().isBadRequest(),
-                        ErrorMessages.RELEASE_YEAR_IS_NOT_PRESENT));
+    return Stream.of(
+        Arguments.of(
+            "{\"titel\":\"haya\",\"erscheinungsjahr\":\"1998\",\"actor\":\"Torsten\"}",
+            status().isOk(),
+            TestMessages.HAYA),
+        Arguments.of(
+            "{\"titel\":\"petra\",\"erscheinungsjahr\":\"1999\",\"actor\":\"Torsten\"}",
+            status().isOk(),
+            TestMessages.PETRA_BOOK),
+        Arguments.of(
+            "{\"titel\":\"peter\",\"erscheinungsjahr\":\"1988\"}",
+            status().isNotFound(),
+            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "null"),
+        Arguments.of(
+            "{\"erscheinungsjahr\":\"1977\",\"actor\":\"Torsten\"}",
+            status().isBadRequest(),
+            ErrorMessages.PARAMETER_IS_MISSING),
+        Arguments.of(
+            "{\"titel\":\"omar\",\"actor\":\"Torsten\"}",
+            status().isBadRequest(),
+            ErrorMessages.PARAMETER_IS_MISSING)));
     }
 
     private static Stream<Arguments> getDeleteBookById() {
@@ -100,13 +85,13 @@ class BookControllerIT {
                         "/deletebookById/1",
                         "Torsten",
                         status().isOk(),
-                        String.format(InfoMessages.BOOK_DELETED_ID, 1)),
+                        TestMessages.BOOK_PETRA_DELETED_BY_ID),
                 Arguments.of(
                         "peter",
-                        "/deletebookById/4",
+                        "/deletebookById/3",
                         "Torsten",
                         status().isOk(),
-                        String.format(InfoMessages.BOOK_DELETED_ID, 4)),
+                        TestMessages.BOOK_PETER_DELETED_BY_ID),
                 Arguments.of(
                         "haya",
                         "/deletebookById/kevin",
@@ -170,24 +155,23 @@ class BookControllerIT {
                 .andExpect(status().isOk())
                 .andReturn();
         String booksString = books.toString().replace(" ", "");
-        assertEquals(booksString, result.getResponse().getContentAsString());
+    assertEquals(
+        "{\"result\":" + booksString + ",\"returnMessage\":null}",
+        result.getResponse().getContentAsString());
     }
 
-    @ParameterizedTest(name = "{1}")
+    @ParameterizedTest(name = "{2}")
     @MethodSource("getAddBookArguments")
     void testAddBook(
-            String id,
-            String titel,
-            String erscheinungsjahr,
-            String actor,
+            String testData,
             ResultMatcher status,
             String message)
             throws Exception {
         MvcResult result = mockMvc
                 .perform(post("/book")
-                        .param("titel", titel)
-                        .param("erscheinungsjahr", erscheinungsjahr)
-                        .param("actor", actor))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(testData)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status)
                 .andReturn();

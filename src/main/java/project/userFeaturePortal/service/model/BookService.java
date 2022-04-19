@@ -9,9 +9,12 @@ import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.exception.ParameterNotPresentException;
+import project.userFeaturePortal.exception.UserNotAllowedException;
 import project.userFeaturePortal.exception.UserNotFoundException;
 import project.userFeaturePortal.model.entity.Book;
+import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.BookRepository;
+import project.userFeaturePortal.model.repository.UserRepository;
 
 import java.util.List;
 
@@ -22,6 +25,7 @@ public class BookService {
   private static final Logger LOGGER = LogManager.getLogger(BookService.class);
   @Autowired private final BookRepository bookRepository;
   private final LogService logService;
+  private final UserRepository userRepository;
 
   public void saveBook(Book book) {
     bookRepository.save(book);
@@ -46,20 +50,22 @@ public class BookService {
 
   private void validateActor(String actor) {
     if (actor == null) {
-      throw new UserNotFoundException("notFoundUser");
+      throw new UserNotFoundException("null");
+    }
+    User user = userRepository.findUserByName(actor);
+    if (user == null) {
+      throw new UserNotAllowedException(ErrorMessages.USER_NOT_ALLOWED);
     }
   }
 
   private void validateErscheinungsjahrAndTitel(Integer erscheinungsjahr, String titel) {
     if (erscheinungsjahr == null || titel == null) {
-      throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
+      throw new ParameterNotPresentException();
     }
   }
 
-  public List<Book> getAllBooks(String actor) {
-    logService.addLog(
-        LogRequestDto.builder().message("All books founds.").severity("INFO").user(actor).build());
-    LOGGER.info("All books founds");
+  public List<Book> getAllBooks() {
+    LOGGER.debug("All books founds");
     return bookRepository.findAll();
   }
 
@@ -70,6 +76,7 @@ public class BookService {
   }
 
   public String deleteById(Integer id, String actor) {
+    validateActor(actor);
     Book book = bookRepository.getOne(id);
     bookRepository.delete(book);
     saveLog(String.format(InfoMessages.BOOK_DELETED_ID, id), "WARNING", actor);

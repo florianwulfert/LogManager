@@ -10,7 +10,7 @@ import {AddBookRequest} from "./addBooks/add-book-request";
 import {AddBookResponse} from "./addBooks/add-book-response";
 import {DeleteBookResponse} from "./deleteBook/delete-book-response";
 
-const API_GET_BOOKS = 'http://localhost:8081/books?actor='
+const API_GET_BOOKS = 'http://localhost:8081/books'
 const API_ADD_BOOK = 'http://localhost:8081/book'
 const API_DELETE_BOOK = 'http://localhost:8081/deletebookById/'
 
@@ -25,10 +25,7 @@ export class BooksService {
   subscriptionManager = new SubscriptionManager();
 
   getBooks(): Observable<GetBooksResponse> {
-    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
-      this.name = r
-    })
-    return this.http.get<GetBooksResponse>(API_GET_BOOKS + this.name, {
+    return this.http.get<GetBooksResponse>(API_GET_BOOKS, {
       observe: 'response'
     }).pipe(
       map((r) => {
@@ -82,7 +79,6 @@ export class BooksService {
     }).pipe(
       map((r) => {
         this.featureManager.openSnackbar("Book with the ID " + i + " was deleted.");
-        console.log(r.body)
         return r.body || {
           result: [],
           returnMessage: ""

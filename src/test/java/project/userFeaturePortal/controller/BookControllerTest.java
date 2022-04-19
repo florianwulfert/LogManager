@@ -68,8 +68,8 @@ public class BookControllerTest {
 
   @Test
   void testGetAllBooks() {
-    bookController.getAllBooks("Torsten");
-    verify(bookService).getAllBooks("Torsten");
+    bookController.getAllBooks();
+    verify(bookService).getAllBooks();
   }
 
   private List<Book> addTestBook() {

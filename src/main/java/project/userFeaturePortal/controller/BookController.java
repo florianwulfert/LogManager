@@ -19,8 +19,8 @@ public class BookController {
   private final BookService bookService;
 
   @GetMapping("/books")
-  public BooksResponseDto getAllBooks(@RequestParam String actor) {
-    return new BooksResponseDto(bookService.getAllBooks(actor), null);
+  public BooksResponseDto getAllBooks() {
+    return new BooksResponseDto(bookService.getAllBooks(), null);
   }
 
   @PostMapping("/book")
@@ -36,7 +36,7 @@ public class BookController {
   @DeleteMapping("/deletebookById/{id}")
   public BooksResponseDto deleteBooksById(@PathVariable Integer id, @RequestParam String actor) {
     String returnMessage = bookService.deleteById(id, actor);
-    return new BooksResponseDto(bookService.getAllBooks(actor), returnMessage);
+    return new BooksResponseDto(bookService.getAllBooks(), returnMessage);
   }
 
   @DeleteMapping("/deletebooksByTitel")
