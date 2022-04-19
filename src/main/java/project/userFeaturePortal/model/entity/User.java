@@ -36,8 +36,9 @@ public class User {
   @Column(name = "height", nullable = false)
   double height;
 
-  @Column(name = "favouriteColor", nullable = false)
-  String favouriteColor;
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "book")
+  Book favouriteBook;
 
   @Column(name = "bmi")
   double bmi;

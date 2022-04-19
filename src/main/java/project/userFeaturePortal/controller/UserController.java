@@ -12,7 +12,7 @@ import project.userFeaturePortal.service.model.UserService;
 
 import java.util.Optional;
 
-@AllArgsConstructor(onConstructor_ = {@Autowired})
+@AllArgsConstructor(onConstructor_ = { @Autowired })
 @RestController
 @CrossOrigin
 @Tag(name = "User")
@@ -24,6 +24,13 @@ public class UserController {
   public UserResponseDto addUser(@RequestBody UserRequestDto allParameters) {
     String returnMessage = userService.addUser(allParameters);
     return new UserResponseDto(userService.findUserList(), returnMessage);
+  }
+
+  @PostMapping("/user/favouriteBook")
+  public String addFavouritBookToUser(
+      @RequestParam final Integer bookId,
+      @RequestParam final int actorId) {
+    return userService.addFavouriteBookToUser(bookId, actorId);
   }
 
   @GetMapping("/users")

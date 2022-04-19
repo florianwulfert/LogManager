@@ -22,9 +22,8 @@ export class UserComponent implements OnInit, OnDestroy {
   subscriptionManager = new SubscriptionManager();
   featureManager = new FeatureManager(this._snackBar);
 
-  displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'favouriteBook', 'delete']
+  displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'bmi', 'favouriteBook', 'delete']
   dataSource: any
-  colors: string[] = ['blue', 'red', 'orange', 'yellow', 'black']
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit(): void {
@@ -42,7 +41,6 @@ export class UserComponent implements OnInit, OnDestroy {
     birthdate: new FormControl('', [Validators.required]),
     height: new FormControl('', [Validators.required]),
     weight: new FormControl('', [Validators.required]),
-    favouriteColor: new FormControl('', [Validators.required]),
     favouriteBook: new FormControl('')
   })
 
@@ -56,7 +54,6 @@ export class UserComponent implements OnInit, OnDestroy {
     request.birthdate = this.form.get("birthdate")?.value
     request.weight = this.form.get("weight")?.value
     request.height = this.form.get("height")?.value
-    request.favouriteColor = this.form.get("favouriteColor")?.value
     request.favouriteBook = this.form.get("favouriteBook")?.value
     return request
   }

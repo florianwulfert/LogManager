@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,11 +42,16 @@ class UserControllerTest {
         .birthdate("05.10.1994")
         .weight(75.0)
         .height(1.65)
-        .favouriteColor("red")
         .build();
 
     systemUnderTest.addUser(request);
     Mockito.verify(userService).addUser(request);
+  }
+
+  @Test
+  void tsetAddFavouriteBookToUser() {
+    systemUnderTest.addFavouritBookToUser(anyInt(), anyInt());
+    verify(userService).addFavouriteBookToUser(anyInt(), anyInt());
   }
 
   @Test
@@ -93,7 +99,6 @@ class UserControllerTest {
             .birthdate(LocalDate.of(1988, 12, 12))
             .weight(90.0)
             .height(1.85)
-            .favouriteColor("yellow")
             .bmi(26.29)
             .build());
 
@@ -104,7 +109,6 @@ class UserControllerTest {
             .birthdate(LocalDate.of(1988, 12, 12))
             .weight(70.0)
             .height(1.85)
-            .favouriteColor("yellow")
             .bmi(20.45)
             .build());
     return users;

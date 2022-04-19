@@ -162,7 +162,6 @@ class BmiControllerIT {
                 .weight(61.3)
                 .height(1.83)
                 .id(1)
-                .favouriteColor("Blue")
                 .build();
         userRepository.save(torsten);
         break;
@@ -175,7 +174,6 @@ class BmiControllerIT {
                 .weight(95.2)
                 .height(1.82)
                 .id(2)
-                .favouriteColor("Yellow")
                 .build();
         userRepository.save(peter);
         break;
@@ -188,7 +186,6 @@ class BmiControllerIT {
                 .weight(75.7)
                 .height(1.85)
                 .id(3)
-                .favouriteColor("Red")
                 .build();
         userRepository.save(hans);
         break;

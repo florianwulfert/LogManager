@@ -25,7 +25,7 @@ public class BmiRequestDto {
     } catch (IndexOutOfBoundsException | NumberFormatException | DateTimeException e) {
       throw new DateFormatException(ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT);
     } catch (RuntimeException ex) {
-      throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
+      throw new ParameterNotPresentException();
     }
   }
 

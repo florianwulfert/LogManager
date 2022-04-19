@@ -5,11 +5,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 import project.userFeaturePortal.common.dto.user.UserRequestDto;
-import project.userFeaturePortal.common.enums.UserColorEnum;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.exception.*;
+import project.userFeaturePortal.model.entity.Book;
+import project.userFeaturePortal.exception.FirstUserUnequalActorException;
+import project.userFeaturePortal.exception.ParameterNotPresentException;
+import project.userFeaturePortal.exception.UserNotAllowedException;
+import project.userFeaturePortal.exception.UserNotFoundException;
 import project.userFeaturePortal.model.entity.User;
+import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.LogRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.model.LogService;
@@ -26,6 +31,7 @@ public class UserValidationService {
   private final UserRepository userRepository;
   private final LogService logService;
   private final LogRepository logRepository;
+  private final BookRepository bookRepository;
 
   public void checkIfAnyEntriesAreNull(UserRequestDto allParameters) {
     if (allParameters.actor == null
@@ -34,25 +40,12 @@ public class UserValidationService {
         || allParameters.name.equals("")
         || allParameters.birthdate == null
         || allParameters.birthdate.equals("")
-        || allParameters.favouriteColor == null
-        || allParameters.favouriteColor.equals("")
         || allParameters.weight == null
         || allParameters.height == null) {
       LOGGER.info(ErrorMessages.PARAMETER_IS_MISSING);
-      throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
+      throw new ParameterNotPresentException();
     }
     LOGGER.debug(InfoMessages.PARAMETERS_ARE_VALID);
-  }
-
-  public void validateFarbenEnum(String userFarben) {
-    for (UserColorEnum farbenEnum : UserColorEnum.values()) {
-      if (userFarben.equals(farbenEnum.getColor())) {
-        LOGGER.debug("Color is valid!");
-        return;
-      }
-    }
-    LOGGER.error(ErrorMessages.COLOR_ILLEGAL, userFarben);
-    throw new IllegalColorException(ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE);
   }
 
   public boolean checkIfUsersListIsEmpty() {
@@ -82,6 +75,15 @@ public class UserValidationService {
       handleNameNotExist(isActor, action, name);
     }
     return user;
+  }
+
+  public Book checkIfBookExists(Integer bookId) {
+    Optional<Book> book = bookRepository.findById(bookId);
+    if (!book.isPresent()) {
+      LOGGER.warn(String.format(ErrorMessages.BOOK_NOT_FOUND_ID, bookId));
+      throw new RuntimeException(String.format(ErrorMessages.BOOK_NOT_FOUND_ID, bookId));
+    }
+    return book.get();
   }
 
   private void handleNameNotExist(boolean isActor, String action, String name) {

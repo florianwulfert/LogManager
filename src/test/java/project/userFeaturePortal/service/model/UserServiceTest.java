@@ -63,9 +63,15 @@ class UserServiceTest {
             .birthdate("1994-10-05")
             .weight(75.0)
             .height(1.65)
-            .favouriteColor("red")
             .build());
     verify(logService).addLog(any());
+    verify(userRepository).save(any());
+  }
+
+  @Test
+  void tsetAddFavouriteBookToUser() {
+    when(userValidationService.checkIfIdExists(anyInt())).thenReturn(users.get(1));
+    systemUnderTest.addFavouriteBookToUser(anyInt(), users.get(1).getId());
     verify(userRepository).save(any());
   }
 
@@ -81,7 +87,6 @@ class UserServiceTest {
             .birthdate("1994-10-05")
             .weight(75.0)
             .height(1.65)
-            .favouriteColor("red")
             .build());
     verify(logService).addLog(any());
     verify(userRepository).save(any());
@@ -153,7 +158,6 @@ class UserServiceTest {
             .birthdate(LocalDate.of(2005, 12, 12))
             .weight(90.0)
             .height(1.85)
-            .favouriteColor("yellow")
             .bmi(26.29)
             .build());
 
@@ -164,7 +168,6 @@ class UserServiceTest {
             .birthdate(LocalDate.of(1988, 12, 12))
             .weight(70.0)
             .height(1.85)
-            .favouriteColor("yellow")
             .bmi(20.45)
             .build());
     return users;

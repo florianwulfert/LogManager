@@ -34,7 +34,7 @@ public class LogValidationService {
         || allParameters.user == null
         || allParameters.user.equals("")) {
       LOGGER.warn(ErrorMessages.PARAMETER_IS_MISSING);
-      throw new ParameterNotPresentException(ErrorMessages.PARAMETER_IS_MISSING);
+      throw new ParameterNotPresentException();
     }
   }
 

@@ -9,7 +9,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.userFeaturePortal.common.dto.user.UserRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
-import project.userFeaturePortal.exception.*;
+import project.userFeaturePortal.exception.FirstUserUnequalActorException;
+import project.userFeaturePortal.exception.ParameterNotPresentException;
+import project.userFeaturePortal.exception.UserNotAllowedException;
+import project.userFeaturePortal.exception.UserNotFoundException;
 import project.userFeaturePortal.model.entity.Log;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.LogRepository;
@@ -62,11 +65,10 @@ class UserValidationServiceTest {
                 systemUnderTest.checkIfAnyEntriesAreNull(
                     UserRequestDto.builder()
                         .actor("Peter")
-                        .name("Hans")
+                        .name(null)
                         .birthdate("19.02.1995")
                         .weight(75.0)
                         .height(1.80)
-                        .favouriteColor("")
                         .build()));
     Assertions.assertEquals(ErrorMessages.PARAMETER_IS_MISSING, ex.getMessage());
   }
@@ -80,21 +82,7 @@ class UserValidationServiceTest {
             .birthdate("19.02.1995")
             .weight(75.0)
             .height(1.80)
-            .favouriteColor("blue")
             .build());
-  }
-
-  @Test
-  void testIfColorIsNotCorrect() {
-    IllegalColorException ex =
-        Assertions.assertThrows(
-            IllegalColorException.class, () -> systemUnderTest.validateFarbenEnum("gold"));
-    Assertions.assertEquals(ErrorMessages.COLOR_ILLEGAL_PLUS_CHOICE, ex.getMessage());
-  }
-
-  @Test
-  void ColorIsCorrect() {
-    systemUnderTest.validateFarbenEnum("blue");
   }
 
   @Test
@@ -272,7 +260,6 @@ class UserValidationServiceTest {
             .birthdate(LocalDate.of(2005, 12, 12))
             .weight(90.0)
             .height(1.85)
-            .favouriteColor("yellow")
             .bmi(26.29)
             .build());
 
@@ -283,7 +270,6 @@ class UserValidationServiceTest {
             .birthdate(LocalDate.of(1988, 12, 12))
             .weight(70.0)
             .height(1.85)
-            .favouriteColor("yellow")
             .bmi(20.45)
             .build());
     return users;
