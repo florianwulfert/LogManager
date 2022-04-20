@@ -63,13 +63,13 @@ public class UserService {
     return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
   }
 
-  public String addFavouriteBookToUser(String titel, int actorId) {
+  public String addFavouriteBookToUser(String titel, String actorName) {
     List<Book> book = userValidationService.checkIfBookExists(titel);
-    User actor = userValidationService.checkIfIdExists(actorId);
+    User actor = userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED);
     actor.setFavouriteBook(book.get(0));
     userRepository.save(actor);
     LOGGER.info(String.format(InfoMessages.BOOK_BY_USER, titel, actor.getName()));
-    return InfoMessages.BOOK_BY_USER;
+    return String.format(InfoMessages.BOOK_BY_USER, titel, actor.getName());
   }
 
   public List<UserDto> findUserList() {

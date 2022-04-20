@@ -107,8 +107,8 @@ class UserServiceTest {
   void testAddFavouriteBookToUser() {
     List<Book> books = testBook();
     when(userValidationService.checkIfBookExists(anyString())).thenReturn(books);
-    when(userValidationService.checkIfIdExists(1)).thenReturn(users.get(0));
-    systemUnderTest.addFavouriteBookToUser("TestBook", users.get(0).getId());
+    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString())).thenReturn(users.get(0));
+    systemUnderTest.addFavouriteBookToUser("TestBook", users.get(0).getName());
   }
 
   @Test

@@ -154,7 +154,7 @@
               <mat-form-field appearance="fill">
                 <mat-label>Favourite Book</mat-label>
                 <mat-select formControlName="favouriteBook">
-                  <mat-option *ngFor="let book of books" [value]="book">
+                  <mat-option *ngFor="let book of books" [value]="book.titel">
                     {{book.titel}}
                   </mat-option>
                 </mat-select>

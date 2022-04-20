@@ -27,6 +27,7 @@ public class InfoMessages {
   public static final String USER_FOUND = "User %s found.";
   public static final String LIST_IS_EMPTY = "List is empty.";
   public static final String LOGS_BY_USER = "There are logs created by user %s.";
+  public static final String USER_WITH_BOOK = "Book with ID %s is assigned to at least one user.";
   public static final String ACTOR_EQUALS_USER = "Actor is equal to user.";
   public static final String BOOK_BY_USER = "Book %s added to user %s.";
 }

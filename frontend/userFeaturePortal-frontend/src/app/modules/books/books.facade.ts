@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {BooksState} from "./books.state";
-import {addBookAction, deleteBookAction, getBooksAction} from "./books.actions";
+import {addBookAction, assignBookToUserAction, deleteBookAction, getBooksAction} from "./books.actions";
 import {getBooks} from "./books.selector";
 import {AddBookRequest} from "./addBooks/add-book-request";
 import {DeleteBookRequest} from "./deleteBook/delete-book-request";
@@ -25,5 +25,10 @@ export class BooksFacade {
 
   deleteBook(request: DeleteBookRequest): void {
     this.booksState.dispatch(deleteBookAction(request))
+  }
+
+  assignBookToUser(request: AddBookRequest): void {
+    console.log(request)
+    this.booksState.dispatch(assignBookToUserAction(request))
   }
 }

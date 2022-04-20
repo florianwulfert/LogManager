@@ -74,13 +74,21 @@ public class BookService {
     return bookRepository.findByTitel(titel);
   }
 
-  public String deleteById(Integer id, String actor) {
+  public String deleteById(int id, String actor) {
     validateActor(actor);
+    checkIfBookIsReferenced(id);
     Book book = bookRepository.getOne(id);
     bookRepository.delete(book);
     saveLog(String.format(InfoMessages.BOOK_DELETED_ID, id), "WARNING", actor);
     LOGGER.info(String.format(InfoMessages.BOOK_DELETED_ID, id));
     return String.format(InfoMessages.BOOK_DELETED_ID, id);
+  }
+
+  private void checkIfBookIsReferenced(int id) {
+    List<User> users = userRepository.findByFavouriteBookId(id);
+    if (!users.isEmpty()) {
+      throw new RuntimeException(String.format(String.format(InfoMessages.USER_WITH_BOOK, id)));
+    }
   }
 
   public String deleteByTitel(String titel, String actor) {

@@ -6,11 +6,14 @@ import {catchError, map, switchMap} from "rxjs/operators";
 import {
   addBookAction,
   addBookResponseAction,
+  assignBookToUserAction,
+  assignBookToUserResponseAction,
   deleteBookAction,
   deleteBookResponseAction,
   getBooksAction,
   getBooksResponseAction,
   loadAddBookErrorAction,
+  loadAssignBookToUserErrorAction,
   loadDeleteBookErrorAction,
   loadGetBooksErrorAction
 } from "./books.actions";
@@ -53,6 +56,19 @@ export class BooksEffects {
           map((deleteBookResponse) =>
             deleteBookResponseAction(deleteBookResponse)),
           catchError((error: string) => of(loadDeleteBookErrorAction({error})))
+        )
+      )
+    )
+  );
+
+  assignBookToUser$: Observable<Action> = createEffect(() =>
+    this.actions$.pipe(
+      ofType(assignBookToUserAction),
+      switchMap((assignBookToUserRequest: AddBookRequest) =>
+        this.booksService.assignBookToUser(assignBookToUserRequest).pipe(
+          map((addBookResponse) =>
+            assignBookToUserResponseAction(addBookResponse)),
+          catchError((error: string) => of(loadAssignBookToUserErrorAction({error})))
         )
       )
     )

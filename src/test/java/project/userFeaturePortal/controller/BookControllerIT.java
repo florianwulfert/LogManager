@@ -61,10 +61,6 @@ class BookControllerIT {
             status().isOk(),
             TestMessages.HAYA),
         Arguments.of(
-            "{\"titel\":\"petra\",\"erscheinungsjahr\":\"1999\",\"actor\":\"Torsten\"}",
-            status().isOk(),
-            TestMessages.PETRA_BOOK),
-        Arguments.of(
             "{\"titel\":\"peter\",\"erscheinungsjahr\":\"1988\"}",
             status().isNotFound(),
             String.format(ErrorMessages.USER_NOT_FOUND_NAME, "null"),
@@ -292,7 +288,7 @@ class BookControllerIT {
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andReturn();
-            assertEquals(String.format(InfoMessages.Book_FOUND_TITLE, "haya"),
+            assertEquals(String.format(TestMessages.BOOK_HAYA),
                     result.getResponse().getContentAsString());
         }
 

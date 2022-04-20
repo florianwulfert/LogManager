@@ -13,6 +13,7 @@ import {DeleteBookResponse} from "./deleteBook/delete-book-response";
 const API_GET_BOOKS = 'http://localhost:8081/books'
 const API_ADD_BOOK = 'http://localhost:8081/book'
 const API_DELETE_BOOK = 'http://localhost:8081/deletebookById/'
+const API_ADD_BOOK_TO_USER = 'http://localhost:8081/user/favouriteBook?bookTitel='
 
 @Injectable({
   providedIn: 'root'
@@ -94,4 +95,31 @@ export class BooksService {
       })
     );
   }
+
+  assignBookToUser(book: AddBookRequest): Observable<AddBookResponse> {
+    console.log(book)
+    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
+      this.name = r
+    })
+    return this.http.post<AddBookResponse>(API_ADD_BOOK_TO_USER + book.titel + '&actor=' + this.name, {
+      observe: 'response'
+    }).pipe(
+      map((r) => {
+        this.featureManager.openSnackbar("Book " + book.titel + " was assigned to user " + this.name + ".");
+        return r || {
+          result: [],
+          returnMessage: ""
+        }
+      }),
+      catchError((err) => {
+        if(err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text);
+        } else {
+          this.featureManager.openSnackbar(err.error);
+        }
+        return throwError('Due to technical issues it is currently not possible to delete this book.')
+      })
+    );
+  }
+
 }
