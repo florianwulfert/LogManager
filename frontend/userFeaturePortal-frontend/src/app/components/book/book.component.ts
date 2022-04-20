@@ -32,6 +32,7 @@ export class BookComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getBooks()
+    this.getUsers()
   }
 
   ngOnDestroy() {
@@ -51,7 +52,6 @@ export class BookComponent implements OnInit, OnDestroy {
     this.usersFacade.getUser()
     this.subscriptionManager.add(this.usersFacade.stateGetUserResponse$).subscribe(result => {
       this.users = result
-      console.log(this.users)
     });
   }
 
@@ -75,7 +75,6 @@ export class BookComponent implements OnInit, OnDestroy {
     let request = new AddBookRequest()
     this.prepareAddBookRequest(request)
     this.booksFacade.addBook(request);
-    this.getBooks()
   }
 
   deleteBook(element: any): void {
@@ -83,5 +82,9 @@ export class BookComponent implements OnInit, OnDestroy {
     let elementValues = Object.keys(element).map(key => element[key])
     request.id = elementValues[0]
     this.booksFacade.deleteBook(request)
+  }
+
+  assignBook(): void {
+
   }
 }

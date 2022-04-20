@@ -31,7 +31,6 @@ export class UserService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r.body)
         return r.body || {
           result: [],
           returnMessage: ""

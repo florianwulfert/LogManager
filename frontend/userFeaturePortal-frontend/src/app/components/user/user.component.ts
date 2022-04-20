@@ -7,6 +7,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AddUserRequest} from "../../modules/user/addUser/add-user-request";
 import {DeleteUserRequest} from "../../modules/user/deleteUser/delete-user-request";
 import {MatPaginator} from "@angular/material/paginator";
+import {BooksFacade} from "../../modules/books/books.facade";
 
 @Component({
   selector: 'app-user',
@@ -15,17 +16,19 @@ import {MatPaginator} from "@angular/material/paginator";
 })
 export class UserComponent implements OnInit, OnDestroy {
 
-  constructor(private userFacade: UserFacade, private _snackBar: MatSnackBar) {
+  constructor(private userFacade: UserFacade, private _snackBar: MatSnackBar, private booksFacade: BooksFacade) {
   }
 
   subscriptionManager = new SubscriptionManager();
 
   displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'bmi', 'favouriteBook', 'delete']
   dataSource: any
+  books: any
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit(): void {
     this.getUserList()
+    this.getBooks()
   }
 
   ngOnDestroy(): void {
@@ -78,6 +81,13 @@ export class UserComponent implements OnInit, OnDestroy {
     this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
+    });
+  }
+
+  getBooks(): void {
+    this.booksFacade.getBooks();
+    this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
+     this.books = result
     });
   }
 }

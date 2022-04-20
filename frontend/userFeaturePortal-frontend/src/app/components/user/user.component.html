@@ -153,7 +153,11 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Favourite Book</mat-label>
-                <input matInput formControlName="favouriteBook">
+                <mat-select formControlName="favouriteBook">
+                  <mat-option *ngFor="let book of books" [value]="book">
+                    {{book.titel}}
+                  </mat-option>
+                </mat-select>
                 <button *ngIf="form.controls['favouriteBook'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['favouriteBook'].reset()">
                   <mat-icon>close</mat-icon>
                 </button>

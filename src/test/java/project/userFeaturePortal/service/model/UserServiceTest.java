@@ -7,10 +7,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.userFeaturePortal.common.dto.user.UserDto;
 import project.userFeaturePortal.common.dto.user.UserRequestDto;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
+import project.userFeaturePortal.model.mapper.UserDtoMapper;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.validation.UserValidationService;
@@ -19,7 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
@@ -49,6 +51,9 @@ class UserServiceTest {
   @Mock
   BookService bookService;
 
+  @Mock
+  UserDtoMapper userDtoMapper;
+
   List<User> users;
 
   @BeforeEach
@@ -59,12 +64,31 @@ class UserServiceTest {
   @Test
   void testAddUser() {
     List<Book> testBook = testBook();
-    when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
-        .thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
     when(userValidationService.checkIfUsersListIsEmpty())
         .thenReturn(false);
     when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString()))
         .thenReturn(users.get(1));
+    systemUnderTest.addUser(
+        UserRequestDto.builder()
+            .actor("Torsten")
+            .name("Hugo")
+            .birthdate("1994-10-05")
+            .weight(75.0)
+            .height(1.65)
+            .favouriteBook(testBook.get(0).getTitel())
+            .build());
+    verify(logService).addLog(any());
+    verify(bookService).searchBooksByTitel("TestBook");
+    verify(userRepository).save(any());
+  }
+  @Test
+  void testBooksListIsNotEmpty() {
+    List<Book> testBook = testBook();
+    when(userValidationService.checkIfUsersListIsEmpty())
+        .thenReturn(false);
+    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString()))
+        .thenReturn(users.get(1));
+    when(bookService.searchBooksByTitel(anyString())).thenReturn(testBook);
     systemUnderTest.addUser(
         UserRequestDto.builder()
             .actor("Torsten")
@@ -83,9 +107,8 @@ class UserServiceTest {
   void testAddFavouriteBookToUser() {
     List<Book> books = testBook();
     when(userValidationService.checkIfBookExists(anyString())).thenReturn(books);
-    when(userValidationService.checkIfIdExists(any())).thenReturn(users.get(0));
-    systemUnderTest.addFavouriteBookToUser("TestBook", users.get(1).getId());
-
+    when(userValidationService.checkIfIdExists(1)).thenReturn(users.get(0));
+    systemUnderTest.addFavouriteBookToUser("TestBook", users.get(0).getId());
   }
 
   @Test
@@ -109,7 +132,9 @@ class UserServiceTest {
 
   @Test
   void testFindUserList() {
+    List<UserDto> userDtoList = addListOfDtos();
     when(userRepository.findAll()).thenReturn(users);
+    when(userDtoMapper.usersToUserDtos(anyList())).thenReturn(userDtoList);
     systemUnderTest.findUserList();
     verify(userRepository).findAll();
   }
@@ -127,15 +152,15 @@ class UserServiceTest {
   }
 
   @Test
-  void assertThatFindUserByNameIsTrue() {
-    when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
+  void whenUserNotFoundButUserListIsEmpty_ThenReturnTrue() {
     assertTrue(systemUnderTest.findUserByName("Peter"));
   }
 
   @Test
-  void FindUserByNameIsFalse() {
-    RuntimeException ex = assertThrows(RuntimeException.class, () ->
-    systemUnderTest.findUserByName("Heini"));
+  void whenUserNotFoundAndUserListIsNotEmpty_ThenReturnFalse() {
+    List<UserDto> userDtoList = addListOfDtos();
+    when(userDtoMapper.usersToUserDtos(anyList())).thenReturn(userDtoList);
+    assertFalse(systemUnderTest.findUserByName("Heini"));
   }
 
   @Test
@@ -166,7 +191,7 @@ class UserServiceTest {
   }
 
   private List<User> addTestUser() {
-    Book testBook = Book.builder().titel("TestBook").erscheinungsjahr(2020).build();
+    Book testBook = Book.builder().id(1).titel("TestBook").erscheinungsjahr(2020).build();
     List<User> users = new ArrayList<>();
     users.add(
         User.builder()
@@ -196,5 +221,18 @@ class UserServiceTest {
     List<Book> booksList = new ArrayList<>();
     booksList.add(Book.builder().titel("TestBook").erscheinungsjahr(2020).build());
     return booksList;
+  }
+
+  private List<UserDto> addListOfDtos() {
+    List<UserDto> dtoList = new ArrayList<>();
+    dtoList.add(UserDto.builder().id(2)
+            .name("Florian")
+            .birthdate(LocalDate.of(1988, 12, 12))
+            .weight(70.0)
+            .height(1.85)
+            .bmi(20.45)
+            .favouriteBookTitel("testBook")
+            .build());
+    return dtoList;
   }
 }

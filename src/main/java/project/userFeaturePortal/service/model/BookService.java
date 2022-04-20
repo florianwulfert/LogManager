@@ -31,7 +31,7 @@ public class BookService {
     bookRepository.save(book);
   }
 
-  public Book addBook(Integer erscheinungsjahr, String titel, String actor) {
+  public List<Book> addBook(Integer erscheinungsjahr, String titel, String actor) {
     validateActor(actor);
     validateErscheinungsjahrAndTitel(erscheinungsjahr,titel);
     Book book = new Book();
@@ -45,7 +45,7 @@ public class BookService {
             .user(actor)
             .build());
     LOGGER.info(String.format(InfoMessages.BOOK_CREATED, titel));
-    return book;
+    return bookRepository.findAll();
   }
 
   private void validateActor(String actor) {

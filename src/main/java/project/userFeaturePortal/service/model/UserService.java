@@ -68,7 +68,7 @@ public class UserService {
     User actor = userValidationService.checkIfIdExists(actorId);
     actor.setFavouriteBook(book.get(0));
     userRepository.save(actor);
-    LOGGER.info(InfoMessages.BOOK_BY_USER);
+    LOGGER.info(String.format(InfoMessages.BOOK_BY_USER, titel, actor.getName()));
     return InfoMessages.BOOK_BY_USER;
   }
 
@@ -88,9 +88,7 @@ public class UserService {
     User user = userRepository.findUserByName(name);
     if (user == null) {
       List<UserDto> users = findUserList();
-      if (users.isEmpty()) {
-        throw new RuntimeException("UsersList is empty");
-      }
+      return users.isEmpty();
     }
     LOGGER.debug(String.format(InfoMessages.USER_FOUND, name));
     return true;
@@ -133,12 +131,7 @@ public class UserService {
     String bmi = bmiService.calculateBmiAndGetBmiMessage(
         user.getBirthdate(), user.getWeight(), user.getHeight());
     saveLog(String.format(InfoMessages.USER_CREATED + "%s", user.getName(), bmi), "INFO", actor);
-    LOGGER.info(
-        String.format(
-            InfoMessages.USER_CREATED
-                + bmiService.calculateBmiAndGetBmiMessage(
-                    user.getBirthdate(), user.getWeight(), user.getHeight()),
-            user.getName()));
+    LOGGER.info(String.format(InfoMessages.USER_CREATED, user.getName()));
   }
 
   private void saveLog(String message, String severity, String actor) {

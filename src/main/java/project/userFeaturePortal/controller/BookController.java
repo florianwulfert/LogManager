@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import project.userFeaturePortal.common.dto.books.AddBookResponseDto;
 import project.userFeaturePortal.common.dto.books.BookRequestDto;
 import project.userFeaturePortal.common.dto.books.BooksResponseDto;
+import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.service.model.BookService;
 
@@ -27,8 +27,9 @@ public class BookController {
   }
 
   @PostMapping("/book")
-  public AddBookResponseDto addBook(@RequestBody BookRequestDto parameters) {
-    return new AddBookResponseDto(bookService.addBook(parameters.erscheinungsjahr, parameters.titel, parameters.actor));
+  public BooksResponseDto addBook(@RequestBody BookRequestDto parameters) {
+    return new BooksResponseDto(bookService.addBook(parameters.erscheinungsjahr, parameters.titel, parameters.actor),
+            String.format(InfoMessages.BOOK_CREATED, parameters.titel));
   }
 
   @GetMapping("/searchbook")
