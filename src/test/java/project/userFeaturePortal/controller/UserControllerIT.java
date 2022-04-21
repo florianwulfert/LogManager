@@ -193,7 +193,7 @@ class UserControllerIT {
                                         .andDo(print())
                                         .andExpect(status().isOk())
                                         .andReturn();
-                        assertEquals(InfoMessages.BOOK_BY_USER, result.getResponse().getContentAsString());
+                        assertEquals(String.format(InfoMessages.BOOK_BY_USER, "haya", "Torsten"), result.getResponse().getContentAsString());
                 }
 
                 @Test
