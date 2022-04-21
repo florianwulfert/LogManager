@@ -1,41 +1,69 @@
 <div class="page row">
   <h1>List of logs</h1>
+  <div>
+    <form [formGroup]="formFilter">
 
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Severity</mat-label>
+        <mat-select formControlName="severity">
+          <mat-option *ngFor="let severity of severities" [value]="severity">
+            {{severity}}
+          </mat-option>
+        </mat-select>
+        <button *ngIf="formFilter.controls['severity'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['severity'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>User</mat-label>
+        <mat-select formControlName="user">
+          <mat-option *ngFor="let user of users" [value]="user">
+            {{user}}
+          </mat-option>
+        </mat-select>
+        <button *ngIf="formFilter.controls['user'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['user'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Date From</mat-label>
+        <input type="date" matInput formControlName="dateFrom">
+        <button *ngIf="formFilter.controls['dateFrom'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['dateFrom'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Date To</mat-label>
+        <input type="date" matInput formControlName="dateTo">
+        <button *ngIf="formFilter.controls['dateTo'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['dateTo'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Message</mat-label>
+        <mat-select formControlName="message">
+          <mat-option *ngFor="let user of users" [value]="user">
+            {{user}}
+          </mat-option>
+        </mat-select>
+        <button *ngIf="formFilter.controls['user'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['user'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+    </form>
+  </div>
   <div class="col-12 col-lg-8">
-    <div>
-      <form [formGroup]="formFilter">
 
-
-          <mat-form-field appearance="fill" class="filter-button">
-            <mat-label>Severity</mat-label>
-            <mat-select formControlName="severity">
-              <mat-option *ngFor="let severity of severities" [value]="severity">
-                {{severity}}
-              </mat-option>
-            </mat-select>
-            <button *ngIf="formFilter.controls['severity'].value" matSuffix mat-icon-button aria-label="Clear"
-                    (click)="formFilter.controls['severity'].reset()">
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-
-
-          <mat-form-field appearance="fill" class="filter-button">
-            <mat-label>User</mat-label>
-            <mat-select formControlName="user">
-              <mat-option *ngFor="let user of users" [value]="user">
-                {{user}}
-              </mat-option>
-            </mat-select>
-            <button *ngIf="formFilter.controls['user'].value" matSuffix mat-icon-button aria-label="Clear"
-                    (click)="formFilter.controls['user'].reset()">
-              <mat-icon>close</mat-icon>
-            </button>
-          </mat-form-field>
-
-
-      </form>
-    </div>
     <mat-form-field appearance="standard" class="filter">
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter" #input>

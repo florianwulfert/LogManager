@@ -56,7 +56,10 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
   public formFilter: FormGroup = new FormGroup({
     severity: new FormControl(''),
-    user: new FormControl('')
+    user: new FormControl(''),
+    dateFrom: new FormControl(''),
+    dateTo: new FormControl(''),
+    message: new FormControl('')
   })
 
   getLogs(): void {
