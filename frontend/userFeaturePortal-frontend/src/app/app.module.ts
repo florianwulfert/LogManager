@@ -33,7 +33,9 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {ProfileMenuComponent} from './components/navigation/profile-menu/profile-menu.component';
 import {ActorModule} from "./modules/actor/actor.module"
 import {ActorIsValidModule} from "./modules/actor/actorIsValid.module";
+import {BookComponent} from "./components/book/book.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {BooksModule} from "./modules/books/books.module";
 
 @NgModule({
   declarations: [
@@ -45,6 +47,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     LoggingComponent,
     HomeComponent,
     ProfileMenuComponent,
+    BookComponent
   ],
   imports: [
     BrowserModule,
@@ -77,8 +80,9 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     FormsModule,
     LogModule,
     BmiModule,
+    MatPaginatorModule,
     ActorIsValidModule,
-    MatPaginatorModule
+    BooksModule
   ],
   exports: [
     BrowserModule,

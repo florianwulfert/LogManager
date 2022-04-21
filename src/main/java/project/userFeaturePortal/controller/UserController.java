@@ -27,10 +27,10 @@ public class UserController {
   }
 
   @PostMapping("/user/favouriteBook")
-  public String addFavouritBookToUser(
-      @RequestParam final Integer bookId,
-      @RequestParam final int actorId) {
-    return userService.addFavouriteBookToUser(bookId, actorId);
+  public String addFavouriteBookToUser(
+      @RequestParam final String bookTitel,
+      @RequestParam final String actor) {
+    return userService.addFavouriteBookToUser(bookTitel, actor);
   }
 
   @GetMapping("/users")

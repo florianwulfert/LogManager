@@ -16,8 +16,9 @@ public class UserRequestDto {
   public String birthdate;
   public Double weight;
   public Double height;
+  public String favouriteBook;
 
-  public LocalDate getBirthdateAsLocalDate() {
+    public LocalDate getBirthdateAsLocalDate() {
     return getLocalDate(this.birthdate);
   }
 }

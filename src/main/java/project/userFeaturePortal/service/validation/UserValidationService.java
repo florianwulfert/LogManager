@@ -7,12 +7,11 @@ import org.springframework.stereotype.Component;
 import project.userFeaturePortal.common.dto.user.UserRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
-import project.userFeaturePortal.exception.*;
-import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.exception.FirstUserUnequalActorException;
 import project.userFeaturePortal.exception.ParameterNotPresentException;
 import project.userFeaturePortal.exception.UserNotAllowedException;
 import project.userFeaturePortal.exception.UserNotFoundException;
+import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.LogRepository;
@@ -77,13 +76,13 @@ public class UserValidationService {
     return user;
   }
 
-  public Book checkIfBookExists(Integer bookId) {
-    Optional<Book> book = bookRepository.findById(bookId);
-    if (!book.isPresent()) {
-      LOGGER.warn(String.format(ErrorMessages.BOOK_NOT_FOUND_ID, bookId));
-      throw new RuntimeException(String.format(ErrorMessages.BOOK_NOT_FOUND_ID, bookId));
+  public List<Book> checkIfBookExists(String bookTitel) {
+    List<Book> books = bookRepository.findByTitel(bookTitel);
+    if (books.isEmpty()) {
+      LOGGER.warn(String.format(ErrorMessages.BOOK_NOT_FOUND_TITEL, bookTitel));
+      throw new RuntimeException(String.format(ErrorMessages.BOOK_NOT_FOUND_TITEL, bookTitel));
     }
-    return book.get();
+    return books;
   }
 
   private void handleNameNotExist(boolean isActor, String action, String name) {

@@ -5,4 +5,5 @@ export interface UserDto {
   height: number,
   weight: number,
   bmi: number
+  favouriteBookTitel: string
 }

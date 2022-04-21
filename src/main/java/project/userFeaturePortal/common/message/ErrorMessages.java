@@ -12,9 +12,6 @@ public class ErrorMessages {
     public static final String USERS_REFERENCED = "Users cannot be deleted because they are referenced in another table!";
     public static final String SEVERITY_NOT_REGISTERED = "Given severity {} is not registered!";
     public static final String NO_ENTRIES_FOUND = "No entries found!";
-    public static final String COLOR_ILLEGAL = "Given color {} is illegal!";
-    public static final String COLOR_ILLEGAL_PLUS_CHOICE = "Color illegal! Choose from the following options: "
-            + "blue, red, orange, yellow, black";
     public static final String NO_USERS_YET = "User cannot be created because there are no users in the database yet. "
             + "First user has to create himself! ";
     public static final String USER_EXISTS = "User %s already exists.";
@@ -31,9 +28,12 @@ public class ErrorMessages {
     public static final String TITLE_IS_NOT_PRESENT = "Required String parameter 'titel' is not present";
     public static final String RELEASE_YEAR_IS_NOT_PRESENT = "Required Integer parameter 'erscheinungsjahr' is not present";
     public static final String BOOK_NOT_FOUND_ID = "Book with id %s not found!";
+    public static final String BOOK_NOT_FOUND_TITEL = "Book with titel %s not found!";
     public static final String ACTOR_NOT_PRESENT = "Required String parameter 'actor' is not present";
     public static final String BOOK_NOT_IDENTIFIED = "BOOK %s not identified!";
     public static final String USER_NOT_ALLOWED_DELETE_USER = "User %s has no authority to delete user.";
     public static final String USER_NOT_ALLOWED_CREATE_USER = "User %s has no authority to create user.";
     public static final String CANNOT_DELETE_USER = "User cannot be deleted.";
+    public static final String USER_NOT_ALLOWED = "User is not allowed to execute this operation.";
+    public static final String LINE_REFERENCED = "Line to delete is referenced in another place";
 }

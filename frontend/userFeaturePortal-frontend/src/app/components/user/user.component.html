@@ -44,6 +44,12 @@
         <td mat-cell *matCellDef="let element"> {{element.bmi}} </td>
       </ng-container>
 
+      <!-- FavouriteBook Column -->
+      <ng-container matColumnDef="favouriteBook">
+        <th mat-header-cell *matHeaderCellDef> Favourite Book</th>
+        <td mat-cell *matCellDef="let element"> {{element.favouriteBookTitel}} </td>
+      </ng-container>
+
       <!-- Delete -->
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef>
@@ -141,6 +147,20 @@
                 <mat-error *ngIf="form.controls['height'].hasError('required')">
                   Height is <strong>required</strong>
                 </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Favourite Book</mat-label>
+                <mat-select formControlName="favouriteBook">
+                  <mat-option *ngFor="let book of books" [value]="book.titel">
+                    {{book.titel}}
+                  </mat-option>
+                </mat-select>
+                <button *ngIf="form.controls['favouriteBook'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['favouriteBook'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
               </mat-form-field>
             </div>
 

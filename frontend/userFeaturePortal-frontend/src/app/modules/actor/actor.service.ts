@@ -19,7 +19,6 @@ export class ActorService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r.body)
         return r.body || {
           foundUser: false
         }

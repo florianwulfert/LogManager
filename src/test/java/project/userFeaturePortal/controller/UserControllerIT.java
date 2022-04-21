@@ -189,24 +189,24 @@ class UserControllerIT {
                 void testAddBookToUser() throws Exception {
                         createBook();
                         MvcResult result = mockMvc
-                                        .perform(post("/user/favouriteBook").param("bookId", "1").param("actorId", "2"))
+                                        .perform(post("/user/favouriteBook").param("bookTitel", "haya").param("actor", "Torsten"))
                                         .andDo(print())
                                         .andExpect(status().isOk())
                                         .andReturn();
-                        assertEquals(InfoMessages.BOOK_BY_USER, result.getResponse().getContentAsString());
+                        assertEquals(String.format(InfoMessages.BOOK_BY_USER, "haya", "Torsten"), result.getResponse().getContentAsString());
                 }
 
                 @Test
-                void WhenFavoiriteBookToAddNotFound() throws Exception {
+                void WhenFavouriteBookToAddNotFound() throws Exception {
                         createBook();
                         MvcResult result = mockMvc
-                                        .perform(post("/user/favouriteBook").param("bookId", "10").param("actorId",
-                                                        "2"))
+                                        .perform(post("/user/favouriteBook").param("bookTitel", "Florian").param("actor",
+                                                        "Torsten"))
                                         .andDo(print())
                                         .andExpect(status().isInternalServerError())
                                         .andReturn();
 
-                        assertEquals(String.format(ErrorMessages.BOOK_NOT_FOUND_ID, 10),
+                        assertEquals(String.format(ErrorMessages.BOOK_NOT_FOUND_TITEL, "Florian"),
                                         result.getResponse().getContentAsString());
                 }
         }

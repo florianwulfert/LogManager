@@ -1,9 +1,10 @@
-package project.userFeaturePortal.common.dto.user;
+package project.userFeaturePortal.common.dto.books;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import project.userFeaturePortal.model.entity.Book;
 
 import java.util.List;
 
@@ -11,8 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponseDto {
-
-  List<UserDto> result;
+public class BooksResponseDto {
+  List<Book> result;
   String returnMessage;
 }

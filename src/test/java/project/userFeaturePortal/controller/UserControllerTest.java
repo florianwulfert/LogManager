@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,8 +50,8 @@ class UserControllerTest {
 
   @Test
   void tsetAddFavouriteBookToUser() {
-    systemUnderTest.addFavouritBookToUser(anyInt(), anyInt());
-    verify(userService).addFavouriteBookToUser(anyInt(), anyInt());
+    systemUnderTest.addFavouriteBookToUser(anyString(), anyString());
+    verify(userService).addFavouriteBookToUser(anyString(), anyString());
   }
 
   @Test
