@@ -40,7 +40,7 @@ public class BookService {
     saveBook(book);
     logService.addLog(
         LogRequestDto.builder()
-            .message("New book was added.")
+            .message(String.format("Book %s was added.", titel))
             .severity("INFO")
             .user(actor)
             .build());

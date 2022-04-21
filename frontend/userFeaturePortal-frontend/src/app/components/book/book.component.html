@@ -36,6 +36,13 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
+
+    <mat-paginator
+      [pageSize]=10
+      [hidePageSize]="true"
+      showFirstLastButtons>
+    </mat-paginator>
+
   </div>
   <div class="col-12 col-lg-4" *ngIf="userAvailable">
     <div class="space-between-fields">
