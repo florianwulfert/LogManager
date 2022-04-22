@@ -20,7 +20,7 @@
         <mat-label>User</mat-label>
         <mat-select formControlName="user">
           <mat-option *ngFor="let user of users" [value]="user">
-            {{user}}
+            {{user.name}}
           </mat-option>
         </mat-select>
         <button *ngIf="formFilter.controls['user'].value" matSuffix mat-icon-button aria-label="Clear"
@@ -50,19 +50,21 @@
       <mat-form-field appearance="fill" class="filter-button">
         <mat-label>Message</mat-label>
         <mat-select formControlName="message">
-          <mat-option *ngFor="let user of users" [value]="user">
-            {{user}}
+          <mat-option *ngFor="let message of messages" [value]="message">
+            {{message.message}}
           </mat-option>
         </mat-select>
-        <button *ngIf="formFilter.controls['user'].value" matSuffix mat-icon-button aria-label="Clear"
-                (click)="formFilter.controls['user'].reset()">
+        <button *ngIf="formFilter.controls['message'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['message'].reset()">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
+      <button mat-raised-button class="filter-button-format" (click)="filterLogs()">Filter logs
+      </button>
 
     </form>
   </div>
-  <div class="col-12 col-lg-8">
+  <div class="col-12 col-lg-8" *ngIf="filterButtonPressed">
 
     <mat-form-field appearance="standard" class="filter">
       <mat-label>Filter</mat-label>

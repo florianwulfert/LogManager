@@ -34,8 +34,8 @@ class LogControllerTest {
   void testGetLogs() {
     LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
     LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
-    systemUnderTest.getLogs("INFO", "Test", startDate, endDate);
-    verify(logService).getLogs(any(), any(), any(), any());
+    systemUnderTest.getLogs("INFO", "Test", startDate, endDate, null);
+    verify(logService).getLogs(any(), any(), any(), any(), any());
   }
 
   @Test

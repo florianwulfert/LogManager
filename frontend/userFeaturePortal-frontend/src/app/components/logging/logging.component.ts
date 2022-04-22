@@ -26,6 +26,8 @@ export class LoggingComponent implements OnInit, OnDestroy {
   severities: string[] = ['TRACE', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'FATAL'];
   dataSource: any;
   users: any
+  messages: any
+  filterButtonPressed: boolean = false
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
@@ -67,6 +69,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
     this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
+      this.messages = result
     })
   }
 
@@ -94,6 +97,10 @@ export class LoggingComponent implements OnInit, OnDestroy {
     this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
       this.users = result
     });
+  }
+
+  filterLogs(): void {
+    this.filterButtonPressed = true
   }
 
 }

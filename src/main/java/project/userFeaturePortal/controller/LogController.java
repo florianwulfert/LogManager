@@ -12,6 +12,7 @@ import project.userFeaturePortal.common.dto.log.LogDTO;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.dto.log.LogResponseDto;
 import project.userFeaturePortal.model.entity.Log;
+import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.mapper.LogDTOMapper;
 import project.userFeaturePortal.service.model.LogService;
 
@@ -47,17 +48,18 @@ public class LogController {
       @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
           final LocalDateTime startDateTime,
       @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
-          final LocalDateTime endDateTime) {
+          final LocalDateTime endDateTime,
+      @RequestParam(required = false) final User user) {
 
     return new LogResponseDto(
-        logService.getLogs(severity, message, startDateTime, endDateTime), null);
+        logService.getLogs(severity, message, startDateTime, endDateTime, user), null);
   }
 
   @PostMapping("/log")
   @Operation(summary = "Add manually a new Log-Entry")
   public LogResponseDto addLog(@RequestBody LogRequestDto allParameters) {
     String returnMessage = logService.addLog(allParameters);
-    return new LogResponseDto(logService.getLogs(null, null, null, null), returnMessage);
+    return new LogResponseDto(logService.getLogs(null, null, null, null, null), returnMessage);
   }
 
   @GetMapping("/logs/{id}")
@@ -73,7 +75,7 @@ public class LogController {
   @Operation(summary = "Delete logs by id of the log")
   public LogResponseDto deleteLogsByID(@PathVariable final Integer id) {
     String returnMessage = logService.deleteById(id);
-    return new LogResponseDto(logService.getLogs(null, null, null, null), returnMessage);
+    return new LogResponseDto(logService.getLogs(null, null, null, null, null), returnMessage);
   }
 
   @DeleteMapping("/logs/delete/severity")
@@ -86,6 +88,6 @@ public class LogController {
   @Operation(summary = "Delete all Logs")
   public LogResponseDto deleteAll() {
     String returnMessage = logService.deleteAll();
-    return new LogResponseDto(logService.getLogs(null, null, null, null), returnMessage);
+    return new LogResponseDto(logService.getLogs(null, null, null, null, null), returnMessage);
   }
 }

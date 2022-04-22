@@ -15,7 +15,6 @@ const API_GET_LOGS = 'http://localhost:8081/logs';
 const API_DELETE_LOGS = 'http://localhost:8081/logs/delete';
 const API_ADD_LOG = 'http://localhost:8081/log';
 const API_DELETE_LOG = 'http://localhost:8081/logs/delete/'
-const API_GET_USERS = 'http://localhost:8081/users'
 
 @Injectable({
   providedIn: 'root'

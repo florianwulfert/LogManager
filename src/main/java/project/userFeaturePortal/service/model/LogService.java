@@ -36,10 +36,10 @@ public class LogService {
   private final LogDTOMapper logDTOMapper;
 
   public List<LogDTO> getLogs(
-      String severity, String message, LocalDateTime startDate, LocalDateTime endDate) {
+      String severity, String message, LocalDateTime startDate, LocalDateTime endDate, User user) {
 
     return logDTOMapper.logsToLogDTOs(
-        logRepository.findLogs(severity, message, startDate, endDate));
+        logRepository.findLogs(severity, message, startDate, endDate, user));
   }
 
   public String addLog(LogRequestDto logRequestDto) {
