@@ -23,7 +23,8 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  bmiDescription = 'Click here to calculate your BMI according to your weight and height or see the BMI of another user.'
+  bmiDescription = 'Click here to calculate your BMI according to your weight and height.'
   userDescription = 'Click here to search a user, create one or delete one.'
   loggingDescription = 'Click here to see which actions took place in the User Manager.'
+  bookDescription = 'Click here to find, delete or add books to a specific user.'
 }

@@ -154,7 +154,6 @@ class LogServiceTest {
             .bmi(25.39)
             .weight(65)
             .height(1.60)
-            .favouriteColor("Red")
             .build());
     return users;
   }

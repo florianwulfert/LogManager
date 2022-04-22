@@ -9,14 +9,18 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
+import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.BookRepository;
+import project.userFeaturePortal.model.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
@@ -30,6 +34,9 @@ public class BookServiceTest {
   @Mock
   LogService logService;
 
+  @Mock
+  UserRepository userRepository;
+
   List<Book> books;
 
   @BeforeEach
@@ -39,6 +46,8 @@ public class BookServiceTest {
 
   @Test
   void testAddBook() {
+    User torsten = createUser();
+    when(userRepository.findUserByName(anyString())).thenReturn(torsten);
     books.add(
         Book.builder()
             .id(1)
@@ -58,6 +67,8 @@ public class BookServiceTest {
 
   @Test
   void testDeleteById() {
+    User torsten = createUser();
+    when(userRepository.findUserByName(anyString())).thenReturn(torsten);
     assertEquals(String.format(InfoMessages.BOOK_DELETED_ID, books.get(0).getId()),
         bookService.deleteById(books.get(0).getId(), "Torsten"));
     verify(bookRepository).delete(any());
@@ -72,7 +83,7 @@ public class BookServiceTest {
 
   @Test
   void testDeleteByTitel() {
-    ArrayList bookz = new ArrayList<Book>();
+    ArrayList<Book> bookz = new ArrayList<Book>();
     bookz.add(books.get(0));
     Mockito.when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(bookz);
     assertEquals(String.format(InfoMessages.BOOK_DELETED_TITLE, books.get(0).getTitel()),
@@ -89,8 +100,7 @@ public class BookServiceTest {
 
   @Test
   void testGetAllBooks() {
-    bookService.getAllBooks("Torsten");
-    verify(logService).addLog(any());
+    bookService.getAllBooks();
     verify(bookRepository).findAll();
   }
 
@@ -161,5 +171,17 @@ public class BookServiceTest {
             .titel("chris")
             .build());
     return books;
+  }
+
+  private User createUser() {
+    User torsten = User.builder()
+            .id(1)
+            .name("Torsten")
+            .birthdate(LocalDate.of(1999, 12, 13))
+            .bmi(25.39)
+            .weight(65)
+            .height(1.60)
+            .build();
+    return torsten;
   }
 }

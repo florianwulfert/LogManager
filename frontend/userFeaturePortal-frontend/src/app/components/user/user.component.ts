@@ -5,9 +5,9 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AddUserRequest} from "../../modules/user/addUser/add-user-request";
-import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {DeleteUserRequest} from "../../modules/user/deleteUser/delete-user-request";
 import {MatPaginator} from "@angular/material/paginator";
+import {BooksFacade} from "../../modules/books/books.facade";
 
 @Component({
   selector: 'app-user',
@@ -16,19 +16,19 @@ import {MatPaginator} from "@angular/material/paginator";
 })
 export class UserComponent implements OnInit, OnDestroy {
 
-  constructor(private userFacade: UserFacade, private _snackBar: MatSnackBar) {
+  constructor(private userFacade: UserFacade, private _snackBar: MatSnackBar, private booksFacade: BooksFacade) {
   }
 
   subscriptionManager = new SubscriptionManager();
-  featureManager = new FeatureManager(this._snackBar);
 
-  displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'favouriteColor', 'bmi', 'delete']
+  displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'bmi', 'favouriteBook', 'delete']
   dataSource: any
-  colors: string[] = ['blue', 'red', 'orange', 'yellow', 'black']
+  books: any
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit(): void {
     this.getUserList()
+    this.getBooks()
   }
 
   ngOnDestroy(): void {
@@ -42,7 +42,7 @@ export class UserComponent implements OnInit, OnDestroy {
     birthdate: new FormControl('', [Validators.required]),
     height: new FormControl('', [Validators.required]),
     weight: new FormControl('', [Validators.required]),
-    favouriteColor: new FormControl('')
+    favouriteBook: new FormControl('')
   })
 
   applyFilter(event: Event) {
@@ -55,7 +55,7 @@ export class UserComponent implements OnInit, OnDestroy {
     request.birthdate = this.form.get("birthdate")?.value
     request.weight = this.form.get("weight")?.value
     request.height = this.form.get("height")?.value
-    request.favouriteColor = this.form.get("favouriteColor")?.value
+    request.favouriteBook = this.form.get("favouriteBook")?.value
     return request
   }
 
@@ -81,6 +81,13 @@ export class UserComponent implements OnInit, OnDestroy {
     this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
+    });
+  }
+
+  getBooks(): void {
+    this.booksFacade.getBooks();
+    this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
+     this.books = result
     });
   }
 }

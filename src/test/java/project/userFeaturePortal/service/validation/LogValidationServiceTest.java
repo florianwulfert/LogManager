@@ -106,7 +106,6 @@ class LogValidationServiceTest {
         .bmi(25.39)
         .weight(65)
         .height(1.60)
-        .favouriteColor("Red")
         .build();
     when(userRepository.findUserByName(anyString())).thenReturn(testUser);
     systemUnderTest.checkActor("Heinrich");

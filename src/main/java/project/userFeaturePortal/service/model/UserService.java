@@ -5,10 +5,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
+import project.userFeaturePortal.common.dto.user.UserDto;
 import project.userFeaturePortal.common.dto.user.UserRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
+import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
+import project.userFeaturePortal.model.mapper.UserDtoMapper;
 import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.validation.UserValidationService;
 
@@ -26,40 +29,53 @@ public class UserService {
   private final UserRepository userRepository;
   private final BmiService bmiService;
   private final UserValidationService userValidationService;
+  private final BookService bookService;
+  private final UserDtoMapper userDtoMapper;
 
   public String addUser(UserRequestDto userRequestDto) {
     userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
+    List<Book> books = bookService.searchBooksByTitel(userRequestDto.favouriteBook);
+    Book book = null;
+    if (!books.isEmpty()) {
+      book = books.get(0);
+    }
     User user =
         User.builder()
             .name(userRequestDto.name)
             .birthdate(userRequestDto.getBirthdateAsLocalDate())
             .weight(userRequestDto.weight)
             .height(userRequestDto.height)
-            .favouriteColor(userRequestDto.favouriteColor.toLowerCase())
             .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
+            .favouriteBook(book)
             .build();
 
-    userValidationService.validateFarbenEnum(user.getFavouriteColor().toLowerCase());
     userValidationService.checkIfUserToPostExists(user.getName());
     if (userValidationService.checkIfUsersListIsEmpty()) {
       userValidationService.checkIfActorEqualsUserToCreate(userRequestDto.actor, user, true);
       saveUser(user, userRequestDto.actor);
     } else {
-      User activeUser =
-          userValidationService.checkIfNameExists(
-              userRequestDto.actor,
-              true,
-              String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, userRequestDto.actor));
+      User activeUser = userValidationService.checkIfNameExists(
+          userRequestDto.actor,
+          true,
+          String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, userRequestDto.actor));
       saveUser(user, activeUser.getName());
     }
-    return bmiService.calculateBmiAndGetBmiMessage(
-        userRequestDto.getBirthdateAsLocalDate(), userRequestDto.weight, userRequestDto.height);
+    return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
   }
 
-  public List<User> findUserList() {
+  public String addFavouriteBookToUser(String titel, String actorName) {
+    List<Book> book = userValidationService.checkIfBookExists(titel);
+    User actor = userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED);
+    actor.setFavouriteBook(book.get(0));
+    userRepository.save(actor);
+    LOGGER.info(String.format(InfoMessages.BOOK_BY_USER, titel, actor.getName()));
+    return String.format(InfoMessages.BOOK_BY_USER, titel, actor.getName());
+  }
+
+  public List<UserDto> findUserList() {
     List<User> users = userRepository.findAll();
     LOGGER.info(users);
-    return users;
+    return userDtoMapper.usersToUserDtos(users);
   }
 
   public Optional<User> findUserById(Integer id) {
@@ -71,7 +87,7 @@ public class UserService {
   public boolean findUserByName(String name) {
     User user = userRepository.findUserByName(name);
     if (user == null) {
-      List<User> users = findUserList();
+      List<UserDto> users = findUserList();
       return users.isEmpty();
     }
     LOGGER.debug(String.format(InfoMessages.USER_FOUND, name));
@@ -80,9 +96,8 @@ public class UserService {
 
   public void deleteById(Integer id, String actorName) {
     User userToDelete = userValidationService.checkIfIdExists(id);
-    User actor =
-        userValidationService.checkIfNameExists(
-            actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
+    User actor = userValidationService.checkIfNameExists(
+        actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
     userValidationService.checkIfUserToDeleteIdEqualsActorId(id, actor.getId());
     userValidationService.checkIfUsersListIsEmpty();
     userValidationService.checkIfExistLogByUserToDelete(userToDelete);
@@ -113,25 +128,18 @@ public class UserService {
 
   private void saveUser(User user, String actor) {
     userRepository.save(user);
-    String bmi =
-        bmiService.calculateBmiAndGetBmiMessage(
-            user.getBirthdate(), user.getWeight(), user.getHeight());
+    String bmi = bmiService.calculateBmiAndGetBmiMessage(
+        user.getBirthdate(), user.getWeight(), user.getHeight());
     saveLog(String.format(InfoMessages.USER_CREATED + "%s", user.getName(), bmi), "INFO", actor);
-    LOGGER.info(
-        String.format(
-            InfoMessages.USER_CREATED
-                + bmiService.calculateBmiAndGetBmiMessage(
-                user.getBirthdate(), user.getWeight(), user.getHeight()),
-            user.getName()));
+    LOGGER.info(String.format(InfoMessages.USER_CREATED, user.getName()));
   }
 
   private void saveLog(String message, String severity, String actor) {
-    LogRequestDto logRequestDto =
-        LogRequestDto.builder()
-            .message(message)
-            .severity(severity)
-            .user(actor)
-            .build();
+    LogRequestDto logRequestDto = LogRequestDto.builder()
+        .message(message)
+        .severity(severity)
+        .user(actor)
+        .build();
     LOGGER.info("Log " + logRequestDto + String.format(" was saved as %s", severity));
     logService.addLog(logRequestDto);
   }

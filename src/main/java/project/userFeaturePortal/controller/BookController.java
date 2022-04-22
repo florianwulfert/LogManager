@@ -4,38 +4,43 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import project.userFeaturePortal.common.dto.books.BookRequestDto;
+import project.userFeaturePortal.common.dto.books.BooksResponseDto;
+import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.service.model.BookService;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Book")
+@Tag(name = "BookComponent")
 public class BookController {
 
   @Autowired
   private final BookService bookService;
 
   @GetMapping("/books")
-  public List<Book> getAllBooks(@RequestParam String actor) {
-    return bookService.getAllBooks(actor);
+  public BooksResponseDto getAllBooks() {
+    return new BooksResponseDto(bookService.getAllBooks(), null);
   }
 
   @PostMapping("/book")
-  public Book addBook(@RequestParam String titel, @RequestParam Integer erscheinungsjahr,
-      @RequestParam String actor) {
-    return bookService.addBook(erscheinungsjahr, titel, actor);
+  public BooksResponseDto addBook(@RequestBody BookRequestDto parameters) {
+    return new BooksResponseDto(bookService.addBook(parameters.erscheinungsjahr, parameters.titel, parameters.actor),
+            String.format(InfoMessages.BOOK_CREATED, parameters.titel));
   }
 
   @GetMapping("/searchbook")
-  public String findBooksBytitel(@RequestParam String titel) {
+  public List<Book> findBooksByTitel(@RequestParam String titel) {
     return bookService.searchBooksByTitel(titel);
   }
 
   @DeleteMapping("/deletebookById/{id}")
-  public String deleteBooksById(@PathVariable Integer id, @RequestParam String actor) {
-    return bookService.deleteById(id, actor);
+  public BooksResponseDto deleteBooksById(@PathVariable Integer id, @RequestParam String actor) {
+    String returnMessage = bookService.deleteById(id, actor);
+    return new BooksResponseDto(bookService.getAllBooks(), returnMessage);
   }
 
   @DeleteMapping("/deletebooksByTitel")

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.userFeaturePortal.common.dto.books.BookRequestDto;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.service.model.BookService;
 
@@ -17,11 +18,9 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 public class BookControllerTest {
 
-  @InjectMocks
-  BookController bookController;
+  @InjectMocks BookController bookController;
 
-  @Mock
-  BookService bookService;
+  @Mock BookService bookService;
 
   List<Book> books;
 
@@ -32,13 +31,14 @@ public class BookControllerTest {
 
   @Test
   void testAddBook() {
-    books.add(
-        Book.builder()
-            .id(6)
-            .titel("petra")
-            .erscheinungsjahr(1990)
-            .build());
-    bookController.addBook(books.get(0).getTitel(), books.get(0).getErscheinungsjahr(), "Torsten");
+    books.add(Book.builder().id(6).titel("petra").erscheinungsjahr(1990).build());
+    BookRequestDto test =
+        BookRequestDto.builder()
+            .actor("Torsten")
+            .erscheinungsjahr(books.get(0).getErscheinungsjahr())
+            .titel(books.get(0).getTitel())
+            .build();
+    bookController.addBook(test);
     verify(bookService).addBook(1998, "haya", "Torsten");
   }
 
@@ -62,38 +62,22 @@ public class BookControllerTest {
 
   @Test
   void testFindBooksBytitel() {
-    bookController.findBooksBytitel("haya");
+    bookController.findBooksByTitel("haya");
     verify(bookService).searchBooksByTitel("haya");
-
   }
 
   @Test
   void testGetAllBooks() {
-    bookController.getAllBooks("Torsten");
-    verify(bookService).getAllBooks("Torsten");
+    bookController.getAllBooks();
+    verify(bookService).getAllBooks();
   }
 
   private List<Book> addTestBook() {
     List<Book> books = new ArrayList<>();
-    books.add(
-        Book.builder()
-            .id(2)
-            .titel("haya")
-            .erscheinungsjahr(1998)
-            .build());
+    books.add(Book.builder().id(2).titel("haya").erscheinungsjahr(1998).build());
 
-    books.add(
-        Book.builder()
-            .id(3)
-            .titel("Lina")
-            .erscheinungsjahr(2000)
-            .build());
-    books.add(
-        Book.builder()
-            .id(4)
-            .titel("Chris")
-            .erscheinungsjahr(2002)
-            .build());
+    books.add(Book.builder().id(3).titel("Lina").erscheinungsjahr(2000).build());
+    books.add(Book.builder().id(4).titel("Chris").erscheinungsjahr(2002).build());
     return books;
   }
 }

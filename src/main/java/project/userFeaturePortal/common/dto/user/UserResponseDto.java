@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import project.userFeaturePortal.model.entity.User;
 
 import java.util.List;
 
@@ -14,6 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class UserResponseDto {
 
-  List<User> result;
+  List<UserDto> result;
   String returnMessage;
 }
