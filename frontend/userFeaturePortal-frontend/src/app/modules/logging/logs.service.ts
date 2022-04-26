@@ -12,9 +12,9 @@ import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {DeleteLogResponse} from "./deleteLog/dto/delete-log-response";
 
 const API_GET_LOGS = 'http://localhost:8081/logs';
-const API_DELETE_LOGS = 'http://localhost:8081/logs/delete';
+const API_DELETE_LOGS = 'http://localhost:8081/logs';
 const API_ADD_LOG = 'http://localhost:8081/log';
-const API_DELETE_LOG = 'http://localhost:8081/logs/delete/'
+const API_DELETE_LOG = 'http://localhost:8081/log/id/'
 
 @Injectable({
   providedIn: 'root'

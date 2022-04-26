@@ -48,20 +48,20 @@ public class UserController {
     return new FindUserResponseDto(userService.findUserByName(name));
   }
 
-  @DeleteMapping("/user/delete/{id}")
+  @DeleteMapping("/user/id/{id}")
   public UserResponseDto deleteUserByID(@PathVariable final Integer id, @RequestParam final String actor) {
     userService.deleteById(id, actor);
     return new UserResponseDto(userService.findUserList(), null);
   }
 
-  @DeleteMapping("/user/delete/name/{name}")
+  @DeleteMapping("/user/name/{name}")
   public UserResponseDto deleteUserByName(
       @PathVariable final String name, @RequestParam final String actor) {
     String returnMessage = userService.deleteByName(name, actor);
     return new UserResponseDto(userService.findUserList(), returnMessage);
   }
 
-  @DeleteMapping("/user/delete")
+  @DeleteMapping("/users")
   public UserResponseDto deleteAll() {
     String returnMessage = userService.deleteAll();
     return new UserResponseDto(userService.findUserList(), returnMessage);

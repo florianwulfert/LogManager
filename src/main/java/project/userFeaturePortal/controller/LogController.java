@@ -67,20 +67,20 @@ public class LogController {
     return logDTOMapper.logsToLogDTOs(returnList);
   }
 
-  @DeleteMapping("/logs/delete/{id}")
+  @DeleteMapping("/log/id/{id}")
   @Operation(summary = "Delete logs by id of the log")
   public LogResponseDto deleteLogsByID(@PathVariable final Integer id) {
     String returnMessage = logService.deleteById(id);
     return new LogResponseDto(logService.getLogs(null,null,null,null), returnMessage);
   }
 
-  @DeleteMapping("/logs/delete/severity")
+  @DeleteMapping("/log/severity")
   @Operation(summary = "Delete logs by severity of the log")
   public String deleteLogsBySeverity(@RequestParam final String severity) {
     return logService.deleteBySeverity(severity);
   }
 
-  @DeleteMapping("/logs/delete")
+  @DeleteMapping("/logs")
   @Operation(summary = "Delete all Logs")
   public LogResponseDto deleteAll() {
     String returnMessage = logService.deleteAll();

@@ -32,23 +32,23 @@ public class BookController {
             String.format(InfoMessages.BOOK_CREATED, parameters.titel));
   }
 
-  @GetMapping("/searchbook")
+  @GetMapping("/book")
   public List<Book> findBooksByTitel(@RequestParam String titel) {
     return bookService.searchBooksByTitel(titel);
   }
 
-  @DeleteMapping("/deletebookById/{id}")
+  @DeleteMapping("/book/id/{id}")
   public BooksResponseDto deleteBooksById(@PathVariable Integer id, @RequestParam String actor) {
     String returnMessage = bookService.deleteById(id, actor);
     return new BooksResponseDto(bookService.getAllBooks(), returnMessage);
   }
 
-  @DeleteMapping("/deletebooksByTitel")
+  @DeleteMapping("/book/titel")
   public String deleteBooksByTitel(@RequestParam String titel, @RequestParam String actor) {
     return bookService.deleteByTitel(titel, actor);
   }
 
-  @DeleteMapping("allBooksdelete")
+  @DeleteMapping("/books")
   public String deleteAll() {
     return bookService.deleteBooks();
   }
