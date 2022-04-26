@@ -15,7 +15,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "BookComponent")
+@Tag(name = "Book")
 public class BookController {
 
   @Autowired
