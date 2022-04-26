@@ -12,7 +12,7 @@ import {DeleteBookResponse} from "./deleteBook/delete-book-response";
 
 const API_GET_BOOKS = 'http://localhost:8081/books'
 const API_ADD_BOOK = 'http://localhost:8081/book'
-const API_DELETE_BOOK = 'http://localhost:8081/deletebookById/'
+const API_DELETE_BOOK = 'http://localhost:8081/book/id/'
 const API_ADD_BOOK_TO_USER = 'http://localhost:8081/user/favouriteBook?bookTitel='
 
 @Injectable({

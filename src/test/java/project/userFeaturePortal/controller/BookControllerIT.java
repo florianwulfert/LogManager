@@ -78,25 +78,25 @@ class BookControllerIT {
         return Stream.of(
                 Arguments.of(
                         "petra",
-                        "/deletebookById/1",
+                        "/book/id/1",
                         "Torsten",
                         status().isOk(),
                         TestMessages.BOOK_PETRA_DELETED_BY_ID),
                 Arguments.of(
                         "peter",
-                        "/deletebookById/3",
+                        "/book/id/3",
                         "Torsten",
                         status().isOk(),
                         TestMessages.BOOK_PETER_DELETED_BY_ID),
                 Arguments.of(
                         "haya",
-                        "/deletebookById/kevin",
+                        "/book/id/kevin",
                         "Torsten",
                         status().isBadRequest(),
                         String.format(TestMessages.ID_FOR_BOOK_HAS_WRONG_FORMAT)),
                 Arguments.of(
                         "omar",
-                        "/deletebookById/",
+                        "/book/id/",
                         "Torsten",
                         status().isNotFound(),
                         ""));
@@ -105,13 +105,13 @@ class BookControllerIT {
     private static Stream<Arguments> getDeleteBookByTitelArguments() {
         return Stream.of(
                 Arguments.of(
-                        "Book was succussfuly deleted",
+                        "Book was successfully deleted",
                         "peter",
                         "Torsten",
                         status().isOk(),
                         String.format(InfoMessages.BOOK_DELETED_TITLE, "peter")),
                 Arguments.of(
-                        "Book was succussfuly deleted",
+                        "Book was successfully deleted",
                         "omar",
                         "Torsten",
                         status().isOk(),
@@ -202,7 +202,7 @@ class BookControllerIT {
             ResultMatcher status,
             String message) throws Exception {
         MvcResult result = mockMvc
-                .perform(delete("/deletebooksByTitel").param("titel", titel).param("actor", actor))
+                .perform(delete("/book/titel").param("titel", titel).param("actor", actor))
                 .andDo(print())
                 .andExpect(status)
                 .andReturn();
@@ -214,7 +214,7 @@ class BookControllerIT {
     void testDeleteAll() throws Exception {
 
         MvcResult result = mockMvc
-                .perform(delete("/allBooksdelete"))
+                .perform(delete("/books"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -279,30 +279,17 @@ class BookControllerIT {
     }
 
     @Nested
-    class FindBookBytitelTests {
+    class FindBookByTitelTests {
 
         @Test
         void testFindBookBytitel() throws Exception {
             MvcResult result = mockMvc
-                    .perform(get("/searchbook").param("titel", "haya"))
+                    .perform(get("/book").param("titel", "haya"))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andReturn();
             assertEquals(String.format(TestMessages.BOOK_HAYA),
                     result.getResponse().getContentAsString());
         }
-
-        @Test
-        void whenTitleToFindNotFoundThenReturnIsNotFound() throws Exception {
-            MvcResult result = mockMvc
-                    .perform(get("/book/title").param("title", "christina"))
-                    .andDo(print())
-                    .andExpect(status().isNotFound())
-                    .andReturn();
-
-            assertEquals("", result.getResponse().getContentAsString());
-
-        }
     }
-
 }

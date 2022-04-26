@@ -13,8 +13,8 @@ import {FeatureManager} from "../../../assets/utils/feature.manager";
 
 const API_BASE = 'http://localhost:8081/users';
 const API_ADD_USER = 'http://localhost:8081/user';
-const API_DELETE_USERS = 'http://localhost:8081/user/delete';
-const API_DELETE_USER = 'http://localhost:8081/user/delete/';
+const API_DELETE_USERS = 'http://localhost:8081/users';
+const API_DELETE_USER = 'http://localhost:8081/user/id/';
 
 @Injectable({
   providedIn: 'root'

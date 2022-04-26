@@ -344,7 +344,7 @@ class LogControllerIT {
         @Test
         void testDeleteLogsById() throws Exception {
             MvcResult result = mockMvc
-                    .perform(delete("/logs/delete/2"))
+                    .perform(delete("/log/id/2"))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andReturn();
@@ -366,7 +366,7 @@ class LogControllerIT {
         @Test
         void testIdForDeleteLogsNotFound() throws Exception {
             MvcResult result = mockMvc
-                    .perform(delete("/logs/delete/20"))
+                    .perform(delete("/log/id/20"))
                     .andDo(print())
                     .andExpect(status().isInternalServerError())
                     .andReturn();
@@ -377,7 +377,7 @@ class LogControllerIT {
         @Test
         void testIdForDeleteLogsHasWrongFormat() throws Exception {
             MvcResult result = mockMvc
-                    .perform(delete("/logs/delete/hallo"))
+                    .perform(delete("/log/id/hallo"))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andReturn();
@@ -389,7 +389,7 @@ class LogControllerIT {
         @Test
         void testDeleteLogsBySeverity() throws Exception {
             MvcResult result = mockMvc
-                    .perform(delete("/logs/delete/severity").param("severity", "INFO"))
+                    .perform(delete("/log/severity").param("severity", "INFO"))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andReturn();
@@ -400,7 +400,7 @@ class LogControllerIT {
         @Test
         void testWrongSeverityForDelete() throws Exception {
             MvcResult result = mockMvc
-                    .perform(delete("/logs/delete/severity").param("severity", "hi"))
+                    .perform(delete("/log/severity").param("severity", "hi"))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andReturn();
@@ -411,7 +411,7 @@ class LogControllerIT {
         @Test
         void testDeleteAll() throws Exception {
             MvcResult result = mockMvc
-                    .perform(delete("/logs/delete"))
+                    .perform(delete("/logs"))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andReturn();
