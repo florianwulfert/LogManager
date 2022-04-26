@@ -221,34 +221,34 @@ class UserControllerIT {
                 return Stream.of(
                                 Arguments.of(
                                                 false,
-                                                "/user/delete/1",
+                                                "/user/id/1",
                                                 "Hans",
                                                 status().isOk(),
                                                 TestMessages.USER_DELETED_BY_ID),
                                 Arguments.of(
                                                 false,
-                                                "/user/delete/1",
+                                                "/user/id/1",
                                                 "Paul",
                                                 status().isForbidden(),
                                                 String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "Paul")),
                                 Arguments.of(
-                                                false, "/user/delete/1", null, status().isBadRequest(),
+                                                false, "/user/id/1", null, status().isBadRequest(),
                                                 TestMessages.ACTOR_NOT_PRESENT),
                                 Arguments.of(
                                                 false,
-                                                "/user/delete/8",
+                                                "/user/id/8",
                                                 "Torsten",
                                                 status().isInternalServerError(),
                                                 String.format(ErrorMessages.USER_NOT_FOUND_ID, 8)),
                                 Arguments.of(
                                                 false,
-                                                "/user/delete/2",
+                                                "/user/id/2",
                                                 "Torsten",
                                                 status().isInternalServerError(),
                                                 ErrorMessages.USER_DELETE_HIMSELF),
                                 Arguments.of(
                                                 true,
-                                                "/user/delete/1",
+                                                "/user/id/1",
                                                 "Torsten",
                                                 status().isInternalServerError(),
                                                 String.format(ErrorMessages.USER_REFERENCED, "Petra")));
@@ -283,50 +283,43 @@ class UserControllerIT {
                                 Arguments.of(
                                                 "User successfully deleted by name",
                                                 false,
-                                                "/user/delete/name/Petra",
+                                                "/user/name/Petra",
                                                 "Torsten",
                                                 status().isOk(),
                                                 TestMessages.USER_PETRA_DELETED_BY_NAME),
                                 Arguments.of(
                                                 "Actor wants to delete himself",
                                                 false,
-                                                "/user/delete/name/Torsten",
+                                                "/user/name/Torsten",
                                                 "Torsten",
                                                 status().isInternalServerError(),
                                                 ErrorMessages.USER_DELETE_HIMSELF),
                                 Arguments.of(
                                                 "Actor not present",
                                                 false,
-                                                "/user/delete/name/Petra",
+                                                "/user/name/Petra",
                                                 null,
                                                 status().isBadRequest(),
                                                 TestMessages.ACTOR_NOT_PRESENT),
                                 Arguments.of(
                                                 "Actor not in database",
                                                 false,
-                                                "/user/delete/name/Petra",
+                                                "/user/name/Petra",
                                                 "ActorName",
                                                 status().isForbidden(),
                                                 String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "ActorName")),
                                 Arguments.of(
                                                 "User to delete not in database ",
                                                 false,
-                                                "/user/delete/name/UserToDeleteNichtBekannt",
+                                                "/user/name/UserToDeleteNichtBekannt",
                                                 "Torsten",
                                                 status().isNotFound(),
                                                 String.format(ErrorMessages.USER_NOT_FOUND_NAME,
                                                                 "UserToDeleteNichtBekannt")),
                                 Arguments.of(
-                                                "User to delete not present",
-                                                false,
-                                                "/user/delete/name/",
-                                                "Torsten",
-                                                status().isBadRequest(),
-                                                TestMessages.USER_TO_DELETE_NOT_PRESENT),
-                                Arguments.of(
                                                 "User is referenced in another table",
                                                 true,
-                                                "/user/delete/name/Petra",
+                                                "/user/name/Petra",
                                                 "Torsten",
                                                 status().isInternalServerError(),
                                                 String.format(ErrorMessages.USER_REFERENCED, "Petra")));
@@ -454,7 +447,7 @@ class UserControllerIT {
                 void testDeleteAll() throws Exception {
                         logRepository.deleteAll();
                         MvcResult result = mockMvc
-                                        .perform(delete("/user/delete"))
+                                        .perform(delete("/users"))
                                         .andDo(print())
                                         .andExpect(status().isOk())
                                         .andReturn();
@@ -473,7 +466,7 @@ class UserControllerIT {
                                                         .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
                                                         .build());
                         MvcResult result = mockMvc
-                                        .perform(delete("/user/delete"))
+                                        .perform(delete("/users"))
                                         .andDo(print())
                                         .andExpect(status().isInternalServerError())
                                         .andReturn();
