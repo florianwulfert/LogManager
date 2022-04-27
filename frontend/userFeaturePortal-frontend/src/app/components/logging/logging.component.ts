@@ -8,6 +8,7 @@ import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
 import {DeleteLogRequest} from "../../modules/logging/deleteLog/dto/delete-log-request";
 import {MatPaginator} from "@angular/material/paginator";
 import {UserFacade} from "../../modules/user/user.facade";
+import {GetLogsRequest} from "../../modules/logging/getLogs/dto/getLogs-request";
 
 
 @Component({
@@ -59,13 +60,24 @@ export class LoggingComponent implements OnInit, OnDestroy {
   public formFilter: FormGroup = new FormGroup({
     severity: new FormControl(''),
     user: new FormControl(''),
-    dateFrom: new FormControl(''),
-    dateTo: new FormControl(''),
+    startDateTime: new FormControl(''),
+    endDateTime: new FormControl(''),
     message: new FormControl('')
   })
 
+  prepareGetLogsRequest(request: GetLogsRequest) {
+    request.severity = this.formFilter.get("severity")?.value
+    request.message = this.formFilter.get("message")?.value
+    request.startDateTime = this.formFilter.get("startDateTime")?.value
+    request.endDateTime = this.formFilter.get("endDateTime")?.value
+    request.user = this.formFilter.get("user")?.value
+
+  }
+
   getLogs(): void {
-    this.logsFacade.getLogs()
+    let request = new GetLogsRequest()
+    this.prepareGetLogsRequest(request)
+    this.logsFacade.getLogs(request)
     this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
@@ -100,6 +112,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   filterLogs(): void {
+    this.getLogs()
     this.filterButtonPressed = true
   }
 

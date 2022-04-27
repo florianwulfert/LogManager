@@ -31,29 +31,26 @@
 
       <mat-form-field appearance="fill" class="filter-button">
         <mat-label>Date From</mat-label>
-        <input type="date" matInput formControlName="dateFrom">
-        <button *ngIf="formFilter.controls['dateFrom'].value" matSuffix mat-icon-button aria-label="Clear"
-                (click)="formFilter.controls['dateFrom'].reset()">
+        <input type="date" matInput formControlName="startDateTime">
+        <button *ngIf="formFilter.controls['startDateTime'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['startDateTime'].reset()">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="filter-button">
         <mat-label>Date To</mat-label>
-        <input type="date" matInput formControlName="dateTo">
-        <button *ngIf="formFilter.controls['dateTo'].value" matSuffix mat-icon-button aria-label="Clear"
-                (click)="formFilter.controls['dateTo'].reset()">
+        <input type="date" matInput formControlName="endDateTime">
+        <button *ngIf="formFilter.controls['endDateTime'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['endDateTime'].reset()">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="filter-button">
         <mat-label>Message</mat-label>
-        <mat-select formControlName="message">
-          <mat-option *ngFor="let message of messages" [value]="message">
-            {{message.message}}
-          </mat-option>
-        </mat-select>
+        <input matInput formControlName="message">
+
         <button *ngIf="formFilter.controls['message'].value" matSuffix mat-icon-button aria-label="Clear"
                 (click)="formFilter.controls['message'].reset()">
           <mat-icon>close</mat-icon>
@@ -135,7 +132,7 @@
     </mat-paginator>
 
   </div>
-  <div class="col-12 col-lg-4">
+  <div class="col-12 col-lg-4" *ngIf="filterButtonPressed">
     <div class="rightSide"></div>
     <mat-accordion multi>
       <mat-expansion-panel>

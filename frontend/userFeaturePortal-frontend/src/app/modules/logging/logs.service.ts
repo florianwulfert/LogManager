@@ -10,6 +10,7 @@ import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {ActorFacade} from "../actor/actor.facade";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {DeleteLogResponse} from "./deleteLog/dto/delete-log-response";
+import {GetLogsRequest} from "./getLogs/dto/getLogs-request";
 
 const API_GET_LOGS = 'http://localhost:8081/logs';
 const API_DELETE_LOGS = 'http://localhost:8081/logs/delete';
@@ -26,18 +27,33 @@ export class LogService {
   name: string | undefined
   subscriptionManager = new SubscriptionManager();
 
-  getLogs(): Observable<GetLogsResponse> {
-    return this.http.get<GetLogsResponse>(API_GET_LOGS, {
+  buildRequestParams(getLogsRequest: GetLogsRequest): String {
+    let severity: string
+    let message: string
+    let startDateTime: string
+    let endDateTime: string
+    let user: string
+
+    return '?severity=' + getLogsRequest.severity
+      + '&message=' + getLogsRequest.message
+      + '&startDateTime=' + getLogsRequest.startDateTime
+      + '&endDateTime=' + getLogsRequest.endDateTime
+      + '&user=' + getLogsRequest.user
+  }
+
+  getLogs(getLogsRequest: GetLogsRequest): Observable<GetLogsResponse> {
+    return this.http.get<GetLogsResponse>(API_GET_LOGS + this.buildRequestParams(getLogsRequest), {
       observe: 'response'
     }).pipe(
       map((r) => {
+        console.log(r.body)
         return r.body || {
           result: [],
           returnMessage: ""
         }
       }),
       catchError((err) => {
-        if(err.error instanceof Object) {
+        if (err.error instanceof Object) {
           this.featureManager.openSnackbar(err.error.text);
         } else {
           this.featureManager.openSnackbar(err.error);
@@ -59,7 +75,7 @@ export class LogService {
         }
       }),
       catchError((err) => {
-        if(err.error instanceof Object) {
+        if (err.error instanceof Object) {
           this.featureManager.openSnackbar(err.error.text);
         } else {
           this.featureManager.openSnackbar(err.error);
@@ -84,7 +100,7 @@ export class LogService {
         }
       }),
       catchError((err) => {
-        if(err.error instanceof Object) {
+        if (err.error instanceof Object) {
           this.featureManager.openSnackbar(err.error.text);
         } else {
           this.featureManager.openSnackbar(err.error);
@@ -106,7 +122,7 @@ export class LogService {
         }
       }),
       catchError((err) => {
-        if(err.error instanceof Object) {
+        if (err.error instanceof Object) {
           this.featureManager.openSnackbar(err.error.text);
         } else {
           this.featureManager.openSnackbar(err.error);

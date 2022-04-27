@@ -12,7 +12,6 @@ import project.userFeaturePortal.common.dto.log.LogDTO;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.dto.log.LogResponseDto;
 import project.userFeaturePortal.model.entity.Log;
-import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.mapper.LogDTOMapper;
 import project.userFeaturePortal.service.model.LogService;
 
@@ -49,7 +48,7 @@ public class LogController {
           final LocalDateTime startDateTime,
       @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
           final LocalDateTime endDateTime,
-      @RequestParam(required = false) final User user) {
+      @RequestParam(required = false) final String user) {
 
     return new LogResponseDto(
         logService.getLogs(severity, message, startDateTime, endDateTime, user), null);

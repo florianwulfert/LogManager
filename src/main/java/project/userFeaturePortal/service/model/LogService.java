@@ -13,6 +13,7 @@ import project.userFeaturePortal.model.entity.Log;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.mapper.LogDTOMapper;
 import project.userFeaturePortal.model.repository.LogRepository;
+import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.validation.LogValidationService;
 
 import javax.transaction.Transactional;
@@ -34,10 +35,12 @@ public class LogService {
   private final LogRepository logRepository;
   private final LogValidationService logValidationService;
   private final LogDTOMapper logDTOMapper;
+  private final UserRepository userRepository;
 
   public List<LogDTO> getLogs(
-      String severity, String message, LocalDateTime startDate, LocalDateTime endDate, User user) {
+      String severity, String message, LocalDateTime startDate, LocalDateTime endDate, String userName) {
 
+    User user = userRepository.findUserByName(userName);
     return logDTOMapper.logsToLogDTOs(
         logRepository.findLogs(severity, message, startDate, endDate, user));
   }
