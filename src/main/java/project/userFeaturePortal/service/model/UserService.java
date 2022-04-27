@@ -49,18 +49,15 @@ public class UserService {
             .favouriteBook(book)
             .build();
 
-    userValidationService.checkIfUserToPostExists(user.getName());
-    if (userValidationService.checkIfUsersListIsEmpty()) {
-      userValidationService.checkIfActorEqualsUserToCreate(userRequestDto.actor, user, true);
+    if (userValidationService.validateUser1(user.getName(), userRequestDto.actor)) {
       saveUser(user, userRequestDto.actor);
-    } else {
-      User activeUser = userValidationService.checkIfNameExists(
-          userRequestDto.actor,
-          true,
-          String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, userRequestDto.actor));
-      saveUser(user, activeUser.getName());
+      return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
     }
-    return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
+    if (userValidationService.validateUser2(userRequestDto.actor)) {
+      saveUser(user, userRequestDto.actor);
+      return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
+    }
+    return ErrorMessages.USER_CREATION_NOT_SUCCEED;
   }
 
   public String addFavouriteBookToUser(String titel, String actorName) {

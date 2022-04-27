@@ -56,14 +56,14 @@ public class UserValidationService {
     return false;
   }
 
-  public void checkIfActorEqualsUserToCreate(String actor, User user, boolean isActor) {
-    if (!user.getName().equals(actor)) {
+  public void checkIfActorEqualsUserToCreate(String actor, String user, boolean isActor) {
+    if (!user.equals(actor)) {
       if (isActor) {
-        LOGGER.warn(ErrorMessages.NO_USERS_YET + user.getName() + " unequal " + actor);
-        throw new FirstUserUnequalActorException(actor, user.getName());
+        LOGGER.warn(ErrorMessages.NO_USERS_YET + user + " unequal " + actor);
+        throw new FirstUserUnequalActorException(actor, user);
       }
-      LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_NAME, user.getName()));
-      throw new UserNotFoundException(user.getName());
+      LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_NAME, user));
+      throw new UserNotFoundException(user);
     }
     LOGGER.info(InfoMessages.ACTOR_EQUALS_USER);
   }
@@ -139,5 +139,20 @@ public class UserValidationService {
       LOGGER.warn(ErrorMessages.USERS_REFERENCED);
       throw new RuntimeException(ErrorMessages.USERS_REFERENCED);
     }
+  }
+
+  public boolean validateUser1(String name, String actor) {
+    checkIfUserToPostExists(name);
+    if (checkIfUsersListIsEmpty()) {
+      checkIfActorEqualsUserToCreate(actor, name, true);
+      return true;
+    }
+    return true;
+  }
+
+  public boolean validateUser2(String actor) {
+    checkIfNameExists(actor, true,
+            String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, actor));
+    return true;
   }
 }

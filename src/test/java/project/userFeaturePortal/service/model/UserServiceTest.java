@@ -64,10 +64,8 @@ class UserServiceTest {
   @Test
   void testAddUser() {
     List<Book> testBook = testBook();
-    when(userValidationService.checkIfUsersListIsEmpty())
-        .thenReturn(false);
-    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString()))
-        .thenReturn(users.get(1));
+    when(userValidationService.validateUser1(anyString(), anyString()))
+        .thenReturn(true);
     systemUnderTest.addUser(
         UserRequestDto.builder()
             .actor("Torsten")
@@ -81,26 +79,19 @@ class UserServiceTest {
     verify(bookService).searchBooksByTitel("TestBook");
     verify(userRepository).save(any());
   }
+
   @Test
-  void testBooksListIsNotEmpty() {
-    List<Book> testBook = testBook();
-    when(userValidationService.checkIfUsersListIsEmpty())
-        .thenReturn(false);
-    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString()))
-        .thenReturn(users.get(1));
-    when(bookService.searchBooksByTitel(anyString())).thenReturn(testBook);
-    systemUnderTest.addUser(
-        UserRequestDto.builder()
+  void whenBooksListNotEmpty_ThenReturnFirstBookOfList() {
+    List<Book> bookList = testBook();
+    systemUnderTest.addUser(UserRequestDto.builder()
             .actor("Torsten")
             .name("Hugo")
             .birthdate("1994-10-05")
             .weight(75.0)
             .height(1.65)
-            .favouriteBook(testBook.get(0).getTitel())
+            .favouriteBook(bookList.get(0).getTitel())
             .build());
-    verify(logService).addLog(any());
     verify(bookService).searchBooksByTitel("TestBook");
-    verify(userRepository).save(any());
   }
 
   @Test
@@ -116,7 +107,8 @@ class UserServiceTest {
     List<Book> testBook = testBook();
     when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
         .thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
-    when(userValidationService.checkIfUsersListIsEmpty()).thenReturn(true);
+    when(userValidationService.validateUser1(anyString(),anyString())).thenReturn(false);
+    when(userValidationService.validateUser2(anyString())).thenReturn(true);
     systemUnderTest.addUser(
         UserRequestDto.builder()
             .actor("Torsten")
