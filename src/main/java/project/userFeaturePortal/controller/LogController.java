@@ -19,9 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author - EugenFriesen 12.02.2021
- */
+/** @author - EugenFriesen 12.02.2021 */
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin
@@ -32,30 +30,35 @@ public class LogController {
   private final LogDTOMapper logDTOMapper;
 
   @GetMapping("/logs")
-  @Operation(summary = "Get Logs filtered by severity and/or message and/or date or nothing", responses = {
-      @ApiResponse(
-          description = "Get logs succeeded",
-          responseCode = "200",
-          content = @Content(
-              mediaType = "application/json",
-              schema = @Schema(implementation = LogResponseDto.class)
-          )
-      )
-  })
+  @Operation(
+      summary = "Get Logs filtered by severity and/or message and/or date or nothing",
+      responses = {
+        @ApiResponse(
+            description = "Get logs succeeded",
+            responseCode = "200",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = LogResponseDto.class)))
+      })
   public LogResponseDto getLogs(
       @RequestParam(required = false) final String severity,
       @RequestParam(required = false) final String message,
-      @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime startDateTime,
-      @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime endDateTime) {
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss")
+          final LocalDateTime startDateTime,
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss")
+          final LocalDateTime endDateTime,
+      @RequestParam(required = false) final String user) {
 
-    return new LogResponseDto(logService.getLogs(severity, message, startDateTime, endDateTime), null);
+    return new LogResponseDto(
+        logService.getLogs(severity, message, startDateTime, endDateTime, user), null);
   }
 
   @PostMapping("/log")
   @Operation(summary = "Add manually a new Log-Entry")
   public LogResponseDto addLog(@RequestBody LogRequestDto allParameters) {
     String returnMessage = logService.addLog(allParameters);
-    return new LogResponseDto(logService.getLogs(null, null, null, null), returnMessage);
+    return new LogResponseDto(logService.getLogs(null, null, null, null, null), returnMessage);
   }
 
   @GetMapping("/logs/{id}")
@@ -71,7 +74,7 @@ public class LogController {
   @Operation(summary = "Delete logs by id of the log")
   public LogResponseDto deleteLogsByID(@PathVariable final Integer id) {
     String returnMessage = logService.deleteById(id);
-    return new LogResponseDto(logService.getLogs(null,null,null,null), returnMessage);
+    return new LogResponseDto(logService.getLogs(null, null, null, null, null), returnMessage);
   }
 
   @DeleteMapping("/log/severity")
@@ -84,6 +87,6 @@ public class LogController {
   @Operation(summary = "Delete all Logs")
   public LogResponseDto deleteAll() {
     String returnMessage = logService.deleteAll();
-    return new LogResponseDto(logService.getLogs(null, null, null, null), returnMessage);
+    return new LogResponseDto(logService.getLogs(null, null, null, null, null), returnMessage);
   }
 }

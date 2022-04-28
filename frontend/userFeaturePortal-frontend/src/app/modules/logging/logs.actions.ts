@@ -5,8 +5,9 @@ import {AddLogErrorResponse, AddLogResponse} from "./addLogs/dto/add-log-respons
 import {AddLogRequest} from "./addLogs/dto/add-log-request";
 import {DeleteLogRequest} from "./deleteLog/dto/delete-log-request";
 import {DeleteLogErrorResponse, DeleteLogResponse} from "./deleteLog/dto/delete-log-response";
+import {GetLogsRequest} from "./getLogs/dto/getLogs-request";
 
-export const getLogsAction = createAction('Get logs');
+export const getLogsAction = createAction('Get logs', props<GetLogsRequest>());
 export const getLogsResponseAction = createAction('Get list of logs', props<GetLogsResponse>())
 export const loadGetLogsErrorAction = createAction('Load Get logs failure', props<GetLogsErrorResponse>())
 

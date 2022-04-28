@@ -67,19 +67,19 @@ class LogServiceTest {
 
   @Test
   void testGetLogs() {
-    when(logDTOMapper.logsToLogDTOs(logRepository.findLogs(any(), any(), any(), any())))
+    when(logDTOMapper.logsToLogDTOs(logRepository.findLogs(any(), any(), any(), any(), any())))
         .thenReturn(logs);
     LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
     LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
-    systemUnderTest.getLogs("WARNING", "Test", startDate, endDate);
-    verify(logDTOMapper).logsToLogDTOs(logRepository.findLogs(any(), any(), any(), any()));
+    systemUnderTest.getLogs("WARNING", "Test", startDate, endDate, null);
+    verify(logDTOMapper).logsToLogDTOs(logRepository.findLogs(any(), any(), any(), any(), any()));
   }
 
   @Test
   void testSeverityIsFalseAtGetLogs() {
     LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
     LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
-    assertEquals(new ArrayList<>(), systemUnderTest.getLogs("Hallo", "Test", startDate, endDate));
+    assertEquals(new ArrayList<>(), systemUnderTest.getLogs("Hallo", "Test", startDate, endDate, null));
   }
 
   @Test
