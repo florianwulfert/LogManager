@@ -90,12 +90,12 @@ class LogControllerIT {
     }
 
     private Stream<Arguments> getLogsArgument() {
-        String jahr1999 = "12.12.1999 12:12:12";
-        String jahr2005 = "14.01.2005 12:10:10";
-        String jahr2004 = "15.02.2004 15:12:14";
-        String jahr1995 = "16.04.1995 18:12:14";
-        String jahr2015 = "25.11.2015 17:18:15";
-        String jahr2002 = "12.03.2002 18:19:20";
+        String jahr1999 = "1999-12-12-12-12-12";
+        String jahr2005 = "2005-01-14-12-10-10";
+        String jahr2004 = "2004-02-15-15-12-14";
+        String jahr1995 = "1995-04-16-18-12-14";
+        String jahr2015 = "2015-11-25-17-18-15";
+        String jahr2002 = "2002-03-12-18-19-20";
 
         return Stream.of(
                 Arguments.of("AllLogs", null, null, null, null, status().isOk(), 10),
