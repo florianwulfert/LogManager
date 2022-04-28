@@ -21,7 +21,7 @@ public interface LogRepository extends JpaRepository<Log, Integer> {
           + " AND (:message is null or log.message like concat('%',:message,'%'))"
           + " AND (:startDate is null or log.timestamp > :startDate)"
           + " AND (:endDate is null or log.timestamp < :endDate)"
-          + " AND (:user is null or log.user < :user)")
+          + " AND (:user is null or log.user = :user)")
   List<Log> findLogs(
       String severity, String message, LocalDateTime startDate, LocalDateTime endDate, User user);
 

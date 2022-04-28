@@ -44,9 +44,9 @@ public class LogController {
   public LogResponseDto getLogs(
       @RequestParam(required = false) final String severity,
       @RequestParam(required = false) final String message,
-      @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss")
           final LocalDateTime startDateTime,
-      @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss")
           final LocalDateTime endDateTime,
       @RequestParam(required = false) final String user) {
 

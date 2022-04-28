@@ -71,7 +71,6 @@ export class LoggingComponent implements OnInit, OnDestroy {
     request.startDateTime = this.formFilter.get("startDateTime")?.value
     request.endDateTime = this.formFilter.get("endDateTime")?.value
     request.user = this.formFilter.get("user")?.value
-
   }
 
   getLogs(): void {

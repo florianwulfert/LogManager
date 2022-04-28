@@ -26,6 +26,27 @@ export class LogService {
 
   name: string | undefined
   subscriptionManager = new SubscriptionManager();
+  countParameter: number = 0
+
+  checkParameter(requestParameter: string | undefined, parameterName: string): string {
+
+    if (requestParameter === "" || requestParameter === null || requestParameter === undefined) {
+      return ""
+    } else {
+      this.countParameter++
+      console.log(this.countParameter)
+      let connectionItem = this.countParameter > 1 ? "&" : "?"
+      return connectionItem + parameterName + '=' + requestParameter
+    }
+  }
+
+  checkDateTime(dateTime: string): string {
+    if (dateTime === '' || dateTime === null) {
+      return ''
+    } else {
+      return dateTime + "-00-00-00"
+    }
+  }
 
   buildRequestParams(getLogsRequest: GetLogsRequest): String {
     let severity: string
@@ -34,14 +55,20 @@ export class LogService {
     let endDateTime: string
     let user: string
 
-    return '?severity=' + getLogsRequest.severity
-      + '&message=' + getLogsRequest.message
-      + '&startDateTime=' + getLogsRequest.startDateTime
-      + '&endDateTime=' + getLogsRequest.endDateTime
-      + '&user=' + getLogsRequest.user
+    severity = this.checkParameter(getLogsRequest.severity, "severity")
+    message = this.checkParameter(getLogsRequest.message, "message")
+    startDateTime = this.checkParameter(getLogsRequest.startDateTime, "startDateTime")
+    endDateTime = this.checkParameter(getLogsRequest.endDateTime, "endDateTime")
+    let startDate = this.checkDateTime(startDateTime)
+    let endDate = this.checkDateTime(endDateTime)
+    user = this.checkParameter(getLogsRequest.user?.name, "user")
+
+    return severity + message + startDate + endDate + user
   }
 
   getLogs(getLogsRequest: GetLogsRequest): Observable<GetLogsResponse> {
+    console.log(getLogsRequest)
+    this.countParameter = 0
     return this.http.get<GetLogsResponse>(API_GET_LOGS + this.buildRequestParams(getLogsRequest), {
       observe: 'response'
     }).pipe(
