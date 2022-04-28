@@ -94,7 +94,6 @@ import {BooksModule} from "./modules/books/books.module";
     MatSidenavModule
   ],
 
-
   providers: [],
   bootstrap: [AppComponent]
 })
