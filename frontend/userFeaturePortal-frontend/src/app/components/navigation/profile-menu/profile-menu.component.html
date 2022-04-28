@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Sign in</h1>
+
+<div mat-dialog-content>
+  <mat-form-field appearance="fill">
+    <mat-label>Username</mat-label>
+    <input matInput [(ngModel)]="data.name">
+  </mat-form-field>
+</div>
+<p *ngIf="errorMessage !== ''" align="center">User not registered yet!<br>
+  Please contact an administrator.</p>
+<div mat-dialog-actions>
+  <button mat-button (click)="cancel()" class="lite-version-button" *ngIf="!isLoggedIn">
+    Continue with lite version
+  </button>
+  <button mat-button (click)="validateLogin()" class="apply-button">Apply</button>
+</div>

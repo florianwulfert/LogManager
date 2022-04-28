@@ -1,0 +1,64 @@
+<div class="container marginTop-40">
+  <div class="row">
+
+    <mat-card class="main-card col">
+      <h1 align="center">Features</h1><p></p>
+      <mat-card class="col cardFormat zoom">
+        <a routerLink="/bmi">
+          <mat-card-title-group>
+            <mat-card-title>BMI-Calculator</mat-card-title>
+            <mat-icon class="marginRight-15">slow_motion_video</mat-icon>
+            <mat-card-subtitle>BMI-Interactions</mat-card-subtitle>
+          </mat-card-title-group>
+          <mat-card-content>
+            {{bmiDescription}}
+          </mat-card-content>
+        </a>
+      </mat-card>
+
+      <mat-card class="col cardFormat zoom">
+        <a routerLink="/book">
+          <mat-card-title-group>
+            <mat-card-title>Books</mat-card-title>
+            <mat-icon class="marginRight-15">book</mat-icon>
+            <mat-card-subtitle>Book-Interactions</mat-card-subtitle>
+          </mat-card-title-group>
+          <mat-card-content>
+            {{bookDescription}}
+          </mat-card-content>
+        </a>
+      </mat-card>
+    </mat-card>
+
+    <mat-card class="main-card col" *ngIf="userAvailable">
+      <h1 align="center">Administration</h1><p></p>
+      <mat-card class="col cardFormat zoom">
+        <a routerLink="/user">
+          <mat-card-title-group>
+            <mat-card-title>User</mat-card-title>
+            <mat-icon class="marginRight-15">supervised_user_circle</mat-icon>
+            <mat-card-subtitle>User-Interactions</mat-card-subtitle>
+          </mat-card-title-group>
+          <mat-card-content>
+            {{userDescription}}
+          </mat-card-content>
+        </a>
+      </mat-card>
+
+      <mat-card class="col cardFormat zoom">
+        <a routerLink="/logging">
+          <mat-card-title-group>
+            <mat-card-title>Logging</mat-card-title>
+            <mat-icon class="marginRight-15">format_list_bulleted</mat-icon>
+            <mat-card-subtitle>Logging-Outputs</mat-card-subtitle>
+          </mat-card-title-group>
+          <mat-card-content>
+            {{loggingDescription}}
+          </mat-card-content>
+        </a>
+      </mat-card>
+    </mat-card>
+
+  </div>
+</div>
+
