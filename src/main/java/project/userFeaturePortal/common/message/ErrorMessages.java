@@ -36,4 +36,5 @@ public class ErrorMessages {
     public static final String CANNOT_DELETE_USER = "User cannot be deleted.";
     public static final String USER_NOT_ALLOWED = "User is not allowed to execute this operation.";
     public static final String LINE_REFERENCED = "Line to delete is referenced in another place";
+    public static final String USER_CREATION_NOT_SUCCEED = "User creation was not successful.";
 }

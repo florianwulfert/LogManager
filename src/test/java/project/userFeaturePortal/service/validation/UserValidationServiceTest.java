@@ -98,7 +98,7 @@ class UserValidationServiceTest {
 
   @Test
   void userIsEqualToActor() {
-    systemUnderTest.checkIfActorEqualsUserToCreate(users.get(0).getName(), users.get(0), true);
+    systemUnderTest.checkIfActorEqualsUserToCreate(users.get(0).getName(), users.get(0).getName(), true);
   }
 
   @Test
@@ -108,7 +108,7 @@ class UserValidationServiceTest {
             FirstUserUnequalActorException.class,
             () ->
                 systemUnderTest.checkIfActorEqualsUserToCreate(
-                    users.get(0).getName(), users.get(1), true));
+                    users.get(0).getName(), users.get(1).getName(), true));
 
     assertEquals(
         ErrorMessages.NO_USERS_YET + users.get(1).getName() + " unequal " + users.get(0).getName(),
@@ -120,7 +120,7 @@ class UserValidationServiceTest {
     UserNotFoundException ex =
         assertThrows(
             UserNotFoundException.class,
-            () -> systemUnderTest.checkIfActorEqualsUserToCreate("Heinrich", users.get(0), false));
+            () -> systemUnderTest.checkIfActorEqualsUserToCreate("Heinrich", users.get(0).getName(), false));
 
     assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_NAME, users.get(0).getName()), ex.getMessage());
   }
