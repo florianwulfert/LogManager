@@ -9,7 +9,7 @@ public class InfoMessages {
   public static final String USER_DELETED_ID = "User with the ID %s was deleted.";
   public static final String USER_DELETED_NAME = "User named %s was deleted.";
   public static final String ALL_USERS_DELETED = "All users were deleted from database!";
-  public static final String USER_CREATED = "User %s was created. ";
+  public static final String USER_CREATED = "User %s was created.";
   public static final String MESSAGE_SAVED = "Message \"%s\" saved as %s!";
   public static final String ENTRY_DELETED_ID = "Entry with the ID %s was deleted from database.";
   public static final String ALL_LOGS_DELETED = "All logs were deleted from database!";

@@ -1,5 +1,6 @@
 package project.userFeaturePortal.service.model;
 
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,7 +81,13 @@ public class UserService {
 
   public List<UserDto> findUserList() {
     List<User> users = userRepository.findAll();
-    LOGGER.info("Actual Users: users");
+
+    List<String> userNames = new ArrayList<>();
+    for (User user: users)  {
+        userNames.add(user.getName());
+    }
+    LOGGER.info("Actual Users: " + userNames);
+
     return userDtoMapper.usersToUserDtos(users);
   }
 
