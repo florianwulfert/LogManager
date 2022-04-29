@@ -140,9 +140,8 @@ public class UserValidationService {
     return false;
   }
 
-  public boolean validateActor(String actor) {
-    checkIfNameExists(
-        actor, true, String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, actor));
+  public boolean validateActor(String actor, String action) {
+    checkIfNameExists(actor, true, String.format(action, actor));
     return true;
   }
 
@@ -154,10 +153,9 @@ public class UserValidationService {
     checkIfExistLogByUserToDelete(userToDelete);
   }
 
-  public User validateDeletingByName(String name, String actorName) {
+  public User validateUserToDelete(String name, String actorName) {
     User user = checkIfNameExists(name, false, ErrorMessages.CANNOT_DELETE_USER);
     checkIfExistLogByUserToDelete(user);
-    checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
     checkIfUserToDeleteEqualsActor(name, actorName);
     return user;
   }

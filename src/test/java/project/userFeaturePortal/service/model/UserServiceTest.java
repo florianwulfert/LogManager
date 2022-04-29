@@ -112,7 +112,7 @@ class UserServiceTest {
     when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
         .thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
     when(userValidationService.validateUserToCreate(anyString(),anyString())).thenReturn(false);
-    when(userValidationService.validateActor(anyString())).thenReturn(true);
+    when(userValidationService.validateActor(anyString(), anyString())).thenReturn(true);
     systemUnderTest.addUser(
         UserRequestDto.builder()
             .actor("Torsten")
@@ -168,7 +168,7 @@ class UserServiceTest {
 
   @Test
   void testDeleteByName() {
-    when(userValidationService.validateDeletingByName(anyString(), anyString())).thenReturn(users.get(0));
+    when(userValidationService.validateUserToDelete(anyString(), anyString())).thenReturn(users.get(0));
     Assertions.assertEquals(
         String.format(InfoMessages.USER_DELETED_NAME, "Peter"),
         systemUnderTest.deleteByName("Peter", "Florian"));
