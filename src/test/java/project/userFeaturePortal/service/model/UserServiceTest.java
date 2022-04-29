@@ -109,8 +109,6 @@ class UserServiceTest {
   @Test
   void testUsersListIsEmpty() {
     List<Book> testBook = testBook();
-    when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
-        .thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
     when(userValidationService.validateUserToCreate(anyString(),anyString())).thenReturn(false);
     when(userValidationService.validateActor(anyString(), anyString())).thenReturn(true);
     systemUnderTest.addUser(

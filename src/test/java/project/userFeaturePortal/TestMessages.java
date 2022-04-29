@@ -49,7 +49,7 @@ public class TestMessages {
                         + "\"favouriteBookTitel\":null,\"bmi\":22.11}," +
                 "{\"id\":4,\"name\":\"Hugo\",\"birthdate\":\"1999-12-13\",\"weight\":78.0,\"height\":1.8,\"favouriteBookTitel\":null,\"bmi\":24.07}],"
                         +
-                        "\"returnMessage\":\"User Hugo was created. \"}";
+                        "\"returnMessage\":\"User Hugo was created.\"}";
         public static final String EMPTY_LIST = "{\"result\":[],\"returnMessage\":\"All users were deleted from database!\"}";
         public static final String USER_DELETED_BY_ID = "{\"result\":[{\"id\":2,\"name\":\"Torsten\",\"birthdate\":\"1985-12-05\",\"weight\":61.3,\"height\":1.83,"
                         + "\"favouriteBookTitel\":null,\"bmi\":18.3},"
