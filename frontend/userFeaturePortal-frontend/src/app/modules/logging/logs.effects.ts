@@ -40,8 +40,8 @@ export class LogEffects {
   delete$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(deleteLogsAction),
-      switchMap(() =>
-        this.logService.deleteLogs().pipe(
+      switchMap((deleteLogsRequest: GetLogsRequest) =>
+        this.logService.deleteLogs(deleteLogsRequest).pipe(
           map((deleteLogsResponse) => deleteLogsResponseAction(deleteLogsResponse)),
           catchError((error: string) => of(loadDeleteLogsErrorAction({error})))
         )
@@ -65,7 +65,7 @@ export class LogEffects {
     this.actions$.pipe(
       ofType(deleteLogAction),
       switchMap((deleteLogRequest: DeleteLogRequest) =>
-        this.logService.deleteLog(deleteLogRequest.id).pipe(
+        this.logService.deleteLog(deleteLogRequest).pipe(
           map((deleteLogResponse) => deleteLogResponseAction(deleteLogResponse)),
           catchError((error: string) => of(loadDeleteLogErrorAction({error})))
         )

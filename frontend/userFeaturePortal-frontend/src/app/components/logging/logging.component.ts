@@ -10,7 +10,6 @@ import {MatPaginator} from "@angular/material/paginator";
 import {UserFacade} from "../../modules/user/user.facade";
 import {GetLogsRequest} from "../../modules/logging/getLogs/dto/getLogs-request";
 
-
 @Component({
   selector: 'app-logging',
   templateUrl: './logging.component.html',
@@ -49,7 +48,9 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   deleteLogs(): void {
-    this.logsFacade.deleteLogs()
+    let request = new GetLogsRequest()
+    this.prepareGetLogsRequest(request)
+    this.logsFacade.deleteLogs(request)
   }
 
   public form: FormGroup = new FormGroup({
@@ -79,7 +80,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
     this.logsFacade.getLogs(request)
     this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
-      this.dataSource.paginator = this.paginator;
+      this.dataSource.paginator = this.paginator
       this.messages = result
     })
   }

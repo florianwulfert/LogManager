@@ -11,6 +11,7 @@ import {ActorFacade} from "../actor/actor.facade";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {DeleteLogResponse} from "./deleteLog/dto/delete-log-response";
 import {GetLogsRequest} from "./getLogs/dto/getLogs-request";
+import {DeleteLogRequest} from "./deleteLog/dto/delete-log-request";
 
 const API_GET_LOGS = 'http://localhost:8081/logs';
 const API_DELETE_LOGS = 'http://localhost:8081/logs';
@@ -48,7 +49,7 @@ export class LogService {
     }
   }
 
-  buildRequestParams(getLogsRequest: GetLogsRequest): String {
+  buildGetLogsRequestParams(getLogsRequest: GetLogsRequest): String {
     let severity: string
     let message: string
     let startDateTime: string
@@ -66,10 +67,30 @@ export class LogService {
     return severity + message + startDate + endDate + user
   }
 
+  buildDeleteLogRequestParams(deleteLogRequest: DeleteLogRequest): String {
+    let id: string
+    let severity: string
+    let message: string
+    let startDateTime: string
+    let endDateTime: string
+    let user: string
+
+    id = this.checkParameter(deleteLogRequest.id, "id")
+    severity = this.checkParameter(deleteLogRequest.severity, "severity")
+    message = this.checkParameter(deleteLogRequest.message, "message")
+    startDateTime = this.checkParameter(deleteLogRequest.startDateTime, "startDateTime")
+    endDateTime = this.checkParameter(deleteLogRequest.endDateTime, "endDateTime")
+    let startDate = this.checkDateTime(startDateTime)
+    let endDate = this.checkDateTime(endDateTime)
+    user = this.checkParameter(deleteLogRequest.user?.name, "user")
+
+    return id + severity + message + startDate + endDate + user
+  }
+
   getLogs(getLogsRequest: GetLogsRequest): Observable<GetLogsResponse> {
     console.log(getLogsRequest)
     this.countParameter = 0
-    return this.http.get<GetLogsResponse>(API_GET_LOGS + this.buildRequestParams(getLogsRequest), {
+    return this.http.get<GetLogsResponse>(API_GET_LOGS + this.buildGetLogsRequestParams(getLogsRequest), {
       observe: 'response'
     }).pipe(
       map((r) => {
@@ -90,8 +111,8 @@ export class LogService {
     );
   }
 
-  deleteLogs(): Observable<DeleteLogsResponse> {
-    return this.http.delete<DeleteLogsResponse>(API_DELETE_LOGS, {
+  deleteLogs(getLogsRequest: GetLogsRequest): Observable<DeleteLogsResponse> {
+    return this.http.delete<DeleteLogsResponse>(API_DELETE_LOGS + this.buildGetLogsRequestParams(getLogsRequest), {
       observe: 'response'
     }).pipe(
       map((r) => {
@@ -137,12 +158,12 @@ export class LogService {
     );
   }
 
-  deleteLog(i: number | undefined): Observable<DeleteLogResponse> {
-    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + i, {
+  deleteLog(deleteLogRequest: DeleteLogRequest): Observable<DeleteLogResponse> {
+    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + this.buildDeleteLogRequestParams(deleteLogRequest), {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("Log with the ID " + i + " was deleted.");
+        this.featureManager.openSnackbar("Log with the ID " + deleteLogRequest.id + " was deleted.");
         return r.body || {
           result: [],
           returnMessage: ""

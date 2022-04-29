@@ -3,15 +3,15 @@ import {GetLogsErrorResponse, GetLogsResponse} from "./getLogs/dto/get-logs-resp
 import {DeleteLogsErrorResponse, DeleteLogsResponse} from "./deleteLogs/dto/delete-logs-response";
 import {AddLogErrorResponse, AddLogResponse} from "./addLogs/dto/add-log-response";
 import {AddLogRequest} from "./addLogs/dto/add-log-request";
-import {DeleteLogRequest} from "./deleteLog/dto/delete-log-request";
 import {DeleteLogErrorResponse, DeleteLogResponse} from "./deleteLog/dto/delete-log-response";
 import {GetLogsRequest} from "./getLogs/dto/getLogs-request";
+import {DeleteLogRequest} from "./deleteLog/dto/delete-log-request";
 
 export const getLogsAction = createAction('Get logs', props<GetLogsRequest>());
 export const getLogsResponseAction = createAction('Get list of logs', props<GetLogsResponse>())
 export const loadGetLogsErrorAction = createAction('Load Get logs failure', props<GetLogsErrorResponse>())
 
-export const deleteLogsAction = createAction('Delete logs');
+export const deleteLogsAction = createAction('Delete logs', props<GetLogsRequest>());
 export const deleteLogsResponseAction = createAction('Get response if logs deleting succeed', props<DeleteLogsResponse>());
 export const loadDeleteLogsErrorAction = createAction('Load Delete Logs failure', props<DeleteLogsErrorResponse>());
 
