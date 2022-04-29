@@ -145,10 +145,9 @@ public class UserValidationService {
     return true;
   }
 
-  public void validateDeletingById(int id, String actorName) {
+  public void validateUserToDeleteById(int id, int actorId) {
     User userToDelete = checkIfIdExists(id);
-    User actor = checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
-    checkIfUserToDeleteIdEqualsActorId(id, actor.getId());
+    checkIfUserToDeleteIdEqualsActorId(id, actorId);
     checkIfUsersListIsEmpty();
     checkIfExistLogByUserToDelete(userToDelete);
   }

@@ -110,7 +110,8 @@ public class UserService {
   }
 
   public void deleteById(Integer id, String actorName) {
-    userValidationService.validateDeletingById(id, actorName);
+    User actor = userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
+    userValidationService.validateUserToDeleteById(id, actor.getId());
 
     userRepository.deleteById(id);
 
