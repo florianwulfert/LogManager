@@ -3,11 +3,12 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {LogFacade} from "../../modules/logging/logs.facade";
 import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
-import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
 import {DeleteLogRequest} from "../../modules/logging/deleteLog/dto/delete-log-request";
 import {MatPaginator} from "@angular/material/paginator";
+import {UserFacade} from "../../modules/user/user.facade";
+import {GetLogsRequest} from "../../modules/logging/getLogs/dto/getLogs-request";
 
 
 @Component({
@@ -17,20 +18,23 @@ import {MatPaginator} from "@angular/material/paginator";
 })
 export class LoggingComponent implements OnInit, OnDestroy {
 
-  constructor(private logsFacade: LogFacade, private _snackBar: MatSnackBar) {
+  constructor(private logsFacade: LogFacade, private _snackBar: MatSnackBar, private userFacade: UserFacade) {
   }
 
   subscriptionManager = new SubscriptionManager();
-  featureManager = new FeatureManager(this._snackBar);
 
   displayedColumns: string[] = ['id', 'message', 'severity', 'timestamp', 'user', 'delete'];
   severities: string[] = ['TRACE', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'FATAL'];
   dataSource: any;
+  users: any
+  messages: any
+  filterButtonPressed: boolean = false
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit(): void {
     this.getLogs()
+    this.getUserList()
   }
 
   ngOnDestroy() {
@@ -53,11 +57,30 @@ export class LoggingComponent implements OnInit, OnDestroy {
     severity: new FormControl('', [Validators.required]),
   })
 
+  public formFilter: FormGroup = new FormGroup({
+    severity: new FormControl(''),
+    user: new FormControl(''),
+    startDateTime: new FormControl(''),
+    endDateTime: new FormControl(''),
+    message: new FormControl('')
+  })
+
+  prepareGetLogsRequest(request: GetLogsRequest) {
+    request.severity = this.formFilter.get("severity")?.value
+    request.message = this.formFilter.get("message")?.value
+    request.startDateTime = this.formFilter.get("startDateTime")?.value
+    request.endDateTime = this.formFilter.get("endDateTime")?.value
+    request.user = this.formFilter.get("user")?.value
+  }
+
   getLogs(): void {
-    this.logsFacade.getLogs()
+    let request = new GetLogsRequest()
+    this.prepareGetLogsRequest(request)
+    this.logsFacade.getLogs(request)
     this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
+      this.messages = result
     })
   }
 
@@ -79,4 +102,17 @@ export class LoggingComponent implements OnInit, OnDestroy {
     request.id = elementValues[0]
     this.logsFacade.deleteLog(request)
   }
+
+  getUserList(): void {
+    this.userFacade.getUser();
+    this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
+      this.users = result
+    });
+  }
+
+  filterLogs(): void {
+    this.getLogs()
+    this.filterButtonPressed = true
+  }
+
 }

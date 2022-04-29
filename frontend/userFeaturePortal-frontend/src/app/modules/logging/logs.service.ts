@@ -10,6 +10,7 @@ import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {ActorFacade} from "../actor/actor.facade";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {DeleteLogResponse} from "./deleteLog/dto/delete-log-response";
+import {GetLogsRequest} from "./getLogs/dto/getLogs-request";
 
 const API_GET_LOGS = 'http://localhost:8081/logs';
 const API_DELETE_LOGS = 'http://localhost:8081/logs';
@@ -25,19 +26,61 @@ export class LogService {
 
   name: string | undefined
   subscriptionManager = new SubscriptionManager();
+  countParameter: number = 0
 
-  getLogs(): Observable<GetLogsResponse> {
-    return this.http.get<GetLogsResponse>(API_GET_LOGS, {
+  checkParameter(requestParameter: string | undefined, parameterName: string): string {
+
+    if (requestParameter === "" || requestParameter === null || requestParameter === undefined) {
+      return ""
+    } else {
+      this.countParameter++
+      console.log(this.countParameter)
+      let connectionItem = this.countParameter > 1 ? "&" : "?"
+      return connectionItem + parameterName + '=' + requestParameter
+    }
+  }
+
+  checkDateTime(dateTime: string): string {
+    if (dateTime === '' || dateTime === null) {
+      return ''
+    } else {
+      return dateTime + "-00-00-00"
+    }
+  }
+
+  buildRequestParams(getLogsRequest: GetLogsRequest): String {
+    let severity: string
+    let message: string
+    let startDateTime: string
+    let endDateTime: string
+    let user: string
+
+    severity = this.checkParameter(getLogsRequest.severity, "severity")
+    message = this.checkParameter(getLogsRequest.message, "message")
+    startDateTime = this.checkParameter(getLogsRequest.startDateTime, "startDateTime")
+    endDateTime = this.checkParameter(getLogsRequest.endDateTime, "endDateTime")
+    let startDate = this.checkDateTime(startDateTime)
+    let endDate = this.checkDateTime(endDateTime)
+    user = this.checkParameter(getLogsRequest.user?.name, "user")
+
+    return severity + message + startDate + endDate + user
+  }
+
+  getLogs(getLogsRequest: GetLogsRequest): Observable<GetLogsResponse> {
+    console.log(getLogsRequest)
+    this.countParameter = 0
+    return this.http.get<GetLogsResponse>(API_GET_LOGS + this.buildRequestParams(getLogsRequest), {
       observe: 'response'
     }).pipe(
       map((r) => {
+        console.log(r.body)
         return r.body || {
           result: [],
           returnMessage: ""
         }
       }),
       catchError((err) => {
-        if(err.error instanceof Object) {
+        if (err.error instanceof Object) {
           this.featureManager.openSnackbar(err.error.text);
         } else {
           this.featureManager.openSnackbar(err.error);
@@ -59,7 +102,7 @@ export class LogService {
         }
       }),
       catchError((err) => {
-        if(err.error instanceof Object) {
+        if (err.error instanceof Object) {
           this.featureManager.openSnackbar(err.error.text);
         } else {
           this.featureManager.openSnackbar(err.error);
@@ -84,7 +127,7 @@ export class LogService {
         }
       }),
       catchError((err) => {
-        if(err.error instanceof Object) {
+        if (err.error instanceof Object) {
           this.featureManager.openSnackbar(err.error.text);
         } else {
           this.featureManager.openSnackbar(err.error);
@@ -106,7 +149,7 @@ export class LogService {
         }
       }),
       catchError((err) => {
-        if(err.error instanceof Object) {
+        if (err.error instanceof Object) {
           this.featureManager.openSnackbar(err.error.text);
         } else {
           this.featureManager.openSnackbar(err.error);
