@@ -13,6 +13,7 @@ import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.mapper.UserDtoMapper;
 import project.userFeaturePortal.model.repository.UserRepository;
+import project.userFeaturePortal.service.validation.BookValidationService;
 import project.userFeaturePortal.service.validation.UserValidationService;
 
 import javax.transaction.Transactional;
@@ -31,6 +32,7 @@ public class UserService {
   private final UserValidationService userValidationService;
   private final BookService bookService;
   private final UserDtoMapper userDtoMapper;
+  private final BookValidationService bookValidationService;
 
   public String addUser(UserRequestDto userRequestDto) {
     userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
@@ -49,11 +51,11 @@ public class UserService {
             .favouriteBook(book)
             .build();
 
-    if (userValidationService.validateUser1(user.getName(), userRequestDto.actor)) {
+    if (userValidationService.validateUserToCreate(user.getName(), userRequestDto.actor)) {
       saveUser(user, userRequestDto.actor);
       return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
     }
-    if (userValidationService.validateUser2(userRequestDto.actor)) {
+    if (userValidationService.validateActor(userRequestDto.actor)) {
       saveUser(user, userRequestDto.actor);
       return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
     }
@@ -61,9 +63,8 @@ public class UserService {
   }
 
   public String addFavouriteBookToUser(String titel, String actorName) {
-    List<Book> book = userValidationService.checkIfBookExists(titel);
     User actor = userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED);
-    actor.setFavouriteBook(book.get(0));
+    actor.setFavouriteBook(bookValidationService.checkIfBookExists(titel));
     userRepository.save(actor);
     LOGGER.info(String.format(InfoMessages.BOOK_BY_USER, titel, actor.getName()));
     return String.format(InfoMessages.BOOK_BY_USER, titel, actor.getName());
@@ -92,24 +93,14 @@ public class UserService {
   }
 
   public void deleteById(Integer id, String actorName) {
-    User userToDelete = userValidationService.checkIfIdExists(id);
-    User actor = userValidationService.checkIfNameExists(
-        actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
-    userValidationService.checkIfUserToDeleteIdEqualsActorId(id, actor.getId());
-    userValidationService.checkIfUsersListIsEmpty();
-    userValidationService.checkIfExistLogByUserToDelete(userToDelete);
-
+    userValidationService.validateDeletingById(id, actorName);
     userRepository.deleteById(id);
     saveLog(String.format(InfoMessages.USER_DELETED_ID, id), "WARNING", actorName);
     LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, id));
   }
 
   public String deleteByName(String name, String actorName) {
-    User user = userValidationService.checkIfNameExists(name, false, ErrorMessages.CANNOT_DELETE_USER);
-    userValidationService.checkIfExistLogByUserToDelete(user);
-    userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
-    userValidationService.checkIfUserToDeleteEqualsActor(name, actorName);
-
+    User user = userValidationService.validateDeletingByName(name, actorName);
     userRepository.deleteById(user.getId());
     saveLog(String.format(InfoMessages.USER_DELETED_NAME, name), "WARNING", actorName);
     LOGGER.info(String.format(InfoMessages.USER_DELETED_NAME, name));

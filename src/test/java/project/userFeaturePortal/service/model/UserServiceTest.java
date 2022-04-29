@@ -15,6 +15,7 @@ import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.mapper.UserDtoMapper;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
+import project.userFeaturePortal.service.validation.BookValidationService;
 import project.userFeaturePortal.service.validation.UserValidationService;
 
 import java.time.LocalDate;
@@ -54,6 +55,9 @@ class UserServiceTest {
   @Mock
   UserDtoMapper userDtoMapper;
 
+  @Mock
+  BookValidationService bookValidationService;
+
   List<User> users;
 
   @BeforeEach
@@ -64,7 +68,7 @@ class UserServiceTest {
   @Test
   void testAddUser() {
     List<Book> testBook = testBook();
-    when(userValidationService.validateUser1(anyString(), anyString()))
+    when(userValidationService.validateUserToCreate(anyString(), anyString()))
         .thenReturn(true);
     systemUnderTest.addUser(
         UserRequestDto.builder()
@@ -97,7 +101,7 @@ class UserServiceTest {
   @Test
   void testAddFavouriteBookToUser() {
     List<Book> books = testBook();
-    when(userValidationService.checkIfBookExists(anyString())).thenReturn(books);
+    when(bookValidationService.checkIfBookExists(anyString())).thenReturn(books.get(0));
     when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString())).thenReturn(users.get(0));
     systemUnderTest.addFavouriteBookToUser("TestBook", users.get(0).getName());
   }
@@ -107,8 +111,8 @@ class UserServiceTest {
     List<Book> testBook = testBook();
     when(bmiService.calculateBmiAndGetBmiMessage(any(), any(), any()))
         .thenReturn("User has a BMI of 24.07 and therewith he has normal weight.");
-    when(userValidationService.validateUser1(anyString(),anyString())).thenReturn(false);
-    when(userValidationService.validateUser2(anyString())).thenReturn(true);
+    when(userValidationService.validateUserToCreate(anyString(),anyString())).thenReturn(false);
+    when(userValidationService.validateActor(anyString())).thenReturn(true);
     systemUnderTest.addUser(
         UserRequestDto.builder()
             .actor("Torsten")
@@ -157,10 +161,6 @@ class UserServiceTest {
 
   @Test
   void testDeleteById() {
-    when(userValidationService.checkIfIdExists(anyInt()))
-        .thenReturn(users.get(0));
-    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString()))
-        .thenReturn(users.get(1));
     systemUnderTest.deleteById(1, "Florian");
     verify(userRepository).deleteById(1);
     verify(logService).addLog(any());
@@ -168,11 +168,10 @@ class UserServiceTest {
 
   @Test
   void testDeleteByName() {
-    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString()))
-        .thenReturn(users.get(1));
+    when(userValidationService.validateDeletingByName(anyString(), anyString())).thenReturn(users.get(0));
     Assertions.assertEquals(
-        String.format(InfoMessages.USER_DELETED_NAME, "Florian"),
-        systemUnderTest.deleteByName("Florian", "Peter"));
+        String.format(InfoMessages.USER_DELETED_NAME, "Peter"),
+        systemUnderTest.deleteByName("Peter", "Florian"));
     verify(logService).addLog(any());
   }
 

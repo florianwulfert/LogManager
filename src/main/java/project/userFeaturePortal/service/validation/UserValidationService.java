@@ -11,7 +11,6 @@ import project.userFeaturePortal.exception.FirstUserUnequalActorException;
 import project.userFeaturePortal.exception.ParameterNotPresentException;
 import project.userFeaturePortal.exception.UserNotAllowedException;
 import project.userFeaturePortal.exception.UserNotFoundException;
-import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.LogRepository;
@@ -47,7 +46,7 @@ public class UserValidationService {
     LOGGER.debug(InfoMessages.PARAMETERS_ARE_VALID);
   }
 
-  public boolean checkIfUsersListIsEmpty() {
+  boolean checkIfUsersListIsEmpty() {
     List<User> usersList = userRepository.findAll();
     if (usersList.isEmpty()) {
       LOGGER.info(InfoMessages.LIST_IS_EMPTY);
@@ -56,7 +55,7 @@ public class UserValidationService {
     return false;
   }
 
-  public void checkIfActorEqualsUserToCreate(String actor, String user, boolean isActor) {
+  void checkIfActorEqualsUserToCreate(String actor, String user, boolean isActor) {
     if (!user.equals(actor)) {
       if (isActor) {
         LOGGER.warn(ErrorMessages.NO_USERS_YET + user + " unequal " + actor);
@@ -65,7 +64,7 @@ public class UserValidationService {
       LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_NAME, user));
       throw new UserNotFoundException(user);
     }
-    LOGGER.info(InfoMessages.ACTOR_EQUALS_USER);
+    LOGGER.debug(InfoMessages.ACTOR_EQUALS_USER);
   }
 
   public User checkIfNameExists(String name, boolean isActor, String action) {
@@ -74,15 +73,6 @@ public class UserValidationService {
       handleNameNotExist(isActor, action, name);
     }
     return user;
-  }
-
-  public List<Book> checkIfBookExists(String bookTitel) {
-    List<Book> books = bookRepository.findByTitel(bookTitel);
-    if (books.isEmpty()) {
-      LOGGER.warn(String.format(ErrorMessages.BOOK_NOT_FOUND_TITEL, bookTitel));
-      throw new RuntimeException(String.format(ErrorMessages.BOOK_NOT_FOUND_TITEL, bookTitel));
-    }
-    return books;
   }
 
   private void handleNameNotExist(boolean isActor, String action, String name) {
@@ -101,7 +91,7 @@ public class UserValidationService {
     }
   }
 
-  public void checkIfUserToDeleteIdEqualsActorId(int userToDeleteId, int actorId) {
+  void checkIfUserToDeleteIdEqualsActorId(int userToDeleteId, int actorId) {
     if (userToDeleteId == actorId) {
       LOGGER.error(ErrorMessages.USER_DELETE_HIMSELF);
       throw new RuntimeException(ErrorMessages.USER_DELETE_HIMSELF);
@@ -109,7 +99,7 @@ public class UserValidationService {
     LOGGER.info(InfoMessages.USER_CAN_BE_DELETED);
   }
 
-  public User checkIfIdExists(int id) {
+  User checkIfIdExists(int id) {
     Optional<User> user = userRepository.findById(id);
     if (user.isEmpty()) {
       LOGGER.info(String.format(ErrorMessages.USER_NOT_FOUND_ID, id));
@@ -141,18 +131,34 @@ public class UserValidationService {
     }
   }
 
-  public boolean validateUser1(String name, String actor) {
+  public boolean validateUserToCreate(String name, String actor) {
     checkIfUserToPostExists(name);
     if (checkIfUsersListIsEmpty()) {
       checkIfActorEqualsUserToCreate(actor, name, true);
       return true;
     }
+    return false;
+  }
+
+  public boolean validateActor(String actor) {
+    checkIfNameExists(
+        actor, true, String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, actor));
     return true;
   }
 
-  public boolean validateUser2(String actor) {
-    checkIfNameExists(actor, true,
-            String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, actor));
-    return true;
+  public void validateDeletingById(int id, String actorName) {
+    User userToDelete = checkIfIdExists(id);
+    User actor = checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
+    checkIfUserToDeleteIdEqualsActorId(id, actor.getId());
+    checkIfUsersListIsEmpty();
+    checkIfExistLogByUserToDelete(userToDelete);
+  }
+
+  public User validateDeletingByName(String name, String actorName) {
+    User user = checkIfNameExists(name, false, ErrorMessages.CANNOT_DELETE_USER);
+    checkIfExistLogByUserToDelete(user);
+    checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
+    checkIfUserToDeleteEqualsActor(name, actorName);
+    return user;
   }
 }
