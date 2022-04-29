@@ -48,11 +48,7 @@ public class UserValidationService {
 
   boolean checkIfUsersListIsEmpty() {
     List<User> usersList = userRepository.findAll();
-    if (usersList.isEmpty()) {
-      LOGGER.info(InfoMessages.LIST_IS_EMPTY);
-      return true;
-    }
-    return false;
+    return usersList.isEmpty();
   }
 
   void checkIfActorEqualsUserToCreate(String actor, String user, boolean isActor) {
