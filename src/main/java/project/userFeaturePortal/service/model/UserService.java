@@ -36,30 +36,35 @@ public class UserService {
 
   public String addUser(UserRequestDto userRequestDto) {
     userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
-    List<Book> books = bookService.searchBooksByTitel(userRequestDto.favouriteBook);
-    Book book = null;
-    if (!books.isEmpty()) {
-      book = books.get(0);
-    }
-    User user =
-        User.builder()
-            .name(userRequestDto.name)
-            .birthdate(userRequestDto.getBirthdateAsLocalDate())
-            .weight(userRequestDto.weight)
-            .height(userRequestDto.height)
-            .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
-            .favouriteBook(book)
-            .build();
+    User user = buildUserToCreate(userRequestDto);
 
     if (userValidationService.validateUserToCreate(user.getName(), userRequestDto.actor)) {
       saveUser(user, userRequestDto.actor);
       return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
     }
+
     if (userValidationService.validateActor(userRequestDto.actor)) {
       saveUser(user, userRequestDto.actor);
       return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
     }
+
     return ErrorMessages.USER_CREATION_NOT_SUCCEED;
+  }
+
+  private User buildUserToCreate(UserRequestDto userRequestDto) {
+    List<Book> books = bookService.searchBooksByTitel(userRequestDto.favouriteBook);
+    Book book = null;
+    if (!books.isEmpty()) {
+      book = books.get(0);
+    }
+    return User.builder()
+        .name(userRequestDto.name)
+        .birthdate(userRequestDto.getBirthdateAsLocalDate())
+        .weight(userRequestDto.weight)
+        .height(userRequestDto.height)
+        .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
+        .favouriteBook(book)
+        .build();
   }
 
   public String addFavouriteBookToUser(String titel, String actorName) {
