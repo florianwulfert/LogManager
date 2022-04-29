@@ -151,7 +151,7 @@ public class UserService {
         .severity(severity)
         .user(actor)
         .build();
-    LOGGER.info("Log " + logRequestDto + String.format(" was saved as %s", severity));
+    LOGGER.info("Log " + logRequestDto.message + String.format(" was saved as %s", severity));
     logService.addLog(logRequestDto);
   }
 }
