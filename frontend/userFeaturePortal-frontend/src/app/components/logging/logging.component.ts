@@ -5,7 +5,6 @@ import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
-import {DeleteLogRequest} from "../../modules/logging/deleteLog/dto/delete-log-request";
 import {MatPaginator} from "@angular/material/paginator";
 import {UserFacade} from "../../modules/user/user.facade";
 import {GetLogsRequest} from "../../modules/logging/getLogs/dto/getLogs-request";
@@ -96,7 +95,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   deleteLog(element: any): void {
-    let request = new DeleteLogRequest
+    let request = new GetLogsRequest()
     this.prepareGetLogsRequest(request)
     let elementValues = Object.keys(element).map(key => element[key])
     request.id = elementValues[0]

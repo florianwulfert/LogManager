@@ -4,7 +4,6 @@ import {addLogAction, deleteLogAction, deleteLogsAction, getLogsAction} from "./
 import {getLogs} from "./logs.selector";
 import {LogsState} from "./logs.state";
 import {AddLogRequest} from "./addLogs/dto/add-log-request";
-import {DeleteLogRequest} from "./deleteLog/dto/delete-log-request";
 import {GetLogsRequest} from "./getLogs/dto/getLogs-request";
 
 @Injectable({providedIn: 'root'})
@@ -28,7 +27,7 @@ export class LogFacade {
     this.logsState.dispatch(addLogAction(request));
   }
 
-  deleteLog(request: DeleteLogRequest): void {
+  deleteLog(request: GetLogsRequest): void {
     this.logsState.dispatch(deleteLogAction(request))
   }
 }

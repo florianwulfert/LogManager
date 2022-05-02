@@ -11,7 +11,6 @@ import {ActorFacade} from "../actor/actor.facade";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {DeleteLogResponse} from "./deleteLog/dto/delete-log-response";
 import {GetLogsRequest} from "./getLogs/dto/getLogs-request";
-import {DeleteLogRequest} from "./deleteLog/dto/delete-log-request";
 
 const API_GET_LOGS = 'http://localhost:8081/logs';
 const API_DELETE_LOGS = 'http://localhost:8081/logs';
@@ -63,24 +62,6 @@ export class LogService {
     let startDate = this.checkDateTime(startDateTime)
     let endDate = this.checkDateTime(endDateTime)
     user = this.checkParameter(getLogsRequest.user?.name, "user")
-
-    return severity + message + startDate + endDate + user
-  }
-
-  buildDeleteLogRequestParams(deleteLogRequest: DeleteLogRequest): String {
-    let severity: string
-    let message: string
-    let startDateTime: string
-    let endDateTime: string
-    let user: string
-
-    severity = this.checkParameter(deleteLogRequest.severity, "severity")
-    message = this.checkParameter(deleteLogRequest.message, "message")
-    startDateTime = this.checkParameter(deleteLogRequest.startDateTime, "startDateTime")
-    endDateTime = this.checkParameter(deleteLogRequest.endDateTime, "endDateTime")
-    let startDate = this.checkDateTime(startDateTime)
-    let endDate = this.checkDateTime(endDateTime)
-    user = this.checkParameter(deleteLogRequest.user?.name, "user")
 
     return severity + message + startDate + endDate + user
   }
@@ -156,9 +137,9 @@ export class LogService {
     );
   }
 
-  deleteLog(deleteLogRequest: DeleteLogRequest): Observable<DeleteLogResponse> {
+  deleteLog(deleteLogRequest: GetLogsRequest): Observable<DeleteLogResponse> {
     this.countParameter = 0
-    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + deleteLogRequest.id + this.buildDeleteLogRequestParams(deleteLogRequest), {
+    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + deleteLogRequest.id + this.buildGetLogsRequestParams(deleteLogRequest), {
       observe: 'response'
     }).pipe(
       map((r) => {
