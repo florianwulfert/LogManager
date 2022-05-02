@@ -20,8 +20,8 @@ export class LogFacade {
     this.logsState.dispatch(getLogsAction(request))
   }
 
-  deleteLogs(request: GetLogsRequest): void {
-    this.logsState.dispatch(deleteLogsAction(request))
+  deleteLogs(): void {
+    this.logsState.dispatch(deleteLogsAction())
   }
 
   addLog(request: AddLogRequest): void {

@@ -48,9 +48,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   deleteLogs(): void {
-    let request = new GetLogsRequest()
-    this.prepareGetLogsRequest(request)
-    this.logsFacade.deleteLogs(request)
+    this.logsFacade.deleteLogs()
   }
 
   public form: FormGroup = new FormGroup({
@@ -99,6 +97,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
   deleteLog(element: any): void {
     let request = new DeleteLogRequest
+    this.prepareGetLogsRequest(request)
     let elementValues = Object.keys(element).map(key => element[key])
     request.id = elementValues[0]
     this.logsFacade.deleteLog(request)

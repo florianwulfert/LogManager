@@ -91,14 +91,8 @@ public class LogController {
 
   @DeleteMapping("/logs")
   @Operation(summary = "Delete all Logs")
-  public LogResponseDto deleteAll(
-          @RequestParam(required = false) final String severity,
-          @RequestParam(required = false) final String message,
-          @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss") final LocalDateTime startDateTime,
-          @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss") final LocalDateTime endDateTime,
-          @RequestParam(required = false) final String user
-  ) {
+  public LogResponseDto deleteAll() {
     String returnMessage = logService.deleteAll();
-    return new LogResponseDto(logService.getLogs(severity, message, startDateTime, endDateTime, user), returnMessage);
+    return new LogResponseDto(logService.getLogs(null, null, null, null, null), returnMessage);
   }
 }

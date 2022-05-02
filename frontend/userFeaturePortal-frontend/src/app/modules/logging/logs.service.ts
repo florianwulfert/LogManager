@@ -68,14 +68,12 @@ export class LogService {
   }
 
   buildDeleteLogRequestParams(deleteLogRequest: DeleteLogRequest): String {
-    let id: string
     let severity: string
     let message: string
     let startDateTime: string
     let endDateTime: string
     let user: string
 
-    id = this.checkParameter(deleteLogRequest.id, "id")
     severity = this.checkParameter(deleteLogRequest.severity, "severity")
     message = this.checkParameter(deleteLogRequest.message, "message")
     startDateTime = this.checkParameter(deleteLogRequest.startDateTime, "startDateTime")
@@ -84,7 +82,7 @@ export class LogService {
     let endDate = this.checkDateTime(endDateTime)
     user = this.checkParameter(deleteLogRequest.user?.name, "user")
 
-    return id + severity + message + startDate + endDate + user
+    return severity + message + startDate + endDate + user
   }
 
   getLogs(getLogsRequest: GetLogsRequest): Observable<GetLogsResponse> {
@@ -111,8 +109,8 @@ export class LogService {
     );
   }
 
-  deleteLogs(getLogsRequest: GetLogsRequest): Observable<DeleteLogsResponse> {
-    return this.http.delete<DeleteLogsResponse>(API_DELETE_LOGS + this.buildGetLogsRequestParams(getLogsRequest), {
+  deleteLogs(): Observable<DeleteLogsResponse> {
+    return this.http.delete<DeleteLogsResponse>(API_DELETE_LOGS, {
       observe: 'response'
     }).pipe(
       map((r) => {
@@ -159,7 +157,8 @@ export class LogService {
   }
 
   deleteLog(deleteLogRequest: DeleteLogRequest): Observable<DeleteLogResponse> {
-    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + this.buildDeleteLogRequestParams(deleteLogRequest), {
+    this.countParameter = 0
+    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + deleteLogRequest.id + this.buildDeleteLogRequestParams(deleteLogRequest), {
       observe: 'response'
     }).pipe(
       map((r) => {
