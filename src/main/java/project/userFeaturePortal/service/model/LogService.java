@@ -18,8 +18,6 @@ import project.userFeaturePortal.service.validation.LogValidationService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,8 +35,7 @@ public class LogService {
   private final LogDTOMapper logDTOMapper;
   private final UserRepository userRepository;
 
-  public List<LogDTO> getLogs(
-      String severity, String message, LocalDateTime startDate, LocalDateTime endDate, String userName) {
+  public List<LogDTO> getLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate, String userName) {
 
     User user = userRepository.findUserByName(userName);
     return logDTOMapper.logsToLogDTOs(
@@ -63,12 +60,8 @@ public class LogService {
   }
 
   private void saveLog(String message, String severity, User user) {
-    Log log = new Log();
-    log.setMessage(message);
-    log.setSeverity(severity);
-    log.setUser(user);
-    Date timestamp = new Date();
-    log.setTimestamp(timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+    LocalDateTime timeStamp = LocalDateTime.now();
+    Log log = Log.builder().message(message).severity(severity).user(user).timestamp(timeStamp).build();
     logRepository.save(log);
   }
 

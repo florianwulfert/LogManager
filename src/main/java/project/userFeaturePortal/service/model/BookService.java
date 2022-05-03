@@ -1,6 +1,5 @@
 package project.userFeaturePortal.service.model;
 
-import static java.lang.String.valueOf;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
