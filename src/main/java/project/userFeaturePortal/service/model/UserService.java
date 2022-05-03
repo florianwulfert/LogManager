@@ -1,6 +1,5 @@
 package project.userFeaturePortal.service.model;
 
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +17,7 @@ import project.userFeaturePortal.service.validation.BookValidationService;
 import project.userFeaturePortal.service.validation.UserValidationService;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,12 +44,9 @@ public class UserService {
       return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
     }
 
-    if (userValidationService.validateActor(userRequestDto.actor, ErrorMessages.USER_NOT_ALLOWED_CREATE_USER)) {
-      saveUser(user, userRequestDto.actor);
-      return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
-    }
-
-    return ErrorMessages.USER_CREATION_NOT_SUCCEED;
+    userValidationService.checkIfNameExists(userRequestDto.actor, true, String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, userRequestDto.actor));
+    saveUser(user, userRequestDto.actor);
+    return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
   }
 
   private User buildUserToCreate(UserRequestDto userRequestDto) {
@@ -118,7 +115,7 @@ public class UserService {
   }
 
   public String deleteByName(String name, String actorName) {
-    userValidationService.validateActor(actorName, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
+    userValidationService.checkIfNameExists(actorName, true, String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, actorName));
     User user = userValidationService.validateUserToDelete(name, actorName);
 
     userRepository.deleteById(user.getId());

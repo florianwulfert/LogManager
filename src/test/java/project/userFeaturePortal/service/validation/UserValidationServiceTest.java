@@ -18,7 +18,6 @@ import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.LogRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.model.LogService;
-import project.userFeaturePortal.service.model.UserService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,20 +33,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserValidationServiceTest {
 
-  @InjectMocks
-  UserValidationService systemUnderTest;
+  @InjectMocks UserValidationService systemUnderTest;
 
-  @Mock
-  UserService userService;
+  @Mock UserRepository userRepository;
 
-  @Mock
-  UserRepository userRepository;
+  @Mock LogService logService;
 
-  @Mock
-  LogService logService;
-
-  @Mock
-  LogRepository logRepository;
+  @Mock LogRepository logRepository;
 
   List<User> users;
 
@@ -86,43 +78,86 @@ class UserValidationServiceTest {
   }
 
   @Test
+  void whenUserToCreateIsValid_ThenReturnTrue() {
+    assertTrue(systemUnderTest.validateUserToCreate("Peter", "Peter"));
+  }
+
+  @Test
   void whenUsersListIsNotEmpty_ThenReturnFalse() {
     when(userRepository.findAll()).thenReturn(users);
-    assertFalse(systemUnderTest.checkIfUsersListIsEmpty());
+    assertFalse(systemUnderTest.validateUserToCreate("Hans", "Hans"));
   }
 
   @Test
-  void whenUsersListIsEmpty_ThenReturnTrue() {
-    assertTrue(systemUnderTest.checkIfUsersListIsEmpty());
+  void userToCreateDoesNotExist() {
+    when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
+    assertThrows(
+        RuntimeException.class, () -> systemUnderTest.validateUserToCreate("Peter", "Hans"));
   }
 
   @Test
-  void userIsEqualToActor() {
-    systemUnderTest.checkIfActorEqualsUserToCreate(users.get(0).getName(), users.get(0).getName(), true);
+  void whenUserToCreateNotEqualActor_ThenThrowFirstUserUnequalActorException() {
+    assertThrows(
+        FirstUserUnequalActorException.class,
+        () -> systemUnderTest.validateUserToCreate("Peter", "Hans"));
   }
 
   @Test
-  void ActorIsNotEqualUserButWantsToAct() {
-    FirstUserUnequalActorException ex =
-        assertThrows(
-            FirstUserUnequalActorException.class,
-            () ->
-                systemUnderTest.checkIfActorEqualsUserToCreate(
-                    users.get(0).getName(), users.get(1).getName(), true));
-
-    assertEquals(
-        ErrorMessages.NO_USERS_YET + users.get(1).getName() + " unequal " + users.get(0).getName(),
-        ex.getMessage());
+  void userToDeleteByIdIsValid() {
+    Optional<User> user =
+        Optional.ofNullable(
+            User.builder()
+                .id(1)
+                .name("Peter")
+                .birthdate(LocalDate.of(2005, 12, 12))
+                .weight(90.0)
+                .height(1.85)
+                .bmi(26.29)
+                .build());
+    when(userRepository.findById(1)).thenReturn(user);
+    systemUnderTest.validateUserToDeleteById(1, 2);
   }
 
   @Test
-  void ActorIsNotEqualUserAndOneWasNotFound() {
-    UserNotFoundException ex =
-        assertThrows(
-            UserNotFoundException.class,
-            () -> systemUnderTest.checkIfActorEqualsUserToCreate("Heinrich", users.get(0).getName(), false));
+  void whenIdFromUserToDeleteDoesNotExist_ThenThrowException() {
+    assertThrows(RuntimeException.class, () -> systemUnderTest.validateUserToDeleteById(1, 2));
+  }
 
-    assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_NAME, users.get(0).getName()), ex.getMessage());
+  @Test
+  void whenUserIdEqualsActorId_ThrowException() {
+    Optional<User> user =
+        Optional.ofNullable(
+            User.builder()
+                .id(1)
+                .name("Peter")
+                .birthdate(LocalDate.of(2005, 12, 12))
+                .weight(90.0)
+                .height(1.85)
+                .bmi(26.29)
+                .build());
+    when(userRepository.findById(1)).thenReturn(user);
+    assertThrows(RuntimeException.class, () -> systemUnderTest.validateUserToDeleteById(1, 1));
+  }
+
+  @Test
+  void whenLogsExistByUserToDelete_ThenThrowException() {
+    when(logService.existLogByUserToDelete(any())).thenReturn(true);
+    when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
+    assertThrows(RuntimeException.class, () -> systemUnderTest.validateUserToDelete("Peter", "Hans"));
+  }
+
+  @Test
+  void userToDeleteIsValid() {
+    when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
+    when(userRepository.findUserByName("Florian")).thenReturn(users.get(1));
+    systemUnderTest.validateUserToDelete("Peter", "Florian");
+  }
+
+  @Test
+  void whenActorEqualsUserToDelete_ThenThrowException() {
+    when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
+    assertThrows(RuntimeException.class, () ->
+            systemUnderTest.validateUserToDelete("Peter", "Peter"));
   }
 
   @Test
@@ -159,74 +194,6 @@ class UserValidationServiceTest {
                     String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "Heinrich")));
     assertEquals(
         String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "Heinrich"), ex.getMessage());
-  }
-
-  @Test
-  void testWhenUserToPostAlreadyExists() {
-    when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
-    RuntimeException ex =
-        assertThrows(
-            RuntimeException.class, () -> systemUnderTest.checkIfUserToPostExists("Torsten"));
-    assertEquals(String.format(ErrorMessages.USER_EXISTS, "Torsten"), ex.getMessage());
-  }
-
-  @Test
-  void testWhenUserToPostIsNull() {
-    when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
-    RuntimeException ex =
-        assertThrows(
-            RuntimeException.class, () -> systemUnderTest.checkIfUserToPostExists("Peter"));
-    assertEquals(String.format(ErrorMessages.USER_EXISTS, "Peter"), ex.getMessage());
-  }
-
-  @Test
-  void testIfUserToDeleteIdEqualsActorId() {
-    RuntimeException ex =
-        assertThrows(
-            RuntimeException.class, () -> systemUnderTest.checkIfUserToDeleteIdEqualsActorId(1, 1));
-    assertEquals(ErrorMessages.USER_DELETE_HIMSELF, ex.getMessage());
-  }
-
-  @Test
-  void UserToDeleteIdNotEqualActorId() {
-    systemUnderTest.checkIfUserToDeleteIdEqualsActorId(5, 1);
-  }
-
-  @Test
-  void testIfIdExists() {
-    when(userRepository.findById(any())).thenReturn(Optional.ofNullable(users.get(0)));
-    systemUnderTest.checkIfIdExists(1);
-  }
-
-  @Test
-  void testIfIdNotExists() {
-    RuntimeException ex =
-        assertThrows(RuntimeException.class, () -> systemUnderTest.checkIfIdExists(1));
-    assertEquals(String.format(ErrorMessages.USER_NOT_FOUND_ID, 1), ex.getMessage());
-  }
-
-  @Test
-  void testIfExistLogByUserToDelete() {
-    when(logService.existLogByUserToDelete(any())).thenReturn(true);
-    RuntimeException ex =
-        assertThrows(
-            RuntimeException.class,
-            () -> systemUnderTest.checkIfExistLogByUserToDelete(users.get(0)));
-    assertEquals(
-        String.format(ErrorMessages.USER_REFERENCED, users.get(0).getName()), ex.getMessage());
-  }
-
-  @Test
-  void testIfUserToDeleteEqualsActor() {
-    when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
-    when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
-    RuntimeException ex =
-        assertThrows(
-            RuntimeException.class,
-            () ->
-                systemUnderTest.checkIfUserToDeleteEqualsActor(
-                    users.get(0).getName(), users.get(0).getName()));
-    assertEquals(ErrorMessages.USER_DELETE_HIMSELF, ex.getMessage());
   }
 
   @Test
