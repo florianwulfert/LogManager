@@ -5,15 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
-import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
+import project.userFeaturePortal.service.validation.BookValidationService;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +35,9 @@ public class BookServiceTest {
   @Mock
   UserRepository userRepository;
 
+  @Mock
+  BookValidationService bookValidationService;
+
   List<Book> books;
 
   @BeforeEach
@@ -46,8 +47,6 @@ public class BookServiceTest {
 
   @Test
   void testAddBook() {
-    User torsten = createUser();
-    when(userRepository.findUserByName(anyString())).thenReturn(torsten);
     books.add(
         Book.builder()
             .id(1)
@@ -67,47 +66,41 @@ public class BookServiceTest {
 
   @Test
   void testDeleteById() {
-    User torsten = createUser();
-    when(userRepository.findUserByName(anyString())).thenReturn(torsten);
     assertEquals(String.format(InfoMessages.BOOK_DELETED_ID, books.get(0).getId()),
         bookService.deleteById(books.get(0).getId(), "Torsten"));
-    verify(bookRepository).delete(any());
+    verify(bookRepository).deleteById(any());
   }
 
   @Test
-  void testDeleteByTitelWhenBooksListIsEmptyReturnNoBooksFounds() {
-    Mockito.when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(new ArrayList<>());
+  void whenBooksListIsEmpty_ThenReturnNoBooksFounds() {
+    when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(new ArrayList<>());
     assertEquals(String.format(InfoMessages.NO_BOOKS_FOUNDS, books.get(0).getTitel()),
         bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
   }
 
   @Test
   void testDeleteByTitel() {
-    ArrayList<Book> bookz = new ArrayList<Book>();
-    bookz.add(books.get(0));
-    Mockito.when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(bookz);
+    List<Book> testBooks = new ArrayList<>();
+    testBooks.add(Book.builder().titel("TestBook").erscheinungsjahr(2002).build());
+    when(bookRepository.findByTitel(anyString())).thenReturn(testBooks);
     assertEquals(String.format(InfoMessages.BOOK_DELETED_TITLE, books.get(0).getTitel()),
-        bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
+            bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
     verify(logService).addLog(any());
   }
 
   @Test
-  void testDeleteByTitelWhenMoreBooksWithSameTitelExistent() {
-    Mockito.when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(books);
+  void testDeleteByTitleWhenMoreBooksWithSameTitleExist() {
+    when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(books);
     assertEquals(String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, books.get(anyInt()).getTitel()),
         bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
   }
 
   @Test
   void testGetAllBooks() {
+    List<Book> books = addTestBook();
+    when(bookRepository.findAll()).thenReturn(books);
     bookService.getAllBooks();
     verify(bookRepository).findAll();
-  }
-
-  @Test
-  void testSaveBook() {
-    bookService.saveBook(any());
-    verify(bookRepository).save(any());
   }
 
   @Test
@@ -118,23 +111,8 @@ public class BookServiceTest {
 
   @Test
   void testSearchBooksByTitel() {
-    List<Book> books = new ArrayList<>();
-    books.add(
-        Book.builder()
-            .id(6)
-            .erscheinungsjahr(1999)
-            .titel("peter")
-            .build());
-    books.add(
-        Book.builder()
-            .id(7)
-            .erscheinungsjahr(1234)
-            .titel("petra")
-            .build());
-
-    Mockito.when(bookRepository.findByTitel(anyString())).thenReturn(books);
-    bookService.searchBooksByTitel(anyString());
-    verify(bookRepository).findByTitel(anyString());
+    when(bookRepository.findByTitel(anyString())).thenReturn(books);
+    bookService.searchBooksByTitel("haya");
   }
 
   private List<Book> addTestBook() {
@@ -171,17 +149,5 @@ public class BookServiceTest {
             .titel("chris")
             .build());
     return books;
-  }
-
-  private User createUser() {
-    User torsten = User.builder()
-            .id(1)
-            .name("Torsten")
-            .birthdate(LocalDate.of(1999, 12, 13))
-            .bmi(25.39)
-            .weight(65)
-            .height(1.60)
-            .build();
-    return torsten;
   }
 }

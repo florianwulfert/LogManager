@@ -1,23 +1,17 @@
 package project.userFeaturePortal.service.model;
 
-import static java.lang.String.valueOf;
-
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
-import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
-import project.userFeaturePortal.exception.ParameterNotPresentException;
-import project.userFeaturePortal.exception.UserNotAllowedException;
-import project.userFeaturePortal.exception.UserNotFoundException;
 import project.userFeaturePortal.model.entity.Book;
-import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.BookRepository;
-import project.userFeaturePortal.model.repository.UserRepository;
+import project.userFeaturePortal.service.validation.BookValidationService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,19 +21,13 @@ public class BookService {
   private static final Logger LOGGER = LogManager.getLogger(BookService.class);
   @Autowired private final BookRepository bookRepository;
   private final LogService logService;
-  private final UserRepository userRepository;
-
-  public void saveBook(Book book) {
-    bookRepository.save(book);
-  }
+  private final BookValidationService bookValidationService;
 
   public List<Book> addBook(Integer erscheinungsjahr, String titel, String actor) {
-    validateActor(actor);
-    validateErscheinungsjahrAndTitel(erscheinungsjahr,titel);
-    Book book = new Book();
-    book.setErscheinungsjahr(erscheinungsjahr);
-    book.setTitel(titel);
-    saveBook(book);
+    bookValidationService.validateActor(actor);
+    bookValidationService.validateErscheinungsjahrAndTitel(erscheinungsjahr,titel);
+    Book book = Book.builder().erscheinungsjahr(erscheinungsjahr).titel(titel).build();
+    bookRepository.save(book);
     logService.addLog(
         LogRequestDto.builder()
             .message(String.format("Book %s was added.", titel))
@@ -50,70 +38,41 @@ public class BookService {
     return bookRepository.findAll();
   }
 
-  private void validateActor(String actor) {
-    if (actor == null) {
-      throw new UserNotFoundException("null");
-    }
-    User user = userRepository.findUserByName(actor);
-    if (user == null) {
-      throw new UserNotAllowedException(ErrorMessages.USER_NOT_ALLOWED);
-    }
-  }
-
-  private void validateErscheinungsjahrAndTitel(Integer erscheinungsjahr, String titel) {
-    if (erscheinungsjahr == null || titel == null) {
-      throw new ParameterNotPresentException();
-    }
-  }
-
   public List<Book> getAllBooks() {
-    LOGGER.debug("All books founds");
-    return bookRepository.findAll();
-  }
+    List<Book> books = bookRepository.findAll();
 
-  public List<Book> searchBooksByTitel(String titel) {
-    List<Book> books = bookRepository.findByTitel(titel);
-
-    if(books.size() == 1) {
-      LOGGER.info(String.format(InfoMessages.ONE_BOOK_FOUND_TITLE, titel));
+    List<String> bookNames = new ArrayList<>();
+    for (Book book: books)  {
+      bookNames.add(book.getTitel());
     }
-
-    if(books.size() > 1) {
-      LOGGER.info(String.format(InfoMessages.BOOK_FOUND_TITLE, books.size() , titel));
-    }
-
+    LOGGER.info("Books found: " + bookNames);
     return books;
   }
 
+  public List<Book> searchBooksByTitel(String titel) {
+    return bookRepository.findByTitel(titel);
+  }
+
   public String deleteById(int id, String actor) {
-    validateActor(actor);
-    checkIfBookIsReferenced(id);
-    Book book = bookRepository.getOne(id);
-    bookRepository.delete(book);
+    bookValidationService.validateActor(actor);
+    bookValidationService.checkIfBookIsReferenced(id);
+    bookRepository.deleteById(id);
     saveLog(String.format(InfoMessages.BOOK_DELETED_ID, id), "WARNING", actor);
-    LOGGER.info(String.format(InfoMessages.BOOK_DELETED_ID, id));
     return String.format(InfoMessages.BOOK_DELETED_ID, id);
   }
 
-  private void checkIfBookIsReferenced(int id) {
-    List<User> users = userRepository.findByFavouriteBookId(id);
-    if (!users.isEmpty()) {
-      throw new RuntimeException(String.format(String.format(InfoMessages.USER_WITH_BOOK, id)));
-    }
-  }
-
   public String deleteByTitel(String titel, String actor) {
-    List<Book> deleteBooks = bookRepository.findByTitel(titel);
-    if (deleteBooks.isEmpty()) {
+    List<Book> booksToDelete = bookRepository.findByTitel(titel);
+    if (booksToDelete.isEmpty()) {
       LOGGER.info(String.format(InfoMessages.NO_BOOKS_FOUNDS, titel));
       return String.format(InfoMessages.NO_BOOKS_FOUNDS, titel);
-    } else if (deleteBooks.size() == 1) {
-      bookRepository.deleteById(deleteBooks.get(0).getId());
+    } else if (booksToDelete.size() == 1) {
+      bookRepository.deleteById(booksToDelete.get(0).getId());
       saveLog(String.format(InfoMessages.BOOK_DELETED_TITLE, titel), "INFO", actor);
       return String.format(InfoMessages.BOOK_DELETED_TITLE, titel);
     } else {
       String listString = "";
-      for (Book b : deleteBooks) {
+      for (Book b : booksToDelete) {
         if (!listString.equals("")) {
           listString = listString.concat(", ");
         }
