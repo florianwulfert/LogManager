@@ -92,9 +92,7 @@ public class UserService {
   }
 
   public Optional<User> findUserById(Integer id) {
-    Optional<User> user = userRepository.findById(id);
-    LOGGER.info(user);
-    return user.isPresent() ? userRepository.findById(id) : Optional.empty();
+    return userRepository.findById(id);
   }
 
   public boolean findUserByName(String name) {
@@ -152,7 +150,6 @@ public class UserService {
         .severity(severity)
         .user(actor)
         .build();
-    LOGGER.info("Log " + logRequestDto.message + String.format(" was saved as %s", severity));
     logService.addLog(logRequestDto);
   }
 }
