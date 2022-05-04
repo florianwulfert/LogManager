@@ -9,7 +9,6 @@ import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
-import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.service.validation.BookValidationService;
 import project.userFeaturePortal.service.validation.UserValidationService;
@@ -93,6 +92,7 @@ public class BookService {
   }
 
   public String deleteBooks(String actor) {
+    userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
     bookRepository.deleteAll();
     LOGGER.info(InfoMessages.ALL_BOOKS_DELETED);
     logService.addLog(LogRequestDto.builder()
