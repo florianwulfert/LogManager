@@ -6,10 +6,12 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
+import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.service.validation.BookValidationService;
+import project.userFeaturePortal.service.validation.UserValidationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +25,10 @@ public class BookService {
   private final BookRepository bookRepository;
   private final LogService logService;
   private final BookValidationService bookValidationService;
+  private final UserValidationService userValidationService;
 
   public List<Book> addBook(Integer erscheinungsjahr, String titel, String actor) {
-    bookValidationService.validateActor(actor);
+    userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
     bookValidationService.validateErscheinungsjahrAndTitel(erscheinungsjahr, titel);
 
     Book book = Book.builder().erscheinungsjahr(erscheinungsjahr).titel(titel).build();
@@ -53,16 +56,19 @@ public class BookService {
   }
 
   public String deleteById(int id, String actor) {
-    bookValidationService.validateActor(actor);
+    userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
     bookValidationService.checkIfBookIsReferenced(id);
+
     bookRepository.deleteById(id);
+
     logService.addLog(LogRequestDto.builder()
         .message(String.format(InfoMessages.BOOK_DELETED_ID, id)).severity("WARNING").user(actor)
         .build());
     return String.format(InfoMessages.BOOK_DELETED_ID, id);
   }
 
-  public String deleteByTitel(String titel, String actor) {
+  public String  deleteByTitel(String titel, String actor) {
+    userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
     List<Book> booksToDelete = bookRepository.findByTitel(titel);
 
     if (booksToDelete.isEmpty()) {
@@ -71,7 +77,10 @@ public class BookService {
     }
 
     if (booksToDelete.size() == 1) {
+      bookValidationService.checkIfBookIsReferenced(booksToDelete.get(0).getId());
+
       bookRepository.deleteById(booksToDelete.get(0).getId());
+
       logService.addLog(LogRequestDto.builder()
           .message(String.format(InfoMessages.BOOK_DELETED_TITLE, titel)).severity("INFO").user(actor)
           .build());

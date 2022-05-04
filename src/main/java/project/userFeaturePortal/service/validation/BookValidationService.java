@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.exception.ParameterNotPresentException;
-import project.userFeaturePortal.exception.UserNotAllowedException;
-import project.userFeaturePortal.exception.UserNotFoundException;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.BookRepository;
@@ -22,7 +20,6 @@ import java.util.List;
 public class BookValidationService {
 
   private final BookRepository bookRepository;
-
   private final UserRepository userRepository;
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
@@ -33,16 +30,6 @@ public class BookValidationService {
       throw new RuntimeException(String.format(ErrorMessages.BOOK_NOT_FOUND_TITEL, bookTitel));
     }
     return books.get(0);
-  }
-
-  public void validateActor(String actorName) {
-    if (actorName == null) {
-      throw new UserNotFoundException("null");
-    }
-    User user = userRepository.findUserByName(actorName);
-    if (user == null) {
-      throw new UserNotAllowedException(ErrorMessages.USER_NOT_ALLOWED);
-    }
   }
 
   public void validateErscheinungsjahrAndTitel(Integer erscheinungsjahr, String titel) {
