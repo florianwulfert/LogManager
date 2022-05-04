@@ -103,11 +103,6 @@ public class BookServiceTest {
     verify(bookRepository).findAll();
   }
 
-  @Test
-  void testSaveLog() {
-    bookService.saveLog("INFO", "string2", "Torsten");
-    verify(logService).addLog(any());
-  }
 
   @Test
   void testSearchBooksByTitel() {

@@ -57,7 +57,10 @@ public class BookService {
     bookValidationService.validateActor(actor);
     bookValidationService.checkIfBookIsReferenced(id);
     bookRepository.deleteById(id);
-    saveLog(String.format(InfoMessages.BOOK_DELETED_ID, id), "WARNING", actor);
+    logService.addLog(LogRequestDto.builder()
+            .message(String.format(InfoMessages.BOOK_DELETED_ID, id))
+            .severity("WARNING")
+            .user(actor).build());
     return String.format(InfoMessages.BOOK_DELETED_ID, id);
   }
 
@@ -69,7 +72,10 @@ public class BookService {
     }
     if (booksToDelete.size() == 1) {
       bookRepository.deleteById(booksToDelete.get(0).getId());
-      saveLog(String.format(InfoMessages.BOOK_DELETED_TITLE, titel), "INFO", actor);
+      logService.addLog(LogRequestDto.builder()
+              .message(String.format(InfoMessages.BOOK_DELETED_TITLE, titel))
+              .severity("INFO")
+              .user(actor).build());
       return String.format(InfoMessages.BOOK_DELETED_TITLE, titel);
     } else {
       String listString = "";
@@ -90,12 +96,5 @@ public class BookService {
     bookRepository.deleteAll();
     LOGGER.info(InfoMessages.ALL_BOOKS_DELETED);
     return InfoMessages.ALL_BOOKS_DELETED;
-  }
-
-  public void saveLog(String message, String severity, String actor) {
-    LogRequestDto logRequestDto =
-        LogRequestDto.builder().message(message).severity(severity).user(actor).build();
-    LOGGER.info(message);
-    logService.addLog(logRequestDto);
   }
 }
