@@ -37,16 +37,18 @@ public class UserService {
 
   public String addUser(UserRequestDto userRequestDto) {
     userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
-    User user = buildUserToCreate(userRequestDto);
+    userValidationService.validateUserToCreate(userRequestDto.name);
+    userValidationService.validateActor(userRequestDto.name, userRequestDto.actor);
 
-    if (userValidationService.validateUserToCreate(user.getName(), userRequestDto.actor)) {
-      saveUser(user, userRequestDto.actor);
-      return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
-    }
+    userRepository.save(buildUserToCreate(userRequestDto));
 
-    userValidationService.checkIfNameExists(userRequestDto.actor, true, String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, userRequestDto.actor));
-    saveUser(user, userRequestDto.actor);
-    return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
+    logService.addLog(LogRequestDto.builder()
+            .message(String.format(InfoMessages.USER_CREATED, userRequestDto.getName()))
+            .severity("INFO")
+            .user(userRequestDto.actor)
+            .build());
+    LOGGER.info(String.format(InfoMessages.USER_CREATED, userRequestDto.getName()));
+    return String.format(InfoMessages.USER_CREATED, userRequestDto.getName());
   }
 
   private User buildUserToCreate(UserRequestDto userRequestDto) {
@@ -105,23 +107,39 @@ public class UserService {
   }
 
   public void deleteById(int id, String actorName) {
+    // validate actor
     userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
+
+    // proof that the ID you want to delete exists
     User userToDelete = userValidationService.checkIfIdExists(id);
+
+    // validate user you want to delete
     userValidationService.validateUserToDelete(userToDelete.getName(), actorName);
 
     userRepository.deleteById(userToDelete.getId());
 
-    saveLog(String.format(InfoMessages.USER_DELETED_ID, userToDelete.getId()), "WARNING", actorName);
+    logService.addLog(LogRequestDto.builder()
+            .message(String.format(InfoMessages.USER_DELETED_ID, userToDelete.getId()))
+            .severity("WARNING")
+            .user(actorName)
+            .build());
     LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, userToDelete.getId()));
   }
 
   public String deleteByName(String name, String actorName) {
+    // validate actor
     userValidationService.checkIfNameExists(actorName, true, String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, actorName));
+
+    // validate user you want to delete
     User userToDelete = userValidationService.validateUserToDelete(name, actorName);
 
     userRepository.deleteById(userToDelete.getId());
 
-    saveLog(String.format(InfoMessages.USER_DELETED_NAME, name), "WARNING", actorName);
+    logService.addLog(LogRequestDto.builder()
+            .message(String.format(InfoMessages.USER_DELETED_NAME, name))
+            .severity("WARNING")
+            .user(actorName)
+            .build());
     LOGGER.info(String.format(InfoMessages.USER_DELETED_NAME, name));
     return String.format(InfoMessages.USER_DELETED_NAME, name);
   }
@@ -133,21 +151,5 @@ public class UserService {
 
     LOGGER.info(InfoMessages.ALL_USERS_DELETED);
     return InfoMessages.ALL_USERS_DELETED;
-  }
-
-  private void saveUser(User user, String actor) {
-    userRepository.save(user);
-
-    saveLog(String.format(InfoMessages.USER_CREATED, user.getName()), "INFO", actor);
-    LOGGER.info(String.format(InfoMessages.USER_CREATED, user.getName()));
-  }
-
-  private void saveLog(String message, String severity, String actor) {
-    LogRequestDto logRequestDto = LogRequestDto.builder()
-        .message(message)
-        .severity(severity)
-        .user(actor)
-        .build();
-    logService.addLog(logRequestDto);
   }
 }

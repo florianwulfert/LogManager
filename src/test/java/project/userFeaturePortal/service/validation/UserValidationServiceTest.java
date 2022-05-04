@@ -25,7 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -78,28 +79,23 @@ class UserValidationServiceTest {
   }
 
   @Test
-  void whenUserToCreateIsValid_ThenReturnTrue() {
-    assertTrue(systemUnderTest.validateUserToCreate("Peter", "Peter"));
-  }
-
-  @Test
   void whenUsersListIsNotEmpty_ThenReturnFalse() {
     when(userRepository.findAll()).thenReturn(users);
-    assertFalse(systemUnderTest.validateUserToCreate("Hans", "Hans"));
+    assertFalse(systemUnderTest.validateActor("Hans", "Hans"));
   }
 
   @Test
   void userToCreateDoesNotExist() {
     when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
     assertThrows(
-        RuntimeException.class, () -> systemUnderTest.validateUserToCreate("Peter", "Hans"));
+        RuntimeException.class, () -> systemUnderTest.validateActor("Peter", "Hans"));
   }
 
   @Test
   void whenUserToCreateNotEqualActor_ThenThrowFirstUserUnequalActorException() {
     assertThrows(
         FirstUserUnequalActorException.class,
-        () -> systemUnderTest.validateUserToCreate("Peter", "Hans"));
+        () -> systemUnderTest.validateActor("Peter", "Hans"));
   }
 
   @Test

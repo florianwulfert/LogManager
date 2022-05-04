@@ -51,25 +51,33 @@ public class UserValidationService {
     }
   }
 
-  public boolean validateUserToCreate(String name, String actor) {
+  public void validateActor(String name, String actor) {
     List<User> usersList = userRepository.findAll();
 
+    // proof that the usersList in the db is empty
+    // --> if so, first user has to be equal to the acting user (actor)
+    boolean userListEmpty = false;
+    if (usersList.isEmpty()) {
+      userListEmpty = true;
+      if (!name.equals(actor)) {
+        LOGGER.warn(ErrorMessages.NO_USERS_YET + name + " unequal " + actor);
+        throw new FirstUserUnequalActorException(actor, name);
+      }
+    }
+
+    // if userList is not empty, check if actor is allowed to create user
+    if (!userListEmpty) {
+      checkIfNameExists(actor, true,
+              String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, actor));
+    }
+  }
+
+  public void validateUserToCreate(String name) {
     // proof that the user you want to create is not existing yet
     if (userRepository.findUserByName(name) != null) {
       LOGGER.warn(String.format(ErrorMessages.USER_EXISTS, name));
       throw new RuntimeException(String.format(ErrorMessages.USER_EXISTS, name));
     }
-
-    // proof that the usersList in the db is empty ---> if yes first user has to be equal to the user who is acting (actor)
-    if (usersList.isEmpty()) {
-      if (!name.equals(actor)) {
-        LOGGER.warn(ErrorMessages.NO_USERS_YET + name + " unequal " + actor);
-        throw new FirstUserUnequalActorException(actor, name);
-      }
-      return true;
-    }
-
-    return false;
   }
 
   public User validateUserToDelete(String name, String actorName) {
@@ -107,7 +115,7 @@ public class UserValidationService {
     User user = userRepository.findUserByName(name);
 
     // proof that user is not null -->
-    // if yes decide whether userName was simply not found or he is not authorized to execute wanted action
+    // if so, decide whether userName was simply not found or he is not authorized to execute wanted action
     if (user == null) {
       if (isActor) {
         LOGGER.info(String.format(action, name));

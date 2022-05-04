@@ -68,8 +68,6 @@ class UserServiceTest {
   @Test
   void testAddUser() {
     List<Book> testBook = testBook();
-    when(userValidationService.validateUserToCreate(anyString(), anyString()))
-        .thenReturn(true);
     systemUnderTest.addUser(
         UserRequestDto.builder()
             .actor("Torsten")
@@ -109,7 +107,6 @@ class UserServiceTest {
   @Test
   void testUsersListIsEmpty() {
     List<Book> testBook = testBook();
-    when(userValidationService.validateUserToCreate(anyString(),anyString())).thenReturn(false);
     when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString())).thenReturn(users.get(0));
     systemUnderTest.addUser(
         UserRequestDto.builder()
