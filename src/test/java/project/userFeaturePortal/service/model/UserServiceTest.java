@@ -159,7 +159,8 @@ class UserServiceTest {
 
   @Test
   void testDeleteById() {
-    when(userValidationService.checkIfNameExists(anyString(),anyBoolean(), anyString())).thenReturn(users.get(0));
+    when(userValidationService.checkIfNameExists(anyString(),anyBoolean(), anyString())).thenReturn(users.get(1));
+    when(userValidationService.checkIfIdExists(1)).thenReturn(users.get(0));
     systemUnderTest.deleteById(1, "Florian");
     verify(userRepository).deleteById(1);
     verify(logService).addLog(any());
