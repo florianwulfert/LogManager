@@ -60,7 +60,7 @@ public class BookServiceTest {
 
   @Test
   void testDeleteBooks() {
-    assertEquals(InfoMessages.ALL_BOOKS_DELETED, bookService.deleteBooks());
+    assertEquals(InfoMessages.ALL_BOOKS_DELETED, bookService.deleteBooks(anyString()));
     verify(bookRepository).deleteAll();
   }
 
