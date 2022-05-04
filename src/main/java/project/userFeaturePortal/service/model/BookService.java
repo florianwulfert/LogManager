@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
+import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.service.validation.BookValidationService;
 
@@ -82,11 +83,11 @@ public class BookService {
     return String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel);
   }
 
-  public String deleteBooks() {
+  public String deleteBooks(String actor) {
     bookRepository.deleteAll();
     LOGGER.info(InfoMessages.ALL_BOOKS_DELETED);
     logService.addLog(LogRequestDto.builder()
-        .message(InfoMessages.ALL_BOOKS_DELETED).severity("INFO").user(null)
+        .message(InfoMessages.ALL_BOOKS_DELETED).severity("INFO").user(actor)
         .build());
     return InfoMessages.ALL_BOOKS_DELETED;
   }
