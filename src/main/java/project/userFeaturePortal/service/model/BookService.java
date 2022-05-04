@@ -66,7 +66,8 @@ public class BookService {
     if (booksToDelete.isEmpty()) {
       LOGGER.info(String.format(InfoMessages.NO_BOOKS_FOUNDS, titel));
       return String.format(InfoMessages.NO_BOOKS_FOUNDS, titel);
-    } else if (booksToDelete.size() == 1) {
+    }
+    if (booksToDelete.size() == 1) {
       bookRepository.deleteById(booksToDelete.get(0).getId());
       saveLog(String.format(InfoMessages.BOOK_DELETED_TITLE, titel), "INFO", actor);
       return String.format(InfoMessages.BOOK_DELETED_TITLE, titel);
