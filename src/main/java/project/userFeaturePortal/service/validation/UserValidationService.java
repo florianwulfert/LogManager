@@ -53,74 +53,70 @@ public class UserValidationService {
 
   public boolean validateUserToCreate(String name, String actor) {
     List<User> usersList = userRepository.findAll();
-    checkIfUserToCreateExists(name);
+
+    // proof that the user you want to create is not existing yet
+    if (userRepository.findUserByName(name) != null) {
+      LOGGER.warn(String.format(ErrorMessages.USER_EXISTS, name));
+      throw new RuntimeException(String.format(ErrorMessages.USER_EXISTS, name));
+    }
+
+    // proof that the usersList in the db is empty ---> if yes first user has to be equal to the user who is acting (actor)
     if (usersList.isEmpty()) {
-      checkIfActorEqualsUserToCreate(actor, name);
+      if (!name.equals(actor)) {
+        LOGGER.warn(ErrorMessages.NO_USERS_YET + name + " unequal " + actor);
+        throw new FirstUserUnequalActorException(actor, name);
+      }
       return true;
     }
+
     return false;
   }
 
   public User validateUserToDelete(String name, String actorName) {
-    User user = checkIfNameExists(name, false, ErrorMessages.CANNOT_DELETE_USER);
-    checkIfExistLogByUserToDelete(user);
-    checkIfUserToDeleteEqualsActor(name, actorName);
-    return user;
+    User userToDelete = checkIfNameExists(name, false, ErrorMessages.CANNOT_DELETE_USER);
+
+    // proof that there are no logs created by the user you want to delete
+    if (logService.existLogByUserToDelete(userToDelete)) {
+      LOGGER.error(String.format(ErrorMessages.USER_REFERENCED, userToDelete.getName()));
+      throw new RuntimeException(
+              String.format(ErrorMessages.USER_REFERENCED, userToDelete.getName()));
+    }
+
+    // proof that user is not deleting himself
+    if (userToDelete.getName().equals(actorName)) {
+      LOGGER.error(ErrorMessages.USER_DELETE_HIMSELF);
+      throw new RuntimeException(ErrorMessages.USER_DELETE_HIMSELF);
+    }
+
+    return userToDelete;
   }
 
   public User checkIfIdExists(int id) {
     Optional<User> user = userRepository.findById(id);
+
+    // if no users with wanted id found throw exception
     if (user.isEmpty()) {
       LOGGER.info(String.format(ErrorMessages.USER_NOT_FOUND_ID, id));
       throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_ID, id));
     }
+
     return user.get();
   }
 
   public User checkIfNameExists(String name, boolean isActor, String action) {
     User user = userRepository.findUserByName(name);
+
+    // proof that user is not null -->
+    // if yes decide whether userName was simply not found or he is not authorized to execute wanted action
     if (user == null) {
-      handleNameNotExist(isActor, action, name);
+      if (isActor) {
+        LOGGER.info(String.format(action, name));
+        throw new UserNotAllowedException(String.format(action, name));
+      }
+      LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
+      throw new UserNotFoundException(name);
     }
+
     return user;
-  }
-
-  private void handleNameNotExist(boolean isActor, String action, String name) {
-    if (isActor) {
-      LOGGER.info(String.format(action, name));
-      throw new UserNotAllowedException(String.format(action, name));
-    }
-    LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
-    throw new UserNotFoundException(name);
-  }
-
-  private void checkIfActorEqualsUserToCreate(String actor, String user) {
-    if (!user.equals(actor)) {
-      LOGGER.warn(ErrorMessages.NO_USERS_YET + user + " unequal " + actor);
-      throw new FirstUserUnequalActorException(actor, user);
-    }
-  }
-
-  private void checkIfUserToCreateExists(String name) {
-    if (userRepository.findUserByName(name) != null) {
-      LOGGER.warn(String.format(ErrorMessages.USER_EXISTS, name));
-      throw new RuntimeException(String.format(ErrorMessages.USER_EXISTS, name));
-    }
-  }
-
-  private void checkIfUserToDeleteEqualsActor(String name, String actorName) {
-    User actor = userRepository.findUserByName(actorName);
-    if (userRepository.findUserByName(name).equals(actor)) {
-      LOGGER.error(ErrorMessages.USER_DELETE_HIMSELF);
-      throw new RuntimeException(ErrorMessages.USER_DELETE_HIMSELF);
-    }
-  }
-
-  private void checkIfExistLogByUserToDelete(User userToDelete) {
-    if (logService.existLogByUserToDelete(userToDelete)) {
-      LOGGER.error(String.format(ErrorMessages.USER_REFERENCED, userToDelete.getName()));
-      throw new RuntimeException(
-          String.format(ErrorMessages.USER_REFERENCED, userToDelete.getName()));
-    }
   }
 }
