@@ -104,21 +104,22 @@ public class UserService {
     return true;
   }
 
-  public void deleteById(Integer id, String actorName) {
-    User actor = userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
-    userValidationService.validateUserToDeleteById(id, actor.getId());
+  public void deleteById(int id, String actorName) {
+    userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
+    User userToDelete = userValidationService.checkIfIdExists(id);
+    userValidationService.validateUserToDelete(userToDelete.getName(), actorName);
 
-    userRepository.deleteById(id);
+    userRepository.deleteById(userToDelete.getId());
 
-    saveLog(String.format(InfoMessages.USER_DELETED_ID, id), "WARNING", actorName);
-    LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, id));
+    saveLog(String.format(InfoMessages.USER_DELETED_ID, userToDelete.getId()), "WARNING", actorName);
+    LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, userToDelete.getId()));
   }
 
   public String deleteByName(String name, String actorName) {
     userValidationService.checkIfNameExists(actorName, true, String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, actorName));
-    User user = userValidationService.validateUserToDelete(name, actorName);
+    User userToDelete = userValidationService.validateUserToDelete(name, actorName);
 
-    userRepository.deleteById(user.getId());
+    userRepository.deleteById(userToDelete.getId());
 
     saveLog(String.format(InfoMessages.USER_DELETED_NAME, name), "WARNING", actorName);
     LOGGER.info(String.format(InfoMessages.USER_DELETED_NAME, name));

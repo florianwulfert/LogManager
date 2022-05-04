@@ -61,17 +61,20 @@ public class UserValidationService {
     return false;
   }
 
-  public void validateUserToDeleteById(int id, int actorId) {
-    User userToDelete = checkIfIdExists(id);
-    checkIfUserToDeleteIdEqualsActorId(id, actorId);
-    checkIfExistLogByUserToDelete(userToDelete);
-  }
-
   public User validateUserToDelete(String name, String actorName) {
     User user = checkIfNameExists(name, false, ErrorMessages.CANNOT_DELETE_USER);
     checkIfExistLogByUserToDelete(user);
     checkIfUserToDeleteEqualsActor(name, actorName);
     return user;
+  }
+
+  public User checkIfIdExists(int id) {
+    Optional<User> user = userRepository.findById(id);
+    if (user.isEmpty()) {
+      LOGGER.info(String.format(ErrorMessages.USER_NOT_FOUND_ID, id));
+      throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_ID, id));
+    }
+    return user.get();
   }
 
   public User checkIfNameExists(String name, boolean isActor, String action) {
@@ -82,13 +85,6 @@ public class UserValidationService {
     return user;
   }
 
-  private void checkIfActorEqualsUserToCreate(String actor, String user) {
-    if (!user.equals(actor)) {
-      LOGGER.warn(ErrorMessages.NO_USERS_YET + user + " unequal " + actor);
-      throw new FirstUserUnequalActorException(actor, user);
-    }
-  }
-
   private void handleNameNotExist(boolean isActor, String action, String name) {
     if (isActor) {
       LOGGER.info(String.format(action, name));
@@ -96,6 +92,13 @@ public class UserValidationService {
     }
     LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
     throw new UserNotFoundException(name);
+  }
+
+  private void checkIfActorEqualsUserToCreate(String actor, String user) {
+    if (!user.equals(actor)) {
+      LOGGER.warn(ErrorMessages.NO_USERS_YET + user + " unequal " + actor);
+      throw new FirstUserUnequalActorException(actor, user);
+    }
   }
 
   private void checkIfUserToCreateExists(String name) {
@@ -111,22 +114,6 @@ public class UserValidationService {
       LOGGER.error(ErrorMessages.USER_DELETE_HIMSELF);
       throw new RuntimeException(ErrorMessages.USER_DELETE_HIMSELF);
     }
-  }
-
-  private void checkIfUserToDeleteIdEqualsActorId(int userToDeleteId, int actorId) {
-    if (userToDeleteId == actorId) {
-      LOGGER.error(ErrorMessages.USER_DELETE_HIMSELF);
-      throw new RuntimeException(ErrorMessages.USER_DELETE_HIMSELF);
-    }
-  }
-
-  private User checkIfIdExists(int id) {
-    Optional<User> user = userRepository.findById(id);
-    if (user.isEmpty()) {
-      LOGGER.info(String.format(ErrorMessages.USER_NOT_FOUND_ID, id));
-      throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_ID, id));
-    }
-    return user.get();
   }
 
   private void checkIfExistLogByUserToDelete(User userToDelete) {

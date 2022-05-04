@@ -103,43 +103,6 @@ class UserValidationServiceTest {
   }
 
   @Test
-  void userToDeleteByIdIsValid() {
-    Optional<User> user =
-        Optional.ofNullable(
-            User.builder()
-                .id(1)
-                .name("Peter")
-                .birthdate(LocalDate.of(2005, 12, 12))
-                .weight(90.0)
-                .height(1.85)
-                .bmi(26.29)
-                .build());
-    when(userRepository.findById(1)).thenReturn(user);
-    systemUnderTest.validateUserToDeleteById(1, 2);
-  }
-
-  @Test
-  void whenIdFromUserToDeleteDoesNotExist_ThenThrowException() {
-    assertThrows(RuntimeException.class, () -> systemUnderTest.validateUserToDeleteById(1, 2));
-  }
-
-  @Test
-  void whenUserIdEqualsActorId_ThrowException() {
-    Optional<User> user =
-        Optional.ofNullable(
-            User.builder()
-                .id(1)
-                .name("Peter")
-                .birthdate(LocalDate.of(2005, 12, 12))
-                .weight(90.0)
-                .height(1.85)
-                .bmi(26.29)
-                .build());
-    when(userRepository.findById(1)).thenReturn(user);
-    assertThrows(RuntimeException.class, () -> systemUnderTest.validateUserToDeleteById(1, 1));
-  }
-
-  @Test
   void whenLogsExistByUserToDelete_ThenThrowException() {
     when(logService.existLogByUserToDelete(any())).thenReturn(true);
     when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
@@ -216,6 +179,26 @@ class UserValidationServiceTest {
   void testUsersAreNotReferenced() {
     when(logRepository.findAll()).thenReturn(new ArrayList<>());
     systemUnderTest.checkIfUsersAreReferenced();
+  }
+
+  @Test
+  void testIdSuccessfullyFound() {
+    Optional<User> user = Optional.ofNullable(User.builder()
+            .id(1)
+            .name("Peter")
+            .birthdate(LocalDate.of(2005, 12, 12))
+            .weight(90.0)
+            .height(1.85)
+            .bmi(26.29)
+            .build());
+    when(userRepository.findById(1)).thenReturn(user);
+    systemUnderTest.checkIfIdExists(1);
+  }
+
+  @Test
+  void whenIdNotFound_ThenThrowException() {
+    assertThrows(RuntimeException.class, () ->
+            systemUnderTest.checkIfIdExists(1));
   }
 
   private List<User> addTestUser() {
