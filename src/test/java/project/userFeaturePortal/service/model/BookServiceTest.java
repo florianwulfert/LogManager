@@ -8,10 +8,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
+import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.validation.BookValidationService;
+import project.userFeaturePortal.service.validation.UserValidationService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +41,9 @@ public class BookServiceTest {
   @Mock
   BookValidationService bookValidationService;
 
+  @Mock
+  UserValidationService userValidationService;
+
   List<Book> books;
 
   @BeforeEach
@@ -60,7 +66,17 @@ public class BookServiceTest {
 
   @Test
   void testDeleteBooks() {
-    assertEquals(InfoMessages.ALL_BOOKS_DELETED, bookService.deleteBooks(anyString()));
+    User user = User.builder()
+            .id(1)
+            .name("Peter")
+            .birthdate(LocalDate.of(2005, 12, 12))
+            .weight(90.0)
+            .height(1.85)
+            .bmi(26.29)
+            .favouriteBook(null)
+            .build();
+    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString())).thenReturn(user);
+    assertEquals(InfoMessages.ALL_BOOKS_DELETED, bookService.deleteBooks("Peter"));
     verify(bookRepository).deleteAll();
   }
 
@@ -80,19 +96,23 @@ public class BookServiceTest {
 
   @Test
   void testDeleteByTitel() {
+    User user = User.builder()
+            .id(1)
+            .name("Peter")
+            .birthdate(LocalDate.of(2005, 12, 12))
+            .weight(90.0)
+            .height(1.85)
+            .bmi(26.29)
+            .favouriteBook(null)
+            .build();
+    when(userValidationService.checkIfNameExists(anyString(),anyBoolean(),anyString())).thenReturn(user);
     List<Book> testBooks = new ArrayList<>();
-    testBooks.add(Book.builder().titel("TestBook").erscheinungsjahr(2002).build());
+    testBooks.add(Book.builder().id(1).titel("TestBook").erscheinungsjahr(2002).build());
     when(bookRepository.findByTitel(anyString())).thenReturn(testBooks);
-    assertEquals(String.format(InfoMessages.BOOK_DELETED_TITLE, books.get(0).getTitel()),
-            bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
+    when(bookValidationService.checkIfBookIsReferenced(any())).thenReturn()
+    assertEquals(String.format(InfoMessages.BOOK_DELETED_TITLE, "TestBook"),
+            bookService.deleteByTitel("TestBook", "Torsten"));
     verify(logService).addLog(any());
-  }
-
-  @Test
-  void testDeleteByTitleWhenMoreBooksWithSameTitleExist() {
-    when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(books);
-    assertEquals(String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, books.get(anyInt()).getTitel()),
-        bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
   }
 
   @Test
