@@ -19,7 +19,6 @@ import {
 } from "./logs.actions";
 import {LogService} from "./logs.service";
 import {AddLogRequest} from "./addLogs/dto/add-log-request";
-import {DeleteLogRequest} from "./deleteLog/dto/delete-log-request";
 import {GetLogsRequest} from "./getLogs/dto/getLogs-request";
 
 
@@ -64,8 +63,8 @@ export class LogEffects {
   deleteLog$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(deleteLogAction),
-      switchMap((deleteLogRequest: DeleteLogRequest) =>
-        this.logService.deleteLog(deleteLogRequest.id).pipe(
+      switchMap((deleteLogRequest: GetLogsRequest) =>
+        this.logService.deleteLog(deleteLogRequest).pipe(
           map((deleteLogResponse) => deleteLogResponseAction(deleteLogResponse)),
           catchError((error: string) => of(loadDeleteLogErrorAction({error})))
         )

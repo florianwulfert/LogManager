@@ -54,7 +54,9 @@ class LogControllerTest {
 
   @Test
   void testDeleteById() {
-    systemUnderTest.deleteLogsByID(1);
+    LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
+    LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
+    systemUnderTest.deleteLogsByID(1, "INFO", "Test", startDate, endDate, "Hans");
     verify(logService).deleteById(1);
   }
 

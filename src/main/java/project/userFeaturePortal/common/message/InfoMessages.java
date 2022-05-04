@@ -9,12 +9,13 @@ public class InfoMessages {
   public static final String USER_DELETED_ID = "User with the ID %s was deleted.";
   public static final String USER_DELETED_NAME = "User named %s was deleted.";
   public static final String ALL_USERS_DELETED = "All users were deleted from database!";
-  public static final String USER_CREATED = "User %s was created. ";
+  public static final String USER_CREATED = "User %s was created.";
   public static final String MESSAGE_SAVED = "Message \"%s\" saved as %s!";
   public static final String ENTRY_DELETED_ID = "Entry with the ID %s was deleted from database.";
   public static final String ALL_LOGS_DELETED = "All logs were deleted from database!";
   public static final String KATZE_TO_HUND = "Katze was translated to Hund!";
-  public static final String Book_FOUND_TITLE = "Books with the title %s were found.";
+  public static final String BOOK_FOUND_TITLE = "%d Books with the title %s were found.";
+  public static final String ONE_BOOK_FOUND_TITLE = "One Book with the title %s was found.";
   public static final String BOOK_CREATED = "Book %s was created.";
   public static final String BOOK_DELETED_ID = "Book with the ID %s was deleted.";
   public static final String BOOK_DELETED_TITLE = "Book with the title %s was deleted.";

@@ -1,5 +1,7 @@
 package project.userFeaturePortal.service.model;
 
+import static java.lang.String.valueOf;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,8 +72,17 @@ public class BookService {
   }
 
   public List<Book> searchBooksByTitel(String titel) {
-    LOGGER.info(String.format(InfoMessages.Book_FOUND_TITLE, titel));
-    return bookRepository.findByTitel(titel);
+    List<Book> books = bookRepository.findByTitel(titel);
+
+    if(books.size() == 1) {
+      LOGGER.info(String.format(InfoMessages.ONE_BOOK_FOUND_TITLE, titel));
+    }
+
+    if(books.size() > 1) {
+      LOGGER.info(String.format(InfoMessages.BOOK_FOUND_TITLE, books.size() , titel));
+    }
+
+    return books;
   }
 
   public String deleteById(int id, String actor) {

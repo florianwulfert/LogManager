@@ -72,9 +72,15 @@ public class LogController {
 
   @DeleteMapping("/log/id/{id}")
   @Operation(summary = "Delete logs by id of the log")
-  public LogResponseDto deleteLogsByID(@PathVariable final Integer id) {
+  public LogResponseDto deleteLogsByID(@PathVariable final Integer id,
+      @RequestParam(required = false) final String severity,
+      @RequestParam(required = false) final String message,
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss") final LocalDateTime startDateTime,
+      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm-ss") final LocalDateTime endDateTime,
+      @RequestParam(required = false) final String user
+  ) {
     String returnMessage = logService.deleteById(id);
-    return new LogResponseDto(logService.getLogs(null, null, null, null, null), returnMessage);
+    return new LogResponseDto(logService.getLogs(severity, message, startDateTime, endDateTime, user), returnMessage);
   }
 
   @DeleteMapping("/log/severity")

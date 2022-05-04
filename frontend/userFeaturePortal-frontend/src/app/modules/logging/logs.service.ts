@@ -48,7 +48,7 @@ export class LogService {
     }
   }
 
-  buildRequestParams(getLogsRequest: GetLogsRequest): String {
+  buildGetLogsRequestParams(getLogsRequest: GetLogsRequest): String {
     let severity: string
     let message: string
     let startDateTime: string
@@ -69,7 +69,7 @@ export class LogService {
   getLogs(getLogsRequest: GetLogsRequest): Observable<GetLogsResponse> {
     console.log(getLogsRequest)
     this.countParameter = 0
-    return this.http.get<GetLogsResponse>(API_GET_LOGS + this.buildRequestParams(getLogsRequest), {
+    return this.http.get<GetLogsResponse>(API_GET_LOGS + this.buildGetLogsRequestParams(getLogsRequest), {
       observe: 'response'
     }).pipe(
       map((r) => {
@@ -137,12 +137,13 @@ export class LogService {
     );
   }
 
-  deleteLog(i: number | undefined): Observable<DeleteLogResponse> {
-    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + i, {
+  deleteLog(deleteLogRequest: GetLogsRequest): Observable<DeleteLogResponse> {
+    this.countParameter = 0
+    return this.http.delete<DeleteLogResponse>(API_DELETE_LOG + deleteLogRequest.id + this.buildGetLogsRequestParams(deleteLogRequest), {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("Log with the ID " + i + " was deleted.");
+        this.featureManager.openSnackbar("Log with the ID " + deleteLogRequest.id + " was deleted.");
         return r.body || {
           result: [],
           returnMessage: ""

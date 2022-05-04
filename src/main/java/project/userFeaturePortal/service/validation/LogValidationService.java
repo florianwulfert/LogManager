@@ -67,7 +67,7 @@ public class LogValidationService {
         LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
         throw new RuntimeException();
       }
-      LOGGER.info(String.format(InfoMessages.USER_FOUND, userName));
+      LOGGER.debug(String.format(InfoMessages.USER_FOUND, userName));
       return user;
     } catch (RuntimeException ex) {
       LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
