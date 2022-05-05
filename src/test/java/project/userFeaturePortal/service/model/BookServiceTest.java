@@ -109,7 +109,6 @@ public class BookServiceTest {
     List<Book> testBooks = new ArrayList<>();
     testBooks.add(Book.builder().id(1).titel("TestBook").erscheinungsjahr(2002).build());
     when(bookRepository.findByTitel(anyString())).thenReturn(testBooks);
-    when(bookValidationService.checkIfBookIsReferenced(any())).thenReturn()
     assertEquals(String.format(InfoMessages.BOOK_DELETED_TITLE, "TestBook"),
             bookService.deleteByTitel("TestBook", "Torsten"));
     verify(logService).addLog(any());
