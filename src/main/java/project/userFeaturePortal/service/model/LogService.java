@@ -15,6 +15,7 @@ import project.userFeaturePortal.model.mapper.LogDTOMapper;
 import project.userFeaturePortal.model.repository.LogRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.validation.LogValidationService;
+import project.userFeaturePortal.service.validation.UserValidationService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ public class LogService {
   private final LogValidationService logValidationService;
   private final LogDTOMapper logDTOMapper;
   private final UserRepository userRepository;
+  private final UserValidationService userValidationService;
 
   public List<LogDTO> getLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate, String userName) {
 
@@ -46,7 +48,7 @@ public class LogService {
     logValidationService.checkIfAnyEntriesAreNull(logRequestDto);
     logValidationService.validateSeverity(logRequestDto.getSeverity());
     LogMessageDto logMessage = logValidationService.validateMessage(logRequestDto.message);
-    User user = logValidationService.checkActor(logRequestDto.user);
+    User user = userValidationService.checkIfNameExists(logRequestDto.user, true, ErrorMessages.USER_NOT_ALLOWED);
     saveLog(logMessage.getMessage(), logRequestDto.getSeverity(), user);
 
     logMessage.setReturnMessage(
