@@ -75,4 +75,5 @@ public class TestMessages {
         + "{\"id\":7,\"titel\":\"paul\",\"erscheinungsjahr\":2008}]," +
                 "\"returnMessage\":\"Book with the ID 3 was deleted.\"}";
         public static final String BOOK_HAYA = "[{\"id\":1,\"titel\":\"haya\",\"erscheinungsjahr\":1998}]";
+        public static final String ALL_BOOKS_DELETED = "{\"result\":[],\"returnMessage\":\"All BOOKS were deleted from database!\"}";
 }
