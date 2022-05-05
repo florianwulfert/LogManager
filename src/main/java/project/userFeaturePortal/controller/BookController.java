@@ -3,6 +3,8 @@ package project.userFeaturePortal.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.userFeaturePortal.common.dto.books.BookRequestDto;
 import project.userFeaturePortal.common.dto.books.BooksResponseDto;
@@ -49,7 +51,8 @@ public class BookController {
   }
 
   @DeleteMapping("/books")
-  public String deleteAll(@RequestParam String actor) {
-    return bookService.deleteBooks(actor);
+  public ResponseEntity<BooksResponseDto> deleteAll(@RequestParam String actor) {
+    String returnMessage = bookService.deleteBooks(actor);
+    return ResponseEntity.status(HttpStatus.OK).body(new BooksResponseDto(bookService.getAllBooks(), returnMessage));
   }
 }

@@ -67,7 +67,6 @@ export class LogService {
   }
 
   getLogs(getLogsRequest: GetLogsRequest): Observable<GetLogsResponse> {
-    console.log(getLogsRequest)
     this.countParameter = 0
     return this.http.get<GetLogsResponse>(API_GET_LOGS + this.buildGetLogsRequestParams(getLogsRequest), {
       observe: 'response'

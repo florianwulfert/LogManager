@@ -50,6 +50,8 @@ export class BookComponent implements OnInit, OnDestroy {
     this.subscriptionManager.clear()
   }
 
+  position = new FormControl('above');
+
   getBooks(): void {
     this.booksFacade.getBooks()
     this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
@@ -95,5 +97,9 @@ export class BookComponent implements OnInit, OnDestroy {
   assignBook(): void {
     let request = this.formBookToUser.get("book")?.value
     this.booksFacade.assignBookToUser(request)
+  }
+
+  deleteBooks(): void {
+    this.booksFacade.deleteLogs()
   }
 }
