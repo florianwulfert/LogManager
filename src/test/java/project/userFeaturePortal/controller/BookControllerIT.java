@@ -62,8 +62,8 @@ class BookControllerIT {
             TestMessages.HAYA),
         Arguments.of(
             "{\"titel\":\"peter\",\"erscheinungsjahr\":\"1988\"}",
-            status().isNotFound(),
-            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "null"),
+            status().isForbidden(),
+            ErrorMessages.USER_NOT_ALLOWED,
         Arguments.of(
             "{\"erscheinungsjahr\":\"1977\",\"actor\":\"Torsten\"}",
             status().isBadRequest(),
@@ -214,7 +214,8 @@ class BookControllerIT {
     void testDeleteAll() throws Exception {
 
         MvcResult result = mockMvc
-                .perform(delete("/books"))
+                .perform(delete("/books")
+                        .param("actor", "Torsten"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
