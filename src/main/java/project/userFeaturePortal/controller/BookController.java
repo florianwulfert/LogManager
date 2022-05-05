@@ -49,7 +49,7 @@ public class BookController {
   }
 
   @DeleteMapping("/books")
-  public String deleteAll() {
-    return bookService.deleteBooks();
+  public String deleteAll(@RequestParam String actor) {
+    return bookService.deleteBooks(actor);
   }
 }

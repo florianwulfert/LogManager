@@ -1,6 +1,5 @@
 package project.userFeaturePortal.service.model;
 
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +17,7 @@ import project.userFeaturePortal.service.validation.BookValidationService;
 import project.userFeaturePortal.service.validation.UserValidationService;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -103,7 +103,6 @@ public class UserService {
       return users.isEmpty();
     }
 
-    LOGGER.debug(String.format(InfoMessages.USER_FOUND, name));
     return true;
   }
 
