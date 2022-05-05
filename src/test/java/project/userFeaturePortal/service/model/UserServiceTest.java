@@ -107,7 +107,6 @@ class UserServiceTest {
   @Test
   void testUsersListIsEmpty() {
     List<Book> testBook = testBook();
-    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString())).thenReturn(users.get(0));
     systemUnderTest.addUser(
         UserRequestDto.builder()
             .actor("Torsten")

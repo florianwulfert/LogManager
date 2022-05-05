@@ -79,16 +79,17 @@ class UserValidationServiceTest {
   }
 
   @Test
-  void whenUsersListIsNotEmpty_ThenReturnFalse() {
+  void whenUsersListIsNotEmptyAndActorIsNotPresent_ThenThrowException() {
     when(userRepository.findAll()).thenReturn(users);
-    assertFalse(systemUnderTest.validateActor("Hans", "Hans"));
+    assertThrows(UserNotAllowedException.class, () ->
+            systemUnderTest.validateActor("Hans", "Hans"));
   }
 
   @Test
-  void userToCreateDoesNotExist() {
-    when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
-    assertThrows(
-        RuntimeException.class, () -> systemUnderTest.validateActor("Peter", "Hans"));
+  void userToCreateAlreadyExists() {
+    when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
+    assertThrows(RuntimeException.class, () ->
+            systemUnderTest.validateUserToCreate("Peter"));
   }
 
   @Test
@@ -108,7 +109,6 @@ class UserValidationServiceTest {
   @Test
   void userToDeleteIsValid() {
     when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
-    when(userRepository.findUserByName("Florian")).thenReturn(users.get(1));
     systemUnderTest.validateUserToDelete("Peter", "Florian");
   }
 
