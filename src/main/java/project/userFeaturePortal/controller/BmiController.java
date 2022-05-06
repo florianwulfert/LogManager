@@ -3,6 +3,8 @@ package project.userFeaturePortal.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.userFeaturePortal.common.dto.bmi.BmiRequestDto;
 import project.userFeaturePortal.common.dto.bmi.BmiResponseDto;
@@ -17,10 +19,10 @@ public class BmiController {
   private final BmiService bmiService;
 
   @PostMapping("/bmi")
-  public BmiResponseDto getBmi(@RequestBody BmiRequestDto parameters) {
+  public ResponseEntity<BmiResponseDto> getBmi(@RequestBody BmiRequestDto parameters) {
     String returnMessage = bmiService.calculateBmiAndGetBmiMessage(
         parameters.getBirthdateAsLocalDate(), parameters.weight, parameters.height);
-    return new BmiResponseDto(returnMessage);
+    return ResponseEntity.status(HttpStatus.OK).body(new BmiResponseDto(returnMessage));
   }
 
   @GetMapping("/bmi/{user}")

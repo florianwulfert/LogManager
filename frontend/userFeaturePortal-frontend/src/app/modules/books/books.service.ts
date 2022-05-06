@@ -97,7 +97,6 @@ export class BooksService {
   }
 
   assignBookToUser(book: AddBookRequest): Observable<AddBookResponse> {
-    console.log(book)
     this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
       this.name = r
     })

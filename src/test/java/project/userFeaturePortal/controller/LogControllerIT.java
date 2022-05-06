@@ -207,7 +207,7 @@ class LogControllerIT {
                 .content("{\"message\":\"Test\",\"severity\":\"INFO\",\"user\":\"Petra\"}")
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
     }
 
@@ -219,7 +219,7 @@ class LogControllerIT {
                 .content("{\"message\":\"Katze\", \"severity\":\"INFO\",\"user\":\"Petra\"}")
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
     }
 

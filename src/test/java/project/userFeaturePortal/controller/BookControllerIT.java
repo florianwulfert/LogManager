@@ -1,7 +1,6 @@
 package project.userFeaturePortal.controller;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,7 +57,7 @@ class BookControllerIT {
     return Stream.of(
         Arguments.of(
             "{\"titel\":\"haya\",\"erscheinungsjahr\":\"1998\",\"actor\":\"Torsten\"}",
-            status().isOk(),
+            status().isCreated(),
             TestMessages.HAYA),
         Arguments.of(
             "{\"titel\":\"peter\",\"erscheinungsjahr\":\"1988\"}",
@@ -279,18 +278,14 @@ class BookControllerIT {
         return books;
     }
 
-    @Nested
-    class FindBookByTitelTests {
-
-        @Test
-        void testFindBookBytitel() throws Exception {
-            MvcResult result = mockMvc
-                    .perform(get("/book").param("titel", "haya"))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andReturn();
-            assertEquals(String.format(TestMessages.BOOK_HAYA),
-                    result.getResponse().getContentAsString());
-        }
+    @Test
+    void testFindBookBytitel() throws Exception {
+        MvcResult result = mockMvc
+                .perform(get("/book").param("titel", "haya"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(String.format(TestMessages.BOOK_HAYA),
+                result.getResponse().getContentAsString());
     }
 }
