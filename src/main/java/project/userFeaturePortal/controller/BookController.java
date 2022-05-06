@@ -3,6 +3,8 @@ package project.userFeaturePortal.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.userFeaturePortal.common.dto.books.BookRequestDto;
 import project.userFeaturePortal.common.dto.books.BooksResponseDto;
@@ -22,14 +24,15 @@ public class BookController {
   private final BookService bookService;
 
   @GetMapping("/books")
-  public BooksResponseDto getAllBooks() {
-    return new BooksResponseDto(bookService.getAllBooks(), null);
+  public ResponseEntity<BooksResponseDto> getAllBooks() {
+    return ResponseEntity.status(HttpStatus.OK).body(new BooksResponseDto(bookService.getAllBooks(), null));
   }
 
   @PostMapping("/book")
-  public BooksResponseDto addBook(@RequestBody BookRequestDto parameters) {
-    return new BooksResponseDto(bookService.addBook(parameters.erscheinungsjahr, parameters.titel, parameters.actor),
-            String.format(InfoMessages.BOOK_CREATED, parameters.titel));
+  public ResponseEntity<BooksResponseDto> addBook(@RequestBody BookRequestDto parameters) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(new BooksResponseDto(bookService.addBook(
+            parameters.erscheinungsjahr, parameters.titel, parameters.actor),
+            String.format(InfoMessages.BOOK_CREATED, parameters.titel)));
   }
 
   @GetMapping("/book")
@@ -38,9 +41,9 @@ public class BookController {
   }
 
   @DeleteMapping("/book/id/{id}")
-  public BooksResponseDto deleteBooksById(@PathVariable Integer id, @RequestParam String actor) {
+  public ResponseEntity<BooksResponseDto> deleteBooksById(@PathVariable Integer id, @RequestParam String actor) {
     String returnMessage = bookService.deleteById(id, actor);
-    return new BooksResponseDto(bookService.getAllBooks(), returnMessage);
+    return ResponseEntity.status(HttpStatus.OK).body(new BooksResponseDto(bookService.getAllBooks(), returnMessage));
   }
 
   @DeleteMapping("/book/titel")
@@ -49,7 +52,7 @@ public class BookController {
   }
 
   @DeleteMapping("/books")
-  public String deleteAll() {
-    return bookService.deleteBooks();
+  public String deleteAll(@RequestParam String actor) {
+    return bookService.deleteBooks(actor);
   }
 }

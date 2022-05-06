@@ -28,7 +28,6 @@ export class BooksFacade {
   }
 
   assignBookToUser(request: AddBookRequest): void {
-    console.log(request)
     this.booksState.dispatch(assignBookToUserAction(request))
   }
 }

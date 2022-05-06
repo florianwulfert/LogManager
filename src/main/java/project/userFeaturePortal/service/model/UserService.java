@@ -1,6 +1,5 @@
 package project.userFeaturePortal.service.model;
 
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +17,7 @@ import project.userFeaturePortal.service.validation.BookValidationService;
 import project.userFeaturePortal.service.validation.UserValidationService;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,19 +37,18 @@ public class UserService {
 
   public String addUser(UserRequestDto userRequestDto) {
     userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
-    User user = buildUserToCreate(userRequestDto);
+    userValidationService.validateUserToCreate(userRequestDto.name);
+    userValidationService.validateActor(userRequestDto.name, userRequestDto.actor);
 
-    if (userValidationService.validateUserToCreate(user.getName(), userRequestDto.actor)) {
-      saveUser(user, userRequestDto.actor);
-      return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
-    }
+    userRepository.save(buildUserToCreate(userRequestDto));
 
-    if (userValidationService.validateActor(userRequestDto.actor, ErrorMessages.USER_NOT_ALLOWED_CREATE_USER)) {
-      saveUser(user, userRequestDto.actor);
-      return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
-    }
-
-    return ErrorMessages.USER_CREATION_NOT_SUCCEED;
+    logService.addLog(LogRequestDto.builder()
+            .message(String.format(InfoMessages.USER_CREATED, userRequestDto.getName()))
+            .severity("INFO")
+            .user(userRequestDto.actor)
+            .build());
+    LOGGER.info(String.format(InfoMessages.USER_CREATED, userRequestDto.getName()));
+    return String.format(InfoMessages.USER_CREATED, userRequestDto.getName());
   }
 
   private User buildUserToCreate(UserRequestDto userRequestDto) {
@@ -103,27 +102,43 @@ public class UserService {
       return users.isEmpty();
     }
 
-    LOGGER.debug(String.format(InfoMessages.USER_FOUND, name));
     return true;
   }
 
-  public void deleteById(Integer id, String actorName) {
-    User actor = userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
-    userValidationService.validateUserToDeleteById(id, actor.getId());
+  public void deleteById(int id, String actorName) {
+    // validate actor
+    userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
 
-    userRepository.deleteById(id);
+    // proof that the ID you want to delete exists
+    User userToDelete = userValidationService.checkIfIdExists(id);
 
-    saveLog(String.format(InfoMessages.USER_DELETED_ID, id), "WARNING", actorName);
-    LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, id));
+    // validate user you want to delete
+    userValidationService.validateUserToDelete(userToDelete.getName(), actorName);
+
+    userRepository.deleteById(userToDelete.getId());
+
+    logService.addLog(LogRequestDto.builder()
+            .message(String.format(InfoMessages.USER_DELETED_ID, userToDelete.getId()))
+            .severity("WARNING")
+            .user(actorName)
+            .build());
+    LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, userToDelete.getId()));
   }
 
   public String deleteByName(String name, String actorName) {
-    userValidationService.validateActor(actorName, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
-    User user = userValidationService.validateUserToDelete(name, actorName);
+    // validate actor
+    userValidationService.checkIfNameExists(actorName, true, String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, actorName));
 
-    userRepository.deleteById(user.getId());
+    // validate user you want to delete
+    User userToDelete = userValidationService.validateUserToDelete(name, actorName);
 
-    saveLog(String.format(InfoMessages.USER_DELETED_NAME, name), "WARNING", actorName);
+    userRepository.deleteById(userToDelete.getId());
+
+    logService.addLog(LogRequestDto.builder()
+            .message(String.format(InfoMessages.USER_DELETED_NAME, name))
+            .severity("WARNING")
+            .user(actorName)
+            .build());
     LOGGER.info(String.format(InfoMessages.USER_DELETED_NAME, name));
     return String.format(InfoMessages.USER_DELETED_NAME, name);
   }
@@ -135,21 +150,5 @@ public class UserService {
 
     LOGGER.info(InfoMessages.ALL_USERS_DELETED);
     return InfoMessages.ALL_USERS_DELETED;
-  }
-
-  private void saveUser(User user, String actor) {
-    userRepository.save(user);
-
-    saveLog(String.format(InfoMessages.USER_CREATED, user.getName()), "INFO", actor);
-    LOGGER.info(String.format(InfoMessages.USER_CREATED, user.getName()));
-  }
-
-  private void saveLog(String message, String severity, String actor) {
-    LogRequestDto logRequestDto = LogRequestDto.builder()
-        .message(message)
-        .severity(severity)
-        .user(actor)
-        .build();
-    logService.addLog(logRequestDto);
   }
 }

@@ -71,7 +71,7 @@ class UserControllerIT {
             "User created",
             false,
             "{\"actor\":\"Petra\",\"name\":\"Hugo\",\"birthdate\":\"1999-12-13\",\"weight\":78.0,\"height\":1.8}",
-            status().isOk(),
+            status().isCreated(),
             TestMessages.USER_CREATED_MESSAGE,
             Arguments.of(
                 "First user has to create himself",

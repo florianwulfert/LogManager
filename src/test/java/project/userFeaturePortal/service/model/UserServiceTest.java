@@ -68,8 +68,6 @@ class UserServiceTest {
   @Test
   void testAddUser() {
     List<Book> testBook = testBook();
-    when(userValidationService.validateUserToCreate(anyString(), anyString()))
-        .thenReturn(true);
     systemUnderTest.addUser(
         UserRequestDto.builder()
             .actor("Torsten")
@@ -109,8 +107,6 @@ class UserServiceTest {
   @Test
   void testUsersListIsEmpty() {
     List<Book> testBook = testBook();
-    when(userValidationService.validateUserToCreate(anyString(),anyString())).thenReturn(false);
-    when(userValidationService.validateActor(anyString(), anyString())).thenReturn(true);
     systemUnderTest.addUser(
         UserRequestDto.builder()
             .actor("Torsten")
@@ -159,7 +155,8 @@ class UserServiceTest {
 
   @Test
   void testDeleteById() {
-    when(userValidationService.checkIfNameExists(anyString(),anyBoolean(), anyString())).thenReturn(users.get(0));
+    when(userValidationService.checkIfNameExists(anyString(),anyBoolean(), anyString())).thenReturn(users.get(1));
+    when(userValidationService.checkIfIdExists(1)).thenReturn(users.get(0));
     systemUnderTest.deleteById(1, "Florian");
     verify(userRepository).deleteById(1);
     verify(logService).addLog(any());

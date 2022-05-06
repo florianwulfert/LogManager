@@ -3,6 +3,8 @@ package project.userFeaturePortal.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.userFeaturePortal.common.dto.user.FindUserResponseDto;
 import project.userFeaturePortal.common.dto.user.UserRequestDto;
@@ -21,9 +23,9 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping("/user")
-  public UserResponseDto addUser(@RequestBody UserRequestDto allParameters) {
+  public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRequestDto allParameters) {
     String returnMessage = userService.addUser(allParameters);
-    return new UserResponseDto(userService.findUserList(), returnMessage);
+    return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponseDto(userService.findUserList(), returnMessage));
   }
 
   @PostMapping("/user/favouriteBook")
@@ -34,8 +36,8 @@ public class UserController {
   }
 
   @GetMapping("/users")
-  public UserResponseDto findUsers() {
-    return new UserResponseDto(userService.findUserList(), null);
+  public ResponseEntity<UserResponseDto> findUsers() {
+    return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(userService.findUserList(), null));
   }
 
   @GetMapping("/user/id")
@@ -44,26 +46,26 @@ public class UserController {
   }
 
   @GetMapping("/user")
-  public FindUserResponseDto findUserByName(@RequestParam final String name) {
-    return new FindUserResponseDto(userService.findUserByName(name));
+  public ResponseEntity<FindUserResponseDto> findUserByName(@RequestParam final String name) {
+    return ResponseEntity.status(HttpStatus.OK).body(new FindUserResponseDto(userService.findUserByName(name)));
   }
 
   @DeleteMapping("/user/id/{id}")
-  public UserResponseDto deleteUserByID(@PathVariable final Integer id, @RequestParam final String actor) {
+  public ResponseEntity<UserResponseDto> deleteUserByID(@PathVariable final Integer id, @RequestParam final String actor) {
     userService.deleteById(id, actor);
-    return new UserResponseDto(userService.findUserList(), null);
+    return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(userService.findUserList(), null));
   }
 
   @DeleteMapping("/user/name/{name}")
-  public UserResponseDto deleteUserByName(
+  public ResponseEntity<UserResponseDto> deleteUserByName(
       @PathVariable final String name, @RequestParam final String actor) {
     String returnMessage = userService.deleteByName(name, actor);
-    return new UserResponseDto(userService.findUserList(), returnMessage);
+    return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(userService.findUserList(), returnMessage));
   }
 
   @DeleteMapping("/users")
-  public UserResponseDto deleteAll() {
+  public ResponseEntity<UserResponseDto> deleteAll() {
     String returnMessage = userService.deleteAll();
-    return new UserResponseDto(userService.findUserList(), returnMessage);
+    return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(userService.findUserList(), returnMessage));
   }
 }
