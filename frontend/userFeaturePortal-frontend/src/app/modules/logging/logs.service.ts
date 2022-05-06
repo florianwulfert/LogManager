@@ -34,7 +34,6 @@ export class LogService {
       return ""
     } else {
       this.countParameter++
-      console.log(this.countParameter)
       let connectionItem = this.countParameter > 1 ? "&" : "?"
       return connectionItem + parameterName + '=' + requestParameter
     }
@@ -67,13 +66,11 @@ export class LogService {
   }
 
   getLogs(getLogsRequest: GetLogsRequest): Observable<GetLogsResponse> {
-    console.log(getLogsRequest)
     this.countParameter = 0
     return this.http.get<GetLogsResponse>(API_GET_LOGS + this.buildGetLogsRequestParams(getLogsRequest), {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r.body)
         return r.body || {
           result: [],
           returnMessage: ""
