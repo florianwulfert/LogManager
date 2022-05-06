@@ -1,34 +1,34 @@
 import {Injectable} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {BibelleseState} from "./bibellese.state";
-import {addBookAction, assignBookToUserAction, deleteBookAction, getBooksAction} from "./bibellese.actions";
-import {getBooks} from "./bibellese.selector";
-import {AddBookRequest} from "./addBooks/add-book-request";
-import {DeleteBookRequest} from "./deleteBook/delete-book-request";
+import {
+  addBibelleseAction,
+  deleteBibelleseAction,
+  getBibelleseAction,
+} from "./bibellese.actions";
+import {getBibellese} from "./bibellese.selector";
+import {DeleteBibelleseRequest} from "./deleteBibellese/delete-bibellese-request";
+import {AddBibelleseRequest} from "./addBibellese/add-bibellese-request";
+import {GetBibelleseRequest} from "./getBibellese/get-bibellese-request";
 
 @Injectable({providedIn: 'root'})
 export class BibelleseFacade {
-  stateGetBooksResponse$ = this.booksState.select(getBooks)
+  stateGetBibelleseResponse$ = this.bibelleseState.select(getBibellese)
 
   constructor(
-    private readonly booksState: Store<BibelleseState>
+    private readonly bibelleseState: Store<BibelleseState>
   ) {
   }
 
-  getBooks(): void {
-    this.booksState.dispatch(getBooksAction())
+  getBooks(request: GetBibelleseRequest): void {
+    this.bibelleseState.dispatch(getBibelleseAction(request))
   }
 
-  addBook(request: AddBookRequest): void {
-    this.booksState.dispatch(addBookAction(request));
+  addBook(request: AddBibelleseRequest): void {
+    this.bibelleseState.dispatch(addBibelleseAction(request));
   }
 
-  deleteBook(request: DeleteBookRequest): void {
-    this.booksState.dispatch(deleteBookAction(request))
-  }
-
-  assignBookToUser(request: AddBookRequest): void {
-    console.log(request)
-    this.booksState.dispatch(assignBookToUserAction(request))
+  deleteBook(request: DeleteBibelleseRequest): void {
+    this.bibelleseState.dispatch(deleteBibelleseAction(request))
   }
 }

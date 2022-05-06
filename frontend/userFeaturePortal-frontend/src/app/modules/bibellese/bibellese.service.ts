@@ -6,14 +6,12 @@ import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {ActorFacade} from "../actor/actor.facade";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {GetBibelleseResponse} from "./getBibellese/get-bibellese-response";
-import {AddBookRequest} from "./addBooks/add-book-request";
-import {AddBookResponse} from "./addBooks/add-book-response";
-import {DeleteBookResponse} from "./deleteBook/delete-book-response";
+import {GetBibelleseRequest} from "./getBibellese/get-bibellese-request";
+import {AddBibelleseRequest} from "./addBibellese/add-bibellese-request";
+import {AddBibelleseResponse} from "./addBibellese/add-bibellese-response";
+import {DeleteBibelleseResponse} from "./deleteBibellese/delete-bibellese-response";
 
-const API_GET_BOOKS = 'http://localhost:8081/books'
-const API_ADD_BOOK = 'http://localhost:8081/book'
-const API_DELETE_BOOK = 'http://localhost:8081/book/id/'
-const API_ADD_BOOK_TO_USER = 'http://localhost:8081/user/favouriteBook?bookTitel='
+const API_BIBELLESE = 'http://localhost:8082/gelesen'
 
 @Injectable({
   providedIn: 'root'
@@ -23,16 +21,41 @@ export class BibelleseService {
   }
 
   name: string | undefined
-  subscriptionManager = new SubscriptionManager();
+  countParameter: number = 0
 
-  getBooks(): Observable<GetBibelleseResponse> {
-    return this.http.get<GetBibelleseResponse>(API_GET_BOOKS, {
+  checkParameter(requestParameter: string | undefined, parameterName: string): string {
+    if (requestParameter === "" || requestParameter === null || requestParameter === undefined) {
+      return ""
+    } else {
+      this.countParameter++
+      let connectionItem = this.countParameter > 1 ? "&" : "?"
+      return connectionItem + parameterName + '=' + requestParameter
+    }
+  }
+
+  buildGetBibelleseRequestParams(getBibelleseRequest: GetBibelleseRequest): String {
+    let bibelabschnitt: string
+    let kommentarAusschnitt: string
+    let leser: string
+    let label: string
+    let lieblingsvers: string
+
+    bibelabschnitt = this.checkParameter(getBibelleseRequest.bibelabschnitt, "bibelabschnitt")
+    kommentarAusschnitt = this.checkParameter(getBibelleseRequest.kommentarAusschnitt, "kommentarAusschnitt")
+    leser = this.checkParameter(getBibelleseRequest.leser, "leser")
+    label = this.checkParameter(getBibelleseRequest.label, "label")
+    lieblingsvers = this.checkParameter(getBibelleseRequest.lieblingsvers, "lieblingsvers")
+
+    return bibelabschnitt + kommentarAusschnitt + leser + label + lieblingsvers
+  }
+
+  getBibellese(request: GetBibelleseRequest): Observable<GetBibelleseResponse> {
+    return this.http.get<GetBibelleseResponse>(API_BIBELLESE + this.buildGetBibelleseRequestParams(request), {
       observe: 'response'
     }).pipe(
       map((r) => {
         return r.body || {
           result: [],
-          returnMessage: ""
         }
       }),
       catchError((err) => {
@@ -46,11 +69,8 @@ export class BibelleseService {
     );
   }
 
-  addBook(addBookRequest: AddBookRequest): Observable<AddBookResponse> {
-    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
-      this.name = r
-    })
-    return this.http.post<any>(API_ADD_BOOK, {...addBookRequest, actor: this.name}, {
+  addBibellese(addBibelleseRequest: AddBibelleseRequest): Observable<AddBibelleseResponse> {
+    return this.http.post<any>(API_BIBELLESE, {...addBibelleseRequest}, {
       observe: 'response'
     }).pipe(
       map((r) => {
@@ -71,15 +91,12 @@ export class BibelleseService {
     );
   }
 
-  deleteBook(i: number | undefined): Observable<DeleteBookResponse> {
-    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
-      this.name = r
-    })
-    return this.http.delete<DeleteBookResponse>(API_DELETE_BOOK + i + '?actor=' + this.name, {
+  deleteBibellese(i: string | undefined): Observable<DeleteBibelleseResponse> {
+    return this.http.delete<DeleteBibelleseResponse>(API_BIBELLESE + i, {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("Book with the ID " + i + " was deleted.");
+        this.featureManager.openSnackbar("Bibellese-Entry with the ID " + i + " was deleted.");
         return r.body || {
           result: [],
           returnMessage: ""
@@ -95,31 +112,4 @@ export class BibelleseService {
       })
     );
   }
-
-  assignBookToUser(book: AddBookRequest): Observable<AddBookResponse> {
-    console.log(book)
-    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
-      this.name = r
-    })
-    return this.http.post<AddBookResponse>(API_ADD_BOOK_TO_USER + book.titel + '&actor=' + this.name, {
-      observe: 'response'
-    }).pipe(
-      map((r) => {
-        this.featureManager.openSnackbar("Book " + book.titel + " was assigned to user " + this.name + ".");
-        return r || {
-          result: [],
-          returnMessage: ""
-        }
-      }),
-      catchError((err) => {
-        if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
-        } else {
-          this.featureManager.openSnackbar(err.error);
-        }
-        return throwError('Due to technical issues it is currently not possible to delete this book.')
-      })
-    );
-  }
-
 }

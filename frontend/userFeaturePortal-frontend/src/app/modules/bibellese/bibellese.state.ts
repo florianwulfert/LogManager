@@ -1,11 +1,11 @@
-import {BibelleseDto} from "./getBibellese/bibellese.dto";
+import {BibelleseDto} from "./bibellese.dto";
 
 export const BOOKS_FEATURE_NAME = 'books'
 
 export interface BibelleseState {
-  booksList: BibelleseDto[]
+  bibelleseList: BibelleseDto[]
 }
 
-export const BOOKS_GET_INITIAL_STATE: BibelleseState = {
-  booksList: [],
+export const BIBELLESE_INITIAL_STATE: BibelleseState = {
+  bibelleseList: [],
 }

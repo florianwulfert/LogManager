@@ -1,9 +1,9 @@
 import {BibelleseDto} from "../bibellese.dto";
 
-export interface GetBibelleseResponse {
+export interface DeleteBibelleseResponse {
   result: BibelleseDto[]
 }
 
-export interface GetBibelleseErrorResponse {
+export interface DeleteBibelleseErrorResponse {
   error: string
 }

@@ -16,5 +16,5 @@ import {BOOKS_FEATURE_NAME} from "./bibellese.state";
     EffectsModule.forRoot(), EffectsModule.forFeature([BibelleseEffects])],
   providers: [BibelleseFacade, FeatureManager]
 })
-export class BooksModule {
+export class BibelleseModule {
 }

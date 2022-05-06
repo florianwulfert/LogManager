@@ -29,7 +29,6 @@ export class LogService {
   countParameter: number = 0
 
   checkParameter(requestParameter: string | undefined, parameterName: string): string {
-
     if (requestParameter === "" || requestParameter === null || requestParameter === undefined) {
       return ""
     } else {

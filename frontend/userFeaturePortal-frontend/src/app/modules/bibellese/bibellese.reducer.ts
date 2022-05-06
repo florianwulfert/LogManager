@@ -1,24 +1,21 @@
 import {createReducer, on} from "@ngrx/store";
 import {
-  addBookResponseAction,
-  assignBookToUserResponseAction,
-  deleteBookResponseAction,
-  getBooksResponseAction
+  addBibelleseResponseAction, deleteBibelleseResponseAction,
+  getBibelleseResponseAction
 } from "./bibellese.actions";
-import {BOOKS_GET_INITIAL_STATE, BibelleseState} from "./bibellese.state";
+import {BIBELLESE_INITIAL_STATE, BibelleseState} from "./bibellese.state";
 import {GetBibelleseResponse} from "./getBibellese/get-bibellese-response";
 
 const handleBooksResponse = (state: BibelleseState, resp: GetBibelleseResponse): BibelleseState => {
   return {
     ...state,
-    booksList: resp.result,
+    bibelleseList: resp.result,
   };
 }
 
 export const BibelleseReducer = createReducer(
-  BOOKS_GET_INITIAL_STATE,
-  on(getBooksResponseAction, handleBooksResponse),
-  on(addBookResponseAction, handleBooksResponse),
-  on(deleteBookResponseAction, handleBooksResponse),
-  on(assignBookToUserResponseAction, handleBooksResponse)
+  BIBELLESE_INITIAL_STATE,
+  on(getBibelleseResponseAction, handleBooksResponse),
+  on(addBibelleseResponseAction, handleBooksResponse),
+  on(deleteBibelleseResponseAction, handleBooksResponse),
 )

@@ -1,22 +1,19 @@
 import {createAction, props} from "@ngrx/store";
-import {GetBooksErrorResponse, GetBibelleseResponse} from "./getBibellese/get-bibellese-response";
-import {AddBookRequest} from "./addBooks/add-book-request";
-import {AddBookErrorResponse, AddBookResponse} from "./addBooks/add-book-response";
-import {DeleteBookErrorResponse, DeleteBookResponse} from "./deleteBook/delete-book-response";
-import {DeleteBookRequest} from "./deleteBook/delete-book-request";
+import {GetBibelleseErrorResponse, GetBibelleseResponse} from "./getBibellese/get-bibellese-response";
+import {GetBibelleseRequest} from "./getBibellese/get-bibellese-request";
+import {AddBibelleseRequest} from "./addBibellese/add-bibellese-request";
+import {AddBibelleseErrorResponse, AddBibelleseResponse} from "./addBibellese/add-bibellese-response";
+import {DeleteBibelleseRequest} from "./deleteBibellese/delete-bibellese-request";
+import {DeleteBibelleseErrorResponse, DeleteBibelleseResponse} from "./deleteBibellese/delete-bibellese-response";
 
-export const getBooksAction = createAction('Get books');
-export const getBooksResponseAction = createAction('Get list of books', props<GetBibelleseResponse>())
-export const loadGetBooksErrorAction = createAction('Load Get books failure', props<GetBooksErrorResponse>())
+export const getBibelleseAction = createAction('Get Bibelleses', props<GetBibelleseRequest>());
+export const getBibelleseResponseAction = createAction('Get list of Bibelleses', props<GetBibelleseResponse>())
+export const loadGetBibelleseErrorAction = createAction('Load Get Bibelleses failure', props<GetBibelleseErrorResponse>())
 
-export const addBookAction = createAction('Add book', props<AddBookRequest>());
-export const addBookResponseAction = createAction('Get response if book addition succeed', props<AddBookResponse>());
-export const loadAddBookErrorAction = createAction('Load Add book failure', props<AddBookErrorResponse>());
+export const addBibelleseAction = createAction('Add Bibellese', props<AddBibelleseRequest>());
+export const addBibelleseResponseAction = createAction('Get response if Bibellese addition succeed', props<AddBibelleseResponse>());
+export const loadAddBibelleseErrorAction = createAction('Load Add Bibellese failure', props<AddBibelleseErrorResponse>());
 
-export const deleteBookAction = createAction('Delete one book', props<DeleteBookRequest>());
-export const deleteBookResponseAction = createAction('Get response if deleting of one book succeed', props<DeleteBookResponse>());
-export const loadDeleteBookErrorAction = createAction('Load Delete book failure', props<DeleteBookErrorResponse>());
-
-export const assignBookToUserAction = createAction('Assign a book to user', props<AddBookRequest>());
-export const assignBookToUserResponseAction = createAction('Get response if assigning of a book to an user succeed', props<AddBookResponse>());
-export const loadAssignBookToUserErrorAction = createAction('Load Assign book to user failure', props<AddBookErrorResponse>());
+export const deleteBibelleseAction = createAction('Delete one Bibellese', props<DeleteBibelleseRequest>());
+export const deleteBibelleseResponseAction = createAction('Get response if deleting of one Bibellese succeed', props<DeleteBibelleseResponse>());
+export const loadDeleteBibelleseErrorAction = createAction('Load Delete Bibellese failure', props<DeleteBibelleseErrorResponse>());
