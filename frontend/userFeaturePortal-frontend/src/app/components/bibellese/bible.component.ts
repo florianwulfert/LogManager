@@ -11,12 +11,12 @@ import {AddBibelleseRequest} from "../../modules/bibellese/addBibellese/add-bibe
 import {DeleteBibelleseRequest} from "../../modules/bibellese/deleteBibellese/delete-bibellese-request";
 
 @Component({
-  selector: 'app-book',
-  templateUrl: './bibellese.component.html',
-  styleUrls: ['./bibellese.component.scss']
+  selector: 'app-bible',
+  templateUrl: './bible.component.html',
+  styleUrls: ['./bible.component.scss']
 })
 
-export class BibelleseComponent implements OnInit, OnDestroy {
+export class BibleComponent implements OnInit, OnDestroy {
 
   constructor(private bibelleseFacade: BibelleseFacade, private _snackBar: MatSnackBar, private actorFacade: ActorFacade) {
   }
@@ -31,6 +31,7 @@ export class BibelleseComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit() {
+    console.log("hi")
     this.getBibellese()
     this.subscriptionManager.add(this.actorFacade.stateActorIsValid$).subscribe(r => {
       if (r === true && r !== undefined) {

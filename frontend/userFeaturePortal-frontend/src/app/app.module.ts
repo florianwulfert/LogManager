@@ -36,7 +36,7 @@ import {ActorIsValidModule} from "./modules/actor/actorIsValid.module";
 import {BookComponent} from "./components/book/book.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {BooksModule} from "./modules/books/books.module";
-import {BibelleseComponent} from "./components/bibellese/bibellese.component";
+import {BibleComponent} from "./components/bibellese/bible.component";
 import {BibelleseModule} from "./modules/bibellese/bibellese.module";
 
 @NgModule({
@@ -50,7 +50,7 @@ import {BibelleseModule} from "./modules/bibellese/bibellese.module";
     HomeComponent,
     ProfileMenuComponent,
     BookComponent,
-    BibelleseComponent
+    BibleComponent
   ],
   imports: [
     BrowserModule,
