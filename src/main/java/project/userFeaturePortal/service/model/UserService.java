@@ -67,6 +67,23 @@ public class UserService {
         .build();
   }
 
+  public String updateUser(UserRequestDto userRequestDto) {
+    List<Book> books = bookService.searchBooksByTitel(userRequestDto.favouriteBook);
+    Book book = null;
+    if (!books.isEmpty()) {
+      book = books.get(0);
+    }
+    User user = userValidationService.checkIfNameExists(userRequestDto.name, false, "");
+    userValidationService.validateActor(userRequestDto.name, userRequestDto.actor);
+    user.setName(userRequestDto.name);
+    user.setBirthdate(userRequestDto.getBirthdateAsLocalDate());
+    user.setWeight(userRequestDto.weight);
+    user.setHeight(userRequestDto.height);
+    user.setFavouriteBook(book);
+    LOGGER.info(String.format(InfoMessages.USER_UPDATED, userRequestDto.name));
+    return String.format(InfoMessages.USER_UPDATED, userRequestDto.name);
+  }
+
   public String addFavouriteBookToUser(String titel, String userName) {
     User user = userValidationService.checkIfNameExists(userName, true, ErrorMessages.USER_NOT_ALLOWED);
     Book book = bookValidationService.checkIfBookExists(titel);

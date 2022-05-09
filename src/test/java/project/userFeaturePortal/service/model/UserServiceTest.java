@@ -97,27 +97,26 @@ class UserServiceTest {
   }
 
   @Test
+  void testUpdateUser() {
+    when(userValidationService.checkIfNameExists(anyString(),anyBoolean(),anyString())).thenReturn(users.get(0));
+    systemUnderTest.updateUser(UserRequestDto.builder()
+            .actor("Florian")
+            .name("Peter")
+            .birthdate("1994-10-05")
+            .weight(75.0)
+            .height(1.65)
+            .favouriteBook(null)
+            .build());
+    verify(bookService).searchBooksByTitel(null);
+
+  }
+
+  @Test
   void testAddFavouriteBookToUser() {
     List<Book> books = testBook();
     when(bookValidationService.checkIfBookExists(anyString())).thenReturn(books.get(0));
     when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString())).thenReturn(users.get(0));
     systemUnderTest.addFavouriteBookToUser("TestBook", users.get(0).getName());
-  }
-
-  @Test
-  void testUsersListIsEmpty() {
-    List<Book> testBook = testBook();
-    systemUnderTest.addUser(
-        UserRequestDto.builder()
-            .actor("Torsten")
-            .name("Hugo")
-            .birthdate("1994-10-05")
-            .weight(75.0)
-            .height(1.65)
-            .favouriteBook(testBook.get(0).getTitel())
-            .build());
-    verify(logService).addLog(any());
-    verify(userRepository).save(any());
   }
 
   @Test
@@ -151,6 +150,12 @@ class UserServiceTest {
     List<UserDto> userDtoList = addListOfDtos();
     when(userDtoMapper.usersToUserDtos(anyList())).thenReturn(userDtoList);
     assertFalse(systemUnderTest.findUserByName("Heini"));
+  }
+
+  @Test
+  void whenUserWasFound_ThenReturnTrue() {
+    when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
+    assertTrue(systemUnderTest.findUserByName("Peter"));
   }
 
   @Test
