@@ -9,11 +9,13 @@ import {GetBooksResponse} from "./getBooks/get-books-response";
 import {AddBookRequest} from "./addBooks/add-book-request";
 import {AddBookResponse} from "./addBooks/add-book-response";
 import {DeleteBookResponse} from "./deleteBook/delete-book-response";
+import {DeleteBooksResponse} from "./deleteBooks/delete-books-response";
 
 const API_GET_BOOKS = 'http://localhost:8081/books'
 const API_ADD_BOOK = 'http://localhost:8081/book'
 const API_DELETE_BOOK = 'http://localhost:8081/book/id/'
 const API_ADD_BOOK_TO_USER = 'http://localhost:8081/user/favouriteBook?bookTitel='
+const API_DELETE_BOOKS = 'http://localhost:8081/books'
 
 @Injectable({
   providedIn: 'root'
@@ -92,6 +94,31 @@ export class BooksService {
           this.featureManager.openSnackbar(err.error);
         }
         return throwError('Due to technical issues it is currently not possible to delete this book.')
+      })
+    );
+  }
+
+  deleteBooks(): Observable<DeleteBooksResponse> {
+    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
+      this.name = r
+    })
+    return this.http.delete<DeleteBooksResponse>(API_DELETE_BOOKS + '?actor=' + this.name, {
+      observe: 'response'
+    }).pipe(
+      map((r) => {
+        this.featureManager.openSnackbar(r.body?.returnMessage);
+        return r.body || {
+          result: [],
+          returnMessage: ''
+        }
+      }),
+      catchError((err) => {
+        if (err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text);
+        } else {
+          this.featureManager.openSnackbar(err.error);
+        }
+        return throwError('Due to technical issues it is currently not possible to delete all books.');
       })
     );
   }

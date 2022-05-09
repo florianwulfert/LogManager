@@ -52,7 +52,8 @@ public class BookController {
   }
 
   @DeleteMapping("/books")
-  public String deleteAll(@RequestParam String actor) {
-    return bookService.deleteBooks(actor);
+  public ResponseEntity<BooksResponseDto> deleteAll(@RequestParam String actor) {
+    String returnMessage = bookService.deleteBooks(actor);
+    return ResponseEntity.status(HttpStatus.OK).body(new BooksResponseDto(bookService.getAllBooks(), returnMessage));
   }
 }

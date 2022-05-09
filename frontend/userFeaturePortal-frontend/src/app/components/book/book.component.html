@@ -26,7 +26,16 @@
         <!-- Delete -->
 
         <ng-container matColumnDef="delete">
-          <th mat-header-cell *matHeaderCellDef></th>
+          <th mat-header-cell *matHeaderCellDef>
+            <button mat-icon-button
+                    matTooltip="Delete all books"
+                    [matTooltipPosition]="position.value"
+                    class="main-deleteButton"
+                    (click)="deleteBooks()"
+                    *ngIf="userAvailable">
+              <mat-icon> delete</mat-icon>
+            </button>
+          </th>
           <td mat-cell *matCellDef="let element">
             <button mat-icon-button class="deleteButton" (click)="deleteBook(element)" id="remove" *ngIf="userAvailable">
               <mat-icon>delete</mat-icon>

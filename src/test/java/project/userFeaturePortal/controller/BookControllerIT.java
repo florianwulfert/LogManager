@@ -219,7 +219,7 @@ class BookControllerIT {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        assertEquals(InfoMessages.ALL_BOOKS_DELETED, result.getResponse().getContentAsString());
+        assertEquals(TestMessages.ALL_BOOKS_DELETED, result.getResponse().getContentAsString());
 
     }
 

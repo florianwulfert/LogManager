@@ -10,11 +10,14 @@ import {
   assignBookToUserResponseAction,
   deleteBookAction,
   deleteBookResponseAction,
+  deleteBooksAction,
+  deleteBooksResponseAction,
   getBooksAction,
   getBooksResponseAction,
   loadAddBookErrorAction,
   loadAssignBookToUserErrorAction,
   loadDeleteBookErrorAction,
+  loadDeleteBooksErrorAction,
   loadGetBooksErrorAction
 } from "./books.actions";
 import {BooksService} from "./books.service";
@@ -56,6 +59,18 @@ export class BooksEffects {
           map((deleteBookResponse) =>
             deleteBookResponseAction(deleteBookResponse)),
           catchError((error: string) => of(loadDeleteBookErrorAction({error})))
+        )
+      )
+    )
+  );
+
+  deleteBooks$: Observable<Action> = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteBooksAction),
+      switchMap(() =>
+        this.booksService.deleteBooks().pipe(
+          map((deleteBooksResponse) => deleteBooksResponseAction(deleteBooksResponse)),
+          catchError((error: string) => of(loadDeleteBooksErrorAction({error})))
         )
       )
     )
