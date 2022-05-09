@@ -77,12 +77,6 @@ public class LogService {
     return String.format(InfoMessages.ENTRY_DELETED_ID, id);
   }
 
-  public boolean existLogByUserToDelete(User user) {
-    List<Log> logs = logRepository.findByUser(user);
-    LOGGER.info(String.format(InfoMessages.LOGS_BY_USER, user));
-    return !logs.isEmpty();
-  }
-
   public String deleteBySeverity(String severity) {
     List<Log> deletedLogs = logRepository.deleteBySeverity(severity);
     if (deletedLogs.isEmpty()) {

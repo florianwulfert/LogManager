@@ -106,12 +106,6 @@ class LogServiceTest {
   }
 
   @Test
-  void testSearchLogByActorId() {
-    systemUnderTest.existLogByUserToDelete(any());
-    verify(logRepository).findByUser(any());
-  }
-
-  @Test
   void testDeleteBySeverity() {
     List<Log> logs = new ArrayList<>();
     logs.add(

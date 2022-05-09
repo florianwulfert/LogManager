@@ -11,10 +11,10 @@ import project.userFeaturePortal.exception.FirstUserUnequalActorException;
 import project.userFeaturePortal.exception.ParameterNotPresentException;
 import project.userFeaturePortal.exception.UserNotAllowedException;
 import project.userFeaturePortal.exception.UserNotFoundException;
+import project.userFeaturePortal.model.entity.Log;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.LogRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
-import project.userFeaturePortal.service.model.LogService;
 import project.userFeaturePortal.service.model.UserService;
 
 import java.util.List;
@@ -26,7 +26,6 @@ public class UserValidationService {
 
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
   private final UserRepository userRepository;
-  private final LogService logService;
   private final LogRepository logRepository;
 
   public void checkIfAnyEntriesAreNull(UserRequestDto allParameters) {
@@ -84,7 +83,8 @@ public class UserValidationService {
     User userToDelete = checkIfNameExists(name, false, ErrorMessages.CANNOT_DELETE_USER);
 
     // proof that there are no logs created by the user you want to delete
-    if (logService.existLogByUserToDelete(userToDelete)) {
+    List<Log> logs = logRepository.findByUser(userToDelete);
+    if (!logs.isEmpty()) {
       LOGGER.error(String.format(ErrorMessages.USER_REFERENCED, userToDelete.getName()));
       throw new RuntimeException(
               String.format(ErrorMessages.USER_REFERENCED, userToDelete.getName()));
@@ -115,7 +115,8 @@ public class UserValidationService {
     User user = userRepository.findUserByName(name);
 
     // proof that user is not null -->
-    // if so, decide whether userName was simply not found or he is not authorized to execute wanted action
+    // if so, decide whether userName was simply not found or he is not authorized to execute wanted
+    // action
     if (user == null) {
       if (isActor) {
         LOGGER.info(String.format(action, name));
