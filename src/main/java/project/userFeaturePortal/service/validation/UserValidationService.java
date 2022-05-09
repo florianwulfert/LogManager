@@ -115,8 +115,8 @@ public class UserValidationService {
     User user = userRepository.findUserByName(name);
 
     // proof that user is not null -->
-    // if so, decide whether userName was simply not found or he is not authorized to execute wanted
-    // action
+    // if so, decide whether userName was simply not found
+    // or he is not authorized to execute wanted action
     if (user == null) {
       if (isActor) {
         LOGGER.info(String.format(action, name));
