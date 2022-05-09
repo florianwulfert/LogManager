@@ -83,10 +83,10 @@ class LogControllerIT {
                         status().isInternalServerError(),
                         String.format(ErrorMessages.SEVERITY_NOT_REGISTERED_CHOICE, "HI")),
                 Arguments.of(
-                        "UserIsFalse",
+                        "UserIsNotAllowed",
                         "{\"message\":\"Test\", \"severity\":\"INFO\",\"user\":\"Alex\"}",
-                        status().isNotFound(),
-                        String.format(ErrorMessages.USER_NOT_FOUND_NAME, "Alex")));
+                        status().isForbidden(),
+                        ErrorMessages.USER_NOT_ALLOWED));
     }
 
     private Stream<Arguments> getLogsArgument() {

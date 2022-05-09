@@ -8,6 +8,8 @@ import {AddUserRequest} from "../../modules/user/addUser/add-user-request";
 import {DeleteUserRequest} from "../../modules/user/deleteUser/delete-user-request";
 import {MatPaginator} from "@angular/material/paginator";
 import {BooksFacade} from "../../modules/books/books.facade";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-user',
@@ -24,6 +26,7 @@ export class UserComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'bmi', 'favouriteBook', 'delete']
   dataSource: any
   books: any
+  onDestroy = new Subject()
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit(): void {
@@ -33,6 +36,8 @@ export class UserComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptionManager.clear();
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
   }
 
   position = new FormControl('above');
@@ -78,7 +83,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   getUserList(): void {
     this.userFacade.getUser();
-    this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
+    this.userFacade.stateGetUserResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
     });
