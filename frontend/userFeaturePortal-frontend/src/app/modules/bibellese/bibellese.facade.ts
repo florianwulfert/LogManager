@@ -20,15 +20,15 @@ export class BibelleseFacade {
   ) {
   }
 
-  getBooks(request: GetBibelleseRequest): void {
+  getBibellese(request: GetBibelleseRequest): void {
     this.bibelleseState.dispatch(getBibelleseAction(request))
   }
 
-  addBook(request: AddBibelleseRequest): void {
+  addBibellese(request: AddBibelleseRequest): void {
     this.bibelleseState.dispatch(addBibelleseAction(request));
   }
 
-  deleteBook(request: DeleteBibelleseRequest): void {
+  deleteBibellese(request: DeleteBibelleseRequest): void {
     this.bibelleseState.dispatch(deleteBibelleseAction(request))
   }
 }

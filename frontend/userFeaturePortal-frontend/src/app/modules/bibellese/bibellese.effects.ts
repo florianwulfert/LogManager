@@ -10,14 +10,15 @@ import {
 import {BibelleseService} from "./bibellese.service";
 import {AddBibelleseRequest} from "./addBibellese/add-bibellese-request";
 import {DeleteBibelleseRequest} from "./deleteBibellese/delete-bibellese-request";
+import {GetBibelleseRequest} from "./getBibellese/get-bibellese-request";
 
 @Injectable({providedIn: 'root'})
 export class BibelleseEffects {
   get$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getBibelleseAction),
-      switchMap(() =>
-        this.bibelleseService.getBibellese().pipe(
+      switchMap((request: GetBibelleseRequest) =>
+        this.bibelleseService.getBibellese(request).pipe(
           map((getBibelleseResponse) => getBibelleseResponseAction(getBibelleseResponse)),
           catchError((error: string) => of(loadGetBibelleseErrorAction({error})))
         )

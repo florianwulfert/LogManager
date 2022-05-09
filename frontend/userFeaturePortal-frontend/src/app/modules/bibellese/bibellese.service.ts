@@ -2,7 +2,6 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable, throwError} from "rxjs";
 import {catchError, map} from "rxjs/operators";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {ActorFacade} from "../actor/actor.facade";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {GetBibelleseResponse} from "./getBibellese/get-bibellese-response";
@@ -56,6 +55,7 @@ export class BibelleseService {
       map((r) => {
         return r.body || {
           result: [],
+          returnMessage: ''
         }
       }),
       catchError((err) => {
@@ -64,7 +64,7 @@ export class BibelleseService {
         } else {
           this.featureManager.openSnackbar(err.error);
         }
-        return throwError('Due to technical issues it is currently not possible to request books.');
+        return throwError('Due to technical issues it is currently not possible to request Bibellese.');
       })
     );
   }
@@ -86,7 +86,7 @@ export class BibelleseService {
         } else {
           this.featureManager.openSnackbar(err.error);
         }
-        return throwError('Due to technical issues it is currently not possible to add books.');
+        return throwError('Due to technical issues it is currently not possible to add entry for Bibellese.');
       })
     );
   }
@@ -108,7 +108,7 @@ export class BibelleseService {
         } else {
           this.featureManager.openSnackbar(err.error);
         }
-        return throwError('Due to technical issues it is currently not possible to delete this book.')
+        return throwError('Due to technical issues it is currently not possible to delete this entry for Bibellese.')
       })
     );
   }
