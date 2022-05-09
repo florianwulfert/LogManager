@@ -31,7 +31,6 @@ export class BibleComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit() {
-    console.log("hi")
     this.getBibellese()
     this.subscriptionManager.add(this.actorFacade.stateActorIsValid$).subscribe(r => {
       if (r === true && r !== undefined) {
@@ -48,6 +47,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     let request = new GetBibelleseRequest();
     this.bibelleseFacade.getBibellese(request)
     this.subscriptionManager.add(this.bibelleseFacade.stateGetBibelleseResponse$).subscribe(result => {
+      console.log(result)
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
       this.bibellese = result

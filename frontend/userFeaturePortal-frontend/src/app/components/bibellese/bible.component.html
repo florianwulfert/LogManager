@@ -1,7 +1,7 @@
 <div class="page row">
-  <h1>Books</h1>
+  <h1>Reading Bible</h1>
 
-  <div class="col-12 col-lg-8">
+  <div class="col-12 col-lg-8 mb-5">
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource" >
 
@@ -13,13 +13,13 @@
 
         <!-- Text Column -->
         <ng-container matColumnDef="text">
-          <th mat-header-cell *matHeaderCellDef> Gelesener Text</th>
+          <th mat-header-cell *matHeaderCellDef> Read Text</th>
           <td mat-cell *matCellDef="let element" class="truncated-cell"> {{element.text}} </td>
         </ng-container>
 
         <!-- Lieblingsvers Column -->
         <ng-container matColumnDef="lieblingsvers">
-          <th mat-header-cell *matHeaderCellDef> Lieblingsvers</th>
+          <th mat-header-cell *matHeaderCellDef> Favourite Verse</th>
           <td mat-cell *matCellDef="let element"> {{element.lieblingsvers}} </td>
         </ng-container>
 
@@ -31,13 +31,13 @@
 
         <!-- Leser Column -->
         <ng-container matColumnDef="leser">
-          <th mat-header-cell *matHeaderCellDef> Leser</th>
+          <th mat-header-cell *matHeaderCellDef> Reader</th>
           <td mat-cell *matCellDef="let element"> {{element.leser}} </td>
         </ng-container>
 
         <!-- Kommentar Column -->
         <ng-container matColumnDef="kommentar">
-          <th mat-header-cell *matHeaderCellDef> Kommentar</th>
+          <th mat-header-cell *matHeaderCellDef> Comment</th>
           <td mat-cell *matCellDef="let element"> {{element.kommentar}} </td>
         </ng-container>
 
@@ -70,10 +70,10 @@
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>
-              Create Bibellese-Entry
+              Create Read
             </mat-panel-title>
             <mat-panel-description>
-              Type in your information about reading bible
+              Type in your reading information
             </mat-panel-description>
           </mat-expansion-panel-header>
 
@@ -82,28 +82,28 @@
             <div class="create-user-body">
               <div>
                 <mat-form-field appearance="fill">
-                  <mat-label>Titel</mat-label>
-                  <input matInput formControlName="titel">
+                  <mat-label>Favourite verse</mat-label>
+                  <input matInput formControlName="lieblingsvers">
                   <button *ngIf="form.controls['lieblingsvers'].value" matSuffix mat-icon-button aria-label="Clear"
                           (click)="form.controls['lieblingsvers'].reset()">
                     <mat-icon>close</mat-icon>
                   </button>
                   <mat-error *ngIf="form.controls['lieblingsvers'].hasError('required')">
-                    Titel is <strong>required</strong>
+                    Favourite verse is <strong>required</strong>
                   </mat-error>
                 </mat-form-field>
               </div>
 
               <div>
                 <mat-form-field appearance="fill">
-                  <mat-label>Erscheinungsjahr</mat-label>
-                  <input matInput formControlName="erscheinungsjahr">
+                  <mat-label>Read text</mat-label>
+                  <input matInput formControlName="text">
                   <button *ngIf="form.controls['text'].value" matSuffix mat-icon-button aria-label="Clear"
                           (click)="form.controls['text'].reset()">
                     <mat-icon>close</mat-icon>
                   </button>
                   <mat-error *ngIf="form.controls['text'].hasError('required')">
-                    Erscheinungsjahr is <strong>required</strong>
+                    Read text is <strong>required</strong>
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -111,7 +111,7 @@
 
 
           </form>
-          <button mat-raised-button class="create button-format" (click)="addBibellese()" [disabled]="!form.valid">Add book
+          <button mat-raised-button class="create button-format" (click)="addBibellese()" [disabled]="!form.valid">Add Read
           </button>
           <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
         </mat-expansion-panel>
