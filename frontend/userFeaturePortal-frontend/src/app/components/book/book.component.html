@@ -31,7 +31,8 @@
                     matTooltip="Delete all books"
                     [matTooltipPosition]="position.value"
                     class="main-deleteButton"
-                    (click)="deleteBooks()">
+                    (click)="deleteBooks()"
+                    *ngIf="userAvailable">
               <mat-icon> delete</mat-icon>
             </button>
           </th>
