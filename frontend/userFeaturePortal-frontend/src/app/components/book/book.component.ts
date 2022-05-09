@@ -52,6 +52,11 @@ export class BookComponent implements OnInit, OnDestroy {
 
   position = new FormControl('above');
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   getBooks(): void {
     this.booksFacade.getBooks()
     this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {

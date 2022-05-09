@@ -2,6 +2,10 @@
   <h1>Books</h1>
 
   <div class="col-12 col-lg-8">
+    <mat-form-field appearance="standard" class="filter">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter" #input>
+    </mat-form-field>
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource" >
 
@@ -45,6 +49,10 @@
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td *ngIf="input.value===''" class="mat-cell" colspan="4">There are no books to show</td>
+          <td *ngIf="input.value!==''" class="mat-cell" colspan="4">No data matching filter "{{input.value}}"</td>
+        </tr>
       </table>
 
       <mat-paginator
