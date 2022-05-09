@@ -72,8 +72,8 @@ public class BookService {
     List<Book> booksToDelete = bookRepository.findByTitel(titel);
 
     if (booksToDelete.isEmpty()) {
-      LOGGER.warn(String.format(InfoMessages.NO_BOOKS_FOUNDS, titel));
-      return String.format(InfoMessages.NO_BOOKS_FOUNDS, titel);
+      LOGGER.warn(String.format(InfoMessages.NO_BOOKS_FOUND, titel));
+      return String.format(InfoMessages.NO_BOOKS_FOUND, titel);
     }
 
     if (booksToDelete.size() == 1) {

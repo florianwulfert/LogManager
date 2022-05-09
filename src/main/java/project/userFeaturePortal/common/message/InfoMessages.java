@@ -17,7 +17,7 @@ public class InfoMessages {
   public static final String BOOK_CREATED = "Book %s was created.";
   public static final String BOOK_DELETED_ID = "Book with the ID %s was deleted.";
   public static final String BOOK_DELETED_TITLE = "Book with the title %s was deleted.";
-  public static final String NO_BOOKS_FOUNDS = "No Books with the title %s founds.";
+  public static final String NO_BOOKS_FOUND = "No books with the title %s found.";
   public static final String ALL_BOOKS_DELETED = "All BOOKS were deleted from database!";
   public static final String BOOK_CAN_NOT_BE_IDENTIFIED = "There are more books with the title %s. Please identify by yourself and delete with the id out of the following list.\n";
   public static final String PARAMETERS_ARE_VALID = "Parameters are valid.";
