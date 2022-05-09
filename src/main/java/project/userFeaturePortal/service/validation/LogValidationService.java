@@ -11,8 +11,6 @@ import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.exception.ParameterNotPresentException;
 import project.userFeaturePortal.exception.SeverityNotFoundException;
-import project.userFeaturePortal.exception.UserNotFoundException;
-import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.UserRepository;
 
 /**
@@ -58,20 +56,5 @@ public class LogValidationService {
           .build();
     }
     return LogMessageDto.builder().message(message).returnMessage("").build();
-  }
-
-  public User checkActor(String userName) {
-    try {
-      User user = userRepository.findUserByName(userName);
-      if (user == null) {
-        LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
-        throw new RuntimeException();
-      }
-      LOGGER.debug(String.format(InfoMessages.USER_FOUND, userName));
-      return user;
-    } catch (RuntimeException ex) {
-      LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
-      throw new UserNotFoundException(userName);
-    }
   }
 }
