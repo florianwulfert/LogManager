@@ -35,7 +35,6 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptionManager.clear();
     this.onDestroy.next(null)
     this.onDestroy.complete()
   }
@@ -91,7 +90,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   getBooks(): void {
     this.booksFacade.getBooks();
-    this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
+    this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
      this.books = result
     });
   }

@@ -8,6 +8,8 @@ import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
 import {MatPaginator} from "@angular/material/paginator";
 import {UserFacade} from "../../modules/user/user.facade";
 import {GetLogsRequest} from "../../modules/logging/getLogs/dto/getLogs-request";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-logging',
@@ -27,6 +29,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   users: any
   messages: any
   filterButtonPressed: boolean = false
+  onDestroy = new Subject()
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
@@ -36,7 +39,8 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptionManager.clear()
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
   }
 
   position = new FormControl('above');
@@ -75,7 +79,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
     let request = new GetLogsRequest()
     this.prepareGetLogsRequest(request)
     this.logsFacade.getLogs(request)
-    this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
+    this.logsFacade.stateGetLogsResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator
       this.messages = result
@@ -104,7 +108,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
   getUserList(): void {
     this.userFacade.getUser();
-    this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
+    this.userFacade.stateGetUserResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.users = result
     });
   }
