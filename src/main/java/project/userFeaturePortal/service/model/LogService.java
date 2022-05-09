@@ -38,33 +38,35 @@ public class LogService {
   private final UserValidationService userValidationService;
 
   public List<LogDTO> getLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate, String userName) {
-
     User user = userRepository.findUserByName(userName);
     return logDTOMapper.logsToLogDTOs(
         logRepository.findLogs(severity, message, startDate, endDate, user));
   }
 
   public String addLog(LogRequestDto logRequestDto) {
+    // validate log entry
     logValidationService.checkIfAnyEntriesAreNull(logRequestDto);
     logValidationService.validateSeverity(logRequestDto.getSeverity());
     LogMessageDto logMessage = logValidationService.validateMessage(logRequestDto.message);
     User user = userValidationService.checkIfNameExists(logRequestDto.user, true, ErrorMessages.USER_NOT_ALLOWED);
-    saveLog(logMessage.getMessage(), logRequestDto.getSeverity(), user);
 
+    // build Log
+    LocalDateTime timeStamp = LocalDateTime.now();
+    Log log = Log.builder().message(logRequestDto.message).severity(logRequestDto.severity).user(user).timestamp(timeStamp).build();
+
+    // save Log
+    logRepository.save(log);
+
+    // return message to User-Interface
     logMessage.setReturnMessage(
         logMessage.getReturnMessage()
             + String.format(
             InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
+
     LOGGER.info(
         String.format(
             InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
     return logMessage.getReturnMessage();
-  }
-
-  private void saveLog(String message, String severity, User user) {
-    LocalDateTime timeStamp = LocalDateTime.now();
-    Log log = Log.builder().message(message).severity(severity).user(user).timestamp(timeStamp).build();
-    logRepository.save(log);
   }
 
   public Log searchLogsByID(Integer id) {
@@ -80,7 +82,6 @@ public class LogService {
   public String deleteBySeverity(String severity) {
     List<Log> deletedLogs = logRepository.deleteBySeverity(severity);
     if (deletedLogs.isEmpty()) {
-      LOGGER.info(ErrorMessages.NO_ENTRIES_FOUND);
       return ErrorMessages.NO_ENTRIES_FOUND;
     }
 
@@ -95,6 +96,7 @@ public class LogService {
     }
 
     sb.append("Entries with the ID(s) ").append(iDs).append(" were deleted from database.");
+    LOGGER.info(sb.toString());
     return sb.toString();
   }
 
