@@ -53,7 +53,7 @@ export class BibelleseService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r.body)
+        this.featureManager.openSnackbar(r.body?.returnMessage);
         return r.body || {
           result: [],
           returnMessage: ''
@@ -93,7 +93,7 @@ export class BibelleseService {
   }
 
   deleteBibellese(i: string | undefined): Observable<DeleteBibelleseResponse> {
-    return this.http.delete<DeleteBibelleseResponse>(API_BIBELLESE + i, {
+    return this.http.delete<DeleteBibelleseResponse>(API_BIBELLESE + "/" + i, {
       observe: 'response'
     }).pipe(
       map((r) => {
