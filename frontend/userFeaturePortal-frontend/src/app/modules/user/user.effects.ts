@@ -63,7 +63,7 @@ export class UserEffects {
     this.actions$.pipe(
       ofType(deleteUserAction),
       switchMap((deleteUserRequest: DeleteUserRequest) =>
-        this.userService.deleteUser(deleteUserRequest.id).pipe(
+        this.userService.deleteUser(deleteUserRequest.name).pipe(
           map((deleteUserResponse) =>
             deleteUserResponseAction(deleteUserResponse)),
           catchError((error: string) => of(loadDeleteUserErrorAction({error})))
