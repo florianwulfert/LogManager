@@ -22,8 +22,6 @@ public class InfoMessages {
   public static final String BOOK_CAN_NOT_BE_IDENTIFIED = "There are more books with the title %s. Please identify by yourself and delete with the id out of the following list.\n";
   public static final String PARAMETERS_ARE_VALID = "Parameters are valid.";
   public static final String SEVERITY_VALID = "Severity valid.";
-  public static final String USER_FOUND = "User %s found.";
-  public static final String LOGS_BY_USER = "There are logs created by user %s.";
   public static final String USER_WITH_BOOK = "Book with ID %s is assigned to at least one user.";
   public static final String BOOK_BY_USER = "Book %s added to user %s.";
 }
