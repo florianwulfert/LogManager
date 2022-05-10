@@ -1,3 +1,3 @@
 export class DeleteUserRequest {
-  id: number | undefined
+  name: string | undefined
 }

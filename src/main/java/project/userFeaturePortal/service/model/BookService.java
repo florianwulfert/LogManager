@@ -72,8 +72,8 @@ public class BookService {
     List<Book> booksToDelete = bookRepository.findByTitel(titel);
 
     if (booksToDelete.isEmpty()) {
-      LOGGER.warn(String.format(InfoMessages.NO_BOOKS_FOUNDS, titel));
-      return String.format(InfoMessages.NO_BOOKS_FOUNDS, titel);
+      LOGGER.warn(String.format(InfoMessages.NO_BOOKS_FOUND, titel));
+      return String.format(InfoMessages.NO_BOOKS_FOUND, titel);
     }
 
     if (booksToDelete.size() == 1) {
@@ -93,6 +93,9 @@ public class BookService {
 
   public String deleteBooks(String actor) {
     userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
+    for (Book book: bookRepository.findAll()) {
+      bookValidationService.checkIfBookIsReferenced(book.getId());
+    }
     bookRepository.deleteAll();
     LOGGER.info(InfoMessages.ALL_BOOKS_DELETED);
     logService.addLog(LogRequestDto.builder()

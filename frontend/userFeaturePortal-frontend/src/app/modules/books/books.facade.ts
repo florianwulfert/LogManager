@@ -37,7 +37,7 @@ export class BooksFacade {
     this.booksState.dispatch(assignBookToUserAction(request))
   }
 
-  deleteLogs() {
+  deleteBooks() {
     this.booksState.dispatch(deleteBooksAction())
   }
 }

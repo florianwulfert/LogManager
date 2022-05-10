@@ -10,9 +10,6 @@ public class TestMessages {
                         + "\"favouriteBookTitel\":null,\"bmi\":22.11}],\"returnMessage\":null}";
         public static final String PETRA = "{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\","
                         + "\"weight\":65.0,\"height\":1.6,\"favouriteBook\":null,\"bmi\":25.39}";
-        public static final String USER_TO_DELETE_NOT_PRESENT = "Required path variable was not found or request param has wrong format! "
-                        + "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; "
-                        + "nested exception is java.lang.NumberFormatException: For input string: \"name\"";
         public static final String LOG_EXAMPLE = "[{\"id\":1,\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\",\"user\":null}]";
         public static final String ID_FOR_LOGS_HAS_WRONG_FORMAT = "Required path variable was not found or request param has wrong format! "
                         + "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; "
@@ -29,15 +26,6 @@ public class TestMessages {
                 + "{\"id\":7,\"titel\":\"paul\",\"erscheinungsjahr\":2008}," +
                 "{\"id\":8,\"titel\":\"haya\",\"erscheinungsjahr\":1998}]," +
                 "\"returnMessage\":\"Book haya was created.\"}";
-        public static final String PETRA_BOOK = "{\"result\":[{\"id\":1,\"titel\":\"haya\",\"erscheinungsjahr\":1998},"
-                + "{\"id\":2,\"titel\":\"petra\",\"erscheinungsjahr\":1989},"
-                + "{\"id\":3,\"titel\":\"peter\",\"erscheinungsjahr\":2010},"
-                + "{\"id\":4,\"titel\":\"lina\",\"erscheinungsjahr\":2009},"
-                + "{\"id\":5,\"titel\":\"omar\",\"erscheinungsjahr\":2002},"
-                + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002},"
-                + "{\"id\":7,\"titel\":\"paul\",\"erscheinungsjahr\":2008}," +
-                "{\"id\":9,\"titel\":\"petra\",\"erscheinungsjahr\":1999}]," +
-                "\"returnMessage\":\"Book petra was created.\"}";
         public static final String ID_FOR_BOOK_HAS_WRONG_FORMAT = "Required path variable was not found or request param has wrong format! "
                         + "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; "
                         + "nested exception is java.lang.NumberFormatException: For input string: \"kevin\"";
