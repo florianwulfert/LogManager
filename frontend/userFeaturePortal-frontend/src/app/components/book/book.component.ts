@@ -9,6 +9,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {DeleteBookRequest} from "../../modules/books/deleteBook/delete-book-request";
 import {UserFacade} from "../../modules/user/user.facade";
 import {ActorFacade} from "../../modules/actor/actor.facade";
+import {takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-book',
@@ -27,6 +29,8 @@ export class BookComponent implements OnInit, OnDestroy {
   users: any
   userAvailable: boolean = false
   booksListAvailable: boolean = false
+  onDestroy = new Subject()
+
 
   dataSource: any;
 
@@ -47,14 +51,15 @@ export class BookComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptionManager.clear()
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
   }
 
   position = new FormControl('above');
 
   getBooks(): void {
     this.booksFacade.getBooks()
-    this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
+    this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
       this.books = result
@@ -87,7 +92,7 @@ export class BookComponent implements OnInit, OnDestroy {
     let elementValues = Object.keys(element).map(key => element[key])
     request.id = elementValues[0]
     this.booksFacade.deleteBook(request)
-    this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
+    this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       if (result.length === 0) {
         this.booksListAvailable = false
       }
