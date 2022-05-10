@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {LogFacade} from "../../modules/logging/logs.facade";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
@@ -20,8 +19,6 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
   constructor(private logsFacade: LogFacade, private _snackBar: MatSnackBar, private userFacade: UserFacade) {
   }
-
-  subscriptionManager = new SubscriptionManager();
 
   displayedColumns: string[] = ['id', 'message', 'severity', 'timestamp', 'user', 'delete'];
   severities: string[] = ['TRACE', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'FATAL'];

@@ -3,7 +3,6 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {CalculateBmiRequest} from "../../modules/bmi/calculate-bmi/dto/calculate-bmi-request";
 import {BmiFacade} from "../../modules/bmi/bmi.facade";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 
@@ -22,7 +21,6 @@ export class BmiComponent implements OnDestroy{
     this.onDestroy.complete()
   }
 
-  subscriptionManager = new SubscriptionManager()
   returnUserMessage: string | undefined
   onDestroy = new Subject()
 

@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {MatTableDataSource} from "@angular/material/table";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatPaginator} from "@angular/material/paginator";
 import {BooksFacade} from "../../modules/books/books.facade";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -23,7 +22,6 @@ export class BookComponent implements OnInit, OnDestroy {
   constructor(private booksFacade: BooksFacade, private _snackBar: MatSnackBar, private usersFacade: UserFacade, private actorFacade: ActorFacade) {
   }
 
-  subscriptionManager = new SubscriptionManager();
   displayedColumns: string[] = ['id', 'titel', 'erscheinungsjahr', 'delete'];
   books: any
   users: any

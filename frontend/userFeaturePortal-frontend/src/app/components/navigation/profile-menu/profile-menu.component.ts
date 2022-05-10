@@ -1,10 +1,11 @@
-import {Component, Inject, Injectable} from '@angular/core';
+import {Component, Inject, Injectable, OnDestroy} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {HeaderComponent} from "../header/header.component";
 import {Profile} from "./profile.interface";
-import {SubscriptionManager} from "../../../../assets/utils/subscription.manager";
 import {ActorDto} from "../../../modules/actor/actor.dto";
 import {ActorFacade} from "../../../modules/actor/actor.facade";
+import {takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 
 @Component({
@@ -16,24 +17,29 @@ import {ActorFacade} from "../../../modules/actor/actor.facade";
 @Injectable({
   providedIn: 'root'
 })
-export class ProfileMenuComponent {
+export class ProfileMenuComponent implements OnDestroy {
 
   errorMessage: string = ''
   actorDto: ActorDto = new ActorDto()
 
-  subscriptionManager = new SubscriptionManager();
-  isLoggedIn: boolean = false;
+  isLoggedIn: boolean = false
+  onDestroy = new Subject()
 
   constructor(
     public dialogRef: MatDialogRef<HeaderComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Profile,
     private readonly actorFacade: ActorFacade,
   ) {
-    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
+    this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if(r !== "" && r !== "not registered user") {
         this.isLoggedIn = true
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
   }
 
   cancel(): void {
@@ -43,8 +49,8 @@ export class ProfileMenuComponent {
   validateLogin(): void {
     this.actorDto.actor = this.data.name
     this.actorFacade.getUserByName(this.actorDto)
-    this.subscriptionManager.add(this.actorFacade.stateActorIsValid$).subscribe(r => {
-      if (r === true) {
+    this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
+      if (r) {
         this.dialogRef.close(this.data.name)
       }
       this.errorMessage = 'User not registered yet!\nPlease contact an administrator.'
