@@ -108,6 +108,6 @@ export class BookComponent implements OnInit, OnDestroy {
   }
 
   deleteBooks(): void {
-    this.booksFacade.deleteLogs()
+    this.booksFacade.deleteBooks()
   }
 }

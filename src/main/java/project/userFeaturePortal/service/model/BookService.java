@@ -93,6 +93,9 @@ public class BookService {
 
   public String deleteBooks(String actor) {
     userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
+    for (Book book: bookRepository.findAll()) {
+      bookValidationService.checkIfBookIsReferenced(book.getId());
+    }
     bookRepository.deleteAll();
     LOGGER.info(InfoMessages.ALL_BOOKS_DELETED);
     logService.addLog(LogRequestDto.builder()
