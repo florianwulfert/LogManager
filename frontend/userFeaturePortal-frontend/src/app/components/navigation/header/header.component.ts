@@ -1,19 +1,20 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {MatMenuTrigger} from "@angular/material/menu";
 import {ProfileMenuComponent} from "../profile-menu/profile-menu.component";
 import {ActorState} from "../../../modules/actor/actor.state";
 import {Store} from "@ngrx/store";
-import {SubscriptionManager} from "../../../../assets/utils/subscription.manager";
 import {ActorFacade} from "../../../modules/actor/actor.facade";
 import {ActorDto} from "../../../modules/actor/actor.dto";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   name: string | undefined
 
@@ -24,11 +25,16 @@ export class HeaderComponent implements OnInit {
   constructor(public dialog: MatDialog, private readonly actorState: Store<ActorState>, private actorFacade: ActorFacade) {
   }
 
-  subscriptionManager = new SubscriptionManager();
   actorDto: ActorDto = new ActorDto()
+  onDestroy = new Subject()
 
   ngOnInit(): void {
     this.openDialog()
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
   }
 
   public onToggleSidenav = () => {
@@ -42,14 +48,14 @@ export class HeaderComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.subscriptionManager.add(this.actorFacade.stateActorIsValid$).subscribe(r => {
-        if (r === false && result !== "not registered user") {
+      this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
+        if (!r && result !== "not registered user") {
           window.location.assign('http://localhost:4200/home');
         }
       })
       this.actorDto.actor = result
       this.actorFacade.saveActor(this.actorDto)
-      this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
+      this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
         this.name = r
       })
       this.menuTrigger.focus()

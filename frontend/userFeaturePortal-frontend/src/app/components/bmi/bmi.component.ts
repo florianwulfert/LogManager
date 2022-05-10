@@ -1,24 +1,29 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {CalculateBmiRequest} from "../../modules/bmi/calculate-bmi/dto/calculate-bmi-request";
 import {BmiFacade} from "../../modules/bmi/bmi.facade";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
-import {FeatureManager} from "../../../assets/utils/feature.manager";
+import {takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-bmi',
   templateUrl: './bmi.component.html',
   styleUrls: ['./bmi.component.scss']
 })
-export class BmiComponent {
+export class BmiComponent implements OnDestroy{
 
   constructor(private bmiFacade: BmiFacade, private _snackBar: MatSnackBar) {
   }
 
-  subscriptionManager = new SubscriptionManager();
-  featureManager = new FeatureManager(this._snackBar);
-  returnUserMessage: string | undefined;
+  ngOnDestroy() {
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
+  }
+
+  returnUserMessage: string | undefined
+  onDestroy = new Subject()
+
 
   public form: FormGroup = new FormGroup({
     weight: new FormControl('', [Validators.required]),
@@ -37,7 +42,7 @@ export class BmiComponent {
     let request = new CalculateBmiRequest()
     request = this.prepareCalcBmiRequest(request)
     this.bmiFacade.calcBmi(request);
-    this.subscriptionManager.add(this.bmiFacade.stateCalcBmi$).subscribe(result => {
+    this.bmiFacade.stateCalcBmi$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.returnUserMessage = result
     })
   }

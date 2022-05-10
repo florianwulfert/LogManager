@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {MatTableDataSource} from "@angular/material/table";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatPaginator} from "@angular/material/paginator";
 import {BooksFacade} from "../../modules/books/books.facade";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -9,6 +8,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {DeleteBookRequest} from "../../modules/books/deleteBook/delete-book-request";
 import {UserFacade} from "../../modules/user/user.facade";
 import {ActorFacade} from "../../modules/actor/actor.facade";
+import {takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-book',
@@ -21,12 +22,13 @@ export class BookComponent implements OnInit, OnDestroy {
   constructor(private booksFacade: BooksFacade, private _snackBar: MatSnackBar, private usersFacade: UserFacade, private actorFacade: ActorFacade) {
   }
 
-  subscriptionManager = new SubscriptionManager();
   displayedColumns: string[] = ['id', 'titel', 'erscheinungsjahr', 'delete'];
   books: any
   users: any
   userAvailable: boolean = false
   booksListAvailable: boolean = false
+  onDestroy = new Subject()
+
 
   dataSource: any;
 
@@ -34,12 +36,12 @@ export class BookComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getBooks()
-    this.subscriptionManager.add(this.actorFacade.stateActorIsValid$).subscribe(r => {
-      if (r === true && r !== undefined) {
+    this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
+      if (r) {
         this.userAvailable = true
       }
     })
-    this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
+    this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       if (result.length > 0) {
         this.booksListAvailable = true
       }
@@ -47,7 +49,8 @@ export class BookComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptionManager.clear()
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
   }
 
   position = new FormControl('above');
@@ -59,7 +62,7 @@ export class BookComponent implements OnInit, OnDestroy {
 
   getBooks(): void {
     this.booksFacade.getBooks()
-    this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
+    this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
       this.books = result
@@ -92,7 +95,7 @@ export class BookComponent implements OnInit, OnDestroy {
     let elementValues = Object.keys(element).map(key => element[key])
     request.id = elementValues[0]
     this.booksFacade.deleteBook(request)
-    this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
+    this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       if (result.length === 0) {
         this.booksListAvailable = false
       }
