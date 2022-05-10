@@ -38,12 +38,12 @@ export class BookComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getBooks()
-    this.subscriptionManager.add(this.actorFacade.stateActorIsValid$).subscribe(r => {
-      if (r === true && r !== undefined) {
+    this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
+      if (r) {
         this.userAvailable = true
       }
     })
-    this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
+    this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       if (result.length > 0) {
         this.booksListAvailable = true
       }
