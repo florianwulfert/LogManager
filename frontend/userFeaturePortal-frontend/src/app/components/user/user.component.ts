@@ -50,6 +50,13 @@ export class UserComponent implements OnInit, OnDestroy {
     favouriteBook: new FormControl('')
   })
 
+  public formUpdate: FormGroup = new FormGroup({
+    birthdate: new FormControl('', [Validators.required]),
+    height: new FormControl('', [Validators.required]),
+    weight: new FormControl('', [Validators.required]),
+    favouriteBook: new FormControl('')
+  })
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -94,5 +101,12 @@ export class UserComponent implements OnInit, OnDestroy {
     this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
      this.books = result
     });
+  }
+
+  updateUser(): void {
+    let request = new AddUserRequest
+    request = this.prepareAddUserRequest(request)
+    this.userFacade.updateUser(request)
+
   }
 }

@@ -73,12 +73,15 @@ public class UserService {
     if (!books.isEmpty()) {
       book = books.get(0);
     }
+    //userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
     User user = userValidationService.checkIfNameExists(userRequestDto.name, false, "");
     userValidationService.validateActor(userRequestDto.name, userRequestDto.actor);
+
     user.setName(userRequestDto.name);
     user.setBirthdate(userRequestDto.getBirthdateAsLocalDate());
     user.setWeight(userRequestDto.weight);
     user.setHeight(userRequestDto.height);
+    user.setBmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height));
     user.setFavouriteBook(book);
     LOGGER.info(String.format(InfoMessages.USER_UPDATED, userRequestDto.name));
     return String.format(InfoMessages.USER_UPDATED, userRequestDto.name);

@@ -21,3 +21,7 @@ export const loadDeleteUserErrorAction = createAction('Load Delete User failure'
 export const deleteUsersAction = createAction('Delete users');
 export const deleteUsersResponseAction = createAction('Get response if user deleting succeed', props<DeleteUsersResponse>());
 export const loadDeleteUsersErrorAction = createAction('Load Delete Users failure', props<DeleteUsersErrorResponse>());
+
+export const updateUserAction = createAction('Update user', props<AddUserRequest>());
+export const updateUserResponseAction = createAction('Get response if user updating succeed', props<AddUserResponse>());
+export const loadUpdateUserErrorAction = createAction('Load Update user failure', props<AddUserErrorResponse>());

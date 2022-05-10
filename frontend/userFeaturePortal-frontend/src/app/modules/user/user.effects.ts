@@ -13,7 +13,10 @@ import {
   loadAddUserErrorAction,
   loadDeleteUserErrorAction,
   loadDeleteUsersErrorAction,
-  loadGetUserErrorAction
+  loadGetUserErrorAction,
+  loadUpdateUserErrorAction,
+  updateUserAction,
+  updateUserResponseAction
 } from 'src/app/modules/user/user.actions'
 import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
@@ -42,6 +45,18 @@ export class UserEffects {
         this.userService.addUser(addUserRequest).pipe(
           map((addUserResponse) => addUserResponseAction(addUserResponse)),
           catchError((error: string) => of(loadAddUserErrorAction({error})))
+        )
+      )
+    )
+  );
+
+  update$: Observable<Action> = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateUserAction),
+      switchMap((addUserRequest: AddUserRequest) =>
+        this.userService.updateUser(addUserRequest).pipe(
+          map((updateUserResponse) => updateUserResponseAction(updateUserResponse)),
+          catchError((error: string) => of(loadUpdateUserErrorAction({error})))
         )
       )
     )

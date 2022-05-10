@@ -14,7 +14,8 @@ import {FeatureManager} from "../../../assets/utils/feature.manager";
 const API_BASE = 'http://localhost:8081/users';
 const API_ADD_USER = 'http://localhost:8081/user';
 const API_DELETE_USERS = 'http://localhost:8081/users';
-const API_DELETE_USER = 'http://localhost:8081/user/id/';
+const API_DELETE_USER = 'http://localhost:8081/user/id/'
+const API_UPDATE_USER = 'http://localhost:8081/userUpdate'
 
 @Injectable({
   providedIn: 'root'
@@ -68,6 +69,32 @@ export class UserService {
           this.featureManager.openSnackbar(err.error);
         }
         return throwError('Due to technical issues it is currently not possible to add users.');
+      })
+    );
+  }
+
+  updateUser(addUserRequest: AddUserRequest): Observable<AddUserResponse> {
+    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
+      this.name = r
+    })
+    return this.http.post<AddUserResponse>(API_UPDATE_USER, {...addUserRequest, actor: this.name, name: this.name}, {
+      observe: 'response'
+    }).pipe(
+      map((r) => {
+        console.log(r.body)
+        this.featureManager.openSnackbar(r.body?.returnMessage);
+        return r.body || {
+          result: [],
+          returnMessage: ""
+        }
+      }),
+      catchError((err) => {
+        if(err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text);
+        } else {
+          this.featureManager.openSnackbar(err.error);
+        }
+        return throwError('Due to technical issues it is currently not possible to update users.');
       })
     );
   }

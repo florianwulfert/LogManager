@@ -148,38 +148,103 @@ class UserControllerIT {
                 ErrorMessages.PARAMETER_IS_MISSING)));
   }
 
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("getAddUserArguments")
-        void testAddUser(
-                        String testName,
-                        Boolean isEmptyUserList,
-                        String content,
-                        ResultMatcher status,
-                        String message)
-                        throws Exception {
-                if (isEmptyUserList) {
-                        userRepository.deleteAll();
-                }
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("getAddUserArguments")
+    void testAddUser(
+                    String testName,
+                    Boolean isEmptyUserList,
+                    String content,
+                    ResultMatcher status,
+                    String message)
+                    throws Exception {
+            if (isEmptyUserList) {
+                    userRepository.deleteAll();
+            }
 
-                MvcResult result = mockMvc
-                                .perform(
-                                                post("/user")
-                                                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                                .content(content)
-                                                                .accept(MediaType.APPLICATION_JSON_VALUE))
-                                .andDo(print())
-                                .andExpect(status)
-                                .andReturn();
+            MvcResult result = mockMvc.perform(
+                post("/user")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(content)
+                    .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status)
+                .andReturn();
 
-                assertEquals(message, result.getResponse().getContentAsString());
-        }
+            assertEquals(message, result.getResponse().getContentAsString());
+    }
+/*
+    private static Stream<Arguments> getUserUpdateArguments() {
+        return Stream.of(
+                Arguments.of(
+                "User updated",
+                        false,
+                        "{\"actor\":\"Petra\",\"name\":\"Hugo\",\"birthdate\":\"1999-12-13\",\"weight\":78.0,\"height\":1.8}",
+                        status().isCreated(),
+                        TestMessages.USER_CREATED_MESSAGE),
+                Arguments.of(
+                        "First user has to create himself",
+                        true,
+                        "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
+                        status().isInternalServerError(),
+                        ErrorMessages.NO_USERS_YET + "Hugo unequal Torsten"),
+                Arguments.of(
+                        "First user created himself",
+                        true,
+                        "{\"actor\":\"Petra\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
+                        status().isOk(),
+                        String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Petra", 24.07)
+                                + InfoMessages.NORMAL_WEIGHT),
+                Arguments.of(
+                        "Actor not known",
+                        false,
+                        "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
+                        status().isForbidden(),
+                        String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "UnknownActor")),
+                Arguments.of(
+                        "Actor not given",
+                        false,
+                        "{\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
+                        status().isBadRequest(),
+                        ErrorMessages.PARAMETER_IS_MISSING),
+                Arguments.of(
+                        "Date has wrong format",
+                        false,
+                        "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"hallo\",\"weight\":78.0,\"height\":1.8}",
+                        status().isBadRequest(),
+                        ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT),
+                Arguments.of(
+                        "weight has wrong format",
+                        false,
+                        "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"hi\",\"height\":1.8}",
+                        status().isBadRequest(),
+                        ErrorMessages.PARAMETER_WRONG_FORMAT));
+    }
 
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("getUserUpdateArguments")
+    @Test
+    void testUpdateUser(String testName, String content) throws Exception {
+        MvcResult result = mockMvc
+                .perform(post("/userUpdate")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(content)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andDo(print())
+                .andExpect(status().isInternalServerError())
+                .andReturn();
+
+        assertEquals(String.format(ErrorMessages.BOOK_NOT_FOUND_TITEL, "Florian"),
+                result.getResponse().getContentAsString());
+    }
+*/
         @Test
         void testFindUsers() throws Exception {
-                MvcResult result = mockMvc.perform(get("/users")).andDo(print()).andExpect(status().isOk()).andReturn();
+                MvcResult result = mockMvc.perform(get("/users"))
+                        .andDo(print())
+                        .andExpect(status().isOk())
+                        .andReturn();
 
-                assertEquals(
-                                TestMessages.PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
+                assertEquals(TestMessages.PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
         }
 
         @Nested

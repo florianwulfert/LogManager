@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {getUsers} from "./user.selector";
-import {addUserAction, deleteUserAction, deleteUsersAction, getUsersAction} from "./user.actions";
+import {addUserAction, deleteUserAction, deleteUsersAction, getUsersAction, updateUserAction} from "./user.actions";
 import {AddUserRequest} from "./addUser/add-user-request";
 import {UserState} from "./user.state";
 import {DeleteUserRequest} from "./deleteUser/delete-user-request";
@@ -28,5 +28,9 @@ export class UserFacade {
 
   deleteUser(request: DeleteUserRequest): void {
     this.userState.dispatch(deleteUserAction(request));
+  }
+
+  updateUser(request: AddUserRequest): void {
+    this.userState.dispatch(updateUserAction(request))
   }
 }
