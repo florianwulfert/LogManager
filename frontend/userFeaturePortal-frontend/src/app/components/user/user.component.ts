@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {UserFacade} from "../../modules/user/user.facade";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -21,8 +20,6 @@ export class UserComponent implements OnInit, OnDestroy {
   constructor(private userFacade: UserFacade, private _snackBar: MatSnackBar, private booksFacade: BooksFacade) {
   }
 
-  subscriptionManager = new SubscriptionManager();
-
   displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'bmi', 'favouriteBook', 'delete']
   dataSource: any
   books: any
@@ -36,7 +33,6 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptionManager.clear();
     this.onDestroy.next(null)
     this.onDestroy.complete()
   }
@@ -93,7 +89,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   getBooks(): void {
     this.booksFacade.getBooks();
-    this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
+    this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
      this.books = result
     });
   }

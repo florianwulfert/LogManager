@@ -1,12 +1,11 @@
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable, throwError} from 'rxjs';
+import {Injectable, OnDestroy} from '@angular/core';
+import {Observable, Subject, throwError} from 'rxjs';
 import {GetUserResponse} from 'src/app/modules/user/getUser/get-user-response';
-import {catchError, map} from "rxjs/operators";
+import {catchError, map, takeUntil} from "rxjs/operators";
 import {AddUserResponse} from "./addUser/add-user-response";
 import {AddUserRequest} from "./addUser/add-user-request";
 import {DeleteUserResponse} from "./deleteUser/delete-user-response";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {ActorFacade} from "../actor/actor.facade";
 import {DeleteUsersResponse} from "./deleteUsers/delete-users-response";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
@@ -20,12 +19,17 @@ const API_UPDATE_USER = 'http://localhost:8081/userUpdate'
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class UserService implements OnDestroy {
   constructor(private readonly http: HttpClient, private readonly actorFacade: ActorFacade, private featureManager: FeatureManager) {
   }
 
+  ngOnDestroy() {
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
+  }
+
   name: string | undefined
-  subscriptionManager = new SubscriptionManager();
+  onDestroy = new Subject()
 
   getUsers(): Observable<GetUserResponse> {
     return this.http.get<GetUserResponse>(API_BASE, {
@@ -49,7 +53,7 @@ export class UserService {
   }
 
   addUser(addUserRequest: AddUserRequest): Observable<AddUserResponse> {
-    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
+    this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       this.name = r
     })
     return this.http.post<AddUserResponse>(API_ADD_USER, {...addUserRequest, actor: this.name}, {
@@ -121,7 +125,7 @@ export class UserService {
   }
 
   deleteUser(i: number | undefined): Observable<DeleteUserResponse> {
-    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
+    this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       this.name = r
     })
     return this.http.delete<DeleteUserResponse>(API_DELETE_USER + i + "?actor=" + this.name, {

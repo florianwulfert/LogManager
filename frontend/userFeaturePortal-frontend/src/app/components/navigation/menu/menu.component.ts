@@ -1,27 +1,33 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {ActorFacade} from "../../../modules/actor/actor.facade";
-import {SubscriptionManager} from "../../../../assets/utils/subscription.manager";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent implements OnInit{
+export class MenuComponent implements OnInit, OnDestroy {
 
   @Output() sidenavClose = new EventEmitter();
 
   constructor(private actorFacade: ActorFacade) {
   }
-  subscriptionManager = new SubscriptionManager();
   userAvailable: boolean = false
+  onDestroy = new Subject()
 
   ngOnInit() {
-    this.subscriptionManager.add(this.actorFacade.stateActorIsValid$).subscribe(r => {
-      if (r === true && r !== undefined) {
+    this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
+      if (r) {
         this.userAvailable = true
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
   }
 
   public onSidenavClose = () => {
