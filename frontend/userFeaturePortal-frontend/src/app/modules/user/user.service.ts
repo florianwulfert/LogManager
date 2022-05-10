@@ -78,7 +78,7 @@ export class UserService implements OnDestroy {
   }
 
   updateUser(addUserRequest: AddUserRequest): Observable<AddUserResponse> {
-    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
+    this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       this.name = r
     })
     return this.http.post<AddUserResponse>(API_UPDATE_USER, {...addUserRequest, actor: this.name}, {
