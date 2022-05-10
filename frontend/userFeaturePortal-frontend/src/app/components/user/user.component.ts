@@ -27,6 +27,7 @@ export class UserComponent implements OnInit, OnDestroy {
   dataSource: any
   books: any
   onDestroy = new Subject()
+  users: any
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit(): void {
@@ -44,13 +45,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
   public form: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    birthdate: new FormControl('', [Validators.required]),
-    height: new FormControl('', [Validators.required]),
-    weight: new FormControl('', [Validators.required]),
-    favouriteBook: new FormControl('')
-  })
-
-  public formUpdate: FormGroup = new FormGroup({
     birthdate: new FormControl('', [Validators.required]),
     height: new FormControl('', [Validators.required]),
     weight: new FormControl('', [Validators.required]),
@@ -93,6 +87,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.userFacade.stateGetUserResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
+      this.users = result
     });
   }
 

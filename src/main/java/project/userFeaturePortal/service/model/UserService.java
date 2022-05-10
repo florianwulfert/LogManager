@@ -73,7 +73,7 @@ public class UserService {
     if (!books.isEmpty()) {
       book = books.get(0);
     }
-    //userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
+    userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
     User user = userValidationService.checkIfNameExists(userRequestDto.name, false, "");
     userValidationService.validateActor(userRequestDto.name, userRequestDto.actor);
 

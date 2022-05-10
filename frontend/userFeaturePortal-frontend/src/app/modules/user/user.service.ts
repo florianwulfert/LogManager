@@ -77,11 +77,10 @@ export class UserService {
     this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
       this.name = r
     })
-    return this.http.post<AddUserResponse>(API_UPDATE_USER, {...addUserRequest, actor: this.name, name: this.name}, {
+    return this.http.post<AddUserResponse>(API_UPDATE_USER, {...addUserRequest, actor: this.name}, {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r.body)
         this.featureManager.openSnackbar(r.body?.returnMessage);
         return r.body || {
           result: [],
