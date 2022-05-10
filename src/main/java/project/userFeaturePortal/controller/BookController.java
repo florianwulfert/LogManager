@@ -60,21 +60,22 @@ public class BookController {
                           content =
                           @Content(
                                   mediaType = "application/json",
-                                  schema = @Schema(implementation = BooksResponseDto.class))),
+                                  schema = @Schema(implementation = String.class))),
                   @ApiResponse(
                           description = "User is not allowed to add a book",
                           responseCode = "403",
                           content =
                           @Content(
                                   mediaType = "application/json",
-                                  schema = @Schema(implementation = BooksResponseDto.class))),
+                                  schema =
+                                    @Schema(implementation = String.class))),
                   @ApiResponse(
                           description = "One of the parameters has wrong format.",
                           responseCode = "400",
                           content =
                           @Content(
                                   mediaType = "application/json",
-                                  schema = @Schema(implementation = BooksResponseDto.class)))
+                                  schema = @Schema(implementation = String.class)))
           })
   public ResponseEntity<BooksResponseDto> addBook(@RequestBody BookRequestDto parameters) {
     return ResponseEntity.status(HttpStatus.CREATED).body(new BooksResponseDto(bookService.addBook(
@@ -113,21 +114,21 @@ public class BookController {
                           content =
                           @Content(
                                   mediaType = "application/json",
-                                  schema = @Schema(implementation = BooksResponseDto.class))),
+                                  schema = @Schema(implementation = String.class))),
                   @ApiResponse(
                           description = "User is not allowed to delete a book",
                           responseCode = "403",
                           content =
                           @Content(
                                   mediaType = "application/json",
-                                  schema = @Schema(implementation = BooksResponseDto.class))),
+                                  schema = @Schema(implementation = String.class))),
                   @ApiResponse(
                           description = "No book with given ID exists",
                           responseCode = "500",
                           content =
                           @Content(
                                   mediaType = "application/json",
-                                  schema = @Schema(implementation = BooksResponseDto.class)))
+                                  schema = @Schema(implementation = String.class)))
           })
   public ResponseEntity<BooksResponseDto> deleteBooksById(@PathVariable Integer id, @RequestParam String actor) {
     String returnMessage = bookService.deleteById(id, actor);
@@ -150,28 +151,28 @@ public class BookController {
                           content =
                           @Content(
                                   mediaType = "application/json",
-                                  schema = @Schema(implementation = BooksResponseDto.class))),
+                                  schema = @Schema(implementation = String.class))),
                   @ApiResponse(
                           description = "User is not allowed to delete a book",
                           responseCode = "403",
                           content =
                           @Content(
                                   mediaType = "application/json",
-                                  schema = @Schema(implementation = BooksResponseDto.class))),
+                                  schema = @Schema(implementation = String.class))),
                   @ApiResponse(
                           description = "One of the parameters has wrong format.",
                           responseCode = "400",
                           content =
                           @Content(
                                   mediaType = "application/json",
-                                  schema = @Schema(implementation = BooksResponseDto.class))),
+                                  schema = @Schema(implementation = String.class))),
                   @ApiResponse(
                           description = "Book is assigned to at least one user",
                           responseCode = "500",
                           content =
                           @Content(
                                   mediaType = "application/json",
-                                  schema = @Schema(implementation = BooksResponseDto.class))),
+                                  schema = @Schema(implementation = String.class))),
           })
   public String deleteBooksByTitel(@RequestParam String titel, @RequestParam String actor) {
     return bookService.deleteByTitel(titel, actor);
