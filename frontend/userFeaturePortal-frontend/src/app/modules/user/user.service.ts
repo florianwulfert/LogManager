@@ -13,7 +13,7 @@ import {FeatureManager} from "../../../assets/utils/feature.manager";
 const API_BASE = 'http://localhost:8081/users';
 const API_ADD_USER = 'http://localhost:8081/user';
 const API_DELETE_USERS = 'http://localhost:8081/users';
-const API_DELETE_USER = 'http://localhost:8081/user/id/';
+const API_DELETE_USER = 'http://localhost:8081/user/name/';
 
 @Injectable({
   providedIn: 'root'
@@ -98,7 +98,7 @@ export class UserService implements OnDestroy {
     );
   }
 
-  deleteUser(i: number | undefined): Observable<DeleteUserResponse> {
+  deleteUser(i: string | undefined): Observable<DeleteUserResponse> {
     this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       this.name = r
     })
@@ -106,7 +106,7 @@ export class UserService implements OnDestroy {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("User with the ID " + i + " was deleted.");
+        this.featureManager.openSnackbar("User named " + i + " was deleted.");
         return r.body || {
           result: [],
           returnMessage: ""

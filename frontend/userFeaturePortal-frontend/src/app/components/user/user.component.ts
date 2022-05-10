@@ -20,7 +20,7 @@ export class UserComponent implements OnInit, OnDestroy {
   constructor(private userFacade: UserFacade, private _snackBar: MatSnackBar, private booksFacade: BooksFacade) {
   }
 
-  displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'bmi', 'favouriteBook', 'delete']
+  displayedColumns: string[] = ['name', 'birthdate', 'weight', 'height', 'bmi', 'favouriteBook', 'delete']
   dataSource: any
   books: any
   onDestroy = new Subject()
@@ -70,11 +70,10 @@ export class UserComponent implements OnInit, OnDestroy {
     this.userFacade.deleteUsers()
   }
 
-  deleteUser(element: any): void {
+  deleteUser(element: string): void {
     let request = new DeleteUserRequest
-    let elementValues = Object.keys(element).map(key => element[key])
-    request.id = elementValues[0]
-    this.userFacade.deleteUser(request);
+    request.name = element
+    this.userFacade.deleteUser(request)
   }
 
   getUserList(): void {
