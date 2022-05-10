@@ -90,7 +90,7 @@ public class BookServiceTest {
   @Test
   void whenBooksListIsEmpty_ThenReturnNoBooksFounds() {
     when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(new ArrayList<>());
-    assertEquals(String.format(InfoMessages.NO_BOOKS_FOUNDS, books.get(0).getTitel()),
+    assertEquals(String.format(InfoMessages.NO_BOOKS_FOUND, books.get(0).getTitel()),
         bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
   }
 

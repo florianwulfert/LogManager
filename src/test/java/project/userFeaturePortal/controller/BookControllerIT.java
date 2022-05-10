@@ -126,7 +126,7 @@ class BookControllerIT {
                         "hajer",
                         "Torsten",
                         status().isOk(),
-                        String.format(InfoMessages.NO_BOOKS_FOUNDS, "hajer")),
+                        String.format(InfoMessages.NO_BOOKS_FOUND, "hajer")),
                 Arguments.of(
                         "There are more books with the title paul",
                         "paul",
