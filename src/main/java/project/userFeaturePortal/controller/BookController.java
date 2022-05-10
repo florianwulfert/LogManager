@@ -40,7 +40,8 @@ public class BookController {
                                   schema = @Schema(example = "{\"result\":[{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\","
                                           + "\"weight\":65.0,\"height\":1.6,\"favouriteBookTitel\":null,\"bmi\":25.39}"
                                           + ",{\"id\":2,\"name\":\"Torsten\",\"birthdate\":\"1985-12-05\",\"weight\":61.3,\"height\":1.83,"
-                                          + "\"favouriteBookTitel\":null,\"bmi\":18.3}]}")))
+                                          + "\"favouriteBookTitel\":null,\"bmi\":18.3}]}",
+                                          allOf = BooksResponseDto.class)))
           })
   public ResponseEntity<BooksResponseDto> getAllBooks() {
     return ResponseEntity.status(HttpStatus.OK).body(new BooksResponseDto(bookService.getAllBooks(), null));
@@ -56,9 +57,9 @@ public class BookController {
                           content =
                           @Content(
                                   mediaType = "application/json",
-                                  schema = @Schema(example = "{{\"result\":[{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\","
-                                          + "\"weight\":65.0,\"height\":1.6,\"favouriteBookTitel\":null,\"bmi\":25.39}],"
-                                          + "\"Book %s was created.\"}"))),
+                                  schema = @Schema(example = "{\"result\":[{\"id\": 318,\"titel\": \"TestBook\"," +
+                                          "\"erscheinungsjahr\": 0}],\"returnMessage\": \"Book TestBook was created.\"}",
+                                          allOf = BooksResponseDto.class))),
                   @ApiResponse(
                           description = "User is not allowed to add a book",
                           responseCode = "403",
@@ -107,7 +108,8 @@ public class BookController {
                                   mediaType = "application/json",
                                   schema = @Schema(example = "{\"result\":[{\"id\":2,\"titel\":\"petra\",\"erscheinungsjahr\":1989},"
                                           + "{\"id\":7,\"titel\":\"paul\",\"erscheinungsjahr\":2008}]," +
-                                          "\"returnMessage\":\"Book with the ID 1 was deleted.\"}"))),
+                                          "\"returnMessage\":\"Book with the ID 1 was deleted.\"}",
+                                          allOf = BooksResponseDto.class))),
                   @ApiResponse(
                           description = "User is not allowed to delete a book",
                           responseCode = "403",
@@ -173,7 +175,8 @@ public class BookController {
                       content =
                       @Content(
                               mediaType = "application/json",
-                              schema = @Schema(example = "{\"result\":[],\"returnMessage\":\"All BOOKS were deleted from database!\"}"))))
+                              schema = @Schema(example = "{\"result\":[],\"returnMessage\":\"All BOOKS were deleted from database!\"}",
+                                      allOf = BooksResponseDto.class))))
   public ResponseEntity<BooksResponseDto> deleteAll(@RequestParam String actor) {
     String returnMessage = bookService.deleteBooks(actor);
     return ResponseEntity.status(HttpStatus.OK).body(new BooksResponseDto(bookService.getAllBooks(), returnMessage));
