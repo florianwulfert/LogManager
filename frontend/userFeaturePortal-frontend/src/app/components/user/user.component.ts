@@ -47,6 +47,20 @@ export class UserComponent implements OnInit, OnDestroy {
     favouriteBook: new FormControl('')
   })
 
+
+  public prefillForm: FormGroup = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    birthdate: new FormControl('', [Validators.required]),
+    height: new FormControl('', [Validators.required]),
+    weight: new FormControl('', [Validators.required]),
+    favouriteBook: new FormControl('')
+
+
+  })
+
+
+
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
