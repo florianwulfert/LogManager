@@ -22,7 +22,7 @@ export class BookComponent implements OnInit, OnDestroy {
   constructor(private booksFacade: BooksFacade, private _snackBar: MatSnackBar, private usersFacade: UserFacade, private actorFacade: ActorFacade) {
   }
 
-  displayedColumns: string[] = ['id', 'titel', 'erscheinungsjahr', 'delete'];
+  displayedColumns: string[] = ['titel', 'erscheinungsjahr', 'delete'];
   books: any
   users: any
   userAvailable: boolean = false
@@ -90,11 +90,10 @@ export class BookComponent implements OnInit, OnDestroy {
     this.booksFacade.addBook(request);
   }
 
-  deleteBook(element: any): void {
-    let request = new DeleteBookRequest()
-    let elementValues = Object.keys(element).map(key => element[key])
-    request.id = elementValues[0]
-    this.booksFacade.deleteBook(request)
+  deleteBook(title: string): void {
+    let deleteRequest = new DeleteBookRequest
+    deleteRequest.title = title
+    this.booksFacade.deleteBook(deleteRequest)
     this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       if (result.length === 0) {
         this.booksListAvailable = false

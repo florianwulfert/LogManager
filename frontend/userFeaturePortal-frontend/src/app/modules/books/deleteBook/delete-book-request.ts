@@ -1,3 +1,3 @@
 export class DeleteBookRequest {
-  id: number | undefined
+  title: string | undefined
 }
