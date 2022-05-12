@@ -92,7 +92,7 @@ export class BookComponent implements OnInit, OnDestroy {
 
   deleteBook(title: string): void {
     let deleteRequest = new DeleteBookRequest
-    deleteRequest.title = title
+    deleteRequest.titel = title
     this.booksFacade.deleteBook(deleteRequest)
     this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       if (result.length === 0) {

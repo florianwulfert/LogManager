@@ -67,7 +67,7 @@ public class BookService {
     return String.format(InfoMessages.BOOK_DELETED_ID, id);
   }
 
-  public String  deleteByTitel(String titel, String actor) {
+  public String  deleteByTitel(String titel, int erscheinungsjahr, String actor) {
     userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
     List<Book> booksToDelete = bookRepository.findByTitel(titel);
 

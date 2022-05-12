@@ -1,3 +1,5 @@
 export class DeleteBookRequest {
-  title: string | undefined
+  titel: string | undefined
+  erscheinungsjahr: number | undefined
+  actor: string | undefined
 }

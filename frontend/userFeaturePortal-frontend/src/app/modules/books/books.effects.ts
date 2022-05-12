@@ -55,7 +55,7 @@ export class BooksEffects {
     this.actions$.pipe(
       ofType(deleteBookAction),
       switchMap((deleteBookRequest: DeleteBookRequest) =>
-        this.booksService.deleteBook(deleteBookRequest.title).pipe(
+        this.booksService.deleteBook(deleteBookRequest).pipe(
           map((deleteBookResponse) =>
             deleteBookResponseAction(deleteBookResponse)),
           catchError((error: string) => of(loadDeleteBookErrorAction({error})))
