@@ -111,4 +111,11 @@ export class BookComponent implements OnInit, OnDestroy {
   deleteBooks(): void {
     this.booksFacade.deleteBooks()
   }
+
+  public getFavouriteColor(): void {
+    this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
+      this.name = r
+    })
+    this.favouriteBook =
+  }
 }
