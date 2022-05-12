@@ -24,11 +24,11 @@ export class BookComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['id', 'titel', 'erscheinungsjahr', 'delete'];
   books: any
-  users: any
   userAvailable: boolean = false
   booksListAvailable: boolean = false
   onDestroy = new Subject()
-
+  name: string | undefined
+  favouriteBook: string | undefined
 
   dataSource: any;
 
@@ -40,6 +40,7 @@ export class BookComponent implements OnInit, OnDestroy {
       if (r) {
         this.userAvailable = true
       }
+      this.favouriteBook = "1"
     })
     this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       if (result.length > 0) {
