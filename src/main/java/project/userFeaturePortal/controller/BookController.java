@@ -162,8 +162,9 @@ public class BookController {
                                   mediaType = "text/plain",
                                   schema = @Schema(example = "Book with ID 1 is assigned to at least one user."))),
           })
-  public String deleteBooksByTitel(@RequestParam String titel, @RequestParam String actor) {
-    return bookService.deleteByTitel(titel, actor);
+  public ResponseEntity<BooksResponseDto> deleteBooksByTitel(@RequestParam String titel, @RequestParam String actor) {
+      String returnMessage = bookService.deleteByTitel(titel, actor);
+      return ResponseEntity.status(HttpStatus.OK).body(new BooksResponseDto(bookService.getAllBooks(), returnMessage));
   }
 
   @DeleteMapping("/books")
