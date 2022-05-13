@@ -10,7 +10,6 @@ import {UserFacade} from "../../modules/user/user.facade";
 import {ActorFacade} from "../../modules/actor/actor.facade";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
-import {ActorDto} from "../../modules/actor/actor.dto";
 
 @Component({
   selector: 'app-book',
@@ -30,7 +29,6 @@ export class BookComponent implements OnInit, OnDestroy {
   onDestroy = new Subject()
   name: string | undefined
   favouriteBook: string | undefined
-  actorDto: ActorDto = new ActorDto()
 
   dataSource: any;
 
@@ -42,7 +40,6 @@ export class BookComponent implements OnInit, OnDestroy {
       if (r) {
         this.userAvailable = true
       }
-      this.favouriteBook = this.getFavouriteBook()
     })
     this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       if (result.length > 0) {
@@ -112,13 +109,5 @@ export class BookComponent implements OnInit, OnDestroy {
 
   deleteBooks(): void {
     this.booksFacade.deleteBooks()
-  }
-
-  public getFavouriteBook(): any {
-    this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
-      this.name = r
-      this.actorDto.actor = this.name
-      this.actorFacade.getUserByName(this.actorDto)
-    })
   }
 }

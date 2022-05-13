@@ -4,7 +4,7 @@ import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
 import {UserEffects} from "./user.effects";
 import {UserFacade} from "./user.facade";
-import {USER_FEATURE_NAME} from "./user.state";
+import {USERS_FEATURE_NAME} from "./usersState";
 import {UserReducer} from "./user.reducer";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 
@@ -12,7 +12,7 @@ import {FeatureManager} from "../../../assets/utils/feature.manager";
   declarations: [],
   imports: [
     CommonModule, StoreModule.forRoot({}),
-    StoreModule.forFeature(USER_FEATURE_NAME, UserReducer),
+    StoreModule.forFeature(USERS_FEATURE_NAME, UserReducer),
     EffectsModule.forRoot(), EffectsModule.forFeature([UserEffects])],
   providers: [UserFacade, FeatureManager]
 })

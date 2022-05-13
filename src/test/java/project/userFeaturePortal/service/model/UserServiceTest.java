@@ -141,7 +141,7 @@ class UserServiceTest {
 
   @Test
   void whenUserNotFoundButUserListIsEmpty_ThenReturnTrue() {
-    systemUnderTest.findUserByName("Peter");
+    systemUnderTest.validateUserByName("Peter");
     verify(userRepository).findUserByName(anyString());
   }
 
@@ -149,7 +149,7 @@ class UserServiceTest {
   void whenUserNotFoundAndUserListIsNotEmpty_ThenReturnFalse() {
     List<UserDto> userDtoList = addListOfDtos();
     when(userDtoMapper.usersToUserDtos(anyList())).thenReturn(userDtoList);
-    systemUnderTest.findUserByName("Heini");
+    systemUnderTest.validateUserByName("Heini");
   }
 
   @Test
