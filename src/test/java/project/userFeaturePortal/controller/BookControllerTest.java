@@ -57,13 +57,7 @@ public class BookControllerTest {
 
   @Test
   void testDeleteBooksByTitel() {
-    BookRequestDto test =
-            BookRequestDto.builder()
-                    .actor("Torsten")
-                    .erscheinungsjahr(books.get(0).getErscheinungsjahr())
-                    .titel(books.get(0).getTitel())
-                    .build();
-    bookController.deleteBooksByTitel(test);
+    bookController.deleteBooksByTitel("haya", "Torsten");
     verify(bookService).deleteByTitel("haya","Torsten");
   }
 
