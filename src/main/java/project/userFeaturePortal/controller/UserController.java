@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import project.userFeaturePortal.common.dto.user.FindUserResponseDto;
 import project.userFeaturePortal.common.dto.user.UserRequestDto;
 import project.userFeaturePortal.common.dto.user.UserResponseDto;
+import project.userFeaturePortal.common.dto.user.ValidateUserResponseDto;
 import project.userFeaturePortal.model.entity.User;
+import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.model.UserService;
 
 import java.util.Optional;
@@ -21,6 +23,7 @@ import java.util.Optional;
 public class UserController {
 
   private final UserService userService;
+  private final UserRepository userRepository;
 
   @PostMapping("/user")
   public ResponseEntity<UserResponseDto> addUser(@RequestBody UserRequestDto allParameters) {
@@ -47,9 +50,13 @@ public class UserController {
 
   @GetMapping("/user")
   public ResponseEntity<FindUserResponseDto> findUserByName(@RequestParam final String name) {
-    return ResponseEntity.status(HttpStatus.OK).body(new FindUserResponseDto(userService.findUserByName(name)));
+    return ResponseEntity.status(HttpStatus.OK).body(new FindUserResponseDto(userRepository.findUserByName(name)));
   }
 
+  @GetMapping("/user")
+    public ResponseEntity<ValidateUserResponseDto> validateUserByName(@RequestParam final String name) {
+      return ResponseEntity.status(HttpStatus.OK).body(new ValidateUserResponseDto(userService.validateUserByName(name)));
+    }
   @DeleteMapping("/user/id/{id}")
   public ResponseEntity<UserResponseDto> deleteUserByID(@PathVariable final Integer id, @RequestParam final String actor) {
     userService.deleteById(id, actor);

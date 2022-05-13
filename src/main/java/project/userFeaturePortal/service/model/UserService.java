@@ -94,18 +94,15 @@ public class UserService {
     return userRepository.findById(id);
   }
 
-  public User findUserByName(String name) {
+  public boolean validateUserByName(String name) {
     User user = userRepository.findUserByName(name);
 
     if (user == null) {
       List<UserDto> users = findUserList();
-      if (users.isEmpty()) {
-        LOGGER.info("User not found and list of users is empty");
-        return null;
-      }
+      return users.isEmpty();
     }
 
-    return user;
+    return true;
   }
 
   public void deleteById(int id, String actorName) {
