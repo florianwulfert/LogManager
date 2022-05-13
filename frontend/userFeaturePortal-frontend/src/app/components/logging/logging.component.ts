@@ -104,7 +104,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   getUserList(): void {
-    this.userFacade.getUser();
+    this.userFacade.getUsers();
     this.userFacade.stateGetUserResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.users = result
     });

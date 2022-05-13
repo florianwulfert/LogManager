@@ -77,7 +77,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   getUserList(): void {
-    this.userFacade.getUser();
+    this.userFacade.getUsers();
     this.userFacade.stateGetUserResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;

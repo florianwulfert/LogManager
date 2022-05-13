@@ -1,8 +1,5 @@
-import {UserDto} from 'src/app/modules/user/getUser/user.dto'
-
 export interface GetUserResponse {
-  result: UserDto[];
-  returnMessage: string;
+  result: boolean
 }
 
 export interface GetUserErrorResponse {

@@ -119,18 +119,13 @@
         </mat-expansion-panel>
       </mat-accordion>
     </div>
-    <div class="space-between-fields">
-      <mat-card class="color-favourite-book">
-        Current favourite book: {{getFavouriteColor()}}
-      </mat-card>
-    </div>
-    <div></div>
-    <div *ngIf="booksListAvailable">
+
+    <div *ngIf="booksListAvailable" class="space-between-fields">
       <mat-accordion>
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>
-              Assign book to user
+              Assign favourite book to user
             </mat-panel-title>
           </mat-expansion-panel-header>
           <form [formGroup]="formBookToUser">
@@ -161,6 +156,13 @@
         </mat-expansion-panel>
       </mat-accordion>
     </div>
+
+    <div>
+      <mat-card>
+        Current favourite book: {{favouriteBook}}
+      </mat-card>
+    </div>
+    <div></div>
 
   </div>
 </div>

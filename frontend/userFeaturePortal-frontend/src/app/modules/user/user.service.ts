@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable, Subject, throwError} from 'rxjs';
-import {GetUserResponse} from 'src/app/modules/user/getUser/get-user-response';
+import {GetUsersResponse} from 'src/app/modules/user/getUsers/get-users-response';
 import {catchError, map, takeUntil} from "rxjs/operators";
 import {AddUserResponse} from "./addUser/add-user-response";
 import {AddUserRequest} from "./addUser/add-user-request";
@@ -10,7 +10,8 @@ import {ActorFacade} from "../actor/actor.facade";
 import {DeleteUsersResponse} from "./deleteUsers/delete-users-response";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 
-const API_BASE = 'http://localhost:8081/users';
+const API_GET_USERS = 'http://localhost:8081/users';
+const API_GET_USER = 'http://localhost:8081/user';
 const API_ADD_USER = 'http://localhost:8081/user';
 const API_DELETE_USERS = 'http://localhost:8081/users';
 const API_DELETE_USER = 'http://localhost:8081/user/name/';
@@ -30,8 +31,8 @@ export class UserService implements OnDestroy {
   name: string | undefined
   onDestroy = new Subject()
 
-  getUsers(): Observable<GetUserResponse> {
-    return this.http.get<GetUserResponse>(API_BASE, {
+  getUsers(): Observable<GetUsersResponse> {
+    return this.http.get<GetUsersResponse>(API_GET_USERS, {
       observe: 'response'
     }).pipe(
       map((r) => {

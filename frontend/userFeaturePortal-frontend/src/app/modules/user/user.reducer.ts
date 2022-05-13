@@ -4,11 +4,11 @@ import {
   addUserResponseAction,
   deleteUserResponseAction,
   deleteUsersResponseAction,
-  getUserResponseAction
+  getUsersResponseAction
 } from "./user.actions";
-import {GetUserResponse} from "./getUser/get-user-response";
+import {GetUsersResponse} from "./getUsers/get-users-response";
 
-const handleUserResponse = (state: UserState, resp: GetUserResponse): UserState => {
+const handleUserResponse = (state: UserState, resp: GetUsersResponse): UserState => {
   return {
     ...state,
     userList: resp.result,
@@ -17,7 +17,7 @@ const handleUserResponse = (state: UserState, resp: GetUserResponse): UserState 
 
 export const UserReducer = createReducer(
   USER_GET_INITIAL_STATE,
-  on(getUserResponseAction, handleUserResponse),
+  on(getUsersResponseAction, handleUserResponse),
   on(deleteUserResponseAction, handleUserResponse),
   on(deleteUsersResponseAction, handleUserResponse),
   on(addUserResponseAction, handleUserResponse),

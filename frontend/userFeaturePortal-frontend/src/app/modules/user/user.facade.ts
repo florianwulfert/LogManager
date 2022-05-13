@@ -14,7 +14,7 @@ export class UserFacade {
     private readonly userState: Store<UserState>,
   ) {}
 
-  getUser(): void {
+  getUsers(): void {
     this.userState.dispatch(getUsersAction());
   }
 
