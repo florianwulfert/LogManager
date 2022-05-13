@@ -138,7 +138,7 @@ class BookControllerIT {
                 .andReturn();
         String booksString = books.toString().replace(" ", "");
     assertEquals(
-        "{\"result\":" + booksString + ",\"returnMessage\":null}",
+        TestMessages.GET_BOOKS,
         result.getResponse().getContentAsString());
     }
 
@@ -255,13 +255,6 @@ class BookControllerIT {
                 .build();
         books.add(paul);
         bookRepository.save(paul);
-        Book paul1 = Book.builder()
-                .id(7)
-                .erscheinungsjahr(2008)
-                .titel("paul")
-                .build();
-        books.add(paul1);
-        bookRepository.save(paul1);
         return books;
     }
 

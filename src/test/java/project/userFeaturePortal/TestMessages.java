@@ -22,9 +22,8 @@ public class TestMessages {
                 + "{\"id\":3,\"titel\":\"peter\",\"erscheinungsjahr\":2010},"
                 + "{\"id\":4,\"titel\":\"lina\",\"erscheinungsjahr\":2009},"
                 + "{\"id\":5,\"titel\":\"omar\",\"erscheinungsjahr\":2002},"
-                + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002},"
-                + "{\"id\":7,\"titel\":\"paul\",\"erscheinungsjahr\":2008}," +
-                "{\"id\":8,\"titel\":\"TestBook1\",\"erscheinungsjahr\":1998}]," +
+                + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002}," +
+                "{\"id\":7,\"titel\":\"TestBook1\",\"erscheinungsjahr\":1998}]," +
                 "\"returnMessage\":\"Book TestBook1 was created.\"}";
         public static final String ID_FOR_BOOK_HAS_WRONG_FORMAT = "Required path variable was not found or request param has wrong format! "
                         + "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; "
@@ -51,16 +50,14 @@ public class TestMessages {
         + "{\"id\":3,\"titel\":\"peter\",\"erscheinungsjahr\":2010},"
         + "{\"id\":4,\"titel\":\"lina\",\"erscheinungsjahr\":2009},"
         + "{\"id\":5,\"titel\":\"omar\",\"erscheinungsjahr\":2002},"
-        + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002},"
-        + "{\"id\":7,\"titel\":\"paul\",\"erscheinungsjahr\":2008}]," +
+        + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002}]," +
                 "\"returnMessage\":\"Book with the ID 1 was deleted.\"}";
 
     public static final String BOOK_PETER_DELETED_BY_ID = "{\"result\":[{\"id\":1,\"titel\":\"TestBook\",\"erscheinungsjahr\":1998}," +
             "{\"id\":2,\"titel\":\"petra\",\"erscheinungsjahr\":1989},"
         + "{\"id\":4,\"titel\":\"lina\",\"erscheinungsjahr\":2009},"
         + "{\"id\":5,\"titel\":\"omar\",\"erscheinungsjahr\":2002},"
-        + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002},"
-        + "{\"id\":7,\"titel\":\"paul\",\"erscheinungsjahr\":2008}]," +
+        + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002}]," +
                 "\"returnMessage\":\"Book with the ID 3 was deleted.\"}";
     public static final String TESTBOOK = "[{\"id\":1,\"titel\":\"TestBook\",\"erscheinungsjahr\":1998}]";
     public static final String ALL_BOOKS_DELETED = "{\"result\":[],\"returnMessage\":\"All BOOKS were deleted from database!\"}";
@@ -70,8 +67,7 @@ public class TestMessages {
               "{\"id\":3,\"titel\":\"peter\",\"erscheinungsjahr\":2010},"
           + "{\"id\":4,\"titel\":\"lina\",\"erscheinungsjahr\":2009},"
           + "{\"id\":5,\"titel\":\"omar\",\"erscheinungsjahr\":2002},"
-          + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002},"
-          + "{\"id\":7,\"titel\":\"paul\",\"erscheinungsjahr\":2008}],"
+          + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002}],"
           + "\"returnMessage\":\"Book with the title TestBook was deleted.\"}";
   public static final String NO_BOOKS_FOUND =
       "{\"result\":[{\"id\":1,\"titel\":\"TestBook\",\"erscheinungsjahr\":1998},"
@@ -79,8 +75,14 @@ public class TestMessages {
           + "{\"id\":3,\"titel\":\"peter\",\"erscheinungsjahr\":2010},"
           + "{\"id\":4,\"titel\":\"lina\",\"erscheinungsjahr\":2009},"
           + "{\"id\":5,\"titel\":\"omar\",\"erscheinungsjahr\":2002},"
-          + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002},"
-          + "{\"id\":7,\"titel\":\"paul\",\"erscheinungsjahr\":2008}],"
+          + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002}],"
           + "\"returnMessage\":\"No books with the title hajer found.\"}";
-  ;
+    public static final String GET_BOOKS = "{\"result\":[{\"id\":1,\"titel\":\"TestBook\",\"erscheinungsjahr\":1998},"
+            + "{\"id\":2,\"titel\":\"petra\",\"erscheinungsjahr\":1989},"
+            + "{\"id\":3,\"titel\":\"peter\",\"erscheinungsjahr\":2010},"
+            + "{\"id\":4,\"titel\":\"lina\",\"erscheinungsjahr\":2009},"
+            + "{\"id\":5,\"titel\":\"omar\",\"erscheinungsjahr\":2002},"
+            + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002}],"
+            + "\"returnMessage\":null}";;
+    ;
 }
