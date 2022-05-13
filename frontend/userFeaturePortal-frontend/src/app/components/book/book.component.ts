@@ -42,7 +42,7 @@ export class BookComponent implements OnInit, OnDestroy {
       if (r) {
         this.userAvailable = true
       }
-      this.favouriteBook = "1"
+      this.favouriteBook = this.getFavouriteBook()
     })
     this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       if (result.length > 0) {
@@ -114,12 +114,11 @@ export class BookComponent implements OnInit, OnDestroy {
     this.booksFacade.deleteBooks()
   }
 
-  public getFavouriteBook(): void {
+  public getFavouriteBook(): any {
     this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       this.name = r
       this.actorDto.actor = this.name
       this.actorFacade.getUserByName(this.actorDto)
-      this.favouriteBook =
     })
   }
 }
