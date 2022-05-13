@@ -67,7 +67,7 @@ public class BookService {
     return String.format(InfoMessages.BOOK_DELETED_ID, id);
   }
 
-  public String  deleteByTitel(String titel, int erscheinungsjahr, String actor) {
+  public String  deleteByTitel(String titel, String actor) {
     userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
     List<Book> booksToDelete = bookRepository.findByTitel(titel);
 
@@ -76,30 +76,14 @@ public class BookService {
       return String.format(InfoMessages.NO_BOOKS_FOUND, titel);
     }
 
-    if (booksToDelete.size() == 1) {
-      bookValidationService.checkIfBookIsReferenced(booksToDelete.get(0).getId());
+    bookValidationService.checkIfBookIsReferenced(booksToDelete.get(0).getId());
 
-      bookRepository.deleteById(booksToDelete.get(0).getId());
+    bookRepository.deleteById(booksToDelete.get(0).getId());
 
-      logService.addLog(LogRequestDto.builder()
-          .message(String.format(InfoMessages.BOOK_DELETED_TITLE, titel)).severity("INFO").user(actor)
-          .build());
-      return String.format(InfoMessages.BOOK_DELETED_TITLE, titel);
-    }
-
-    for (Book book: booksToDelete) {
-      if (book.getErscheinungsjahr().equals(erscheinungsjahr)) {
-        bookValidationService.checkIfBookIsReferenced(book.getId());
-        bookRepository.deleteById(book.getId());
-        logService.addLog(LogRequestDto.builder()
-                .message(String.format(InfoMessages.BOOK_DELETED_TITLE, titel)).severity("INFO").user(actor)
-                .build());
-        return String.format(InfoMessages.BOOK_DELETED_TITLE, titel);
-      }
-    }
-
-    LOGGER.warn(String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel));
-    return String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel);
+    logService.addLog(LogRequestDto.builder()
+        .message(String.format(InfoMessages.BOOK_DELETED_TITLE, titel)).severity("INFO").user(actor)
+        .build());
+    return String.format(InfoMessages.BOOK_DELETED_TITLE, titel);
   }
 
   public String deleteBooks(String actor) {

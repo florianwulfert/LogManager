@@ -64,7 +64,7 @@ public class BookControllerTest {
                     .titel(books.get(0).getTitel())
                     .build();
     bookController.deleteBooksByTitel(test);
-    verify(bookService).deleteByTitel("haya", 1998, "Torsten");
+    verify(bookService).deleteByTitel("haya","Torsten");
   }
 
   @Test

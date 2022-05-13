@@ -20,7 +20,7 @@ public class Book {
   @Column(name = "id", unique = true, nullable = false)
   private Integer id;
 
-  @Column
+  @Column(name = "titel", unique = true, nullable = false)
   private String titel;
   @Column
   private Integer erscheinungsjahr;

@@ -91,7 +91,7 @@ public class BookServiceTest {
   void whenBooksListIsEmpty_ThenReturnNoBooksFounds() {
     when(bookRepository.findByTitel(books.get(0).getTitel())).thenReturn(new ArrayList<>());
     assertEquals(String.format(InfoMessages.NO_BOOKS_FOUND, books.get(0).getTitel()),
-        bookService.deleteByTitel(books.get(0).getTitel(), 1, "Torsten"));
+        bookService.deleteByTitel(books.get(0).getTitel(), "Torsten"));
   }
 
   @Test
@@ -110,7 +110,7 @@ public class BookServiceTest {
     testBooks.add(Book.builder().id(1).titel("TestBook").erscheinungsjahr(2002).build());
     when(bookRepository.findByTitel(anyString())).thenReturn(testBooks);
     assertEquals(String.format(InfoMessages.BOOK_DELETED_TITLE, "TestBook"),
-            bookService.deleteByTitel("TestBook", 1,"Torsten"));
+            bookService.deleteByTitel("TestBook", "Torsten"));
     verify(logService).addLog(any());
   }
 
