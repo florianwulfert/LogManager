@@ -69,7 +69,7 @@ class UserControllerTest {
   @Test
   void testFindUserByName() {
     systemUnderTest.findUserByName(users.get(0).getName());
-    verify(userService).validateUserByName(users.get(0).getName());
+    verify(userService).findUserByName(users.get(0).getName());
   }
 
   @Test
