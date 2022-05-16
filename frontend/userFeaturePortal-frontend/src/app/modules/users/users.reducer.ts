@@ -9,6 +9,7 @@ import {
 import {GetUsersResponse} from "./getUsers/get-users-response";
 
 const handleUsersResponse = (state: UsersState, resp: GetUsersResponse): UsersState => {
+  console.log(resp)
   return {
     ...state,
     userList: resp.result,

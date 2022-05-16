@@ -7,5 +7,5 @@ export interface UsersState {
 }
 
 export const USERS_GET_INITIAL_STATE: UsersState = {
-  userList: [],
+  userList: []
 };

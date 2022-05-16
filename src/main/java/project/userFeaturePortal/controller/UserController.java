@@ -50,7 +50,7 @@ public class UserController {
 
   @GetMapping("/user")
   public ResponseEntity<FindUserResponseDto> findUserByName(@RequestParam final String name) {
-    return ResponseEntity.status(HttpStatus.OK).body(new FindUserResponseDto(userRepository.findUserByName(name)));
+    return ResponseEntity.status(HttpStatus.OK).body(new FindUserResponseDto(userService.findUserByName(name)));
   }
 
   @GetMapping("/validateUser")

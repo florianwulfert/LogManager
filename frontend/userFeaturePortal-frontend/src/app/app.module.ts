@@ -36,6 +36,7 @@ import {ActorIsValidModule} from "./modules/actor/actorIsValid.module";
 import {BookComponent} from "./components/book/book.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {BooksModule} from "./modules/books/books.module";
+import {UserModule} from "./modules/user/user.module";
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import {BooksModule} from "./modules/books/books.module";
     BmiModule,
     MatPaginatorModule,
     ActorIsValidModule,
-    BooksModule
+    BooksModule,
+    UserModule
   ],
   exports: [
     BrowserModule,

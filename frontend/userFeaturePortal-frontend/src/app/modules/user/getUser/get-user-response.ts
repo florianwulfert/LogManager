@@ -1,7 +1,7 @@
 import {UserDto} from "../../users/getUsers/user.dto";
 
 export interface GetUserResponse {
-  result: UserDto
+  user: UserDto
 }
 
 export interface GetUserErrorResponse {

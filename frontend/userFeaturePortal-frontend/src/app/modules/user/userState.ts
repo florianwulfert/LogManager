@@ -3,7 +3,7 @@ import {UserDto} from "../users/getUsers/user.dto";
 export const USER_FEATURE_NAME = 'user';
 
 export interface UserState {
-  response: UserDto
+  user: UserDto
 }
 
 const user: UserDto = {
@@ -17,5 +17,5 @@ const user: UserDto = {
 }
 
 export const USER_GET_INITIAL_STATE: UserState = {
-  response: user
+  user: user
 }

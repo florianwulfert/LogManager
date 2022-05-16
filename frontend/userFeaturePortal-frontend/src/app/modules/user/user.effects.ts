@@ -9,15 +9,17 @@ import {getUserAction, getUserResponseAction, loadGetUserErrorAction} from "./us
 @Injectable({providedIn: 'root'})
 export class UserEffects {
   getUser$: Observable<Action> = createEffect(() =>
-    this.actions$.pipe(
-      ofType(getUserAction),
-      switchMap(() =>
-        this.userService.getUser().pipe(
-          map((getUserResponse) => getUserResponseAction(getUserResponse)),
-          catchError((error: string) => of(loadGetUserErrorAction({error})))
+      this.actions$.pipe(
+        ofType(getUserAction),
+        switchMap(() =>
+          this.userService.getUser().pipe(
+            map((getUserResponse) => getUserResponseAction(getUserResponse)),
+            catchError((error: string) => of(loadGetUserErrorAction({error})))
+          )
         )
-      )
-    )
+      ), {
+      dispatch: false
+    }
   );
 
   constructor(private readonly actions$: Actions, private readonly userService: UserService) {

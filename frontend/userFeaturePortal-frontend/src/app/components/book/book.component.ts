@@ -32,9 +32,7 @@ export class BookComponent implements OnInit, OnDestroy {
   userAvailable: boolean = false
   booksListAvailable: boolean = false
   onDestroy = new Subject()
-  name: string | undefined
   favouriteBook: string | undefined
-
   dataSource: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
@@ -44,8 +42,10 @@ export class BookComponent implements OnInit, OnDestroy {
     this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if (r) {
         this.userAvailable = true
+        this.getUsersFavouriteBook()
       }
     })
+
     this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       if (result.length > 0) {
         this.booksListAvailable = true
@@ -116,6 +116,10 @@ export class BookComponent implements OnInit, OnDestroy {
   }
 
   getUsersFavouriteBook(): void {
-
+    this.userFacade.getUser()
+    this.userFacade.stateGetUserResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      console.log(result)
+      this.favouriteBook = result.favouriteBookTitel
+    })
   }
 }
