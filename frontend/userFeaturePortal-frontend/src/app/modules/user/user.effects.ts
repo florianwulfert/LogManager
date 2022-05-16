@@ -17,9 +17,7 @@ export class UserEffects {
             catchError((error: string) => of(loadGetUserErrorAction({error})))
           )
         )
-      ), {
-      dispatch: false
-    }
+      )
   );
 
   constructor(private readonly actions$: Actions, private readonly userService: UserService) {
