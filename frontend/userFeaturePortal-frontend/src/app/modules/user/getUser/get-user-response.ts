@@ -1,5 +1,7 @@
+import {UserDto} from "../../users/getUsers/user.dto";
+
 export interface GetUserResponse {
-  result: boolean
+  result: UserDto
 }
 
 export interface GetUserErrorResponse {

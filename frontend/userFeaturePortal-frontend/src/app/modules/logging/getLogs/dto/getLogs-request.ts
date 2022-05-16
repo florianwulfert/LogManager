@@ -1,4 +1,4 @@
-import {UserDto} from "../../../user/getUsers/user.dto";
+import {UserDto} from "../../../users/getUsers/user.dto";
 
 export class GetLogsRequest {
   id: number | undefined

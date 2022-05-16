@@ -1,36 +1,18 @@
 import {Injectable} from "@angular/core";
 import {Store} from "@ngrx/store";
-import {getUsers} from "./user.selector";
-import {addUserAction, deleteUserAction, deleteUsersAction, getUsersAction} from "./user.actions";
-import {AddUserRequest} from "./addUser/add-user-request";
-import {UsersState} from "./usersState";
-import {DeleteUserRequest} from "./deleteUser/delete-user-request";
+import {getUser} from "./user.selector";
+import {UserState} from "./userState";
+import {getUserAction} from "./user.actions";
 
 @Injectable({providedIn: 'root'})
 export class UserFacade {
-  stateGetUserResponse$ = this.userState.select(getUsers)
+  stateGetUserResponse$ = this.userState.select(getUser)
 
   constructor(
-    private readonly userState: Store<UsersState>,
+    private readonly userState: Store<UserState>,
   ) {}
 
-  getUsers(): void {
-    this.userState.dispatch(getUsersAction());
-  }
-
-  addUser(request: AddUserRequest): void {
-    this.userState.dispatch(addUserAction(request));
-  }
-
-  deleteUsers(): void {
-    this.userState.dispatch(deleteUsersAction());
-  }
-
-  deleteUser(request: DeleteUserRequest): void {
-    this.userState.dispatch(deleteUserAction(request));
-  }
-
   getUser(): void {
-    this
+    this.userState.dispatch(getUserAction())
   }
 }

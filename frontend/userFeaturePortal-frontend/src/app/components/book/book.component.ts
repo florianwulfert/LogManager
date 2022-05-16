@@ -6,10 +6,11 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AddBookRequest} from "../../modules/books/addBooks/add-book-request";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {DeleteBookRequest} from "../../modules/books/deleteBook/delete-book-request";
-import {UserFacade} from "../../modules/user/user.facade";
+import {UsersFacade} from "../../modules/users/users.facade";
 import {ActorFacade} from "../../modules/actor/actor.facade";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
+import {UserFacade} from "../../modules/user/user.facade";
 
 @Component({
   selector: 'app-book',
@@ -19,7 +20,11 @@ import {Subject} from "rxjs";
 
 export class BookComponent implements OnInit, OnDestroy {
 
-  constructor(private booksFacade: BooksFacade, private _snackBar: MatSnackBar, private usersFacade: UserFacade, private actorFacade: ActorFacade) {
+  constructor(private booksFacade: BooksFacade,
+              private _snackBar: MatSnackBar,
+              private usersFacade: UsersFacade,
+              private actorFacade: ActorFacade,
+              private userFacade: UserFacade) {
   }
 
   displayedColumns: string[] = ['id', 'titel', 'erscheinungsjahr', 'delete'];
@@ -109,5 +114,9 @@ export class BookComponent implements OnInit, OnDestroy {
 
   deleteBooks(): void {
     this.booksFacade.deleteBooks()
+  }
+
+  getUsersFavouriteBook(): void {
+
   }
 }

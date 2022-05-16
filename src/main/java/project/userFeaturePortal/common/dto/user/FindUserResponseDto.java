@@ -11,5 +11,5 @@ import project.userFeaturePortal.model.entity.User;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindUserResponseDto {
-    User foundUser;
+    User user;
 }

@@ -1,4 +1,4 @@
-import {UserDto} from "./getUsers/user.dto";
+import {UserDto} from "../users/getUsers/user.dto";
 
 export const USER_FEATURE_NAME = 'user';
 

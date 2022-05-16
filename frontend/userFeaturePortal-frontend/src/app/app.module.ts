@@ -22,7 +22,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-import {UserModule} from "./modules/user/user.module";
+import {UsersModule} from "./modules/users/users.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatTooltipModule} from "@angular/material/tooltip";
@@ -66,7 +66,7 @@ import {BooksModule} from "./modules/books/books.module";
     MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
-    UserModule,
+    UsersModule,
     ReactiveFormsModule,
     MatSnackBarModule,
     MatTooltipModule,

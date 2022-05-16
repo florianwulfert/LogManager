@@ -1,6 +1,6 @@
 import {createFeatureSelector, createSelector} from "@ngrx/store";
-import {UserDto} from "./getUsers/user.dto";
-import {USERS_FEATURE_NAME, UsersState} from "./usersState";
+import {USER_FEATURE_NAME, UserState} from "./userState";
+import {UserDto} from "../users/getUsers/user.dto";
 
-const userGetState = createFeatureSelector<UsersState>(USERS_FEATURE_NAME);
-export const getUsers = createSelector(userGetState, (state: UsersState): UserDto[] => state.userList);
+const userGetState = createFeatureSelector<UserState>(USER_FEATURE_NAME);
+export const getUser = createSelector(userGetState, (state: UserState): UserDto => state.response);

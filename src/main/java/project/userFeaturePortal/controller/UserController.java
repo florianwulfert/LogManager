@@ -56,7 +56,8 @@ public class UserController {
   @GetMapping("/validateUser")
     public ResponseEntity<ValidateUserResponseDto> validateUserByName(@RequestParam final String name) {
       return ResponseEntity.status(HttpStatus.OK).body(new ValidateUserResponseDto(userService.validateUserByName(name)));
-    }
+  }
+
   @DeleteMapping("/user/id/{id}")
   public ResponseEntity<UserResponseDto> deleteUserByID(@PathVariable final Integer id, @RequestParam final String actor) {
     userService.deleteById(id, actor);

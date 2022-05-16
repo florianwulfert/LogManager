@@ -5,7 +5,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
 import {MatPaginator} from "@angular/material/paginator";
-import {UserFacade} from "../../modules/user/user.facade";
+import {UsersFacade} from "../../modules/users/users.facade";
 import {GetLogsRequest} from "../../modules/logging/getLogs/dto/getLogs-request";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
@@ -17,7 +17,7 @@ import {takeUntil} from "rxjs/operators";
 })
 export class LoggingComponent implements OnInit, OnDestroy {
 
-  constructor(private logsFacade: LogFacade, private _snackBar: MatSnackBar, private userFacade: UserFacade) {
+  constructor(private logsFacade: LogFacade, private _snackBar: MatSnackBar, private userFacade: UsersFacade) {
   }
 
   displayedColumns: string[] = ['id', 'message', 'severity', 'timestamp', 'user', 'delete'];
@@ -105,7 +105,7 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
   getUserList(): void {
     this.userFacade.getUsers();
-    this.userFacade.stateGetUserResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+    this.userFacade.stateGetUsersResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.users = result
     });
   }
