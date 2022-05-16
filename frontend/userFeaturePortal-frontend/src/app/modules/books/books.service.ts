@@ -12,7 +12,7 @@ import {DeleteBooksResponse} from "./deleteBooks/delete-books-response";
 
 const API_GET_BOOKS = 'http://localhost:8081/books'
 const API_ADD_BOOK = 'http://localhost:8081/book'
-const API_DELETE_BOOK = 'http://localhost:8081/book/id/'
+const API_DELETE_BOOK = 'http://localhost:8081/book/titel?titel='
 const API_ADD_BOOK_TO_USER = 'http://localhost:8081/user/favouriteBook?bookTitel='
 const API_DELETE_BOOKS = 'http://localhost:8081/books'
 
@@ -77,15 +77,15 @@ export class BooksService implements OnDestroy{
     );
   }
 
-  deleteBook(i: number | undefined): Observable<DeleteBookResponse> {
+  deleteBook(titel: string): Observable<DeleteBookResponse> {
     this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       this.name = r
     })
-    return this.http.delete<DeleteBookResponse>(API_DELETE_BOOK + i + '?actor=' + this.name, {
+    return this.http.delete<DeleteBookResponse>(API_DELETE_BOOK + titel + '&actor=' + this.name, {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("Book with the ID " + i + " was deleted.");
+        this.featureManager.openSnackbar("Book with the title " + titel + " was deleted.");
         return r.body || {
           result: [],
           returnMessage: ""
