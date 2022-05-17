@@ -1,12 +1,11 @@
-import {Injectable} from "@angular/core";
+import {Injectable, OnDestroy} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {Observable, throwError} from "rxjs";
-import {catchError, map} from "rxjs/operators";
+import {Observable, Subject, throwError} from "rxjs";
+import {catchError, map, takeUntil} from "rxjs/operators";
 import {GetLogsResponse} from "./getLogs/dto/get-logs-response";
 import {DeleteLogsResponse} from "./deleteLogs/dto/delete-logs-response";
 import {AddLogResponse} from "./addLogs/dto/add-log-response";
 import {AddLogRequest} from "./addLogs/dto/add-log-request";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {ActorFacade} from "../actor/actor.facade";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {DeleteLogResponse} from "./deleteLog/dto/delete-log-response";
@@ -20,13 +19,18 @@ const API_DELETE_LOG = 'http://localhost:8081/log/id/'
 @Injectable({
   providedIn: 'root'
 })
-export class LogService {
+export class LogService implements OnDestroy{
   constructor(private readonly http: HttpClient, private readonly actorFacade: ActorFacade, private featureManager: FeatureManager) {
   }
 
   name: string | undefined
-  subscriptionManager = new SubscriptionManager();
   countParameter: number = 0
+  onDestroy = new Subject()
+
+  ngOnDestroy() {
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
+  }
 
   checkParameter(requestParameter: string | undefined, parameterName: string): string {
     if (requestParameter === "" || requestParameter === null || requestParameter === undefined) {
@@ -109,7 +113,7 @@ export class LogService {
   }
 
   addLog(addLogRequest: AddLogRequest): Observable<AddLogResponse> {
-    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
+    this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       this.name = r
     })
     return this.http.post<any>(API_ADD_LOG, {...addLogRequest, user: this.name}, {

@@ -22,7 +22,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-import {UserModule} from "./modules/user/user.module";
+import {UsersModule} from "./modules/users/users.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatTooltipModule} from "@angular/material/tooltip";
@@ -36,6 +36,7 @@ import {ActorIsValidModule} from "./modules/actor/actorIsValid.module";
 import {BookComponent} from "./components/book/book.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {BooksModule} from "./modules/books/books.module";
+import {UserModule} from "./modules/user/user.module";
 import {BibleComponent} from "./components/bibellese/bible.component";
 import {BibelleseModule} from "./modules/bibellese/bibellese.module";
 
@@ -69,7 +70,7 @@ import {BibelleseModule} from "./modules/bibellese/bibellese.module";
     MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
-    UserModule,
+    UsersModule,
     ReactiveFormsModule,
     MatSnackBarModule,
     MatTooltipModule,
@@ -86,7 +87,8 @@ import {BibelleseModule} from "./modules/bibellese/bibellese.module";
     MatPaginatorModule,
     ActorIsValidModule,
     BooksModule,
-    BibelleseModule
+    BibelleseModule,
+    UserModule
   ],
   exports: [
     BrowserModule,

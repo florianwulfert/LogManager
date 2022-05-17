@@ -27,7 +27,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -81,29 +80,20 @@ class UserValidationServiceTest {
   @Test
   void whenUsersListIsNotEmptyAndActorIsNotPresent_ThenThrowException() {
     when(userRepository.findAll()).thenReturn(users);
-    assertThrows(UserNotAllowedException.class, () ->
-            systemUnderTest.validateActor("Hans", "Hans"));
+    assertThrows(
+        UserNotAllowedException.class, () -> systemUnderTest.validateActor("Hans", "Hans"));
   }
 
   @Test
   void userToCreateAlreadyExists() {
     when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
-    assertThrows(RuntimeException.class, () ->
-            systemUnderTest.validateUserToCreate("Peter"));
+    assertThrows(RuntimeException.class, () -> systemUnderTest.validateUserToCreate("Peter"));
   }
 
   @Test
   void whenUserToCreateNotEqualActor_ThenThrowFirstUserUnequalActorException() {
     assertThrows(
-        FirstUserUnequalActorException.class,
-        () -> systemUnderTest.validateActor("Peter", "Hans"));
-  }
-
-  @Test
-  void whenLogsExistByUserToDelete_ThenThrowException() {
-    when(logService.existLogByUserToDelete(any())).thenReturn(true);
-    when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
-    assertThrows(RuntimeException.class, () -> systemUnderTest.validateUserToDelete("Peter", "Hans"));
+        FirstUserUnequalActorException.class, () -> systemUnderTest.validateActor("Peter", "Hans"));
   }
 
   @Test
@@ -113,10 +103,27 @@ class UserValidationServiceTest {
   }
 
   @Test
+  void whenUserIsLinkedInALog_ThrowException() {
+    List<Log> testLogs = new ArrayList<>();
+    testLogs.add(
+        Log.builder()
+            .id(1)
+            .user(users.get(0))
+            .severity("INFO")
+            .message("Test")
+            .timestamp(LocalDateTime.now())
+            .build());
+    when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
+    when(logRepository.findByUser(users.get(0))).thenReturn(testLogs);
+    assertThrows(RuntimeException.class, () ->
+            systemUnderTest.validateUserToDelete("Peter","Florian"));
+  }
+
+  @Test
   void whenActorEqualsUserToDelete_ThenThrowException() {
     when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
-    assertThrows(RuntimeException.class, () ->
-            systemUnderTest.validateUserToDelete("Peter", "Peter"));
+    assertThrows(
+        RuntimeException.class, () -> systemUnderTest.validateUserToDelete("Peter", "Peter"));
   }
 
   @Test
@@ -179,22 +186,23 @@ class UserValidationServiceTest {
 
   @Test
   void testIdSuccessfullyFound() {
-    Optional<User> user = Optional.ofNullable(User.builder()
-            .id(1)
-            .name("Peter")
-            .birthdate(LocalDate.of(2005, 12, 12))
-            .weight(90.0)
-            .height(1.85)
-            .bmi(26.29)
-            .build());
+    Optional<User> user =
+        Optional.ofNullable(
+            User.builder()
+                .id(1)
+                .name("Peter")
+                .birthdate(LocalDate.of(2005, 12, 12))
+                .weight(90.0)
+                .height(1.85)
+                .bmi(26.29)
+                .build());
     when(userRepository.findById(1)).thenReturn(user);
     systemUnderTest.checkIfIdExists(1);
   }
 
   @Test
   void whenIdNotFound_ThenThrowException() {
-    assertThrows(RuntimeException.class, () ->
-            systemUnderTest.checkIfIdExists(1));
+    assertThrows(RuntimeException.class, () -> systemUnderTest.checkIfIdExists(1));
   }
 
   private List<User> addTestUser() {

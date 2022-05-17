@@ -18,6 +18,7 @@ import project.userFeaturePortal.model.mapper.LogDTOMapper;
 import project.userFeaturePortal.model.repository.LogRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.validation.LogValidationService;
+import project.userFeaturePortal.service.validation.UserValidationService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,10 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 import static project.userFeaturePortal.TestMessages.ENTRIES_DELETED;
 
 /**
@@ -52,6 +51,9 @@ class LogServiceTest {
 
   @Mock
   LogDTOMapper logDTOMapper;
+
+  @Mock
+  UserValidationService userValidationService;
 
   List<LogMessageDto> customLogMessageDto;
   List<User> users;
@@ -85,9 +87,10 @@ class LogServiceTest {
   @Test
   void testAddLog() {
     when(logValidationService.validateMessage(anyString())).thenReturn(customLogMessageDto.get(1));
-    assertEquals(
-        "Message \"Banane\" saved as INFO!", systemUnderTest.addLog(logRequestDtos.get(0)));
-    verify(logRepository, Mockito.times(1)).save(any());
+    when(userValidationService.checkIfNameExists(anyString(),anyBoolean(),anyString())).thenReturn(users.get(0));
+    assertEquals("Message \"Banane\" saved as INFO!",
+            systemUnderTest.addLog(logRequestDtos.get(0)));
+    verify(logRepository, times(1)).save(any());
   }
 
   @Test
@@ -100,12 +103,6 @@ class LogServiceTest {
   void testDeleteById() {
     assertEquals(String.format(InfoMessages.ENTRY_DELETED_ID, 2), systemUnderTest.deleteById(2));
     verify(logRepository).deleteById(2);
-  }
-
-  @Test
-  void testSearchLogByActorId() {
-    systemUnderTest.existLogByUserToDelete(any());
-    verify(logRepository).findByUser(any());
   }
 
   @Test

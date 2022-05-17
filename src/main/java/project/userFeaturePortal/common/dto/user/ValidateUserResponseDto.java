@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FindUserResponseDto {
-    UserDto user;
+public class ValidateUserResponseDto {
+   boolean foundUser;
 }
