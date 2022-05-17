@@ -172,7 +172,7 @@
         </mat-expansion-panel>
       </mat-accordion>
     </div>
-
+    <div class="space-between-fields"></div>
     <div>
       <mat-accordion>
         <mat-expansion-panel>
@@ -203,11 +203,10 @@
                 </mat-error>
               </mat-form-field>
             </div>
-
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Birthdate</mat-label>
-                <input type="date" matInput formControlName="birthdate" [ngModel]="prefillForm.getRawValue().birthdate">
+                <input type="date" matInput formControlName="birthdate">
                 <button *ngIf="prefillForm.controls['birthdate'].value" matSuffix mat-icon-button aria-label="Clear"
                         (click)="prefillForm.controls['birthdate'].reset()">
                   <mat-icon>close</mat-icon>
@@ -221,7 +220,7 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Weight</mat-label>
-                <input matInput formControlName="weight">
+                <input matInput formControlName="weight" >
                 <button *ngIf="prefillForm.controls['weight'].value" matSuffix mat-icon-button aria-label="Clear"
                         (click)="prefillForm.controls['weight'].reset()">
                   <mat-icon>close</mat-icon>

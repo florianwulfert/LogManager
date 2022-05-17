@@ -6,6 +6,7 @@ import {ActorFacade} from "../actor/actor.facade";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {GetUserResponse} from "./getUser/get-user-response";
 import {UserDto} from "../users/getUsers/user.dto";
+import {GetUserRequest} from "./getUser/getUser-request";
 
 const API_GET_USER = 'http://localhost:8081/user?name=';
 
@@ -21,7 +22,6 @@ export class UserService implements OnDestroy {
     this.onDestroy.complete()
   }
 
-  name: string | undefined
   onDestroy = new Subject()
   userDto: UserDto = {
     id: 0,
@@ -33,11 +33,8 @@ export class UserService implements OnDestroy {
     favouriteBookTitel: ""
   }
 
-  getUser(): Observable<GetUserResponse> {
-    this.actorFacade.stateActor$.pipe().subscribe(r => {
-      this.name = r
-    })
-    return this.http.get<GetUserResponse>(API_GET_USER + this.name, {
+  getUser(request: GetUserRequest): Observable<GetUserResponse> {
+    return this.http.get<GetUserResponse>(API_GET_USER + request.name, {
       observe: 'response'
     }).pipe(
       map((r) => {

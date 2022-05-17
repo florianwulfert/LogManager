@@ -14,6 +14,7 @@ const API_GET_USERS = 'http://localhost:8081/users';
 const API_ADD_USER = 'http://localhost:8081/user';
 const API_DELETE_USERS = 'http://localhost:8081/users';
 const API_DELETE_USER = 'http://localhost:8081/user/name/';
+const API_UPDATE_USER = 'http://localhost:8081/userUpdate'
 
 @Injectable({
   providedIn: 'root'
@@ -72,6 +73,31 @@ export class UsersService implements OnDestroy {
           this.featureManager.openSnackbar(err.error);
         }
         return throwError('Due to technical issues it is currently not possible to add users.');
+      })
+    );
+  }
+
+  updateUser(updateUserRequest: AddUserRequest): Observable<AddUserResponse> {
+    this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
+      this.name = r
+    })
+    return this.http.post<AddUserResponse>(API_UPDATE_USER, {...updateUserRequest, actor: this.name}, {
+      observe: 'response'
+    }).pipe(
+      map((r) => {
+        this.featureManager.openSnackbar(r.body?.returnMessage);
+        return r.body || {
+          result: [],
+          returnMessage: ""
+        }
+      }),
+      catchError((err) => {
+        if(err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text);
+        } else {
+          this.featureManager.openSnackbar(err.error);
+        }
+        return throwError('Due to technical issues it is currently not possible to update users.');
       })
     );
   }

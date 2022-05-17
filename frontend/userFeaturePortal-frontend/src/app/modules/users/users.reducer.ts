@@ -4,7 +4,8 @@ import {
   addUserResponseAction,
   deleteUserResponseAction,
   deleteUsersResponseAction,
-  getUsersResponseAction
+  getUsersResponseAction,
+  updateUserResponseAction
 } from "./users.actions";
 import {GetUsersResponse} from "./getUsers/get-users-response";
 
@@ -21,4 +22,5 @@ export const UsersReducer = createReducer(
   on(deleteUserResponseAction, handleUsersResponse),
   on(deleteUsersResponseAction, handleUsersResponse),
   on(addUserResponseAction, handleUsersResponse),
+  on(updateUserResponseAction, handleUsersResponse)
 );
