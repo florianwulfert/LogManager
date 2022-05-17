@@ -41,7 +41,6 @@ export class UserService implements OnDestroy {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r.body?.user)
         return r.body || {
           user: this.userDto
         }
@@ -49,10 +48,13 @@ export class UserService implements OnDestroy {
       catchError((err) => {
         if (err.error instanceof Object) {
           this.featureManager.openSnackbar(err.error.text);
-        } else {
+          return throwError('Wrong object in interface')
+        } if (err.error) {
           this.featureManager.openSnackbar(err.error);
+          return throwError('business error')
         }
-        return throwError('Due to technical issues it is currently not possible to request this user.');
+        this.featureManager.openSnackbar('Due to technical issues it is currently not possible to request this user.')
+        return throwError('Due to technical issues it is currently not possible to request this user.')
       })
     );
   }

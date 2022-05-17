@@ -7,7 +7,7 @@
       <input matInput (keyup)="applyFilter($event)" placeholder="Type to filter" #input>
     </mat-form-field>
     <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource" >
+      <table mat-table [dataSource]="dataSource">
 
         <!-- Titel Column -->
         <ng-container matColumnDef="titel">
@@ -35,7 +35,8 @@
             </button>
           </th>
           <td mat-cell *matCellDef="let element">
-            <button mat-icon-button class="deleteButton" (click)="deleteBook(element.titel)" id="remove" *ngIf="userAvailable">
+            <button mat-icon-button class="deleteButton" (click)="deleteBook(element.titel)" id="remove"
+                    *ngIf="userAvailable">
               <mat-icon>delete</mat-icon>
             </button>
           </td>
@@ -150,8 +151,7 @@
         </mat-expansion-panel>
       </mat-accordion>
     </div>
-
-    <div>
+    <div *ngIf="favouriteBook">
       <mat-card>
         Current favourite book: {{favouriteBook}}
       </mat-card>

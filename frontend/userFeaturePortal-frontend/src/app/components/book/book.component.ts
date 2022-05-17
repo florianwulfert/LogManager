@@ -42,9 +42,13 @@ export class BookComponent implements OnInit, OnDestroy {
     this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if (r) {
         this.userAvailable = true
-        this.getUsersFavouriteBook()
       }
     })
+
+    if (this.userAvailable) {
+      this.userFacade.getUser()
+      this.getUsersFavouriteBook()
+    }
 
     this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       if (result.length > 0) {
@@ -92,7 +96,8 @@ export class BookComponent implements OnInit, OnDestroy {
   addBook(): void {
     let request = new AddBookRequest()
     this.prepareAddBookRequest(request)
-    this.booksFacade.addBook(request);
+    this.booksFacade.addBook(request)
+    this.getUsersFavouriteBook()
   }
 
   deleteBook(title: string): void {
@@ -104,11 +109,13 @@ export class BookComponent implements OnInit, OnDestroy {
         this.booksListAvailable = false
       }
     })
+    this.getUsersFavouriteBook()
   }
 
   assignBook(): void {
     let request = this.formBookToUser.get("book")?.value
     this.booksFacade.assignBookToUser(request)
+    this.getUsersFavouriteBook()
   }
 
   deleteBooks(): void {
@@ -116,9 +123,7 @@ export class BookComponent implements OnInit, OnDestroy {
   }
 
   getUsersFavouriteBook(): void {
-    this.userFacade.getUser()
     this.userFacade.stateGetUserResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
-      console.log(result)
       this.favouriteBook = result.favouriteBookTitel
     })
   }

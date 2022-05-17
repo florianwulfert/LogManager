@@ -4,8 +4,6 @@ import {USER_GET_INITIAL_STATE, UserState} from "./userState";
 import {getUserResponseAction} from "./user.actions";
 
 const handleUserResponse = (state: UserState, resp: GetUserResponse): UserState => {
-  console.log( resp
-  )
   return {
     ...state,
     user: resp.user,

@@ -31,6 +31,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   bmiDescription = 'Click here to calculate your BMI according to your weight and height.'
   userDescription = 'Click here to search a user, create one or delete one.'
-  loggingDescription = 'Click here to see which actions took place in the User Manager.'
+  loggingDescription = 'Click here to see which actions took place in the User Feature Portal.'
   bookDescription = 'Click here to find, delete or add books to a specific user.'
 }
