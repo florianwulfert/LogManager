@@ -104,7 +104,12 @@ public class UserService {
     return userRepository.findById(id);
   }
 
-  public boolean findUserByName(String name) {
+  public UserDto findUserByName(String name) {
+    User user = userRepository.findUserByName(name);
+    return userDtoMapper.userToUserDto(user);
+  }
+
+  public boolean validateUserByName(String name) {
     User user = userRepository.findUserByName(name);
 
     if (user == null) {

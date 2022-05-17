@@ -36,6 +36,10 @@ public class BookValidationService {
     if (erscheinungsjahr == null || titel == null) {
       throw new ParameterNotPresentException();
     }
+    if (!bookRepository.findByTitel(titel).isEmpty()) {
+      LOGGER.warn(String.format(ErrorMessages.BOOK_EXISTS, titel));
+      throw new RuntimeException(String.format(ErrorMessages.BOOK_EXISTS, titel));
+    }
   }
 
   public void checkIfBookIsReferenced(int id) {

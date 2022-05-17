@@ -22,8 +22,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -142,14 +140,15 @@ class UserServiceTest {
 
   @Test
   void whenUserNotFoundButUserListIsEmpty_ThenReturnTrue() {
-    assertTrue(systemUnderTest.findUserByName("Peter"));
+    systemUnderTest.validateUserByName("Peter");
+    verify(userRepository).findUserByName(anyString());
   }
 
   @Test
   void whenUserNotFoundAndUserListIsNotEmpty_ThenReturnFalse() {
     List<UserDto> userDtoList = addListOfDtos();
     when(userDtoMapper.usersToUserDtos(anyList())).thenReturn(userDtoList);
-    assertFalse(systemUnderTest.findUserByName("Heini"));
+    systemUnderTest.validateUserByName("Heini");
   }
 
   @Test
