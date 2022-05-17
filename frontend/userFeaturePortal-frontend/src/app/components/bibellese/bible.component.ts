@@ -23,7 +23,6 @@ export class BibleComponent implements OnInit, OnDestroy {
   }
 
   displayedColumns: string[] = ['text', 'lieblingsvers', 'lieblingsversText', 'label', 'leser', 'kommentar', 'delete'];
-  bibellese: any
   userAvailable: boolean = false
   onDestroy = new Subject()
 
@@ -50,6 +49,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.bibelleseFacade.getBibellese(request)
     this.bibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
+      console.log(this.dataSource.data)
       this.dataSource.paginator = this.paginator;
     })
   }
@@ -59,7 +59,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     text: new FormControl('', [Validators.required]),
   })
 
-  prepareAddBookRequest(request: AddBibelleseRequest) {
+  prepareAddBibelleseRequest(request: AddBibelleseRequest) {
     request.lieblingsverse = this.form.get("lieblingsvers")?.value
     request.bibelabschnitt = this.form.get("text")?.value
     return request;
@@ -67,7 +67,7 @@ export class BibleComponent implements OnInit, OnDestroy {
 
   addBibellese(): void {
     let request = new AddBibelleseRequest()
-    this.prepareAddBookRequest(request)
+    this.prepareAddBibelleseRequest(request)
     this.bibelleseFacade.addBibellese(request);
   }
 
