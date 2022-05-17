@@ -22,7 +22,7 @@ export class BibleComponent implements OnInit, OnDestroy {
   }
 
   subscriptionManager = new SubscriptionManager();
-  displayedColumns: string[] = ['text', 'lieblingsvers', 'label', 'leser', 'kommentar', 'delete'];
+  displayedColumns: string[] = ['text', 'lieblingsvers', 'lieblingsversText', 'label', 'leser', 'kommentar', 'delete'];
   bibellese: any
   userAvailable: boolean = false
 
@@ -49,7 +49,6 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.subscriptionManager.add(this.bibelleseFacade.stateGetBibelleseResponse$).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
-      this.bibellese = result
     })
   }
 
