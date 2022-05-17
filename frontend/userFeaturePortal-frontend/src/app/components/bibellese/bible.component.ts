@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {MatTableDataSource} from "@angular/material/table";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatPaginator} from "@angular/material/paginator";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -9,6 +8,8 @@ import {BibelleseFacade} from "../../modules/bibellese/bibellese.facade";
 import {GetBibelleseRequest} from "../../modules/bibellese/getBibellese/get-bibellese-request";
 import {AddBibelleseRequest} from "../../modules/bibellese/addBibellese/add-bibellese-request";
 import {DeleteBibelleseRequest} from "../../modules/bibellese/deleteBibellese/delete-bibellese-request";
+import {takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-bible',
@@ -21,10 +22,10 @@ export class BibleComponent implements OnInit, OnDestroy {
   constructor(private bibelleseFacade: BibelleseFacade, private _snackBar: MatSnackBar, private actorFacade: ActorFacade) {
   }
 
-  subscriptionManager = new SubscriptionManager();
   displayedColumns: string[] = ['text', 'lieblingsvers', 'lieblingsversText', 'label', 'leser', 'kommentar', 'delete'];
   bibellese: any
   userAvailable: boolean = false
+  onDestroy = new Subject()
 
   dataSource: any;
 
@@ -32,21 +33,22 @@ export class BibleComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getBibellese()
-    this.subscriptionManager.add(this.actorFacade.stateActorIsValid$).subscribe(r => {
-      if (r === true && r !== undefined) {
+    this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
+      if (r) {
         this.userAvailable = true
       }
     })
   }
 
   ngOnDestroy() {
-    this.subscriptionManager.clear()
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
   }
 
   getBibellese(): void {
     let request = new GetBibelleseRequest();
     this.bibelleseFacade.getBibellese(request)
-    this.subscriptionManager.add(this.bibelleseFacade.stateGetBibelleseResponse$).subscribe(result => {
+    this.bibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
     })
