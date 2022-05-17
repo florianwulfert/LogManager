@@ -4,9 +4,9 @@ import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
 import {UserEffects} from "./user.effects";
 import {UserFacade} from "./user.facade";
-import {USER_FEATURE_NAME} from "./user.state";
 import {UserReducer} from "./user.reducer";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
+import {USER_FEATURE_NAME} from "./userState";
 
 @NgModule({
   declarations: [],
