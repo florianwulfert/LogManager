@@ -185,20 +185,20 @@
             </mat-panel-description>
           </mat-expansion-panel-header>
 
-          <form [formGroup]="prefillForm">
+          <form [formGroup]="form">
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Name</mat-label>
-                <mat-select formControlName="name">
+                <mat-select formControlName="name" (selectionChange)="getUsersData($event.value)">
                   <mat-option *ngFor="let name of users" [value]="name.name">
                     {{name.name}}
                   </mat-option>
                 </mat-select>
-                <button *ngIf="prefillForm.controls['name'].value" matSuffix mat-icon-button aria-label="Clear"
-                        (click)="prefillForm.controls['name'].reset()">
+                <button *ngIf="form.controls['name'].value" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="form.controls['name'].reset()">
                   <mat-icon>close</mat-icon>
                 </button>
-                <mat-error *ngIf="prefillForm.controls['name'].hasError('required')">
+                <mat-error *ngIf="form.controls['name'].hasError('required')">
                   Name is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
@@ -207,11 +207,11 @@
               <mat-form-field appearance="fill">
                 <mat-label>Birthdate</mat-label>
                 <input type="date" matInput formControlName="birthdate">
-                <button *ngIf="prefillForm.controls['birthdate'].value" matSuffix mat-icon-button aria-label="Clear"
-                        (click)="prefillForm.controls['birthdate'].reset()">
+                <button *ngIf="form.controls['birthdate'].value" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="form.controls['birthdate'].reset()">
                   <mat-icon>close</mat-icon>
                 </button>
-                <mat-error *ngIf="prefillForm.controls['birthdate'].hasError('required')">
+                <mat-error *ngIf="form.controls['birthdate'].hasError('required')">
                   Birthdate is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
@@ -221,11 +221,11 @@
               <mat-form-field appearance="fill">
                 <mat-label>Weight</mat-label>
                 <input matInput formControlName="weight" >
-                <button *ngIf="prefillForm.controls['weight'].value" matSuffix mat-icon-button aria-label="Clear"
-                        (click)="prefillForm.controls['weight'].reset()">
+                <button *ngIf="form.controls['weight'].value" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="form.controls['weight'].reset()">
                   <mat-icon>close</mat-icon>
                 </button>
-                <mat-error *ngIf="prefillForm.controls['weight'].hasError('required')">
+                <mat-error *ngIf="form.controls['weight'].hasError('required')">
                   Weight is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
@@ -235,11 +235,11 @@
               <mat-form-field appearance="fill">
                 <mat-label>Height</mat-label>
                 <input matInput formControlName="height">
-                <button *ngIf="prefillForm.controls['height'].value" matSuffix mat-icon-button aria-label="Clear"
-                        (click)="prefillForm.controls['height'].reset()">
+                <button *ngIf="form.controls['height'].value" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="form.controls['height'].reset()">
                   <mat-icon>close</mat-icon>
                 </button>
-                <mat-error *ngIf="prefillForm.controls['height'].hasError('required')">
+                <mat-error *ngIf="form.controls['height'].hasError('required')">
                   Height is <strong>required</strong>
                 </mat-error>
               </mat-form-field>
@@ -253,15 +253,15 @@
                     {{book.titel}}
                   </mat-option>
                 </mat-select>
-                <button *ngIf="prefillForm.controls['favouriteBook'].value" matSuffix mat-icon-button aria-label="Clear"
-                        (click)="prefillForm.controls['favouriteBook'].reset()">
+                <button *ngIf="form.controls['favouriteBook'].value" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="form.controls['favouriteBook'].reset()">
                   <mat-icon>close</mat-icon>
                 </button>
               </mat-form-field>
             </div>
           </form>
-          <button type="submit" mat-raised-button class="create button-format" (click)="updateUser()" [disabled]="!prefillForm.valid">Update</button>
-          <button mat-raised-button class="reset button-format" (click)="prefillForm.reset()">Reset</button>
+          <button type="submit" mat-raised-button class="create button-format" (click)="updateUser()" [disabled]="!form.valid">Update</button>
+          <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
         </mat-expansion-panel>
       </mat-accordion>
     </div>

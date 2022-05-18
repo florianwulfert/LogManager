@@ -59,23 +59,6 @@ export class UserComponent implements OnInit, OnDestroy {
     favouriteBook: new FormControl('')
   })
 
-
-  public prefillForm: FormGroup = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    birthdate: new FormControl('', [Validators.required]),
-    height: new FormControl('', [Validators.required]),
-    weight: new FormControl('', [Validators.required]),
-    favouriteBook: new FormControl('')
-  })
-
-  preFillForm(): void {
-    this.prefillForm.patchValue({
-      name: "frfe",
-      height: 1.8,
-
-    })
-  }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -126,15 +109,18 @@ export class UserComponent implements OnInit, OnDestroy {
     let request = new AddUserRequest
     request = this.prepareAddUserRequest(request)
     this.usersFacade.updateUser(request)
-
   }
 
 
-  getUsersData(name: string): void {
+  getUsersData(name: string) {
     let getRequest = new GetUserRequest()
     getRequest.name = name
     this.userFacade.getUser(getRequest)
     this.userFacade.stateGetUserResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      this.form.get("birthdate")?.setValue(result.birthdate)
+      this.form.get("weight")?.setValue(result.weight)
+      this.form.get("height")?.setValue(result.height)
+      this.form.get("favouriteBook")?.setValue(result.favouriteBookTitel)
     })
   }
 }
