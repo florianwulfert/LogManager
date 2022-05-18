@@ -5,7 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.userFeaturePortal.common.dto.books.BookRequestDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
@@ -30,9 +29,9 @@ public class BookService {
 
   public List<Book> addBook(Integer erscheinungsjahr, String titel, String actor) {
     userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
-    bookValidationService.validateParameters(erscheinungsjahr, titel, actor);
+    bookValidationService.validateParameters(erscheinungsjahr, titel, true);
 
-    Book book = buildBook(titel, erscheinungsjahr);
+    Book book = Book.builder().titel(titel).erscheinungsjahr(erscheinungsjahr).build();
     bookRepository.save(book);
 
     logService.addLog(LogRequestDto.builder()
@@ -42,20 +41,15 @@ public class BookService {
     return bookRepository.findAll();
   }
 
-  private Book buildBook(String titel, int erscheinungsjahr) {
-    Book book = new Book();
-    book.setTitel(titel);
-    book.setErscheinungsjahr(erscheinungsjahr);
-    return book;
-  }
+  public String updateBook(String titel, int erscheinungsjahr, String actor) {
+    bookValidationService.validateParameters(erscheinungsjahr, titel, false);
+    userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
 
-  public String updateUser(BookRequestDto allParameters) {
-    bookValidationService.validateParameters(allParameters.erscheinungsjahr,
-            allParameters.titel, allParameters.actor);
-    userValidationService.checkIfNameExists(allParameters.actor, true, ErrorMessages.USER_NOT_ALLOWED);
-    buildBook(allParameters.titel, allParameters.erscheinungsjahr);
-    LOGGER.info(String.format(InfoMessages.BOOK_UPDATED, allParameters.titel));
-    return String.format(InfoMessages.BOOK_UPDATED, allParameters.titel);
+    List<Book> book = bookRepository.findByTitel(titel);
+    book.get(0).setErscheinungsjahr(erscheinungsjahr);
+
+    LOGGER.info(String.format(InfoMessages.BOOK_UPDATED, titel));
+    return String.format(InfoMessages.BOOK_UPDATED, titel);
   }
 
   public List<Book> getAllBooks() {

@@ -32,13 +32,15 @@ public class BookValidationService {
     return books.get(0);
   }
 
-  public void validateParameters(Integer erscheinungsjahr, String titel, String actor) {
-    if (erscheinungsjahr == null || titel == null || actor == null) {
+  public void validateParameters(Integer erscheinungsjahr, String titel, boolean isCreate) {
+    if (erscheinungsjahr == null || titel == null) {
       throw new ParameterNotPresentException();
     }
-    if (!bookRepository.findByTitel(titel).isEmpty()) {
-      LOGGER.warn(String.format(ErrorMessages.BOOK_EXISTS, titel));
-      throw new RuntimeException(String.format(ErrorMessages.BOOK_EXISTS, titel));
+    if (isCreate) {
+      if (!bookRepository.findByTitel(titel).isEmpty()) {
+        LOGGER.warn(String.format(ErrorMessages.BOOK_EXISTS, titel));
+        throw new RuntimeException(String.format(ErrorMessages.BOOK_EXISTS, titel));
+      }
     }
   }
 

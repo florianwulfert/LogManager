@@ -65,6 +65,12 @@ public class BookServiceTest {
   }
 
   @Test
+  void testUpdateBook() {
+    when(bookRepository.findByTitel(anyString())).thenReturn(books);
+    assertEquals("Book Petra was updated.", bookService.updateBook("Petra", 2016, "Peter"));
+  }
+
+  @Test
   void testDeleteBooks() {
     User user = User.builder()
             .id(1)

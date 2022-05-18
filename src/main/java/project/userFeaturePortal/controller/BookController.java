@@ -39,10 +39,8 @@ public class BookController {
                     schema =
                         @Schema(
                             example =
-                                "{\"result\":[{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\","
-                                    + "\"weight\":65.0,\"height\":1.6,\"favouriteBookTitel\":null,\"bmi\":25.39}"
-                                    + ",{\"id\":2,\"name\":\"Torsten\",\"birthdate\":\"1985-12-05\",\"weight\":61.3,\"height\":1.83,"
-                                    + "\"favouriteBookTitel\":null,\"bmi\":18.3}]}",
+                                "{\"result\":[{\"id\":1,\"titel\":\"TestBook1\",\"erscheinungsjahr\":1999}"
+                                    + ",{\"id\":2,\"titel\":\"TestBook2\",\"erscheinungsjahr\":1985}], \"returnMessage\":null}",
                             allOf = BooksResponseDto.class)))
       })
   public ResponseEntity<BooksResponseDto> getAllBooks() {
@@ -96,7 +94,7 @@ public class BookController {
           responses = {
                   @ApiResponse(
                           description = "Updating a book succeeded",
-                          responseCode = "201",
+                          responseCode = "200",
                           content =
                           @Content(
                                   mediaType = "application/json",
@@ -104,7 +102,7 @@ public class BookController {
                                   @Schema(
                                           example =
                                                   "{\"result\":[{\"id\": 318,\"titel\": \"TestBook\","
-                                                          + "\"erscheinungsjahr\": 0}],\"returnMessage\": \"Book TestBook was updated.\"}",
+                                                          + "\"erscheinungsjahr\": 2000}],\"returnMessage\": \"Book TestBook was updated.\"}",
                                           allOf = BooksResponseDto.class))),
                   @ApiResponse(
                           description = "User is not allowed to execute this operation.",
@@ -122,7 +120,7 @@ public class BookController {
                                   schema = @Schema(example = "One of the parameters has wrong format.")))
           })
   public ResponseEntity<BooksResponseDto> updateUser(@RequestBody BookRequestDto allParameters) {
-    String returnMessage = bookService.updateUser(allParameters);
+    String returnMessage = bookService.updateBook(allParameters.titel, allParameters.erscheinungsjahr, allParameters.actor);
     return ResponseEntity.status(HttpStatus.OK)
         .body(new BooksResponseDto(bookService.getAllBooks(), returnMessage));
   }
