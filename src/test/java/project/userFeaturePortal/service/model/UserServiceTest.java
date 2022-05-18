@@ -154,7 +154,7 @@ class UserServiceTest {
   @Test
   void whenUserWasFound_ThenReturnTrue() {
     when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
-    assertTrue(systemUnderTest.findUserByName("Peter"));
+    systemUnderTest.findUserByName("Peter");
   }
 
   @Test
