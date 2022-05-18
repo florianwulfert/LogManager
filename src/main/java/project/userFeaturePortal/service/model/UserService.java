@@ -40,7 +40,7 @@ public class UserService {
     userValidationService.validateUserToCreate(userRequestDto.name);
     userValidationService.validateActor(userRequestDto.name, userRequestDto.actor);
 
-    userRepository.save(buildUserToCreate(userRequestDto));
+    userRepository.save(buildUser(userRequestDto, new User()));
 
     logService.addLog(LogRequestDto.builder()
             .message(String.format(InfoMessages.USER_CREATED, userRequestDto.getName()))
@@ -51,20 +51,30 @@ public class UserService {
     return String.format(InfoMessages.USER_CREATED, userRequestDto.getName());
   }
 
-  private User buildUserToCreate(UserRequestDto userRequestDto) {
+  private User buildUser(UserRequestDto userRequestDto, User user) {
     List<Book> books = bookService.searchBooksByTitel(userRequestDto.favouriteBook);
     Book book = null;
     if (!books.isEmpty()) {
       book = books.get(0);
     }
-    return User.builder()
-        .name(userRequestDto.name)
-        .birthdate(userRequestDto.getBirthdateAsLocalDate())
-        .weight(userRequestDto.weight)
-        .height(userRequestDto.height)
-        .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
-        .favouriteBook(book)
-        .build();
+
+    user.setName(userRequestDto.name);
+    user.setBirthdate(userRequestDto.getBirthdateAsLocalDate());
+    user.setWeight(userRequestDto.weight);
+    user.setHeight(userRequestDto.height);
+    user.setBmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height));
+    user.setFavouriteBook(book);
+    return user;
+  }
+
+  public String updateUser(UserRequestDto userRequestDto) {
+    userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
+    User user = userValidationService.checkIfNameExists(userRequestDto.name, false, "");
+    userValidationService.validateActor(userRequestDto.name, userRequestDto.actor);
+
+    buildUser(userRequestDto, user);
+    LOGGER.info(String.format(InfoMessages.USER_UPDATED, userRequestDto.name));
+    return String.format(InfoMessages.USER_UPDATED, userRequestDto.name);
   }
 
   public String addFavouriteBookToUser(String titel, String userName) {

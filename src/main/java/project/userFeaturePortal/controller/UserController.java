@@ -38,6 +38,12 @@ public class UserController {
     return userService.addFavouriteBookToUser(bookTitel, actor);
   }
 
+  @PostMapping("/userUpdate")
+  public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserRequestDto allParameters) {
+    String returnMessage = userService.updateUser(allParameters);
+    return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(userService.findUserList(), returnMessage));
+  }
+
   @GetMapping("/users")
   public ResponseEntity<UserResponseDto> findUsers() {
     return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(userService.findUserList(), null));

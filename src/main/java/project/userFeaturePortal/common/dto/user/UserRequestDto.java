@@ -18,7 +18,7 @@ public class UserRequestDto {
   public Double height;
   public String favouriteBook;
 
-    public LocalDate getBirthdateAsLocalDate() {
+  public LocalDate getBirthdateAsLocalDate() {
     return getLocalDate(this.birthdate);
   }
 }

@@ -5,14 +5,15 @@ import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {UserService} from "./user.service";
 import {getUserAction, getUserResponseAction, loadGetUserErrorAction} from "./user.actions";
+import {GetUserRequest} from "./getUser/getUser-request";
 
 @Injectable({providedIn: 'root'})
 export class UserEffects {
   getUser$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getUserAction),
-      switchMap(() =>
-        this.userService.getUser().pipe(
+      switchMap((request: GetUserRequest) =>
+        this.userService.getUser(request).pipe(
           map((getUserResponse) => getUserResponseAction(getUserResponse)),
           catchError((error: string) => of(loadGetUserErrorAction({error})))
         )

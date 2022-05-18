@@ -80,20 +80,21 @@
 
   <div class="col-12 col-lg-4">
     <div class="rightSide"></div>
-    <mat-accordion multi>
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Create user
-          </mat-panel-title>
-          <mat-panel-description>
-            Type in user information
-          </mat-panel-description>
-        </mat-expansion-panel-header>
 
-        <form [formGroup]="form">
+    <div class="space-between-fields">
+      <mat-accordion multi>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Create user
+            </mat-panel-title>
+            <mat-panel-description>
+              Type in user information
+            </mat-panel-description>
+          </mat-expansion-panel-header>
 
-          <div class="create-user-body">
+          <form [formGroup]="form">
+
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Name</mat-label>
@@ -165,12 +166,106 @@
               </mat-form-field>
             </div>
 
-          </div>
-        </form>
-        <button type="submit" mat-raised-button class="create button-format" (click)="createUser()" [disabled]="!form.valid">Create</button>
-        <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
-      </mat-expansion-panel>
-    </mat-accordion>
+          </form>
+          <button type="submit" mat-raised-button class="create button-format" (click)="createUser()" [disabled]="!form.valid">Create</button>
+          <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <div class="space-between-fields"></div>
+    <div>
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Update user
+            </mat-panel-title>
+            <mat-panel-description>
+              Type in new user information
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <form [formGroup]="form">
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Name</mat-label>
+                <mat-select formControlName="name" (selectionChange)="getUsersData($event.value)">
+                  <mat-option *ngFor="let name of users" [value]="name.name">
+                    {{name.name}}
+                  </mat-option>
+                </mat-select>
+                <button *ngIf="form.controls['name'].value" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="form.controls['name'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="form.controls['name'].hasError('required')">
+                  Name is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Birthdate</mat-label>
+                <input type="date" matInput formControlName="birthdate">
+                <button *ngIf="form.controls['birthdate'].value" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="form.controls['birthdate'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="form.controls['birthdate'].hasError('required')">
+                  Birthdate is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Weight</mat-label>
+                <input matInput formControlName="weight" >
+                <button *ngIf="form.controls['weight'].value" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="form.controls['weight'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="form.controls['weight'].hasError('required')">
+                  Weight is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Height</mat-label>
+                <input matInput formControlName="height">
+                <button *ngIf="form.controls['height'].value" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="form.controls['height'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="form.controls['height'].hasError('required')">
+                  Height is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Favourite Book</mat-label>
+                <mat-select formControlName="favouriteBook">
+                  <mat-option *ngFor="let book of books" [value]="book.titel">
+                    {{book.titel}}
+                  </mat-option>
+                </mat-select>
+                <button *ngIf="form.controls['favouriteBook'].value" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="form.controls['favouriteBook'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+          </form>
+          <button type="submit" mat-raised-button class="create button-format" (click)="updateUser()" [disabled]="!form.valid">Update</button>
+          <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+
   </div>
 </div>
 
