@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import project.userFeaturePortal.common.dto.books.BookRequestDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
@@ -29,9 +30,9 @@ public class BookService {
 
   public List<Book> addBook(Integer erscheinungsjahr, String titel, String actor) {
     userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
-    bookValidationService.validateErscheinungsjahrAndTitel(erscheinungsjahr, titel);
+    bookValidationService.validateParameters(erscheinungsjahr, titel, actor);
 
-    Book book = Book.builder().erscheinungsjahr(erscheinungsjahr).titel(titel).build();
+    Book book = buildBook(titel, erscheinungsjahr);
     bookRepository.save(book);
 
     logService.addLog(LogRequestDto.builder()
@@ -39,6 +40,22 @@ public class BookService {
         .build());
     LOGGER.info(String.format(InfoMessages.BOOK_CREATED, titel));
     return bookRepository.findAll();
+  }
+
+  private Book buildBook(String titel, int erscheinungsjahr) {
+    Book book = new Book();
+    book.setTitel(titel);
+    book.setErscheinungsjahr(erscheinungsjahr);
+    return book;
+  }
+
+  public String updateUser(BookRequestDto allParameters) {
+    bookValidationService.validateParameters(allParameters.erscheinungsjahr,
+            allParameters.titel, allParameters.actor);
+    userValidationService.checkIfNameExists(allParameters.actor, true, ErrorMessages.USER_NOT_ALLOWED);
+    buildBook(allParameters.titel, allParameters.erscheinungsjahr);
+    LOGGER.info(String.format(InfoMessages.BOOK_UPDATED, allParameters.titel));
+    return String.format(InfoMessages.BOOK_UPDATED, allParameters.titel);
   }
 
   public List<Book> getAllBooks() {

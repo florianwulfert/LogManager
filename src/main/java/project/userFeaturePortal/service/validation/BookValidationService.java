@@ -32,8 +32,8 @@ public class BookValidationService {
     return books.get(0);
   }
 
-  public void validateErscheinungsjahrAndTitel(Integer erscheinungsjahr, String titel) {
-    if (erscheinungsjahr == null || titel == null) {
+  public void validateParameters(Integer erscheinungsjahr, String titel, String actor) {
+    if (erscheinungsjahr == null || titel == null || actor == null) {
       throw new ParameterNotPresentException();
     }
     if (!bookRepository.findByTitel(titel).isEmpty()) {
