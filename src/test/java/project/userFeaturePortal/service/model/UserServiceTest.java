@@ -1,6 +1,5 @@
 package project.userFeaturePortal.service.model;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +21,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -118,6 +119,14 @@ class UserServiceTest {
   }
 
   @Test
+  void testDeleteFavouriteColor() {
+    when(userValidationService.checkIfNameExists(anyString(),anyBoolean(),anyString())).thenReturn(users.get(0));
+    assertEquals(String.format(InfoMessages.FAV_BOOK_DELETED,  "Peter"),
+            systemUnderTest.deleteFavouriteBook("Peter"));
+    verify(userRepository).save(any());
+  }
+
+  @Test
   void testFindUserList() {
     List<UserDto> userDtoList = addListOfDtos();
     when(userRepository.findAll()).thenReturn(users);
@@ -134,8 +143,14 @@ class UserServiceTest {
 
   @Test
   void testFindUserByName() {
-    userRepository.findUserByName(anyString());
-    verify(userRepository).findUserByName(anyString());
+    when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
+    systemUnderTest.findUserByName("Peter");
+  }
+
+  @Test
+  void whenValidatedUserFound_ThenReturnTrue() {
+    when(userRepository.findUserByName(anyString())).thenReturn(users.get(0));
+    assertTrue(systemUnderTest.validateUserByName("Peter"));
   }
 
   @Test
@@ -152,12 +167,6 @@ class UserServiceTest {
   }
 
   @Test
-  void whenUserWasFound_ThenReturnTrue() {
-    when(userRepository.findUserByName("Peter")).thenReturn(users.get(0));
-    systemUnderTest.findUserByName("Peter");
-  }
-
-  @Test
   void testDeleteById() {
     when(userValidationService.checkIfNameExists(anyString(),anyBoolean(), anyString())).thenReturn(users.get(1));
     when(userValidationService.checkIfIdExists(1)).thenReturn(users.get(0));
@@ -169,7 +178,7 @@ class UserServiceTest {
   @Test
   void testDeleteByName() {
     when(userValidationService.validateUserToDelete(anyString(), anyString())).thenReturn(users.get(0));
-    Assertions.assertEquals(
+    assertEquals(
         String.format(InfoMessages.USER_DELETED_NAME, "Peter"),
         systemUnderTest.deleteByName("Peter", "Florian"));
     verify(logService).addLog(any());
@@ -177,7 +186,7 @@ class UserServiceTest {
 
   @Test
   void testDeleteAll() {
-    Assertions.assertEquals(InfoMessages.ALL_USERS_DELETED, systemUnderTest.deleteAll());
+    assertEquals(InfoMessages.ALL_USERS_DELETED, systemUnderTest.deleteAll());
     verify(userRepository).deleteAll();
   }
 

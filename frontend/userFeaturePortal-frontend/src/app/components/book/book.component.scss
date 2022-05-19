@@ -61,7 +61,7 @@ mat-form-field {
 }
 
 .favourite-book-delete {
-  position: sticky;
-  top: 0;
+  float: right;
+  bottom: 10px;
   transform: scale(0.9);
 }
