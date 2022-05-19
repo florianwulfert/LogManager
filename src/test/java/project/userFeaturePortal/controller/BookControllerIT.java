@@ -259,7 +259,7 @@ class BookControllerIT {
     }
 
     @Test
-    void testFindBookBytitel() throws Exception {
+    void testFindBookByTitel() throws Exception {
         MvcResult result = mockMvc
                 .perform(get("/book").param("titel", "TestBook"))
                 .andDo(print())

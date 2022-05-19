@@ -1,6 +1,5 @@
 package project.userFeaturePortal.service.model;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -76,7 +76,6 @@ class UserServiceTest {
             .favouriteBook(testBook.get(0).getTitel())
             .build());
     verify(logService).addLog(any());
-    verify(bookService).searchBooksByTitel("TestBook");
     verify(userRepository).save(any());
   }
 
@@ -91,22 +90,21 @@ class UserServiceTest {
             .height(1.65)
             .favouriteBook(bookList.get(0).getTitel())
             .build());
-    verify(bookService).searchBooksByTitel("TestBook");
+    verify(logService).addLog(any());
   }
 
   @Test
   void testUpdateUser() {
     when(userValidationService.checkIfNameExists(anyString(),anyBoolean(),anyString())).thenReturn(users.get(0));
-    systemUnderTest.updateUser(UserRequestDto.builder()
+    assertEquals(String.format(InfoMessages.USER_UPDATED, "Peter"),
+            systemUnderTest.updateUser(UserRequestDto.builder()
             .actor("Florian")
             .name("Peter")
             .birthdate("1994-10-05")
             .weight(75.0)
             .height(1.65)
             .favouriteBook(null)
-            .build());
-    verify(bookService).searchBooksByTitel(null);
-
+            .build()));
   }
 
   @Test
@@ -169,7 +167,7 @@ class UserServiceTest {
   @Test
   void testDeleteByName() {
     when(userValidationService.validateUserToDelete(anyString(), anyString())).thenReturn(users.get(0));
-    Assertions.assertEquals(
+    assertEquals(
         String.format(InfoMessages.USER_DELETED_NAME, "Peter"),
         systemUnderTest.deleteByName("Peter", "Florian"));
     verify(logService).addLog(any());
@@ -177,7 +175,7 @@ class UserServiceTest {
 
   @Test
   void testDeleteAll() {
-    Assertions.assertEquals(InfoMessages.ALL_USERS_DELETED, systemUnderTest.deleteAll());
+    assertEquals(InfoMessages.ALL_USERS_DELETED, systemUnderTest.deleteAll());
     verify(userRepository).deleteAll();
   }
 

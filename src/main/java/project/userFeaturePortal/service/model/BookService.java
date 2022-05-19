@@ -30,12 +30,11 @@ public class BookService {
   private final UserValidationService userValidationService;
   private final BookDtoMapper bookDtoMapper;
 
-  public List<Book> addBook(Integer erscheinungsjahr, String titel, String actor) {
+  public List<Book> addBook(int erscheinungsjahr, String titel, String actor) {
     userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
     bookValidationService.validateParameters(erscheinungsjahr, titel, true);
 
-    Book book = Book.builder().titel(titel).erscheinungsjahr(erscheinungsjahr).build();
-    bookRepository.save(book);
+    bookRepository.save(buildBook(titel, erscheinungsjahr, new Book()));
 
     logService.addLog(LogRequestDto.builder()
         .message(String.format("Book %s was added.", titel)).severity("INFO").user(actor)
@@ -44,12 +43,18 @@ public class BookService {
     return bookRepository.findAll();
   }
 
+  private Book buildBook(String titel, int erscheinungsjahr, Book book) {
+    book.setTitel(titel);
+    book.setErscheinungsjahr(erscheinungsjahr);
+    return book;
+  }
+
   public String updateBook(String titel, int erscheinungsjahr, String actor) {
     bookValidationService.validateParameters(erscheinungsjahr, titel, false);
     userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
+    Book book = bookValidationService.checkIfBookExists(titel);
 
-    List<Book> book = bookRepository.findByTitel(titel);
-    book.get(0).setErscheinungsjahr(erscheinungsjahr);
+    bookRepository.save(buildBook(titel,erscheinungsjahr,book));
 
     LOGGER.info(String.format(InfoMessages.BOOK_UPDATED, titel));
     return String.format(InfoMessages.BOOK_UPDATED, titel);
