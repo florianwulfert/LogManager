@@ -6,6 +6,7 @@ import {
   assignBookToUserAction,
   deleteBookAction,
   deleteBooksAction,
+  deleteFavouriteBookAction,
   getBooksAction
 } from "./books.actions";
 import {getBooks} from "./books.selector";
@@ -35,6 +36,10 @@ export class BooksFacade {
 
   assignBookToUser(request: AddBookRequest): void {
     this.booksState.dispatch(assignBookToUserAction(request))
+  }
+
+  deleteFavouriteBook() {
+    this.booksState.dispatch(deleteFavouriteBookAction())
   }
 
   deleteBooks() {

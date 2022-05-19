@@ -88,6 +88,16 @@ public class UserService {
     return String.format(InfoMessages.BOOK_BY_USER, titel, user.getName());
   }
 
+  public String deleteFavouriteBook(String userName) {
+    User user = userValidationService.checkIfNameExists(userName, false, ErrorMessages.USER_NOT_FOUND_NAME);
+    user.setFavouriteBook(null);
+
+    userRepository.save(user);
+
+    LOGGER.info(String.format(InfoMessages.FAV_BOOK_DELETED, userName));
+    return String.format(InfoMessages.FAV_BOOK_DELETED,  userName);
+  }
+
   public List<UserDto> findUserList() {
     List<User> users = userRepository.findAll();
 

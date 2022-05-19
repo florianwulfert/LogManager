@@ -4,6 +4,7 @@ import {
   assignBookToUserResponseAction,
   deleteBookResponseAction,
   deleteBooksResponseAction,
+  deleteFavouriteBookResponseAction,
   getBooksResponseAction
 } from "./books.actions";
 import {BOOKS_GET_INITIAL_STATE, BooksState} from "./books.state";
@@ -22,5 +23,6 @@ export const BooksReducer = createReducer(
   on(addBookResponseAction, handleBooksResponse),
   on(deleteBookResponseAction, handleBooksResponse),
   on(assignBookToUserResponseAction, handleBooksResponse),
-  on(deleteBooksResponseAction, handleBooksResponse)
+  on(deleteBooksResponseAction, handleBooksResponse),
+  on(deleteFavouriteBookResponseAction, handleBooksResponse)
 )

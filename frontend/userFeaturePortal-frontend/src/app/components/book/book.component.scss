@@ -56,6 +56,12 @@ mat-form-field {
   transform: scale(1.3);
 }
 
-.rightSide{
+.rightSide {
   margin-bottom: 70px;
+}
+
+.favourite-book-delete {
+  position: sticky;
+  top: 0;
+  transform: scale(0.9);
 }

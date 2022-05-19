@@ -25,4 +25,5 @@ public class InfoMessages {
   public static final String USER_WITH_BOOK = "Book with ID %s is assigned to at least one user.";
   public static final String BOOK_BY_USER = "Book %s added to user %s.";
   public static final String USER_UPDATED = "User %s updated.";
+  public static final String FAV_BOOK_DELETED = "User %s does not have a favourite book anymore.";
 }

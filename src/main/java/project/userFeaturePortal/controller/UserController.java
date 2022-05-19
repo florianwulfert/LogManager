@@ -38,6 +38,11 @@ public class UserController {
     return userService.addFavouriteBookToUser(bookTitel, actor);
   }
 
+  @PostMapping("/user/deleteFavouriteBook")
+  public String deleteFavouriteBook(@RequestParam String name) {
+    return userService.deleteFavouriteBook(name);
+  }
+
   @PostMapping("/userUpdate")
   public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserRequestDto allParameters) {
     String returnMessage = userService.updateUser(allParameters);
