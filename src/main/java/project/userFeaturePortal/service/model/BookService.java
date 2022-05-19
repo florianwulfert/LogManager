@@ -5,10 +5,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import project.userFeaturePortal.common.dto.books.BookDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
+import project.userFeaturePortal.model.mapper.BookDtoMapper;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.service.validation.BookValidationService;
 import project.userFeaturePortal.service.validation.UserValidationService;
@@ -26,6 +28,7 @@ public class BookService {
   private final LogService logService;
   private final BookValidationService bookValidationService;
   private final UserValidationService userValidationService;
+  private final BookDtoMapper bookDtoMapper;
 
   public List<Book> addBook(Integer erscheinungsjahr, String titel, String actor) {
     userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
@@ -62,8 +65,9 @@ public class BookService {
     return books;
   }
 
-  public List<Book> searchBooksByTitel(String titel) {
-    return bookRepository.findByTitel(titel);
+  public BookDto searchBooksByTitel(String titel) {
+    List<Book> books = bookRepository.findByTitel(titel);
+    return bookDtoMapper.bookToBookDto(books.get(0));
   }
 
   public String deleteById(int id, String actor) {

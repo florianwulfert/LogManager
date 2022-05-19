@@ -12,11 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.userFeaturePortal.common.dto.books.BookRequestDto;
 import project.userFeaturePortal.common.dto.books.BooksResponseDto;
+import project.userFeaturePortal.common.dto.books.FindBookResponseDto;
 import project.userFeaturePortal.common.message.InfoMessages;
-import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.service.model.BookService;
-
-import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -119,7 +117,7 @@ public class BookController {
                                   mediaType = "text/plain",
                                   schema = @Schema(example = "One of the parameters has wrong format.")))
           })
-  public ResponseEntity<BooksResponseDto> updateUser(@RequestBody BookRequestDto allParameters) {
+  public ResponseEntity<BooksResponseDto> updateBook(@RequestBody BookRequestDto allParameters) {
     String returnMessage = bookService.updateBook(allParameters.titel, allParameters.erscheinungsjahr, allParameters.actor);
     return ResponseEntity.status(HttpStatus.OK)
         .body(new BooksResponseDto(bookService.getAllBooks(), returnMessage));
@@ -127,10 +125,10 @@ public class BookController {
 
   @GetMapping("/book")
   @Operation(
-      summary = "Found books by titel of the book",
+      summary = "Found book by titel of the book",
       responses = {
         @ApiResponse(
-            description = "Book(s) found",
+            description = "Book found",
             responseCode = "200",
             content =
                 @Content(
@@ -140,8 +138,8 @@ public class BookController {
                             example =
                                 "{\"id\":5,\"titel\":\"TestBook\",\"erscheinungsjahr\":2002},"))),
       })
-  public List<Book> findBooksByTitel(@RequestParam String titel) {
-    return bookService.searchBooksByTitel(titel);
+  public ResponseEntity<FindBookResponseDto> findBooksByTitel(@RequestParam String titel) {
+    return ResponseEntity.status(HttpStatus.OK).body(new FindBookResponseDto(bookService.searchBooksByTitel(titel)));
   }
 
   @DeleteMapping("/book/id/{id}")

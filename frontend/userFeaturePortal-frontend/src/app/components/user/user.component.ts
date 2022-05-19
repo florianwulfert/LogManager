@@ -105,7 +105,7 @@ export class UserComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateUser(): void {
+  updateUser() {
     let request = new AddUserRequest
     request = this.prepareAddUserRequest(request)
     this.usersFacade.updateUser(request)

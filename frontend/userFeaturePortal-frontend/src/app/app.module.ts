@@ -37,6 +37,7 @@ import {BookComponent} from "./components/book/book.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {BooksModule} from "./modules/books/books.module";
 import {UserModule} from "./modules/user/user.module";
+import {BookModule} from "./modules/book/book.module";
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import {UserModule} from "./modules/user/user.module";
     MatPaginatorModule,
     ActorIsValidModule,
     BooksModule,
-    UserModule
+    UserModule,
+    BookModule
   ],
   exports: [
     BrowserModule,

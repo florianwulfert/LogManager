@@ -12,6 +12,7 @@ import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.mapper.UserDtoMapper;
+import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.validation.BookValidationService;
 import project.userFeaturePortal.service.validation.UserValidationService;
@@ -31,7 +32,7 @@ public class UserService {
   private final UserRepository userRepository;
   private final BmiService bmiService;
   private final UserValidationService userValidationService;
-  private final BookService bookService;
+  private final BookRepository bookRepository;
   private final UserDtoMapper userDtoMapper;
   private final BookValidationService bookValidationService;
 
@@ -52,7 +53,7 @@ public class UserService {
   }
 
   private User buildUser(UserRequestDto userRequestDto, User user) {
-    List<Book> books = bookService.searchBooksByTitel(userRequestDto.favouriteBook);
+    List<Book> books = bookRepository.findByTitel(userRequestDto.favouriteBook);
     Book book = null;
     if (!books.isEmpty()) {
       book = books.get(0);
