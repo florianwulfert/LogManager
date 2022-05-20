@@ -14,7 +14,7 @@ const API_GET_USERS = 'http://localhost:8081/users';
 const API_ADD_USER = 'http://localhost:8081/user';
 const API_DELETE_USERS = 'http://localhost:8081/users';
 const API_DELETE_USER = 'http://localhost:8081/user/name/';
-const API_UPDATE_USER = 'http://localhost:8081/userUpdate'
+const API_UPDATE_USER = 'http://localhost:8081/user/update'
 
 @Injectable({
   providedIn: 'root'

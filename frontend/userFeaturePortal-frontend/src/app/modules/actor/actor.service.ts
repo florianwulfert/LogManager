@@ -5,7 +5,7 @@ import {catchError, map} from "rxjs/operators";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {Injectable} from "@angular/core";
 
-const API_FIND_USER = 'http://localhost:8081/validateUser?name='
+const API_FIND_USER = 'http://localhost:8081/user/validate?name='
 
 
 @Injectable({
