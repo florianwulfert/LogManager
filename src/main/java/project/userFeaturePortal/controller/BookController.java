@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.userFeaturePortal.common.dto.books.BookRequestDto;
 import project.userFeaturePortal.common.dto.books.BooksResponseDto;
@@ -40,7 +38,7 @@ public class BookController implements BookAPI{
   }
 
   @Override
-  public ResponseEntity<BooksResponseDto> updateBook(@RequestBody BookRequestDto allParameters) {
+  public ResponseEntity<BooksResponseDto> updateBook(BookRequestDto allParameters) {
     String returnMessage = bookService.updateBook(allParameters.titel, allParameters.erscheinungsjahr, allParameters.actor);
     return ResponseEntity.status(HttpStatus.OK)
         .body(new BooksResponseDto(bookService.getAllBooks(), returnMessage));
@@ -66,7 +64,7 @@ public class BookController implements BookAPI{
   }
 
   @Override
-  public ResponseEntity<BooksResponseDto> deleteAll(@RequestParam String actor) {
+  public ResponseEntity<BooksResponseDto> deleteAll(String actor) {
     String returnMessage = bookService.deleteBooks(actor);
     return ResponseEntity.status(HttpStatus.OK)
         .body(new BooksResponseDto(bookService.getAllBooks(), returnMessage));
