@@ -1,4 +1,4 @@
-package project.userFeaturePortal.controller;
+package project.userFeaturePortal.controller.API;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

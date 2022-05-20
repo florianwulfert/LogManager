@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.userFeaturePortal.common.dto.log.LogDTO;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.dto.log.LogResponseDto;
+import project.userFeaturePortal.controller.API.LogAPI;
 import project.userFeaturePortal.model.entity.Log;
 import project.userFeaturePortal.model.mapper.LogDTOMapper;
 import project.userFeaturePortal.service.model.LogService;

@@ -11,6 +11,7 @@ import project.userFeaturePortal.common.dto.user.FindUserResponseDto;
 import project.userFeaturePortal.common.dto.user.UserRequestDto;
 import project.userFeaturePortal.common.dto.user.UserResponseDto;
 import project.userFeaturePortal.common.dto.user.ValidateUserResponseDto;
+import project.userFeaturePortal.controller.API.UserAPI;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.model.UserService;
@@ -21,7 +22,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 @Tag(name = "User")
-public class UserController implements UserAPI{
+public class UserController implements UserAPI {
 
   private final UserService userService;
   private final UserRepository userRepository;

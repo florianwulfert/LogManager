@@ -1,4 +1,4 @@
-package project.userFeaturePortal.controller;
+package project.userFeaturePortal.controller.API;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

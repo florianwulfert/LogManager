@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import project.userFeaturePortal.common.dto.bmi.BmiRequestDto;
 import project.userFeaturePortal.common.dto.bmi.BmiResponseDto;
+import project.userFeaturePortal.controller.API.BmiAPI;
 import project.userFeaturePortal.service.model.BmiService;
 
 @CrossOrigin
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @RestController
 @Tag(name = "Bmi")
-public class BmiController implements BmiAPI{
+public class BmiController implements BmiAPI {
 
   private final BmiService bmiService;
 
