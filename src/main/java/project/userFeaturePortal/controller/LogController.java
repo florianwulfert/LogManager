@@ -1,6 +1,5 @@
 package project.userFeaturePortal.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,7 +43,6 @@ public class LogController implements LogAPI {
   }
 
   @Override
-  @Operation(summary = "Add manually a new Log-Entry")
   public ResponseEntity<LogResponseDto> addLog(LogRequestDto allParameters) {
     String returnMessage = logService.addLog(allParameters);
     return ResponseEntity.status(HttpStatus.CREATED)
