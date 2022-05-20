@@ -7,7 +7,6 @@ import {
   deleteBookAction,
   deleteBooksAction,
   deleteFavouriteBookAction,
-  getBooksAction
   getBooksAction,
   updateBookAction
 } from "./books.actions";

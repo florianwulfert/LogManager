@@ -21,7 +21,6 @@ import {
   loadDeleteBookErrorAction,
   loadDeleteBooksErrorAction,
   loadDeleteFavouriteBookErrorAction,
-  loadGetBooksErrorAction
   loadGetBooksErrorAction,
   loadUpdateBookErrorAction,
   updateBookAction,
