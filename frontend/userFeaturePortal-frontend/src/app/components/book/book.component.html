@@ -57,10 +57,8 @@
       </mat-paginator>
     </div>
   </div>
-  <div class="col-12 col-lg-4" *ngIf="userAvailable">
-    <div>
 
-    </div>
+  <div class="col-12 col-lg-4" *ngIf="userAvailable">
     <div class="space-between-fields">
       <div class="rightSide"></div>
       <mat-accordion multi>
@@ -105,8 +103,6 @@
                 </mat-form-field>
               </div>
             </div>
-
-
           </form>
           <button mat-raised-button class="create button-format" (click)="addBook()" [disabled]="!form.valid">Add book
           </button>
@@ -151,12 +147,63 @@
         </mat-expansion-panel>
       </mat-accordion>
     </div>
-    <div *ngIf="favouriteBook">
+
+    <div *ngIf="favouriteBook" class="space-between-fields">
       <mat-card>
         Current favourite book: {{favouriteBook}}
       </mat-card>
     </div>
-    <div></div>
 
+    <div class="space-between-fields">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Update book
+            </mat-panel-title>
+            <mat-panel-description>
+              Type in new book information
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <form [formGroup]="form">
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Titel</mat-label>
+                <mat-select formControlName="titel" (selectionChange)="getBookData($event.value)">
+                  <mat-option *ngFor="let book of books" [value]="book.titel">
+                    {{book.titel}}
+                  </mat-option>
+                </mat-select>
+                <button *ngIf="form.controls['titel'].value" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="form.controls['titel'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="form.controls['titel'].hasError('required')">
+                  Titel is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Erscheinungsjahr</mat-label>
+                <input matInput formControlName="erscheinungsjahr">
+                <button *ngIf="form.controls['erscheinungsjahr'].value" matSuffix mat-icon-button aria-label="Clear"
+                        (click)="form.controls['erscheinungsjahr'].reset()">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="form.controls['erscheinungsjahr'].hasError('required')">
+                  Birthdate is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </form>
+          <button type="submit" mat-raised-button class="create button-format" (click)="updateBook()"
+                  [disabled]="!form.valid">Update
+          </button>
+          <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
   </div>
 </div>
