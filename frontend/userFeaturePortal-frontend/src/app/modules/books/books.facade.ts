@@ -8,6 +8,8 @@ import {
   deleteBooksAction,
   deleteFavouriteBookAction,
   getBooksAction
+  getBooksAction,
+  updateBookAction
 } from "./books.actions";
 import {getBooks} from "./books.selector";
 import {AddBookRequest} from "./addBooks/add-book-request";
@@ -44,5 +46,9 @@ export class BooksFacade {
 
   deleteBooks() {
     this.booksState.dispatch(deleteBooksAction())
+  }
+
+  updateBook(request: AddBookRequest) {
+    this.booksState.dispatch(updateBookAction(request))
   }
 }

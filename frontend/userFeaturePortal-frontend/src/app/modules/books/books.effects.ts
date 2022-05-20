@@ -22,6 +22,10 @@ import {
   loadDeleteBooksErrorAction,
   loadDeleteFavouriteBookErrorAction,
   loadGetBooksErrorAction
+  loadGetBooksErrorAction,
+  loadUpdateBookErrorAction,
+  updateBookAction,
+  updateBookResponseAction
 } from "./books.actions";
 import {BooksService} from "./books.service";
 import {AddBookRequest} from "./addBooks/add-book-request";
@@ -49,6 +53,18 @@ export class BooksEffects {
         this.booksService.addBook(addBookRequest).pipe(
           map((addBookResponse) => addBookResponseAction(addBookResponse)),
           catchError((error: string) => of(loadAddBookErrorAction({error})))
+        )
+      )
+    )
+  );
+
+  update$: Observable<Action> = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateBookAction),
+      switchMap((updateBookRequest: AddBookRequest) =>
+        this.booksService.updateBook(updateBookRequest).pipe(
+          map((updateBookResponse) => updateBookResponseAction(updateBookResponse)),
+          catchError((error: string) => of(loadUpdateBookErrorAction({error})))
         )
       )
     )

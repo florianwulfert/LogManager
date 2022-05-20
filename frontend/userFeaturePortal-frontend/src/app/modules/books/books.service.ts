@@ -12,6 +12,7 @@ import {DeleteBooksResponse} from "./deleteBooks/delete-books-response";
 
 const API_GET_BOOKS = 'http://localhost:8081/books'
 const API_ADD_BOOK = 'http://localhost:8081/book'
+const API_UPDATE_BOOK = 'http://localhost:8081/book/update'
 const API_DELETE_BOOK = 'http://localhost:8081/book/titel?titel='
 const API_ADD_BOOK_TO_USER = 'http://localhost:8081/user/favouriteBook?bookTitel='
 const API_DELETE_BOOKS = 'http://localhost:8081/books'
@@ -74,6 +75,31 @@ export class BooksService implements OnDestroy{
           this.featureManager.openSnackbar(err.error);
         }
         return throwError('Due to technical issues it is currently not possible to add books.');
+      })
+    );
+  }
+
+  updateBook(updateBookRequest: AddBookRequest): Observable<AddBookResponse> {
+    this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
+      this.name = r
+    })
+    return this.http.post<any>(API_UPDATE_BOOK, {...updateBookRequest, actor: this.name}, {
+      observe: 'response'
+    }).pipe(
+      map((r) => {
+        this.featureManager.openSnackbar(r.body?.returnMessage);
+        return r.body || {
+          result: [],
+          returnMessage: ''
+        }
+      }),
+      catchError((err) => {
+        if(err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text);
+        } else {
+          this.featureManager.openSnackbar(err.error);
+        }
+        return throwError('Due to technical issues it is currently not possible to update books.');
       })
     );
   }

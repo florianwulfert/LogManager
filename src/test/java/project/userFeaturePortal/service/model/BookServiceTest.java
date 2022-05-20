@@ -6,9 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.userFeaturePortal.common.dto.books.BookDto;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
+import project.userFeaturePortal.model.mapper.BookDtoMapper;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.validation.BookValidationService;
@@ -44,6 +46,9 @@ public class BookServiceTest {
   @Mock
   UserValidationService userValidationService;
 
+  @Mock
+  BookDtoMapper bookDtoMapper;
+
   List<Book> books;
 
   @BeforeEach
@@ -62,6 +67,12 @@ public class BookServiceTest {
     bookService.addBook(books.get(0).getErscheinungsjahr(), books.get(0).getTitel(), "Torsten");
     verify(logService).addLog(any());
     verify(bookRepository).save(any());
+  }
+
+  @Test
+  void testUpdateBook() {
+    when(bookValidationService.checkIfBookExists(anyString())).thenReturn(books.get(0));
+    assertEquals("Book TestBook was updated.", bookService.updateBook("TestBook", 2016, "Peter"));
   }
 
   @Test
@@ -125,8 +136,10 @@ public class BookServiceTest {
 
   @Test
   void testSearchBooksByTitel() {
+    BookDto bookDto = BookDto.builder().titel("TestBook").erscheinungsjahr(1).build();
+    when(bookDtoMapper.bookToBookDto(any())).thenReturn(bookDto);
     when(bookRepository.findByTitel(anyString())).thenReturn(books);
-    bookService.searchBooksByTitel("haya");
+    bookService.searchBooksByTitel("TestBook");
   }
 
   private List<Book> addTestBook() {
@@ -135,7 +148,7 @@ public class BookServiceTest {
         Book.builder()
             .id(1)
             .erscheinungsjahr(1998)
-            .titel("haya")
+            .titel("TestBook")
             .build());
 
     books.add(

@@ -5,10 +5,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import project.userFeaturePortal.common.dto.books.BookDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
+import project.userFeaturePortal.model.mapper.BookDtoMapper;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.service.validation.BookValidationService;
 import project.userFeaturePortal.service.validation.UserValidationService;
@@ -26,19 +28,36 @@ public class BookService {
   private final LogService logService;
   private final BookValidationService bookValidationService;
   private final UserValidationService userValidationService;
+  private final BookDtoMapper bookDtoMapper;
 
-  public List<Book> addBook(Integer erscheinungsjahr, String titel, String actor) {
+  public List<Book> addBook(int erscheinungsjahr, String titel, String actor) {
     userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
-    bookValidationService.validateErscheinungsjahrAndTitel(erscheinungsjahr, titel);
+    bookValidationService.validateParameters(erscheinungsjahr, titel, true);
 
-    Book book = Book.builder().erscheinungsjahr(erscheinungsjahr).titel(titel).build();
-    bookRepository.save(book);
+    bookRepository.save(buildBook(titel, erscheinungsjahr, new Book()));
 
     logService.addLog(LogRequestDto.builder()
         .message(String.format("Book %s was added.", titel)).severity("INFO").user(actor)
         .build());
     LOGGER.info(String.format(InfoMessages.BOOK_CREATED, titel));
     return bookRepository.findAll();
+  }
+
+  private Book buildBook(String titel, int erscheinungsjahr, Book book) {
+    book.setTitel(titel);
+    book.setErscheinungsjahr(erscheinungsjahr);
+    return book;
+  }
+
+  public String updateBook(String titel, int erscheinungsjahr, String actor) {
+    bookValidationService.validateParameters(erscheinungsjahr, titel, false);
+    userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
+    Book book = bookValidationService.checkIfBookExists(titel);
+
+    bookRepository.save(buildBook(titel,erscheinungsjahr,book));
+
+    LOGGER.info(String.format(InfoMessages.BOOK_UPDATED, titel));
+    return String.format(InfoMessages.BOOK_UPDATED, titel);
   }
 
   public List<Book> getAllBooks() {
@@ -51,8 +70,9 @@ public class BookService {
     return books;
   }
 
-  public List<Book> searchBooksByTitel(String titel) {
-    return bookRepository.findByTitel(titel);
+  public BookDto searchBooksByTitel(String titel) {
+    List<Book> books = bookRepository.findByTitel(titel);
+    return bookDtoMapper.bookToBookDto(books.get(0));
   }
 
   public String deleteById(int id, String actor) {
