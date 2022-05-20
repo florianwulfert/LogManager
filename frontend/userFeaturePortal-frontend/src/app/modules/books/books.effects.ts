@@ -12,12 +12,15 @@ import {
   deleteBookResponseAction,
   deleteBooksAction,
   deleteBooksResponseAction,
+  deleteFavouriteBookAction,
+  deleteFavouriteBookResponseAction,
   getBooksAction,
   getBooksResponseAction,
   loadAddBookErrorAction,
   loadAssignBookToUserErrorAction,
   loadDeleteBookErrorAction,
   loadDeleteBooksErrorAction,
+  loadDeleteFavouriteBookErrorAction,
   loadGetBooksErrorAction,
   loadUpdateBookErrorAction,
   updateBookAction,
@@ -99,6 +102,19 @@ export class BooksEffects {
           map((addBookResponse) =>
             assignBookToUserResponseAction(addBookResponse)),
           catchError((error: string) => of(loadAssignBookToUserErrorAction({error})))
+        )
+      )
+    )
+  );
+
+  deleteFavouriteBook$: Observable<Action> = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteFavouriteBookAction),
+      switchMap(() =>
+        this.booksService.deleteFavouriteBook().pipe(
+          map((deleteFavouriteBookResponse) =>
+            deleteFavouriteBookResponseAction(deleteFavouriteBookResponse)),
+          catchError((error: string) => of(loadDeleteFavouriteBookErrorAction({error})))
         )
       )
     )

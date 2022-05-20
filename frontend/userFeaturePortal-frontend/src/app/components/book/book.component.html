@@ -151,6 +151,13 @@
     <div *ngIf="favouriteBook" class="space-between-fields">
       <mat-card>
         Current favourite book: {{favouriteBook}}
+        <button mat-icon-button
+                matTooltip="Delete favourite book"
+                [matTooltipPosition]="position.value"
+                (click)="deleteFavouriteBook()"
+                class="favourite-book-delete">
+          <mat-icon> delete</mat-icon>
+        </button>
       </mat-card>
     </div>
 

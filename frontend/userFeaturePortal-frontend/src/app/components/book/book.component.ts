@@ -133,6 +133,10 @@ export class BookComponent implements OnInit, OnDestroy {
     })
   }
 
+  deleteFavouriteBook() {
+    this.booksFacade.deleteFavouriteBook()
+  }
+
   updateBook() {
     let request = new AddBookRequest()
     request = this.prepareAddBookRequest(request)

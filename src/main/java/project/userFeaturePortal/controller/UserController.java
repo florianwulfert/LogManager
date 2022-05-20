@@ -38,7 +38,12 @@ public class UserController {
     return userService.addFavouriteBookToUser(bookTitel, actor);
   }
 
-  @PostMapping("/userUpdate")
+  @PostMapping("/user/favouriteBook/delete")
+  public String deleteFavouriteBook(@RequestParam String name) {
+    return userService.deleteFavouriteBook(name);
+  }
+
+  @PostMapping("/user/update")
   public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserRequestDto allParameters) {
     String returnMessage = userService.updateUser(allParameters);
     return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(userService.findUserList(), returnMessage));
@@ -59,7 +64,7 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).body(new FindUserResponseDto(userService.findUserByName(name)));
   }
 
-  @GetMapping("/validateUser")
+  @GetMapping("/user/validate")
     public ResponseEntity<ValidateUserResponseDto> validateUserByName(@RequestParam final String name) {
       return ResponseEntity.status(HttpStatus.OK).body(new ValidateUserResponseDto(userService.validateUserByName(name)));
   }
