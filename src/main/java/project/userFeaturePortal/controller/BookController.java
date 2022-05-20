@@ -86,7 +86,7 @@ public class BookController {
                 String.format(InfoMessages.BOOK_CREATED, parameters.titel)));
   }
 
-  @PostMapping("/bookUpdate")
+  @PostMapping("/book/update")
   @Operation(
           summary = "Update manually an existing Book",
           responses = {

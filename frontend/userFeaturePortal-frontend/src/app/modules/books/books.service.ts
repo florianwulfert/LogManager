@@ -12,7 +12,7 @@ import {DeleteBooksResponse} from "./deleteBooks/delete-books-response";
 
 const API_GET_BOOKS = 'http://localhost:8081/books'
 const API_ADD_BOOK = 'http://localhost:8081/book'
-const API_UPDATE_BOOK = 'http://localhost:8081/bookUpdate'
+const API_UPDATE_BOOK = 'http://localhost:8081/book/update'
 const API_DELETE_BOOK = 'http://localhost:8081/book/titel?titel='
 const API_ADD_BOOK_TO_USER = 'http://localhost:8081/user/favouriteBook?bookTitel='
 const API_DELETE_BOOKS = 'http://localhost:8081/books'
