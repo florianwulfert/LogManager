@@ -15,7 +15,7 @@ public interface UserAPI {
   String addFavouriteBookToUser(@RequestParam final String bookTitel, @RequestParam final String actor);
 
   @PostMapping("/user/favouriteBook/delete")
-  String deleteFavouriteBook(@RequestParam String name);
+  ResponseEntity<GetFavouriteBookResponseDto> deleteFavouriteBook(@RequestParam String name);
 
   @PostMapping("/user/update")
   ResponseEntity<UserResponseDto> updateUser(@RequestBody UserRequestDto allParameters);

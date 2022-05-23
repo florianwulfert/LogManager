@@ -11,9 +11,9 @@ import {ActorFacade} from "../../modules/actor/actor.facade";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 import {UserFacade} from "../../modules/user/user.facade";
-import {GetUserRequest} from "../../modules/user/getUser/getUser-request";
 import {GetBookRequest} from "../../modules/book/getBook/get-book-request";
 import {BookFacade} from "../../modules/book/book.facade";
+import {FavouriteBookFacade} from "../../modules/favouriteBook/favouriteBook.facade";
 
 @Component({
   selector: 'app-book',
@@ -28,7 +28,8 @@ export class BookComponent implements OnInit, OnDestroy {
               private usersFacade: UsersFacade,
               private actorFacade: ActorFacade,
               private userFacade: UserFacade,
-              private bookFacade: BookFacade) {
+              private bookFacade: BookFacade,
+              private favouriteBookFacade: FavouriteBookFacade) {
   }
 
   displayedColumns: string[] = ['titel', 'erscheinungsjahr', 'delete'];
@@ -50,9 +51,7 @@ export class BookComponent implements OnInit, OnDestroy {
     })
 
     if (this.userAvailable) {
-      this.actorFacade.stateActor$.pipe().subscribe(r => {
-        this.getUsersFavouriteBook(r)
-      })
+      this.getFavouriteBook()
     }
 
     this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
@@ -124,17 +123,15 @@ export class BookComponent implements OnInit, OnDestroy {
     this.booksFacade.deleteBooks()
   }
 
-  getUsersFavouriteBook(name: string): void {
-    let getRequest = new GetUserRequest()
-    getRequest.name = name
-    this.userFacade.getUser(getRequest)
-    this.userFacade.stateGetUserResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
-      this.favouriteBook = result.favouriteBookTitel
+  getFavouriteBook(): void {
+    this.favouriteBookFacade.getFavouriteBook()
+    this.favouriteBookFacade.stateGetFavouriteBookResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      this.favouriteBook = result
     })
   }
 
   deleteFavouriteBook() {
-    this.booksFacade.deleteFavouriteBook()
+    this.favouriteBookFacade.deleteFavouriteBook()
   }
 
   updateBook() {

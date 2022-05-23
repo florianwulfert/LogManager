@@ -36,8 +36,13 @@ public class UserController implements UserAPI {
   }
 
   @Override
-  public String deleteFavouriteBook(String name) {
-    return userService.deleteFavouriteBook(name);
+  public ResponseEntity<GetFavouriteBookResponseDto> deleteFavouriteBook(String name) {
+    return ResponseEntity.status(HttpStatus.OK).body(new GetFavouriteBookResponseDto(userService.deleteFavouriteBook(name)));
+  }
+
+  @Override
+  public ResponseEntity<GetFavouriteBookResponseDto> getFavouriteBook(String name) {
+    return ResponseEntity.status(HttpStatus.OK).body(new GetFavouriteBookResponseDto(userService.getFavouriteBook(name)));
   }
 
   @Override
@@ -64,11 +69,6 @@ public class UserController implements UserAPI {
   @Override
     public ResponseEntity<ValidateUserResponseDto> validateUserByName(String name) {
       return ResponseEntity.status(HttpStatus.OK).body(new ValidateUserResponseDto(userService.validateUserByName(name)));
-  }
-
-  @Override
-  public ResponseEntity<GetFavouriteBookResponseDto> getFavouriteBook(String name) {
-    return ResponseEntity.status(HttpStatus.OK).body(new GetFavouriteBookResponseDto(userService.getFavouriteBook(name)));
   }
 
   @Override

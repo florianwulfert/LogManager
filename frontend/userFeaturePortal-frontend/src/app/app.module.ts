@@ -38,6 +38,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {BooksModule} from "./modules/books/books.module";
 import {UserModule} from "./modules/user/user.module";
 import {BookModule} from "./modules/book/book.module";
+import {FavouriteBookModule} from "./modules/favouriteBook/favouriteBook.module";
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import {BookModule} from "./modules/book/book.module";
     ActorIsValidModule,
     BooksModule,
     UserModule,
-    BookModule
+    BookModule,
+    FavouriteBookModule
   ],
   exports: [
     BrowserModule,

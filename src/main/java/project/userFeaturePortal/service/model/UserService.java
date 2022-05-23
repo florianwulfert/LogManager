@@ -96,7 +96,7 @@ public class UserService {
     userRepository.save(user);
 
     LOGGER.info(String.format(InfoMessages.FAV_BOOK_DELETED, userName));
-    return String.format(InfoMessages.FAV_BOOK_DELETED,  userName);
+    return user.getFavouriteBook().getTitel();
   }
 
   public List<UserDto> findUserList() {
