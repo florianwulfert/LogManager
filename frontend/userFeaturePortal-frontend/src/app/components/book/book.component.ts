@@ -126,6 +126,7 @@ export class BookComponent implements OnInit, OnDestroy {
   getFavouriteBook(): void {
     this.favouriteBookFacade.getFavouriteBook()
     this.favouriteBookFacade.stateGetFavouriteBookResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      console.log(result)
       this.favouriteBook = result
     })
   }

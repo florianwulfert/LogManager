@@ -5,5 +5,5 @@ export interface FavouriteBookState {
 }
 
 export const FAVOURITE_BOOK_GET_INITIAL_STATE: FavouriteBookState = {
-  favouriteBook: '',
+  favouriteBook: ''
 }

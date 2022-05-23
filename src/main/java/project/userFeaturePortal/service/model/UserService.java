@@ -90,12 +90,17 @@ public class UserService {
   }
 
   public String deleteFavouriteBook(String userName) {
-    User user = userValidationService.checkIfNameExists(userName, false, ErrorMessages.USER_NOT_FOUND_NAME);
+    User user = userValidationService.checkIfNameExists(userName, false, String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
     user.setFavouriteBook(null);
 
     userRepository.save(user);
 
     LOGGER.info(String.format(InfoMessages.FAV_BOOK_DELETED, userName));
+    return user.getFavouriteBook().getTitel();
+  }
+
+  public String getFavouriteBook(String name) {
+    User user = userValidationService.checkIfNameExists(name, false, String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
     return user.getFavouriteBook().getTitel();
   }
 
@@ -176,10 +181,5 @@ public class UserService {
 
     LOGGER.info(InfoMessages.ALL_USERS_DELETED);
     return InfoMessages.ALL_USERS_DELETED;
-  }
-
-  public String getFavouriteBook(String name) {
-    User user = userRepository.findUserByName(name);
-    return user.getFavouriteBook().getTitel();
   }
 }
