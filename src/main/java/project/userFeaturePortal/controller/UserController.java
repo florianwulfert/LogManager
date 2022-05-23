@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
-import project.userFeaturePortal.common.dto.user.FindUserResponseDto;
-import project.userFeaturePortal.common.dto.user.UserRequestDto;
-import project.userFeaturePortal.common.dto.user.UserResponseDto;
-import project.userFeaturePortal.common.dto.user.ValidateUserResponseDto;
+import project.userFeaturePortal.common.dto.user.*;
 import project.userFeaturePortal.controller.API.UserAPI;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.UserRepository;
@@ -67,6 +64,11 @@ public class UserController implements UserAPI {
   @Override
     public ResponseEntity<ValidateUserResponseDto> validateUserByName(String name) {
       return ResponseEntity.status(HttpStatus.OK).body(new ValidateUserResponseDto(userService.validateUserByName(name)));
+  }
+
+  @Override
+  public ResponseEntity<GetFavouriteBookResponseDto> getFavouriteBook(String name) {
+    return ResponseEntity.status(HttpStatus.OK).body(new GetFavouriteBookResponseDto(userService.getFavouriteBook(name)));
   }
 
   @Override

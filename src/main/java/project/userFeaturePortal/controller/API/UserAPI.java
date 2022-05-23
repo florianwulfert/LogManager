@@ -2,10 +2,7 @@ package project.userFeaturePortal.controller.API;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import project.userFeaturePortal.common.dto.user.FindUserResponseDto;
-import project.userFeaturePortal.common.dto.user.UserRequestDto;
-import project.userFeaturePortal.common.dto.user.UserResponseDto;
-import project.userFeaturePortal.common.dto.user.ValidateUserResponseDto;
+import project.userFeaturePortal.common.dto.user.*;
 import project.userFeaturePortal.model.entity.User;
 
 import java.util.Optional;
@@ -34,6 +31,9 @@ public interface UserAPI {
 
   @GetMapping("/user/validate")
   ResponseEntity<ValidateUserResponseDto> validateUserByName(@RequestParam final String name);
+
+  @GetMapping("/user/favouriteBook")
+  ResponseEntity<GetFavouriteBookResponseDto> getFavouriteBook(@RequestParam final String name);
 
   @DeleteMapping("/user/id/{id}")
   ResponseEntity<UserResponseDto> deleteUserByID(@PathVariable final Integer id, @RequestParam final String actor);

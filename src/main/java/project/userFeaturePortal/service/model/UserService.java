@@ -177,4 +177,9 @@ public class UserService {
     LOGGER.info(InfoMessages.ALL_USERS_DELETED);
     return InfoMessages.ALL_USERS_DELETED;
   }
+
+  public String getFavouriteBook(String name) {
+    User user = userRepository.findUserByName(name);
+    return user.getFavouriteBook().getTitel();
+  }
 }
