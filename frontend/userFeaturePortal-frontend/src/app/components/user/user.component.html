@@ -93,7 +93,7 @@
             </mat-panel-description>
           </mat-expansion-panel-header>
 
-          <form [formGroup]="form">
+          <form [formGroup]="form" (keydown.enter)="createUser()">
 
             <div>
               <mat-form-field appearance="fill">
@@ -185,7 +185,7 @@
             </mat-panel-description>
           </mat-expansion-panel-header>
 
-          <form [formGroup]="form">
+          <form [formGroup]="form" (keydown.enter)="updateUser()">
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Name</mat-label>
