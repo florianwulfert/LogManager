@@ -12,6 +12,7 @@ import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.mapper.UserDtoMapper;
+import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.validation.BookValidationService;
 import project.userFeaturePortal.service.validation.UserValidationService;
@@ -31,7 +32,7 @@ public class UserService {
   private final UserRepository userRepository;
   private final BmiService bmiService;
   private final UserValidationService userValidationService;
-  private final BookService bookService;
+  private final BookRepository bookRepository;
   private final UserDtoMapper userDtoMapper;
   private final BookValidationService bookValidationService;
 
@@ -40,7 +41,7 @@ public class UserService {
     userValidationService.validateUserToCreate(userRequestDto.name);
     userValidationService.validateActor(userRequestDto.name, userRequestDto.actor);
 
-    userRepository.save(buildUserToCreate(userRequestDto));
+    userRepository.save(buildUser(userRequestDto, new User()));
 
     logService.addLog(LogRequestDto.builder()
             .message(String.format(InfoMessages.USER_CREATED, userRequestDto.getName()))
@@ -51,20 +52,30 @@ public class UserService {
     return String.format(InfoMessages.USER_CREATED, userRequestDto.getName());
   }
 
-  private User buildUserToCreate(UserRequestDto userRequestDto) {
-    List<Book> books = bookService.searchBooksByTitel(userRequestDto.favouriteBook);
+  private User buildUser(UserRequestDto userRequestDto, User user) {
+    List<Book> books = bookRepository.findByTitel(userRequestDto.favouriteBook);
     Book book = null;
     if (!books.isEmpty()) {
       book = books.get(0);
     }
-    return User.builder()
-        .name(userRequestDto.name)
-        .birthdate(userRequestDto.getBirthdateAsLocalDate())
-        .weight(userRequestDto.weight)
-        .height(userRequestDto.height)
-        .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
-        .favouriteBook(book)
-        .build();
+
+    user.setName(userRequestDto.name);
+    user.setBirthdate(userRequestDto.getBirthdateAsLocalDate());
+    user.setWeight(userRequestDto.weight);
+    user.setHeight(userRequestDto.height);
+    user.setBmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height));
+    user.setFavouriteBook(book);
+    return user;
+  }
+
+  public String updateUser(UserRequestDto userRequestDto) {
+    userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
+    User user = userValidationService.checkIfNameExists(userRequestDto.name, false, "");
+    userValidationService.validateActor(userRequestDto.name, userRequestDto.actor);
+
+    buildUser(userRequestDto, user);
+    LOGGER.info(String.format(InfoMessages.USER_UPDATED, userRequestDto.name));
+    return String.format(InfoMessages.USER_UPDATED, userRequestDto.name);
   }
 
   public String addFavouriteBookToUser(String titel, String userName) {
@@ -76,6 +87,16 @@ public class UserService {
 
     LOGGER.info(String.format(InfoMessages.BOOK_BY_USER, titel, user.getName()));
     return String.format(InfoMessages.BOOK_BY_USER, titel, user.getName());
+  }
+
+  public String deleteFavouriteBook(String userName) {
+    User user = userValidationService.checkIfNameExists(userName, false, ErrorMessages.USER_NOT_FOUND_NAME);
+    user.setFavouriteBook(null);
+
+    userRepository.save(user);
+
+    LOGGER.info(String.format(InfoMessages.FAV_BOOK_DELETED, userName));
+    return String.format(InfoMessages.FAV_BOOK_DELETED,  userName);
   }
 
   public List<UserDto> findUserList() {

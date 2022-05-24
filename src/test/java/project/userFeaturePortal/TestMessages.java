@@ -59,7 +59,7 @@ public class TestMessages {
         + "{\"id\":5,\"titel\":\"omar\",\"erscheinungsjahr\":2002},"
         + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002}]," +
                 "\"returnMessage\":\"Book with the ID 3 was deleted.\"}";
-    public static final String TESTBOOK = "[{\"id\":1,\"titel\":\"TestBook\",\"erscheinungsjahr\":1998}]";
+    public static final String TESTBOOK = "{\"book\":{\"titel\":\"TestBook\",\"erscheinungsjahr\":1998}}";
     public static final String ALL_BOOKS_DELETED = "{\"result\":[],\"returnMessage\":\"All BOOKS were deleted from database!\"}";
   public static final String TESTBOOK_DELETED_BY_TITLE =
       "{\"result\":["

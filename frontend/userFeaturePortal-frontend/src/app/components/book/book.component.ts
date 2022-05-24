@@ -11,6 +11,9 @@ import {ActorFacade} from "../../modules/actor/actor.facade";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 import {UserFacade} from "../../modules/user/user.facade";
+import {GetUserRequest} from "../../modules/user/getUser/getUser-request";
+import {GetBookRequest} from "../../modules/book/getBook/get-book-request";
+import {BookFacade} from "../../modules/book/book.facade";
 
 @Component({
   selector: 'app-book',
@@ -24,7 +27,8 @@ export class BookComponent implements OnInit, OnDestroy {
               private _snackBar: MatSnackBar,
               private usersFacade: UsersFacade,
               private actorFacade: ActorFacade,
-              private userFacade: UserFacade) {
+              private userFacade: UserFacade,
+              private bookFacade: BookFacade) {
   }
 
   displayedColumns: string[] = ['titel', 'erscheinungsjahr', 'delete'];
@@ -46,8 +50,9 @@ export class BookComponent implements OnInit, OnDestroy {
     })
 
     if (this.userAvailable) {
-      this.userFacade.getUser()
-      this.getUsersFavouriteBook()
+      this.actorFacade.stateActor$.pipe().subscribe(r => {
+        this.getUsersFavouriteBook(r)
+      })
     }
 
     this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
@@ -97,7 +102,6 @@ export class BookComponent implements OnInit, OnDestroy {
     let request = new AddBookRequest()
     this.prepareAddBookRequest(request)
     this.booksFacade.addBook(request)
-    this.getUsersFavouriteBook()
   }
 
   deleteBook(title: string): void {
@@ -109,22 +113,42 @@ export class BookComponent implements OnInit, OnDestroy {
         this.booksListAvailable = false
       }
     })
-    this.getUsersFavouriteBook()
   }
 
   assignBook(): void {
     let request = this.formBookToUser.get("book")?.value
     this.booksFacade.assignBookToUser(request)
-    this.getUsersFavouriteBook()
   }
 
   deleteBooks(): void {
     this.booksFacade.deleteBooks()
   }
 
-  getUsersFavouriteBook(): void {
+  getUsersFavouriteBook(name: string): void {
+    let getRequest = new GetUserRequest()
+    getRequest.name = name
+    this.userFacade.getUser(getRequest)
     this.userFacade.stateGetUserResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.favouriteBook = result.favouriteBookTitel
+    })
+  }
+
+  deleteFavouriteBook() {
+    this.booksFacade.deleteFavouriteBook()
+  }
+
+  updateBook() {
+    let request = new AddBookRequest()
+    request = this.prepareAddBookRequest(request)
+    this.booksFacade.updateBook(request)
+  }
+
+  getBookData(titel: string) {
+    let request = new GetBookRequest()
+    request.titel = titel
+    this.bookFacade.getBook(request)
+    this.bookFacade.stateGetBookResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      this.form.get("erscheinungsjahr")?.setValue(result.erscheinungsjahr)
     })
   }
 }

@@ -39,6 +39,7 @@ import {BooksModule} from "./modules/books/books.module";
 import {UserModule} from "./modules/user/user.module";
 import {BibleComponent} from "./components/bibellese/bible.component";
 import {BibelleseModule} from "./modules/bibellese/bibellese.module";
+import {BookModule} from "./modules/book/book.module";
 
 @NgModule({
   declarations: [
@@ -89,6 +90,8 @@ import {BibelleseModule} from "./modules/bibellese/bibellese.module";
     BooksModule,
     BibelleseModule,
     UserModule
+    UserModule,
+    BookModule
   ],
   exports: [
     BrowserModule,

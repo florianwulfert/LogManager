@@ -4,16 +4,16 @@ import {Observable, Subject, throwError} from 'rxjs';
 import {catchError, map} from "rxjs/operators";
 import {ActorFacade} from "../actor/actor.facade";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
-import {GetUserResponse} from "./getUser/get-user-response";
-import {UserDto} from "../users/getUsers/user.dto";
-import {GetUserRequest} from "./getUser/getUser-request";
+import {GetBookRequest} from "./getBook/get-book-request";
+import {GetBookResponse} from "./getBook/get-book-response";
+import {BookDto} from "./getBook/book.dto";
 
-const API_GET_USER = 'http://localhost:8081/user?name=';
+const API_GET_BOOK = 'http://localhost:8081/book?titel=';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService implements OnDestroy {
+export class BookService implements OnDestroy {
   constructor(private readonly http: HttpClient, private readonly actorFacade: ActorFacade, private featureManager: FeatureManager) {
   }
 
@@ -23,23 +23,18 @@ export class UserService implements OnDestroy {
   }
 
   onDestroy = new Subject()
-  userDto: UserDto = {
-    id: 0,
-    name: "",
-    birthdate: "",
-    height: 0,
-    weight: 0,
-    bmi: 0,
-    favouriteBookTitel: ""
+  bookDto: BookDto = {
+    titel: "",
+    erscheinungsjahr: 0
   }
 
-  getUser(request: GetUserRequest): Observable<GetUserResponse> {
-    return this.http.get<GetUserResponse>(API_GET_USER + request.name, {
+  getBook(request: GetBookRequest): Observable<GetBookResponse> {
+    return this.http.get<GetBookResponse>(API_GET_BOOK + request.titel, {
       observe: 'response'
     }).pipe(
       map((r) => {
         return r.body || {
-          user: this.userDto
+          book: this.bookDto
         }
       }),
       catchError((err) => {
@@ -50,8 +45,8 @@ export class UserService implements OnDestroy {
           this.featureManager.openSnackbar(err.error);
           return throwError('business error')
         }
-        this.featureManager.openSnackbar('Due to technical issues it is currently not possible to request this user.')
-        return throwError('Due to technical issues it is currently not possible to request this user.')
+        this.featureManager.openSnackbar('Due to technical issues it is currently not possible to request this book.')
+        return throwError('Due to technical issues it is currently not possible to request this book.')
       })
     );
   }

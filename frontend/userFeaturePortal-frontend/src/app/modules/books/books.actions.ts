@@ -22,6 +22,14 @@ export const assignBookToUserAction = createAction('Assign a book to user', prop
 export const assignBookToUserResponseAction = createAction('Get response if assigning of a book to an user succeed', props<AddBookResponse>());
 export const loadAssignBookToUserErrorAction = createAction('Load Assign book to user failure', props<AddBookErrorResponse>());
 
+export const deleteFavouriteBookAction = createAction('Delete favourite book');
+export const deleteFavouriteBookResponseAction = createAction('Get response if deleting the favourite book succeed', props<AddBookResponse>());
+export const loadDeleteFavouriteBookErrorAction = createAction('Load Delete favourite book failure', props<AddBookErrorResponse>());
+
 export const deleteBooksAction = createAction('Delete all books');
 export const deleteBooksResponseAction = createAction('Get response if deleting of all books succeed', props<DeleteBooksResponse>());
 export const loadDeleteBooksErrorAction = createAction('Load Delete books failure', props<DeleteBooksErrorResponse>());
+
+export const updateBookAction = createAction('Update book', props<AddBookRequest>());
+export const updateBookResponseAction = createAction('Get response if book updating succeed', props<AddBookResponse>());
+export const loadUpdateBookErrorAction = createAction('Load Update book failure', props<AddBookErrorResponse>());
