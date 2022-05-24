@@ -3,7 +3,7 @@
 
   <div class="col-12 mb-5">
     <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource" >
+      <table mat-table [dataSource]="dataSource">
 
         <!-- Text Column -->
         <ng-container matColumnDef="text">
@@ -81,6 +81,22 @@
             <div class="create-user-body">
               <div>
                 <mat-form-field appearance="fill">
+                  <mat-label>Textarea in the bible</mat-label>
+                  <input matInput formControlName="bibelabschnitt">
+                  <button *ngIf="form.controls['bibelabschnitt'].value" matSuffix mat-icon-button aria-label="Clear"
+                          (click)="form.controls['bibelabschnitt'].reset()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-error *ngIf="form.controls['bibelabschnitt'].hasError('required')">
+                    Textarea in the bible is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div>
+                <button mat-icon-button>
+                  <mat-icon>add</mat-icon>
+                </button>
+                <mat-form-field appearance="fill">
                   <mat-label>Favourite verse</mat-label>
                   <input matInput formControlName="lieblingsvers">
                   <button *ngIf="form.controls['lieblingsvers'].value" matSuffix mat-icon-button aria-label="Clear"
@@ -92,23 +108,65 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-
               <div>
+                <button mat-icon-button>
+                  <mat-icon>add</mat-icon>
+                </button>
                 <mat-form-field appearance="fill">
-                  <mat-label>Read text</mat-label>
-                  <input matInput formControlName="text">
-                  <button *ngIf="form.controls['text'].value" matSuffix mat-icon-button aria-label="Clear"
-                          (click)="form.controls['text'].reset()">
+                  <mat-label>Text of favourite verse</mat-label>
+                  <input matInput formControlName="versText">
+                  <button *ngIf="form.controls['versText'].value" matSuffix mat-icon-button aria-label="Clear"
+                          (click)="form.controls['versText'].reset()">
                     <mat-icon>close</mat-icon>
                   </button>
-                  <mat-error *ngIf="form.controls['text'].hasError('required')">
-                    Read text is <strong>required</strong>
+                  <mat-error *ngIf="form.controls['versText'].hasError('required')">
+                    Text of favourite verse is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div>
+                <button mat-icon-button>
+                  <mat-icon>add</mat-icon>
+                </button>
+                <mat-form-field appearance="fill">
+                  <mat-label>Labels</mat-label>
+                  <input matInput formControlName="labels">
+                  <button *ngIf="form.controls['labels'].value" matSuffix mat-icon-button aria-label="Clear"
+                          (click)="form.controls['labels'].reset()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-error *ngIf="form.controls['labels'].hasError('required')">
+                    Labels are <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field appearance="fill">
+                  <mat-label>Comment</mat-label>
+                  <input matInput formControlName="kommentar">
+                  <button *ngIf="form.controls['kommentar'].value" matSuffix mat-icon-button aria-label="Clear"
+                          (click)="form.controls['kommentar'].reset()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-error *ngIf="form.controls['kommentar'].hasError('required')">
+                    Comment is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field appearance="fill">
+                  <mat-label>Reader</mat-label>
+                  <input matInput formControlName="leser">
+                  <button *ngIf="form.controls['leser'].value" matSuffix mat-icon-button aria-label="Clear"
+                          (click)="form.controls['leser'].reset()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-error *ngIf="form.controls['leser'].hasError('required')">
+                    Reader is <strong>required</strong>
                   </mat-error>
                 </mat-form-field>
               </div>
             </div>
-
-
           </form>
           <button mat-raised-button class="create button-format" (click)="addBibellese()" [disabled]="!form.valid">Add Read
           </button>

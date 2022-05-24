@@ -89,7 +89,6 @@ import {BookModule} from "./modules/book/book.module";
     ActorIsValidModule,
     BooksModule,
     BibelleseModule,
-    UserModule
     UserModule,
     BookModule
   ],

@@ -71,10 +71,12 @@ export class BibelleseService {
   }
 
   addBibellese(addBibelleseRequest: AddBibelleseRequest): Observable<AddBibelleseResponse> {
+    console.log(addBibelleseRequest)
     return this.http.post<any>(API_BIBELLESE, {...addBibelleseRequest}, {
       observe: 'response'
     }).pipe(
       map((r) => {
+        console.log(r)
         this.featureManager.openSnackbar(r.body?.returnMessage);
         return r.body || {
           result: [],
@@ -93,7 +95,7 @@ export class BibelleseService {
   }
 
   deleteBibellese(i: string | undefined): Observable<DeleteBibelleseResponse> {
-    return this.http.delete<DeleteBibelleseResponse>(API_BIBELLESE + "/" + i, {
+    return this.http.delete<DeleteBibelleseResponse>(API_BIBELLESE + "?id=" + i, {
       observe: 'response'
     }).pipe(
       map((r) => {
@@ -104,6 +106,7 @@ export class BibelleseService {
         }
       }),
       catchError((err) => {
+        console.log(err)
         if(err.error instanceof Object) {
           this.featureManager.openSnackbar(err.error.text);
         } else {

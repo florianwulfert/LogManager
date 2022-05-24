@@ -49,32 +49,39 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.bibelleseFacade.getBibellese(request)
     this.bibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
-      console.log(this.dataSource.data)
       this.dataSource.paginator = this.paginator;
     })
   }
 
   public form: FormGroup = new FormGroup({
+    bibelabschnitt: new FormControl('', [Validators.required]),
     lieblingsvers: new FormControl('', [Validators.required]),
-    text: new FormControl('', [Validators.required]),
+    versText: new FormControl('', [Validators.required]),
+    labels: new FormControl('', [Validators.required]),
+    kommentar: new FormControl('', [Validators.required]),
+    leser: new FormControl('', [Validators.required]),
   })
 
   prepareAddBibelleseRequest(request: AddBibelleseRequest) {
-    request.lieblingsverse = this.form.get("lieblingsvers")?.value
-    request.bibelabschnitt = this.form.get("text")?.value
+    request.bibelabschnitt = this.form.get("bibelabschnitt")?.value
+    request.lieblingsverse = [this.form.get("lieblingsvers")?.value]
+    request.versText = [this.form.get("versText")?.value]
+    request.labels = [this.form.get("labels")?.value]
+    request.kommentar = this.form.get("kommentar")?.value
+    request.leser = this.form.get("leser")?.value
     return request;
   }
 
   addBibellese(): void {
     let request = new AddBibelleseRequest()
+    console.log(request)
     this.prepareAddBibelleseRequest(request)
     this.bibelleseFacade.addBibellese(request);
   }
 
   deleteBibellese(element: any): void {
     let request = new DeleteBibelleseRequest()
-    let elementValues = Object.keys(element).map(key => element[key])
-    request.id = elementValues[0]
+    request.id = element.id
     this.bibelleseFacade.deleteBibellese(request)
   }
 }
