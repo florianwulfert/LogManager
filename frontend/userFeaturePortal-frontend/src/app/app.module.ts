@@ -40,6 +40,7 @@ import {UserModule} from "./modules/user/user.module";
 import {BibleComponent} from "./components/bibellese/bible.component";
 import {BibelleseModule} from "./modules/bibellese/bibellese.module";
 import {BookModule} from "./modules/book/book.module";
+import {MatChipsModule} from "@angular/material/chips";
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import {BookModule} from "./modules/book/book.module";
     BooksModule,
     BibelleseModule,
     UserModule,
-    BookModule
+    BookModule,
+    MatChipsModule
   ],
   exports: [
     BrowserModule,

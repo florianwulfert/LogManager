@@ -23,6 +23,7 @@ export class BibleComponent implements OnInit, OnDestroy {
   }
 
   displayedColumns: string[] = ['text', 'lieblingsvers', 'lieblingsversText', 'label', 'leser', 'kommentar', 'delete'];
+  labelList: string[] = [];
   userAvailable: boolean = false
   onDestroy = new Subject()
 
@@ -66,7 +67,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     request.bibelabschnitt = this.form.get("bibelabschnitt")?.value
     request.lieblingsverse = [this.form.get("lieblingsvers")?.value]
     request.versText = [this.form.get("versText")?.value]
-    request.labels = [this.form.get("labels")?.value]
+    request.labels = this.labelList
     request.kommentar = this.form.get("kommentar")?.value
     request.leser = this.form.get("leser")?.value
     return request;
@@ -83,5 +84,9 @@ export class BibleComponent implements OnInit, OnDestroy {
     let request = new DeleteBibelleseRequest()
     request.id = element.id
     this.bibelleseFacade.deleteBibellese(request)
+  }
+
+  addLabel() {
+    this.labelList.push(this.form.get("labels")?.value);
   }
 }
