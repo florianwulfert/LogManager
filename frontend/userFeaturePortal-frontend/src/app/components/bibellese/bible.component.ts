@@ -58,7 +58,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     bibelabschnitt: new FormControl('', [Validators.required]),
     lieblingsvers: new FormControl('', [Validators.required]),
     versText: new FormControl('', [Validators.required]),
-    labels: new FormControl('', [Validators.required]),
+    labels: new FormControl(''),
     kommentar: new FormControl('', [Validators.required]),
     leser: new FormControl('', [Validators.required]),
   })
@@ -88,5 +88,10 @@ export class BibleComponent implements OnInit, OnDestroy {
 
   addLabel() {
     this.labelList.push(this.form.get("labels")?.value);
+  }
+
+  resetForm() {
+    this.form.reset();
+    this.labelList.splice(0, this.labelList.length)
   }
 }

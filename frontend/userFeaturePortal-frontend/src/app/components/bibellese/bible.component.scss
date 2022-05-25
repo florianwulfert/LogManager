@@ -45,3 +45,10 @@ mat-form-field {
 .space-between-fields {
   margin-bottom: 15px;
 }
+
+.card-height{
+  height: 100px;
+  max-height: 200px;
+  max-width: 400px;
+  overflow: scroll;
+}
