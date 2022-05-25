@@ -1,96 +1,11 @@
 <div class="page row">
   <h1>Reading Bible</h1>
-
-  <div class="col-12 mb-5">
-    <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource">
-
-        <!-- Text Column -->
-        <ng-container matColumnDef="text">
-          <th mat-header-cell *matHeaderCellDef> Read text</th>
-          <td mat-cell *matCellDef="let element" class="truncated-cell">
-            <mat-card class="card-height">{{element.text}}</mat-card>
-          </td>
-        </ng-container>
-
-        <!-- Lieblingsvers Column -->
-        <ng-container matColumnDef="lieblingsvers">
-          <th mat-header-cell *matHeaderCellDef> Favourite verse</th>
-          <td mat-cell *matCellDef="let element">
-            <mat-card class="card-height">
-              <mat-chip-list class="mat-chip-list-stacked" *ngFor="let vers of element.lieblingsvers">
-                <mat-chip>{{vers}}</mat-chip>
-              </mat-chip-list>
-            </mat-card>
-          </td>
-        </ng-container>
-
-        <!-- Lieblingsvers Column -->
-        <ng-container matColumnDef="lieblingsversText">
-          <th mat-header-cell *matHeaderCellDef> Text of favourite verse</th>
-          <td mat-cell *matCellDef="let element">
-            <mat-card class="card-height">
-              <mat-chip-list class="mat-chip-list-stacked" *ngFor="let text of element.lieblingsversText">
-                <mat-chip [color]="'primary'" class="p-5">{{text}}</mat-chip>
-              </mat-chip-list>
-            </mat-card>
-          </td>
-        </ng-container>
-
-        <!-- Label Column -->
-        <ng-container matColumnDef="label">
-          <th mat-header-cell *matHeaderCellDef> Label</th>
-          <td mat-cell *matCellDef="let element">
-            <mat-card class="card-height">
-              <mat-chip-list class="mat-standard-chip mb-1" *ngFor="let labelItem of element.label">
-                <mat-chip>{{labelItem}}</mat-chip>
-              </mat-chip-list>
-            </mat-card>
-          </td>
-        </ng-container>
-
-        <!-- Leser Column -->
-        <ng-container matColumnDef="leser">
-          <th mat-header-cell *matHeaderCellDef> Reader</th>
-          <td mat-cell *matCellDef="let element">
-            <mat-card class="card-height">{{element.leser}}</mat-card>
-          </td>
-        </ng-container>
-
-        <!-- Kommentar Column -->
-        <ng-container matColumnDef="kommentar">
-          <th mat-header-cell *matHeaderCellDef> Comment</th>
-          <td mat-cell *matCellDef="let element">
-            <mat-card class="card-height">{{element.kommentar}}</mat-card>
-          </td>
-        </ng-container>
-
-        <!-- Delete -->
-        <ng-container matColumnDef="delete">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let element">
-            <button mat-icon-button class="deleteButton" (click)="deleteBibellese(element)" id="remove" *ngIf="userAvailable">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
-
-      <mat-paginator
-        [pageSize]=10
-        [hidePageSize]="true"
-        showFirstLastButtons>
-      </mat-paginator>
-    </div>
-  </div>
-
   <div class="col-12" *ngIf="userAvailable">
     <div class="space-between-fields">
       <mat-accordion>
-        <mat-expansion-panel>
+        <mat-expansion-panel [expanded]="isExpanded"
+                             (opened)="isExpanded = true"
+                             (closed)="isExpanded = false">
           <mat-expansion-panel-header>
             <mat-panel-title>
               Create Read
@@ -202,6 +117,90 @@
         </mat-expansion-panel>
       </mat-accordion>
     </div>
+  </div>
+  <div class="col-12 mb-5">
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
 
+        <!-- Text Column -->
+        <ng-container matColumnDef="text">
+          <th mat-header-cell *matHeaderCellDef> Read text</th>
+          <td mat-cell *matCellDef="let element" class="truncated-cell">
+            <mat-card class="card-height">{{element.text}}</mat-card>
+          </td>
+        </ng-container>
+
+        <!-- Lieblingsvers Column -->
+        <ng-container matColumnDef="lieblingsvers">
+          <th mat-header-cell *matHeaderCellDef> Favourite verse</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-card class="card-height">
+              <mat-chip-list class="mat-chip-list-stacked" *ngFor="let vers of element.lieblingsvers">
+                <mat-chip>{{vers}}</mat-chip>
+              </mat-chip-list>
+            </mat-card>
+          </td>
+        </ng-container>
+
+        <!-- Lieblingsvers Column -->
+        <ng-container matColumnDef="lieblingsversText">
+          <th mat-header-cell *matHeaderCellDef> Text of favourite verse</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-card class="card-height">
+              <mat-chip-list class="mat-chip-list-stacked" *ngFor="let text of element.lieblingsversText">
+                <mat-chip [color]="'primary'" class="p-5">{{text}}</mat-chip>
+              </mat-chip-list>
+            </mat-card>
+          </td>
+        </ng-container>
+
+        <!-- Label Column -->
+        <ng-container matColumnDef="label">
+          <th mat-header-cell *matHeaderCellDef> Label</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-card class="card-height">
+              <mat-chip-list class="mat-standard-chip mb-1" *ngFor="let labelItem of element.label">
+                <mat-chip>{{labelItem}}</mat-chip>
+              </mat-chip-list>
+            </mat-card>
+          </td>
+        </ng-container>
+
+        <!-- Leser Column -->
+        <ng-container matColumnDef="leser">
+          <th mat-header-cell *matHeaderCellDef> Reader</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-card class="card-height">{{element.leser}}</mat-card>
+          </td>
+        </ng-container>
+
+        <!-- Kommentar Column -->
+        <ng-container matColumnDef="kommentar">
+          <th mat-header-cell *matHeaderCellDef> Comment</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-card class="card-height">{{element.kommentar}}</mat-card>
+          </td>
+        </ng-container>
+
+        <!-- Delete -->
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button class="deleteButton" (click)="deleteBibellese(element)" id="remove" *ngIf="userAvailable">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [pageSize]=10
+        [hidePageSize]="true"
+        showFirstLastButtons>
+      </mat-paginator>
+    </div>
   </div>
 </div>

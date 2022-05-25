@@ -32,6 +32,7 @@ export class BibleComponent implements OnInit, OnDestroy {
   lieblingsversTexte: string[] = [];
   userAvailable: boolean = false
   onDestroy = new Subject()
+  isExpanded = false;
 
   dataSource: any;
 
@@ -83,6 +84,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     let request = new AddBibelleseRequest()
     this.prepareAddBibelleseRequest(request)
     this.bibelleseFacade.addBibellese(request);
+    this.isExpanded = false;
   }
 
   deleteBibellese(element: any): void {
