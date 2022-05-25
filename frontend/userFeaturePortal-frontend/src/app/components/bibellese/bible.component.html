@@ -126,7 +126,7 @@
         <ng-container matColumnDef="text">
           <th mat-header-cell *matHeaderCellDef> Read text</th>
           <td mat-cell *matCellDef="let element" class="truncated-cell">
-            <mat-card class="card-height">{{element.text}}</mat-card>
+            <mat-card class="card-style">{{element.text}}</mat-card>
           </td>
         </ng-container>
 
@@ -134,7 +134,7 @@
         <ng-container matColumnDef="lieblingsvers">
           <th mat-header-cell *matHeaderCellDef> Favourite verse</th>
           <td mat-cell *matCellDef="let element">
-            <mat-card class="card-height">
+            <mat-card class="card-style">
               <mat-chip-list class="mat-chip-list-stacked" *ngFor="let vers of element.lieblingsvers">
                 <mat-chip>{{vers}}</mat-chip>
               </mat-chip-list>
@@ -146,10 +146,10 @@
         <ng-container matColumnDef="lieblingsversText">
           <th mat-header-cell *matHeaderCellDef> Text of favourite verse</th>
           <td mat-cell *matCellDef="let element">
-            <mat-card class="card-height">
-              <mat-chip-list class="mat-chip-list-stacked" *ngFor="let text of element.lieblingsversText">
-                <mat-chip [color]="'primary'" class="p-5">{{text}}</mat-chip>
-              </mat-chip-list>
+            <mat-card class="card-style">
+              <li *ngFor="let text of element.lieblingsversText">
+                <ul>{{text}}</ul>
+              </li>
             </mat-card>
           </td>
         </ng-container>
@@ -158,7 +158,7 @@
         <ng-container matColumnDef="label">
           <th mat-header-cell *matHeaderCellDef> Label</th>
           <td mat-cell *matCellDef="let element">
-            <mat-card class="card-height">
+            <mat-card class="card-style">
               <mat-chip-list class="mat-standard-chip mb-1" *ngFor="let labelItem of element.label">
                 <mat-chip>{{labelItem}}</mat-chip>
               </mat-chip-list>
@@ -170,7 +170,7 @@
         <ng-container matColumnDef="leser">
           <th mat-header-cell *matHeaderCellDef> Reader</th>
           <td mat-cell *matCellDef="let element">
-            <mat-card class="card-height">{{element.leser}}</mat-card>
+            <mat-card class="card-style">{{element.leser}}</mat-card>
           </td>
         </ng-container>
 
@@ -178,7 +178,7 @@
         <ng-container matColumnDef="kommentar">
           <th mat-header-cell *matHeaderCellDef> Comment</th>
           <td mat-cell *matCellDef="let element">
-            <mat-card class="card-height">{{element.kommentar}}</mat-card>
+            <mat-card class="card-style">{{element.kommentar}}</mat-card>
           </td>
         </ng-container>
 
