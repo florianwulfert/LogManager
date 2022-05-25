@@ -53,7 +53,7 @@ export class BibelleseService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar(r.body?.returnMessage);
+        this.featureManager.openSnackbar(r.body?.returnMessage, "success");
         return r.body || {
           result: [],
           returnMessage: ''
@@ -62,10 +62,10 @@ export class BibelleseService {
       catchError((err) => {
         if(err.error instanceof Object) {
           console.error(err.error.text)
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
           console.error(err.error)
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to request Bibellese.');
       })
@@ -77,7 +77,7 @@ export class BibelleseService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar(r.body?.returnMessage);
+        this.featureManager.openSnackbar(r.body?.returnMessage, "success");
         return r.body || {
           result: [],
           returnMessage: ''
@@ -86,10 +86,10 @@ export class BibelleseService {
       catchError((err) => {
         if(err.error instanceof Object) {
           console.error(err.error.text)
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
           console.error(err.error)
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to add entry for Bibellese.');
       })
@@ -101,7 +101,7 @@ export class BibelleseService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("Bibellese-Entry with the ID " + i + " was deleted.");
+        this.featureManager.openSnackbar("Bibellese-Entry with the ID " + i + " was deleted.", "success");
         return r.body || {
           result: [],
           returnMessage: ""
@@ -110,10 +110,10 @@ export class BibelleseService {
       catchError((err) => {
         if(err.error instanceof Object) {
           console.error(err.error.text)
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
           console.error(err.error)
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to delete this entry for Bibellese.')
       })

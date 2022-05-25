@@ -45,9 +45,9 @@ export class BooksService implements OnDestroy{
       }),
       catchError((err) => {
         if (err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to request books.');
       })
@@ -62,7 +62,7 @@ export class BooksService implements OnDestroy{
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar(r.body?.returnMessage);
+        this.featureManager.openSnackbar(r.body?.returnMessage, "success");
         return r.body || {
           result: [],
           returnMessage: ''
@@ -70,9 +70,9 @@ export class BooksService implements OnDestroy{
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to add books.');
       })
@@ -87,7 +87,7 @@ export class BooksService implements OnDestroy{
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar(r.body?.returnMessage);
+        this.featureManager.openSnackbar(r.body?.returnMessage, "success");
         return r.body || {
           result: [],
           returnMessage: ''
@@ -95,9 +95,9 @@ export class BooksService implements OnDestroy{
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to update books.');
       })
@@ -112,7 +112,7 @@ export class BooksService implements OnDestroy{
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("Book with the title " + titel + " was deleted.");
+        this.featureManager.openSnackbar("Book with the title " + titel + " was deleted.", "success");
         return r.body || {
           result: [],
           returnMessage: ""
@@ -120,9 +120,9 @@ export class BooksService implements OnDestroy{
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to delete this book.')
       })
@@ -137,7 +137,7 @@ export class BooksService implements OnDestroy{
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar(r.body?.returnMessage);
+        this.featureManager.openSnackbar(r.body?.returnMessage, "success");
         return r.body || {
           result: [],
           returnMessage: ''
@@ -145,9 +145,9 @@ export class BooksService implements OnDestroy{
       }),
       catchError((err) => {
         if (err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to delete all books.');
       })
@@ -162,7 +162,7 @@ export class BooksService implements OnDestroy{
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("Book " + book.titel + " was assigned to user " + this.name + ".");
+        this.featureManager.openSnackbar("Book " + book.titel + " was assigned to user " + this.name + ".", "success");
         return r || {
           result: [],
           returnMessage: ""
@@ -170,9 +170,9 @@ export class BooksService implements OnDestroy{
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to delete this book.')
       })
@@ -187,7 +187,7 @@ export class BooksService implements OnDestroy{
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("User " + this.name + " does not have a favourite book anymore.");
+        this.featureManager.openSnackbar("User " + this.name + " does not have a favourite book anymore.", "success");
         return r || {
           result: [],
           returnMessage: ""
@@ -195,9 +195,9 @@ export class BooksService implements OnDestroy{
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to delete this book.')
       })

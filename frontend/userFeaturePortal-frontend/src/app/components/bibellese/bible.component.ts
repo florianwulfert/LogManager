@@ -95,7 +95,7 @@ export class BibleComponent implements OnInit, OnDestroy {
 
   addLabel() {
     if(!this.form.get("labels")?.value) {
-      this.featureManager.openSnackbar("Value for label must be filled")
+      this.featureManager.openSnackbar("Value for label must be filled", "failed")
       return;
     }
     this.labelList.push(this.form.get("labels")?.value);
@@ -104,7 +104,7 @@ export class BibleComponent implements OnInit, OnDestroy {
 
   addLieblingsVers() {
     if(!this.form.get("lieblingsvers")?.value) {
-      this.featureManager.openSnackbar("Value for verse must be filled")
+      this.featureManager.openSnackbar("Value for verse must be filled", "failed")
       return;
     }
     this.lieblingsverse.push(this.form.get("lieblingsvers")?.value);
@@ -113,7 +113,7 @@ export class BibleComponent implements OnInit, OnDestroy {
 
   addLieblingsVersText() {
     if(!this.form.get("versText")?.value) {
-      this.featureManager.openSnackbar("Value for text must be filled")
+      this.featureManager.openSnackbar("Value for text must be filled", "failed")
       return;
     }
     this.lieblingsversTexte.push(this.form.get("versText")?.value);
