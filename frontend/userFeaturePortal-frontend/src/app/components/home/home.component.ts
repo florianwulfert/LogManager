@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActorFacade} from "../../modules/actor/actor.facade";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
+import {UserFacade} from "../../modules/user/user.facade";
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   userAvailable: boolean = false
   onDestroy = new Subject()
 
-  constructor(private readonly actorFacade: ActorFacade) {
+  constructor(private readonly actorFacade: ActorFacade, private readonly userFacade: UserFacade) {
   }
 
   ngOnInit() {
