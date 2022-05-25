@@ -60,9 +60,11 @@ export class BibelleseService {
         }
       }),
       catchError((err) => {
-        if (err.error instanceof Object) {
+        if(err.error instanceof Object) {
+          console.error(err.error.text)
           this.featureManager.openSnackbar(err.error.text);
         } else {
+          console.error(err.error)
           this.featureManager.openSnackbar(err.error);
         }
         return throwError('Due to technical issues it is currently not possible to request Bibellese.');
@@ -71,12 +73,10 @@ export class BibelleseService {
   }
 
   addBibellese(addBibelleseRequest: AddBibelleseRequest): Observable<AddBibelleseResponse> {
-    console.log(addBibelleseRequest)
     return this.http.post<any>(API_BIBELLESE, {...addBibelleseRequest}, {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r)
         this.featureManager.openSnackbar(r.body?.returnMessage);
         return r.body || {
           result: [],
@@ -85,8 +85,10 @@ export class BibelleseService {
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
+          console.error(err.error.text)
           this.featureManager.openSnackbar(err.error.text);
         } else {
+          console.error(err.error)
           this.featureManager.openSnackbar(err.error);
         }
         return throwError('Due to technical issues it is currently not possible to add entry for Bibellese.');
@@ -106,10 +108,11 @@ export class BibelleseService {
         }
       }),
       catchError((err) => {
-        console.log(err)
         if(err.error instanceof Object) {
+          console.error(err.error.text)
           this.featureManager.openSnackbar(err.error.text);
         } else {
+          console.error(err.error)
           this.featureManager.openSnackbar(err.error);
         }
         return throwError('Due to technical issues it is currently not possible to delete this entry for Bibellese.')

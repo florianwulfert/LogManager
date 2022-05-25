@@ -47,8 +47,9 @@ mat-form-field {
 }
 
 .card-height{
-  height: 100px;
+  height: 140px;
   max-height: 200px;
   max-width: 400px;
+  min-width: 120px;
   overflow: scroll;
 }

@@ -10,6 +10,7 @@ import {AddBibelleseRequest} from "../../modules/bibellese/addBibellese/add-bibe
 import {DeleteBibelleseRequest} from "../../modules/bibellese/deleteBibellese/delete-bibellese-request";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
+import {FeatureManager} from "../../../assets/utils/feature.manager";
 
 @Component({
   selector: 'app-bible',
@@ -19,11 +20,16 @@ import {Subject} from "rxjs";
 
 export class BibleComponent implements OnInit, OnDestroy {
 
-  constructor(private bibelleseFacade: BibelleseFacade, private _snackBar: MatSnackBar, private actorFacade: ActorFacade) {
+  constructor(private bibelleseFacade: BibelleseFacade,
+              private _snackBar: MatSnackBar,
+              private actorFacade: ActorFacade,
+              private featureManager: FeatureManager) {
   }
 
   displayedColumns: string[] = ['text', 'lieblingsvers', 'lieblingsversText', 'label', 'leser', 'kommentar', 'delete'];
   labelList: string[] = [];
+  lieblingsverse: string[] = [];
+  lieblingsversTexte: string[] = [];
   userAvailable: boolean = false
   onDestroy = new Subject()
 
@@ -56,8 +62,8 @@ export class BibleComponent implements OnInit, OnDestroy {
 
   public form: FormGroup = new FormGroup({
     bibelabschnitt: new FormControl('', [Validators.required]),
-    lieblingsvers: new FormControl('', [Validators.required]),
-    versText: new FormControl('', [Validators.required]),
+    lieblingsvers: new FormControl('', ),
+    versText: new FormControl('', ),
     labels: new FormControl(''),
     kommentar: new FormControl('', [Validators.required]),
     leser: new FormControl('', [Validators.required]),
@@ -65,8 +71,8 @@ export class BibleComponent implements OnInit, OnDestroy {
 
   prepareAddBibelleseRequest(request: AddBibelleseRequest) {
     request.bibelabschnitt = this.form.get("bibelabschnitt")?.value
-    request.lieblingsverse = [this.form.get("lieblingsvers")?.value]
-    request.versText = [this.form.get("versText")?.value]
+    request.lieblingsverse = this.lieblingsverse
+    request.versText = this.lieblingsversTexte
     request.labels = this.labelList
     request.kommentar = this.form.get("kommentar")?.value
     request.leser = this.form.get("leser")?.value
@@ -75,7 +81,6 @@ export class BibleComponent implements OnInit, OnDestroy {
 
   addBibellese(): void {
     let request = new AddBibelleseRequest()
-    console.log(request)
     this.prepareAddBibelleseRequest(request)
     this.bibelleseFacade.addBibellese(request);
   }
@@ -87,11 +92,36 @@ export class BibleComponent implements OnInit, OnDestroy {
   }
 
   addLabel() {
+    if(!this.form.get("labels")?.value) {
+      this.featureManager.openSnackbar("Value for label must be filled")
+      return;
+    }
     this.labelList.push(this.form.get("labels")?.value);
+    this.form.get("labels")?.reset();
+  }
+
+  addLieblingsVers() {
+    if(!this.form.get("lieblingsvers")?.value) {
+      this.featureManager.openSnackbar("Value for verse must be filled")
+      return;
+    }
+    this.lieblingsverse.push(this.form.get("lieblingsvers")?.value);
+    this.form.get("lieblingsvers")?.reset();
+  }
+
+  addLieblingsVersText() {
+    if(!this.form.get("versText")?.value) {
+      this.featureManager.openSnackbar("Value for text must be filled")
+      return;
+    }
+    this.lieblingsversTexte.push(this.form.get("versText")?.value);
+    this.form.get("versText")?.reset();
   }
 
   resetForm() {
     this.form.reset();
-    this.labelList.splice(0, this.labelList.length)
+    this.labelList = [];
+    this.lieblingsverse = [];
+    this.lieblingsversTexte = [];
   }
 }

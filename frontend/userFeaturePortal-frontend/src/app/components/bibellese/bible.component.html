@@ -7,7 +7,7 @@
 
         <!-- Text Column -->
         <ng-container matColumnDef="text">
-          <th mat-header-cell *matHeaderCellDef> Read Text</th>
+          <th mat-header-cell *matHeaderCellDef> Read text</th>
           <td mat-cell *matCellDef="let element" class="truncated-cell">
             <mat-card class="card-height">{{element.text}}</mat-card>
           </td>
@@ -15,17 +15,25 @@
 
         <!-- Lieblingsvers Column -->
         <ng-container matColumnDef="lieblingsvers">
-          <th mat-header-cell *matHeaderCellDef> Favourite Verse</th>
+          <th mat-header-cell *matHeaderCellDef> Favourite verse</th>
           <td mat-cell *matCellDef="let element">
-            <mat-card class="card-height">{{element.lieblingsvers}}</mat-card>
+            <mat-card class="card-height">
+              <mat-chip-list class="mat-chip-list-stacked" *ngFor="let vers of element.lieblingsvers">
+                <mat-chip>{{vers}}</mat-chip>
+              </mat-chip-list>
+            </mat-card>
           </td>
         </ng-container>
 
         <!-- Lieblingsvers Column -->
         <ng-container matColumnDef="lieblingsversText">
-          <th mat-header-cell *matHeaderCellDef> Favourite Verse</th>
+          <th mat-header-cell *matHeaderCellDef> Text of favourite verse</th>
           <td mat-cell *matCellDef="let element">
-            <mat-card class="card-height">{{element.lieblingsversText}}</mat-card>
+            <mat-card class="card-height">
+              <mat-chip-list class="mat-chip-list-stacked" *ngFor="let text of element.lieblingsversText">
+                <mat-chip [color]="'primary'" class="p-5">{{text}}</mat-chip>
+              </mat-chip-list>
+            </mat-card>
           </td>
         </ng-container>
 
@@ -34,7 +42,7 @@
           <th mat-header-cell *matHeaderCellDef> Label</th>
           <td mat-cell *matCellDef="let element">
             <mat-card class="card-height">
-              <mat-chip-list class="mat-standard-chip" *ngFor="let labelItem of element.label">
+              <mat-chip-list class="mat-standard-chip mb-1" *ngFor="let labelItem of element.label">
                 <mat-chip>{{labelItem}}</mat-chip>
               </mat-chip-list>
             </mat-card>
@@ -109,9 +117,14 @@
                 </mat-form-field>
               </div>
               <div>
-                <button mat-icon-button>
+                <button mat-icon-button (click)="addLieblingsVers()">
                   <mat-icon>add</mat-icon>
                 </button>
+                <mat-list *ngFor="let vers of lieblingsverse">
+                  <mat-card>
+                    <mat-list-item>{{vers}}</mat-list-item>
+                  </mat-card>
+                </mat-list>
                 <mat-form-field appearance="fill">
                   <mat-label>Favourite verse</mat-label>
                   <input matInput formControlName="lieblingsvers">
@@ -119,15 +132,17 @@
                           (click)="form.controls['lieblingsvers'].reset()">
                     <mat-icon>close</mat-icon>
                   </button>
-                  <mat-error *ngIf="form.controls['lieblingsvers'].hasError('required')">
-                    Favourite verse is <strong>required</strong>
-                  </mat-error>
                 </mat-form-field>
               </div>
               <div>
-                <button mat-icon-button>
+                <button mat-icon-button (click)="addLieblingsVersText()">
                   <mat-icon>add</mat-icon>
                 </button>
+                <mat-list *ngFor="let text of lieblingsversTexte">
+                  <mat-card>
+                    <mat-list-item>{{text}}</mat-list-item>
+                  </mat-card>
+                </mat-list>
                 <mat-form-field appearance="fill">
                   <mat-label>Text of favourite verse</mat-label>
                   <input matInput formControlName="versText">
@@ -135,9 +150,6 @@
                           (click)="form.controls['versText'].reset()">
                     <mat-icon>close</mat-icon>
                   </button>
-                  <mat-error *ngIf="form.controls['versText'].hasError('required')">
-                    Text of favourite verse is <strong>required</strong>
-                  </mat-error>
                 </mat-form-field>
               </div>
               <div>
@@ -154,9 +166,6 @@
                           (click)="form.controls['labels'].reset()">
                     <mat-icon>close</mat-icon>
                   </button>
-                  <mat-error *ngIf="form.controls['labels'].hasError('required')">
-                    Labels are <strong>required</strong>
-                  </mat-error>
                 </mat-form-field>
               </div>
               <div>
