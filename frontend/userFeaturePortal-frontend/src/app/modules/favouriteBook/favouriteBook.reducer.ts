@@ -1,5 +1,9 @@
 import {createReducer, on} from "@ngrx/store";
-import {deleteFavouriteBookResponseAction, getFavouriteBookResponseAction} from "./favouriteBook.actions";
+import {
+  assignBookToUserResponseAction,
+  deleteFavouriteBookResponseAction,
+  getFavouriteBookResponseAction
+} from "./favouriteBook.actions";
 import {FAVOURITE_BOOK_GET_INITIAL_STATE, FavouriteBookState} from "./favouriteBook.state";
 import {FavouriteBookResponse} from "./getFavouriteBook/favouriteBook-response";
 
@@ -13,5 +17,6 @@ const handleBooksResponse = (state: FavouriteBookState, resp: FavouriteBookRespo
 export const FavouriteBookReducer = createReducer(
   FAVOURITE_BOOK_GET_INITIAL_STATE,
   on(deleteFavouriteBookResponseAction, handleBooksResponse),
-  on(getFavouriteBookResponseAction, handleBooksResponse)
+  on(getFavouriteBookResponseAction, handleBooksResponse),
+  on(assignBookToUserResponseAction, handleBooksResponse)
 )

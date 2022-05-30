@@ -1,8 +1,9 @@
 import {Injectable} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {FavouriteBookState} from "./favouriteBook.state";
-import {deleteFavouriteBookAction, getFavouriteBookAction} from "./favouriteBook.actions";
+import {assignBookToUserAction, deleteFavouriteBookAction, getFavouriteBookAction} from "./favouriteBook.actions";
 import {getFavouriteBook} from "./favouriteBook.selector";
+import {AddBookRequest} from "../books/addBooks/add-book-request";
 
 @Injectable({providedIn: 'root'})
 export class FavouriteBookFacade {
@@ -20,4 +21,9 @@ export class FavouriteBookFacade {
   getFavouriteBook() {
     this.favouriteBookState.dispatch(getFavouriteBookAction())
   }
+
+  assignBookToUser(request: AddBookRequest) {
+    this.favouriteBookState.dispatch(assignBookToUserAction(request))
+  }
+
 }

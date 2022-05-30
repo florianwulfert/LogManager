@@ -44,21 +44,25 @@ export class BookComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getBooks()
+
     this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if (r) {
         this.userAvailable = true
       }
     })
+    console.log(this.userAvailable)
 
-    if (this.userAvailable) {
-      this.getFavouriteBook()
-    }
+    this.delay(5000).then(r => this.getFavouriteBook());
 
     this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       if (result.length > 0) {
         this.booksListAvailable = true
       }
     })
+  }
+
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
   ngOnDestroy() {
@@ -116,7 +120,7 @@ export class BookComponent implements OnInit, OnDestroy {
 
   assignBook(): void {
     let request = this.formBookToUser.get("book")?.value
-    this.booksFacade.assignBookToUser(request)
+    this.favouriteBookFacade.assignBookToUser(request)
   }
 
   deleteBooks(): void {
@@ -126,8 +130,8 @@ export class BookComponent implements OnInit, OnDestroy {
   getFavouriteBook(): void {
     this.favouriteBookFacade.getFavouriteBook()
     this.favouriteBookFacade.stateGetFavouriteBookResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
-      console.log(result)
       this.favouriteBook = result
+      console.log(this.favouriteBook)
     })
   }
 

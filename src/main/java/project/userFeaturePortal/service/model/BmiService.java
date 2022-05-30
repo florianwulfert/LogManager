@@ -22,7 +22,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class BmiService extends DateUtil {
 
-  private static final Logger LOGGER = LogManager.getLogger(UserService.class);
+  private static final Logger LOGGER = LogManager.getLogger(BmiService.class);
   private final UserRepository userRepository;
   private final BmiValidationService bmiValidationService;
 

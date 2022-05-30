@@ -5,9 +5,12 @@ import {catchError, map, takeUntil} from "rxjs/operators";
 import {ActorFacade} from "../actor/actor.facade";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {FavouriteBookResponse} from "./getFavouriteBook/favouriteBook-response";
+import {AddBookRequest} from "../books/addBooks/add-book-request";
 
 const API_DELETE_FAVOURITE_BOOK = 'http://localhost:8081/user/favouriteBook/delete?name='
 const API_GET_FAVOURITE_BOOK = 'http://localhost:8081/user/favouriteBook?name='
+const API_ADD_BOOK_TO_USER = 'http://localhost:8081/user/favouriteBook?bookTitel='
+
 
 @Injectable({
   providedIn: 'root'
@@ -32,9 +35,10 @@ export class FavouriteBookService implements OnDestroy{
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("User " + this.name + " does not have a favourite book anymore.");
+        this.featureManager.openSnackbar(r.returnMessage)
         return r || {
-          result: ""
+          favouriteBook: "",
+          returnMessage: ""
         }
       }),
       catchError((err) => {
@@ -57,7 +61,8 @@ export class FavouriteBookService implements OnDestroy{
     }).pipe(
       map((r) => {
         return r.body || {
-          favouriteBook: ''
+          favouriteBook: '',
+          returnMessage: ''
         }
       }),
       catchError((err) => {
@@ -74,4 +79,28 @@ export class FavouriteBookService implements OnDestroy{
     );
   }
 
+  assignBookToUser(book: AddBookRequest): Observable<FavouriteBookResponse> {
+    this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
+      this.name = r
+    })
+    return this.http.post<FavouriteBookResponse>(API_ADD_BOOK_TO_USER + book.titel + '&actor=' + this.name, {
+      observe: 'response'
+    }).pipe(
+      map((r) => {
+        this.featureManager.openSnackbar(r.returnMessage);
+        return r || {
+          favouriteBook: "",
+          returnMessage: ""
+        }
+      }),
+      catchError((err) => {
+        if(err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text);
+        } else {
+          this.featureManager.openSnackbar(err.error);
+        }
+        return throwError('Due to technical issues it is currently not possible to delete this book.')
+      })
+    );
+  }
 }

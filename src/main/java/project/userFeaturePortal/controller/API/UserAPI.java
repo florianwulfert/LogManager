@@ -12,7 +12,7 @@ public interface UserAPI {
   ResponseEntity<UserResponseDto> addUser(@RequestBody UserRequestDto allParameters);
 
   @PostMapping("/user/favouriteBook")
-  String addFavouriteBookToUser(@RequestParam final String bookTitel, @RequestParam final String actor);
+  ResponseEntity<GetFavouriteBookResponseDto> addFavouriteBookToUser(@RequestParam final String bookTitel, @RequestParam final String actor);
 
   @PostMapping("/user/favouriteBook/delete")
   ResponseEntity<GetFavouriteBookResponseDto> deleteFavouriteBook(@RequestParam String name);
