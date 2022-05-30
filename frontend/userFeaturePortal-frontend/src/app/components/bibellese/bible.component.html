@@ -36,7 +36,12 @@
                   <mat-icon>add</mat-icon>
                 </button>
                 <mat-chip-list *ngFor="let vers of lieblingsverse" class="mat-standard-chip">
-                    <mat-chip>{{vers}}</mat-chip>
+                  <mat-chip>
+                    {{vers}}
+                    <button mat-icon-button class="deleteButton" (click)="deleteLieblingsVers(vers)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </mat-chip>
                 </mat-chip-list>
                 <mat-form-field appearance="fill">
                   <mat-label>Favourite verse</mat-label>
@@ -53,7 +58,12 @@
                 </button>
                 <mat-list *ngFor="let text of lieblingsversTexte">
                   <mat-card>
-                    <mat-list-item>{{text}}</mat-list-item>
+                    <mat-list-item>
+                      {{text}}
+                      <button mat-icon-button class="deleteButton" (click)="deleteLieblingsVersText(text)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </mat-list-item>
                   </mat-card>
                 </mat-list>
                 <mat-form-field appearance="fill">

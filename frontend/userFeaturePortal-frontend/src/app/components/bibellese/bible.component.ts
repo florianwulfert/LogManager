@@ -122,6 +122,17 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.form.get("lieblingsvers")?.reset();
   }
 
+  deleteLieblingsVers(lieblingsVers: string) {
+    let count = 0;
+    for (let vers of this.lieblingsverse) {
+      if (vers === lieblingsVers) {
+        this.lieblingsverse.splice(count, 1)
+        return
+      }
+      count++
+    }
+  }
+
   addLieblingsVersText() {
     if (!this.form.get("versText")?.value) {
       this.featureManager.openSnackbar("Value for text must be filled", "failed")
@@ -129,6 +140,17 @@ export class BibleComponent implements OnInit, OnDestroy {
     }
     this.lieblingsversTexte.push(this.form.get("versText")?.value);
     this.form.get("versText")?.reset();
+  }
+
+  deleteLieblingsVersText(lieblingsVersText: string) {
+    let count = 0;
+    for (let versText of this.lieblingsversTexte) {
+      if (versText === lieblingsVersText) {
+        this.lieblingsversTexte.splice(count, 1)
+        return
+      }
+      count++
+    }
   }
 
   resetForm() {
