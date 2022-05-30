@@ -32,13 +32,13 @@
                 </mat-form-field>
               </div>
               <div>
-                <button mat-icon-button (click)="addItemToList('lieblingsvers', lieblingsverse)">
+                <button mat-icon-button (click)="featureManager.addItemToList(form, 'lieblingsvers', lieblingsverse)">
                   <mat-icon>add</mat-icon>
                 </button>
                 <mat-chip-list *ngFor="let vers of lieblingsverse" class="mat-standard-chip">
                   <mat-chip>
                     {{vers}}
-                    <button mat-icon-button class="deleteButton" (click)="deleteItemFromList(vers, lieblingsverse)">
+                    <button mat-icon-button class="deleteButton" (click)="featureManager.deleteItemFromList(vers, lieblingsverse)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </mat-chip>
@@ -53,14 +53,14 @@
                 </mat-form-field>
               </div>
               <div>
-                <button mat-icon-button (click)="addItemToList('versText', lieblingsversTexte)">
+                <button mat-icon-button (click)="featureManager.addItemToList(form, 'versText', lieblingsversTexte)">
                   <mat-icon>add</mat-icon>
                 </button>
                 <mat-list *ngFor="let text of lieblingsversTexte">
                   <mat-card>
                     <mat-list-item>
                       {{text}}
-                      <button mat-icon-button class="deleteButton" (click)="deleteItemFromList(text, lieblingsversTexte)">
+                      <button mat-icon-button class="deleteButton" (click)="featureManager.deleteItemFromList(text, lieblingsversTexte)">
                         <mat-icon>delete</mat-icon>
                       </button>
                     </mat-list-item>
@@ -76,13 +76,13 @@
                 </mat-form-field>
               </div>
               <div>
-                <button mat-icon-button (click)="addItemToList('labels', labelList)">
+                <button mat-icon-button (click)="featureManager.addItemToList(form, 'labels', labelList)">
                   <mat-icon>add</mat-icon>
                 </button>
                 <mat-chip-list class="mat-standard-chip" *ngFor="let label of labelList">
                   <mat-chip>
                     {{label}}
-                    <button mat-icon-button class="deleteButton" (click)="deleteItemFromList(label, labelList)">
+                    <button mat-icon-button class="deleteButton" (click)="featureManager.deleteItemFromList(label, labelList)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </mat-chip>

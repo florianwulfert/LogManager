@@ -23,7 +23,7 @@ export class BibleComponent implements OnInit, OnDestroy {
   constructor(private bibelleseFacade: BibelleseFacade,
               private _snackBar: MatSnackBar,
               private actorFacade: ActorFacade,
-              private featureManager: FeatureManager) {
+              public featureManager: FeatureManager) {
   }
 
   displayedColumns: string[] = ['text', 'lieblingsvers', 'lieblingsversText', 'label', 'leser', 'kommentar', 'delete'];
@@ -52,15 +52,6 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.onDestroy.complete()
   }
 
-  getBibellese(): void {
-    let request = new GetBibelleseRequest();
-    this.bibelleseFacade.getBibellese(request)
-    this.bibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
-      this.dataSource = new MatTableDataSource(result)
-      this.dataSource.paginator = this.paginator;
-    })
-  }
-
   public form: FormGroup = new FormGroup({
     bibelabschnitt: new FormControl('', [Validators.required]),
     lieblingsvers: new FormControl('',),
@@ -87,30 +78,19 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.isExpanded = false;
   }
 
+  getBibellese(): void {
+    let request = new GetBibelleseRequest();
+    this.bibelleseFacade.getBibellese(request)
+    this.bibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      this.dataSource = new MatTableDataSource(result)
+      this.dataSource.paginator = this.paginator;
+    })
+  }
+
   deleteBibellese(element: any): void {
     let request = new DeleteBibelleseRequest()
     request.id = element.id
     this.bibelleseFacade.deleteBibellese(request)
-  }
-
-  addItemToList(itemToAdd: string, list: string[]) {
-    if (!this.form.get(itemToAdd)?.value) {
-      this.featureManager.openSnackbar("Value for " + itemToAdd + " must be filled", "failed")
-      return;
-    }
-    list.push(this.form.get(itemToAdd)?.value);
-    this.form.get(itemToAdd)?.reset();
-  }
-
-  deleteItemFromList(itemToDelete: string, list: string[]) {
-    let count = 0;
-    for (let item of list) {
-      if (item === itemToDelete) {
-        list.splice(count, 1)
-        return
-      }
-      count++
-    }
   }
 
   resetForm() {
