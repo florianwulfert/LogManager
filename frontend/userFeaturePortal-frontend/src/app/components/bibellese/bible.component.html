@@ -35,11 +35,9 @@
                 <button mat-icon-button (click)="addLieblingsVers()">
                   <mat-icon>add</mat-icon>
                 </button>
-                <mat-list *ngFor="let vers of lieblingsverse">
-                  <mat-card>
-                    <mat-list-item>{{vers}}</mat-list-item>
-                  </mat-card>
-                </mat-list>
+                <mat-chip-list *ngFor="let vers of lieblingsverse" class="mat-standard-chip">
+                    <mat-chip>{{vers}}</mat-chip>
+                </mat-chip-list>
                 <mat-form-field appearance="fill">
                   <mat-label>Favourite verse</mat-label>
                   <input matInput formControlName="lieblingsvers">
