@@ -70,7 +70,13 @@
                   <mat-icon>add</mat-icon>
                 </button>
                 <mat-chip-list class="mat-standard-chip" *ngFor="let label of labelList">
-                  <mat-chip>{{label}}</mat-chip>
+                  <mat-chip>
+                    {{label}}
+                    <button mat-icon-button class="deleteButton" (click)="deleteLabel(label)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </mat-chip>
+
                 </mat-chip-list>
                 <mat-form-field appearance="fill">
                   <mat-label>Labels</mat-label>

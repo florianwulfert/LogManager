@@ -63,8 +63,8 @@ export class BibleComponent implements OnInit, OnDestroy {
 
   public form: FormGroup = new FormGroup({
     bibelabschnitt: new FormControl('', [Validators.required]),
-    lieblingsvers: new FormControl('', ),
-    versText: new FormControl('', ),
+    lieblingsvers: new FormControl('',),
+    versText: new FormControl('',),
     labels: new FormControl(''),
     kommentar: new FormControl('', [Validators.required]),
     leser: new FormControl('', [Validators.required]),
@@ -94,7 +94,7 @@ export class BibleComponent implements OnInit, OnDestroy {
   }
 
   addLabel() {
-    if(!this.form.get("labels")?.value) {
+    if (!this.form.get("labels")?.value) {
       this.featureManager.openSnackbar("Value for label must be filled", "failed")
       return;
     }
@@ -102,8 +102,19 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.form.get("labels")?.reset();
   }
 
+  deleteLabel(label: string) {
+    let count = 0;
+    for (let labelInList of this.labelList) {
+      if (labelInList === label) {
+        this.labelList.splice(count, 1)
+        return
+      }
+      count++
+    }
+  }
+
   addLieblingsVers() {
-    if(!this.form.get("lieblingsvers")?.value) {
+    if (!this.form.get("lieblingsvers")?.value) {
       this.featureManager.openSnackbar("Value for verse must be filled", "failed")
       return;
     }
@@ -112,7 +123,7 @@ export class BibleComponent implements OnInit, OnDestroy {
   }
 
   addLieblingsVersText() {
-    if(!this.form.get("versText")?.value) {
+    if (!this.form.get("versText")?.value) {
       this.featureManager.openSnackbar("Value for text must be filled", "failed")
       return;
     }
