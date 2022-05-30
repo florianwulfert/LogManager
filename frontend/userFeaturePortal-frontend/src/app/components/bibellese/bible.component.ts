@@ -93,31 +93,13 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.bibelleseFacade.deleteBibellese(request)
   }
 
-  addLabel() {
-    if (!this.form.get("labels")?.value) {
-      this.featureManager.openSnackbar("Value for label must be filled", "failed")
+  addItemToList(itemToAdd: string, list: string[]) {
+    if (!this.form.get(itemToAdd)?.value) {
+      this.featureManager.openSnackbar("Value for " + itemToAdd + " must be filled", "failed")
       return;
     }
-    this.labelList.push(this.form.get("labels")?.value);
-    this.form.get("labels")?.reset();
-  }
-
-  addLieblingsVers() {
-    if (!this.form.get("lieblingsvers")?.value) {
-      this.featureManager.openSnackbar("Value for verse must be filled", "failed")
-      return;
-    }
-    this.lieblingsverse.push(this.form.get("lieblingsvers")?.value);
-    this.form.get("lieblingsvers")?.reset();
-  }
-
-  addLieblingsVersText() {
-    if (!this.form.get("versText")?.value) {
-      this.featureManager.openSnackbar("Value for text must be filled", "failed")
-      return;
-    }
-    this.lieblingsversTexte.push(this.form.get("versText")?.value);
-    this.form.get("versText")?.reset();
+    list.push(this.form.get(itemToAdd)?.value);
+    this.form.get(itemToAdd)?.reset();
   }
 
   deleteItemFromList(itemToDelete: string, list: string[]) {
