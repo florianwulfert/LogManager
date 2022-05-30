@@ -37,7 +37,10 @@ import {BookComponent} from "./components/book/book.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {BooksModule} from "./modules/books/books.module";
 import {UserModule} from "./modules/user/user.module";
+import {BibleComponent} from "./components/bibellese/bible.component";
+import {BibelleseModule} from "./modules/bibellese/bibellese.module";
 import {BookModule} from "./modules/book/book.module";
+import {MatChipsModule} from "@angular/material/chips";
 
 @NgModule({
   declarations: [
@@ -49,7 +52,8 @@ import {BookModule} from "./modules/book/book.module";
     LoggingComponent,
     HomeComponent,
     ProfileMenuComponent,
-    BookComponent
+    BookComponent,
+    BibleComponent
   ],
   imports: [
     BrowserModule,
@@ -85,8 +89,10 @@ import {BookModule} from "./modules/book/book.module";
     MatPaginatorModule,
     ActorIsValidModule,
     BooksModule,
+    BibelleseModule,
     UserModule,
-    BookModule
+    BookModule,
+    MatChipsModule
   ],
   exports: [
     BrowserModule,

@@ -43,9 +43,9 @@ export class UsersService implements OnDestroy {
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to request users.');
       })
@@ -60,7 +60,7 @@ export class UsersService implements OnDestroy {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar(r.body?.returnMessage);
+        this.featureManager.openSnackbar(r.body?.returnMessage, "success");
         return r.body || {
           result: [],
           returnMessage: ""
@@ -68,9 +68,9 @@ export class UsersService implements OnDestroy {
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to add users.');
       })
@@ -85,7 +85,7 @@ export class UsersService implements OnDestroy {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar(r.body?.returnMessage);
+        this.featureManager.openSnackbar(r.body?.returnMessage, "success");
         return r.body || {
           result: [],
           returnMessage: ""
@@ -93,9 +93,9 @@ export class UsersService implements OnDestroy {
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to update users.');
       })
@@ -107,7 +107,7 @@ export class UsersService implements OnDestroy {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar(r.body?.returnMessage);
+        this.featureManager.openSnackbar(r.body?.returnMessage, "success");
         return r.body || {
           result: [],
           returnMessage: ""
@@ -115,9 +115,9 @@ export class UsersService implements OnDestroy {
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to delete users.');
       })
@@ -132,7 +132,7 @@ export class UsersService implements OnDestroy {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar("User named " + i + " was deleted.");
+        this.featureManager.openSnackbar("User named " + i + " was deleted.", "success");
         return r.body || {
           result: [],
           returnMessage: ""
@@ -140,9 +140,9 @@ export class UsersService implements OnDestroy {
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to delete this user.');
       })

@@ -19,7 +19,7 @@ import project.userFeaturePortal.service.model.UserService;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
-  private static final Logger LOGGER = LogManager.getLogger(UserService.class);
+  private static final Logger LOGGER = LogManager.getLogger(RestExceptionHandler.class);
 
   @ResponseBody
   @ExceptionHandler(MissingServletRequestParameterException.class)

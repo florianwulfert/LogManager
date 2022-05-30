@@ -6,6 +6,7 @@ import {UserComponent} from "../components/user/user.component";
 import {LoggingComponent} from "../components/logging/logging.component";
 import {HomeComponent} from "../components/home/home.component";
 import {BookComponent} from "../components/book/book.component";
+import {BibleComponent} from "../components/bibellese/bible.component";
 
 const routes: Routes = [
   {path: 'app', redirectTo: 'home'},
@@ -31,6 +32,10 @@ const routesHome: Routes = [
   {path: 'home', component: HomeComponent}
 ];
 
+const routesBible: Routes = [
+  {path: 'bible', component: BibleComponent}
+];
+
 const different: Routes = [
   {path: '**', redirectTo: 'home'},
 ];
@@ -44,6 +49,7 @@ const different: Routes = [
     RouterModule.forChild(routesUser),
     RouterModule.forChild(routesLogging),
     RouterModule.forChild(routesHome),
+    RouterModule.forChild(routesBible),
     RouterModule.forChild(different)
   ],
   exports: [
