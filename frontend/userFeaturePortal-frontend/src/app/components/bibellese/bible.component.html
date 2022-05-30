@@ -38,7 +38,7 @@
                 <mat-chip-list *ngFor="let vers of lieblingsverse" class="mat-standard-chip">
                   <mat-chip>
                     {{vers}}
-                    <button mat-icon-button class="deleteButton" (click)="deleteLieblingsVers(vers)">
+                    <button mat-icon-button class="deleteButton" (click)="deleteItemFromList(vers, lieblingsverse)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </mat-chip>
@@ -60,7 +60,7 @@
                   <mat-card>
                     <mat-list-item>
                       {{text}}
-                      <button mat-icon-button class="deleteButton" (click)="deleteLieblingsVersText(text)">
+                      <button mat-icon-button class="deleteButton" (click)="deleteItemFromList(text, lieblingsversTexte)">
                         <mat-icon>delete</mat-icon>
                       </button>
                     </mat-list-item>
@@ -82,7 +82,7 @@
                 <mat-chip-list class="mat-standard-chip" *ngFor="let label of labelList">
                   <mat-chip>
                     {{label}}
-                    <button mat-icon-button class="deleteButton" (click)="deleteLabel(label)">
+                    <button mat-icon-button class="deleteButton" (click)="deleteItemFromList(label, labelList)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </mat-chip>

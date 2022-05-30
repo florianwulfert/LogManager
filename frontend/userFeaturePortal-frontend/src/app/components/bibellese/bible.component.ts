@@ -102,17 +102,6 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.form.get("labels")?.reset();
   }
 
-  deleteLabel(label: string) {
-    let count = 0;
-    for (let labelInList of this.labelList) {
-      if (labelInList === label) {
-        this.labelList.splice(count, 1)
-        return
-      }
-      count++
-    }
-  }
-
   addLieblingsVers() {
     if (!this.form.get("lieblingsvers")?.value) {
       this.featureManager.openSnackbar("Value for verse must be filled", "failed")
@@ -120,17 +109,6 @@ export class BibleComponent implements OnInit, OnDestroy {
     }
     this.lieblingsverse.push(this.form.get("lieblingsvers")?.value);
     this.form.get("lieblingsvers")?.reset();
-  }
-
-  deleteLieblingsVers(lieblingsVers: string) {
-    let count = 0;
-    for (let vers of this.lieblingsverse) {
-      if (vers === lieblingsVers) {
-        this.lieblingsverse.splice(count, 1)
-        return
-      }
-      count++
-    }
   }
 
   addLieblingsVersText() {
@@ -142,11 +120,11 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.form.get("versText")?.reset();
   }
 
-  deleteLieblingsVersText(lieblingsVersText: string) {
+  deleteItemFromList(itemToDelete: string, list: string[]) {
     let count = 0;
-    for (let versText of this.lieblingsversTexte) {
-      if (versText === lieblingsVersText) {
-        this.lieblingsversTexte.splice(count, 1)
+    for (let item of list) {
+      if (item === itemToDelete) {
+        list.splice(count, 1)
         return
       }
       count++
