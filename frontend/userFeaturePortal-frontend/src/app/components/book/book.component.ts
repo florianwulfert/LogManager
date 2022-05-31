@@ -48,15 +48,7 @@ export class BookComponent implements OnInit, OnDestroy {
     this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if (r) {
         this.userAvailable = true
-      }
-    })
-    console.log(this.userAvailable)
-
-    this.delay(5000).then(r => this.getFavouriteBook());
-
-    this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
-      if (result.length > 0) {
-        this.booksListAvailable = true
+        this.delay(5000).then(r => this.getFavouriteBook());
       }
     })
   }
@@ -80,9 +72,13 @@ export class BookComponent implements OnInit, OnDestroy {
   getBooks(): void {
     this.booksFacade.getBooks()
     this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      console.log(result)
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
       this.books = result
+      if (result.length > 0) {
+        this.booksListAvailable = true
+      }
     })
   }
 
@@ -131,7 +127,6 @@ export class BookComponent implements OnInit, OnDestroy {
     this.favouriteBookFacade.getFavouriteBook()
     this.favouriteBookFacade.stateGetFavouriteBookResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.favouriteBook = result
-      console.log(this.favouriteBook)
     })
   }
 

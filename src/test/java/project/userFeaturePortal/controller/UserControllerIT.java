@@ -172,7 +172,7 @@ class UserControllerIT {
 
             assertEquals(message, result.getResponse().getContentAsString());
     }
-/*
+/* // TODO: fix tests
     private static Stream<Arguments> getUserUpdateArguments() {
         return Stream.of(
                 Arguments.of(
@@ -258,7 +258,7 @@ class UserControllerIT {
                                         .andDo(print())
                                         .andExpect(status().isOk())
                                         .andReturn();
-                        assertEquals(String.format(InfoMessages.BOOK_BY_USER, "haya", "Torsten"), result.getResponse().getContentAsString());
+                        assertEquals(TestMessages.BOOK_HAYA_ADDED_BY_TORSTEN, result.getResponse().getContentAsString());
                 }
 
                 @Test
