@@ -93,7 +93,7 @@ import {MatChipsModule} from "@angular/material/chips";
     BibelleseModule,
     UserModule,
     BookModule,
-    MatChipsModule
+    MatChipsModule,
     BookModule,
     FavouriteBookModule
   ],

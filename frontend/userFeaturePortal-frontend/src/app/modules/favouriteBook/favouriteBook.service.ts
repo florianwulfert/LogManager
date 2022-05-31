@@ -35,7 +35,7 @@ export class FavouriteBookService implements OnDestroy{
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar(r.returnMessage)
+        this.featureManager.openSnackbar(r.returnMessage, "success")
         return r || {
           favouriteBook: "",
           returnMessage: ""
@@ -43,9 +43,9 @@ export class FavouriteBookService implements OnDestroy{
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to delete this book.')
       })
@@ -67,13 +67,13 @@ export class FavouriteBookService implements OnDestroy{
       }),
       catchError((err) => {
         if (err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text,"failed");
           return throwError('Wrong object in interface')
         } if (err.error) {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error,"failed");
           return throwError('business error')
         }
-        this.featureManager.openSnackbar('Due to technical issues it is currently not possible to request favourite book.')
+        this.featureManager.openSnackbar('Due to technical issues it is currently not possible to request favourite book.',"failed")
         return throwError('Due to technical issues it is currently not possible to request favourite book.')
       })
     );
@@ -87,7 +87,7 @@ export class FavouriteBookService implements OnDestroy{
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar(r.returnMessage);
+        this.featureManager.openSnackbar(r.returnMessage, "success");
         return r || {
           favouriteBook: "",
           returnMessage: ""
@@ -95,9 +95,9 @@ export class FavouriteBookService implements OnDestroy{
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text,"failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error,"failed");
         }
         return throwError('Due to technical issues it is currently not possible to delete this book.')
       })
