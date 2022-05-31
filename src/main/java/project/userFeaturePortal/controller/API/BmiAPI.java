@@ -28,14 +28,6 @@ public interface BmiAPI {
                                                             "{\"resultMessage\":\"User has a BMI of 28 and therewith he has overweight.\"}",
                                                             allOf = BmiResponseDto.class))),
                     @ApiResponse(
-                            description = "One of the parameters has wrong format.",
-                            responseCode = "400",
-                            content =
-                                    @Content(
-                                            mediaType = "text/plain",
-                                            schema =
-                                                    @Schema(example = "One of the parameters has wrong format."))),
-                    @ApiResponse(
                             description = "Illegal format for birthdate!",
                             responseCode = "400",
                             content =
