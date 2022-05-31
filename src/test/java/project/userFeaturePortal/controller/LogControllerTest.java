@@ -40,9 +40,11 @@ class LogControllerTest {
 
   @Test
   void testAddLog() {
+    LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
+    LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
     LogRequestDto testDto =
         LogRequestDto.builder().message("TestMessage").severity("INFO").user("Peter").build();
-    systemUnderTest.addLog(testDto);
+    systemUnderTest.addLog(testDto, startDate, endDate);
     verify(logService).addLog(any());
   }
 

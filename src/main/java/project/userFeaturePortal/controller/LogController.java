@@ -43,10 +43,12 @@ public class LogController implements LogAPI {
   }
 
   @Override
-  public ResponseEntity<LogResponseDto> addLog(LogRequestDto allParameters) {
+  public ResponseEntity<LogResponseDto> addLog(LogRequestDto allParameters,
+                                               LocalDateTime startDateTime,
+                                               LocalDateTime endDateTime) {
     String returnMessage = logService.addLog(allParameters);
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(new LogResponseDto(logService.getLogs(null, null, null, null, null), returnMessage));
+        .body(new LogResponseDto(logService.getLogs(allParameters.severity, allParameters.message, startDateTime, endDateTime, allParameters.user), returnMessage));
   }
 
   @Override

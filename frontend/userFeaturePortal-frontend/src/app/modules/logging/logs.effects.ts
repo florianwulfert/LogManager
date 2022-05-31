@@ -18,7 +18,6 @@ import {
   loadGetLogsErrorAction
 } from "./logs.actions";
 import {LogService} from "./logs.service";
-import {AddLogRequest} from "./addLogs/dto/add-log-request";
 import {GetLogsRequest} from "./getLogs/dto/getLogs-request";
 
 
@@ -51,7 +50,7 @@ export class LogEffects {
   add$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(addLogAction),
-      switchMap((addLogRequest: AddLogRequest) =>
+      switchMap((addLogRequest: GetLogsRequest) =>
         this.logService.addLog(addLogRequest).pipe(
           map((addLogResponse) => addLogResponseAction(addLogResponse)),
           catchError((error: string) => of(loadAddLogErrorAction({error})))
