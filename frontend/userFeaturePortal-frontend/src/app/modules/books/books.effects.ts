@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Observable, of} from "rxjs";
 import {Action} from "@ngrx/store";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
-import {catchError, map, switchMap} from "rxjs/operators";
+import {catchError, map, switchMap, tap} from "rxjs/operators";
 import {
   addBookAction,
   addBookResponseAction,
@@ -33,7 +33,8 @@ export class BooksEffects {
       switchMap(() =>
         this.booksService.getBooks().pipe(
           map((getBooksResponse) => getBooksResponseAction(getBooksResponse)),
-          catchError((error: string) => of(loadGetBooksErrorAction({error})))
+          catchError((error: string) => of(loadGetBooksErrorAction({error}))),
+          tap(response => console.log(response))
         )
       )
     )

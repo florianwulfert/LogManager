@@ -71,6 +71,7 @@ export class BookComponent implements OnInit, OnDestroy {
 
   getBooks(): void {
     this.booksFacade.getBooks()
+    console.log(this.booksFacade.stateGetBooksResponse$)
     this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       console.log(result)
       this.dataSource = new MatTableDataSource(result)
