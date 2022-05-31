@@ -2,7 +2,7 @@
 
   <mat-card class="main-card">
     <h1 align="center">BMI-Calculator</h1>
-    <form [formGroup]="form">
+    <form [formGroup]="form" (keydown.enter)="calculateBmi()">
 
       <div class="calculate-bmi-body">
 

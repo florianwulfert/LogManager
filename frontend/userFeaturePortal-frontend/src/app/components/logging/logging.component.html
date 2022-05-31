@@ -1,7 +1,7 @@
 <div class="page row">
   <h1>List of logs</h1>
   <div>
-    <form [formGroup]="formFilter">
+    <form [formGroup]="formFilter" (keydown.enter)="filterLogs()">
 
       <mat-form-field appearance="fill" class="filter-button">
         <mat-label>Severity</mat-label>
@@ -145,7 +145,7 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
 
-        <form [formGroup]="form">
+        <form [formGroup]="form" (keydown.enter)="createLog()">
 
           <div class="create-user-body">
             <div>

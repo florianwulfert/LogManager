@@ -1,0 +1,220 @@
+<div class="page row">
+  <h1>Reading Bible</h1>
+  <div class="col-12" *ngIf="userAvailable">
+    <div class="space-between-fields">
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="isExpanded"
+                             (opened)="isExpanded = true"
+                             (closed)="isExpanded = false">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Create Read
+            </mat-panel-title>
+            <mat-panel-description>
+              Type in your reading information
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <form [formGroup]="form">
+
+            <div class="create-user-body">
+              <div>
+                <mat-form-field appearance="fill">
+                  <mat-label>Textarea in the bible</mat-label>
+                  <input matInput formControlName="bibelabschnitt">
+                  <button *ngIf="form.controls['bibelabschnitt'].value" matSuffix mat-icon-button aria-label="Clear"
+                          (click)="form.controls['bibelabschnitt'].reset()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-error *ngIf="form.controls['bibelabschnitt'].hasError('required')">
+                    Textarea in the bible is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div>
+                <button mat-icon-button (click)="featureManager.addItemToList(form, 'lieblingsvers', lieblingsverse)">
+                  <mat-icon>add</mat-icon>
+                </button>
+                <mat-chip-list *ngFor="let vers of lieblingsverse" class="mat-standard-chip">
+                  <mat-chip>
+                    {{vers}}
+                    <button mat-icon-button class="deleteButton" (click)="featureManager.deleteItemFromList(vers, lieblingsverse)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </mat-chip>
+                </mat-chip-list>
+                <mat-form-field appearance="fill">
+                  <mat-label>Favourite verse</mat-label>
+                  <input matInput formControlName="lieblingsvers">
+                  <button *ngIf="form.controls['lieblingsvers'].value" matSuffix mat-icon-button aria-label="Clear"
+                          (click)="form.controls['lieblingsvers'].reset()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+              <div>
+                <button mat-icon-button (click)="featureManager.addItemToList(form, 'versText', lieblingsversTexte)">
+                  <mat-icon>add</mat-icon>
+                </button>
+                <mat-list *ngFor="let text of lieblingsversTexte">
+                  <mat-card>
+                    <mat-list-item>
+                      {{text}}
+                      <button mat-icon-button class="deleteButton" (click)="featureManager.deleteItemFromList(text, lieblingsversTexte)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </mat-list-item>
+                  </mat-card>
+                </mat-list>
+                <mat-form-field appearance="fill">
+                  <mat-label>Text of favourite verse</mat-label>
+                  <input matInput formControlName="versText">
+                  <button *ngIf="form.controls['versText'].value" matSuffix mat-icon-button aria-label="Clear"
+                          (click)="form.controls['versText'].reset()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+              <div>
+                <button mat-icon-button (click)="featureManager.addItemToList(form, 'labels', labelList)">
+                  <mat-icon>add</mat-icon>
+                </button>
+                <mat-chip-list class="mat-standard-chip" *ngFor="let label of labelList">
+                  <mat-chip>
+                    {{label}}
+                    <button mat-icon-button class="deleteButton" (click)="featureManager.deleteItemFromList(label, labelList)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </mat-chip>
+
+                </mat-chip-list>
+                <mat-form-field appearance="fill">
+                  <mat-label>Labels</mat-label>
+                  <input matInput formControlName="labels">
+                  <button *ngIf="form.controls['labels'].value" matSuffix mat-icon-button aria-label="Clear"
+                          (click)="form.controls['labels'].reset()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field appearance="fill">
+                  <mat-label>Comment</mat-label>
+                  <input matInput formControlName="kommentar">
+                  <button *ngIf="form.controls['kommentar'].value" matSuffix mat-icon-button aria-label="Clear"
+                          (click)="form.controls['kommentar'].reset()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-error *ngIf="form.controls['kommentar'].hasError('required')">
+                    Comment is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field appearance="fill">
+                  <mat-label>Reader</mat-label>
+                  <input matInput formControlName="leser">
+                  <button *ngIf="form.controls['leser'].value" matSuffix mat-icon-button aria-label="Clear"
+                          (click)="form.controls['leser'].reset()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <mat-error *ngIf="form.controls['leser'].hasError('required')">
+                    Reader is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+          <button mat-raised-button class="create button-format" (click)="addBibellese()" [disabled]="!form.valid">Add Read
+          </button>
+          <button mat-raised-button class="reset button-format" (click)="resetForm()">Reset</button>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+  <div class="col-12 mb-5">
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
+
+        <!-- Text Column -->
+        <ng-container matColumnDef="text">
+          <th mat-header-cell *matHeaderCellDef> Read text</th>
+          <td mat-cell *matCellDef="let element" class="truncated-cell">
+            <mat-card class="card-style">{{element.text}}</mat-card>
+          </td>
+        </ng-container>
+
+        <!-- Lieblingsvers Column -->
+        <ng-container matColumnDef="lieblingsvers">
+          <th mat-header-cell *matHeaderCellDef> Favourite verse</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-card class="card-style">
+              <mat-chip-list class="mat-chip-list-stacked" *ngFor="let vers of element.lieblingsvers">
+                <mat-chip>{{vers}}</mat-chip>
+              </mat-chip-list>
+            </mat-card>
+          </td>
+        </ng-container>
+
+        <!-- Lieblingsvers Column -->
+        <ng-container matColumnDef="lieblingsversText">
+          <th mat-header-cell *matHeaderCellDef> Text of favourite verse</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-card class="card-style">
+              <li *ngFor="let text of element.lieblingsversText">
+                <ul>{{text}}</ul>
+              </li>
+            </mat-card>
+          </td>
+        </ng-container>
+
+        <!-- Label Column -->
+        <ng-container matColumnDef="label">
+          <th mat-header-cell *matHeaderCellDef> Label</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-card class="card-style">
+              <mat-chip-list class="mat-standard-chip mb-1" *ngFor="let labelItem of element.label">
+                <mat-chip>{{labelItem}}</mat-chip>
+              </mat-chip-list>
+            </mat-card>
+          </td>
+        </ng-container>
+
+        <!-- Leser Column -->
+        <ng-container matColumnDef="leser">
+          <th mat-header-cell *matHeaderCellDef> Reader</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-card class="card-style">{{element.leser}}</mat-card>
+          </td>
+        </ng-container>
+
+        <!-- Kommentar Column -->
+        <ng-container matColumnDef="kommentar">
+          <th mat-header-cell *matHeaderCellDef> Comment</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-card class="card-style">{{element.kommentar}}</mat-card>
+          </td>
+        </ng-container>
+
+        <!-- Delete -->
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button class="deleteButton" (click)="deleteBibellese(element)" id="remove" *ngIf="userAvailable">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [pageSize]=10
+        [hidePageSize]="true"
+        showFirstLastButtons>
+      </mat-paginator>
+    </div>
+  </div>
+</div>

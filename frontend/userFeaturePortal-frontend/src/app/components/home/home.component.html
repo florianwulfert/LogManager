@@ -28,6 +28,19 @@
           </mat-card-content>
         </a>
       </mat-card>
+
+      <mat-card class="col cardFormat zoom" *ngIf="userAvailable">
+        <a routerLink="/bible">
+          <mat-card-title-group>
+            <mat-card-title>Reading bible</mat-card-title>
+            <mat-icon class="marginRight-15">library_books</mat-icon>
+            <mat-card-subtitle>Thoughts about reading bible</mat-card-subtitle>
+          </mat-card-title-group>
+          <mat-card-content>
+            {{bibelleseDescription}}
+          </mat-card-content>
+        </a>
+      </mat-card>
     </mat-card>
 
     <mat-card class="main-card col" *ngIf="userAvailable">

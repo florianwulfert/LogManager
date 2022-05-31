@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Sign in</h1>
 
-<div mat-dialog-content>
+<div mat-dialog-content (keydown.enter)="validateLogin()">
   <mat-form-field appearance="fill">
     <mat-label>Username</mat-label>
     <input matInput [(ngModel)]="data.name">
