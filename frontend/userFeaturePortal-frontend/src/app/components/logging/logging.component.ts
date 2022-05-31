@@ -90,9 +90,11 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   createLog(): void {
-    let request = new AddLogRequest
-    this.prepareAddLogRequest(request)
-    this.logsFacade.addLog(request);
+    let getLogsRequest = new GetLogsRequest()
+    this.prepareGetLogsRequest(getLogsRequest)
+    let addLogRequest = new AddLogRequest
+    this.prepareAddLogRequest(addLogRequest)
+    this.logsFacade.addLog(addLogRequest);
   }
 
   deleteLog(element: any): void {
