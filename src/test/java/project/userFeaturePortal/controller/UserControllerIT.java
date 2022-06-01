@@ -50,22 +50,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(Lifecycle.PER_CLASS)
 class UserControllerIT {
 
-        List<User> userList = new ArrayList<>();
-        @Autowired
-        private MockMvc mockMvc;
-        @Autowired
-        private UserRepository userRepository;
-        @Autowired
-        private LogRepository logRepository;
-        @Autowired
-        private BookRepository bookRepository;
+    List<User> userList = new ArrayList<>();
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private LogRepository logRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
-        @BeforeAll
-        public void setup() {
-                userList = createUser();
-        }
+    @BeforeAll
+    public void setup() {
+            userList = createUser();
+    }
 
-  private static Stream<Arguments> getAddUserArguments() {
+    private static Stream<Arguments> getAddUserArguments() {
     return Stream.of(
         Arguments.of(
             "User created",
@@ -172,252 +172,230 @@ class UserControllerIT {
 
             assertEquals(message, result.getResponse().getContentAsString());
     }
-/*
+
     private static Stream<Arguments> getUserUpdateArguments() {
         return Stream.of(
                 Arguments.of(
                 "User updated",
-                        false,
-                        "{\"actor\":\"Petra\",\"name\":\"Hugo\",\"birthdate\":\"1999-12-13\",\"weight\":78.0,\"height\":1.8}",
-                        status().isCreated(),
+                        "{\"actor\":\"Petra\",\"name\":\"Torsten\",\"birthdate\":\"1999-12-13\",\"weight\":78.0,\"height\":1.8}",
+                        status().isOk(),
                         TestMessages.USER_CREATED_MESSAGE),
                 Arguments.of(
-                        "First user has to create himself",
-                        true,
-                        "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
-                        status().isInternalServerError(),
-                        ErrorMessages.NO_USERS_YET + "Hugo unequal Torsten"),
-                Arguments.of(
-                        "First user created himself",
-                        true,
-                        "{\"actor\":\"Petra\",\"name\":\"Petra\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
-                        status().isOk(),
-                        String.format(InfoMessages.USER_CREATED + InfoMessages.BMI_MESSAGE, "Petra", 24.07)
-                                + InfoMessages.NORMAL_WEIGHT),
-                Arguments.of(
                         "Actor not known",
-                        false,
-                        "{\"actor\":\"UnknownActor\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
+                        "{\"actor\":\"UnknownActor\",\"name\":\"Torsten\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
                         status().isForbidden(),
                         String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, "UnknownActor")),
                 Arguments.of(
                         "Actor not given",
-                        false,
-                        "{\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
+                        "{\"name\":\"Torsten\",\"birthdate\":\"1995-11-05\",\"weight\":78.0,\"height\":1.8}",
                         status().isBadRequest(),
                         ErrorMessages.PARAMETER_IS_MISSING),
                 Arguments.of(
                         "Date has wrong format",
-                        false,
-                        "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"hallo\",\"weight\":78.0,\"height\":1.8}",
+                        "{\"actor\":\"Torsten\",\"name\":\"Torsten\",\"birthdate\":\"hallo\",\"weight\":78.0,\"height\":1.8}",
                         status().isBadRequest(),
                         ErrorMessages.ILLEGAL_BIRTHDATE_FORMAT),
                 Arguments.of(
                         "weight has wrong format",
-                        false,
-                        "{\"actor\":\"Torsten\",\"name\":\"Hugo\",\"birthdate\":\"1995-11-05\",\"weight\":\"hi\",\"height\":1.8}",
+                        "{\"actor\":\"Torsten\",\"name\":\"Torsten\",\"birthdate\":\"1995-11-05\",\"weight\":\"hi\",\"height\":1.8}",
                         status().isBadRequest(),
                         ErrorMessages.PARAMETER_WRONG_FORMAT));
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("getUserUpdateArguments")
-    @Test
-    void testUpdateUser(String testName, String content) throws Exception {
-        MvcResult result = mockMvc
-                .perform(post("/userUpdate")
+    void testUpdateUser(String testName, String content, ResultMatcher status) throws Exception {
+        createUser();
+        mockMvc
+                .perform(post("/user/update")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(content)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
-                .andExpect(status().isInternalServerError())
+                .andExpect(status)
                 .andReturn();
-
-        assertEquals(String.format(ErrorMessages.BOOK_NOT_FOUND_TITEL, "Florian"),
-                result.getResponse().getContentAsString());
     }
-*/
+
+    @Test
+    void testFindUsers() throws Exception {
+            MvcResult result = mockMvc.perform(get("/users"))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            assertEquals(TestMessages.PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
+    }
+
+    @Nested
+    class AddFavouriteBookTests {
         @Test
-        void testFindUsers() throws Exception {
-                MvcResult result = mockMvc.perform(get("/users"))
-                        .andDo(print())
-                        .andExpect(status().isOk())
-                        .andReturn();
-
-                assertEquals(TestMessages.PETRA_TORSTEN_HANS, result.getResponse().getContentAsString());
-        }
-
-        @Nested
-        class AddFavouriteBookTests {
-
-                @Test
-                void testAddBookToUser() throws Exception {
-                        createBook();
-                        MvcResult result = mockMvc
-                                        .perform(post("/user/favouriteBook").param("bookTitel", "haya").param("actor", "Torsten"))
-                                        .andDo(print())
-                                        .andExpect(status().isOk())
-                                        .andReturn();
-                        assertEquals(String.format(InfoMessages.BOOK_BY_USER, "haya", "Torsten"), result.getResponse().getContentAsString());
-                }
-
-                @Test
-                void WhenFavouriteBookToAddNotFound() throws Exception {
-                        createBook();
-                        MvcResult result = mockMvc
-                                        .perform(post("/user/favouriteBook").param("bookTitel", "Florian").param("actor",
-                                                        "Torsten"))
-                                        .andDo(print())
-                                        .andExpect(status().isInternalServerError())
-                                        .andReturn();
-
-                        assertEquals(String.format(ErrorMessages.BOOK_NOT_FOUND_TITEL, "Florian"),
-                                        result.getResponse().getContentAsString());
-                }
+        void testAddBookToUser() throws Exception {
+                createBook();
+                MvcResult result = mockMvc
+                                .perform(post("/user/favouriteBook").param("bookTitel", "haya").param("actor", "Torsten"))
+                                .andDo(print())
+                                .andExpect(status().isOk())
+                                .andReturn();
+                assertEquals(String.format(InfoMessages.BOOK_BY_USER, "haya", "Torsten"), result.getResponse().getContentAsString());
         }
 
         @Test
-        void testFindUserByName() throws Exception {
-                mockMvc.perform(get("/user/")
-                                .param("name", "Torsten")).andDo(print()).andExpect(status().isOk()).andReturn();
-        }
-
-        private static Stream<Arguments> getDeleteUserByIdArguments() {
-                return Stream.of(
-                                Arguments.of(
-                                                false,
-                                                "/user/id/1",
-                                                "Hans",
-                                                status().isOk(),
-                                                TestMessages.USER_DELETED_BY_ID),
-                                Arguments.of(
-                                                false,
-                                                "/user/id/1",
-                                                "Paul",
-                                                status().isForbidden(),
-                                                String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "Paul")),
-                                Arguments.of(
-                                                false, "/user/id/1", null, status().isBadRequest(),
-                                                TestMessages.ACTOR_NOT_PRESENT),
-                                Arguments.of(
-                                                false,
-                                                "/user/id/8",
-                                                "Torsten",
-                                                status().isInternalServerError(),
-                                                String.format(ErrorMessages.USER_NOT_FOUND_ID, 8)),
-                                Arguments.of(
-                                                false,
-                                                "/user/id/2",
-                                                "Torsten",
-                                                status().isInternalServerError(),
-                                                ErrorMessages.USER_DELETE_HIMSELF),
-                                Arguments.of(
-                                                true,
-                                                "/user/id/1",
-                                                "Torsten",
-                                                status().isInternalServerError(),
-                                                String.format(ErrorMessages.USER_REFERENCED, "Petra")));
-        }
-
-        @ParameterizedTest(name = "{4}")
-        @MethodSource("getDeleteUserByIdArguments")
-        void testDeleteUserById(
-                        Boolean userIsReferenced, String url, String actor, ResultMatcher status, String message)
-                        throws Exception {
-                if (userIsReferenced) {
-                        logRepository.save(
-                                        Log.builder()
-                                                        .id(1)
-                                                        .user(userList.get(0))
-                                                        .message("Test")
-                                                        .severity("INFO")
-                                                        .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
-                                                        .build());
-                }
+        void WhenFavouriteBookToAddNotFound() throws Exception {
+                createBook();
                 MvcResult result = mockMvc
-                                .perform(delete(url).param("actor", actor))
+                                .perform(post("/user/favouriteBook").param("bookTitel", "Florian").param("actor",
+                                                "Torsten"))
                                 .andDo(print())
-                                .andExpect(status)
+                                .andExpect(status().isInternalServerError())
                                 .andReturn();
 
-                assertEquals(message, result.getResponse().getContentAsString());
+                assertEquals(String.format(ErrorMessages.BOOK_NOT_FOUND_TITEL, "Florian"),
+                                result.getResponse().getContentAsString());
         }
+    }
 
-        private static Stream<Arguments> getDeleteUserByNameArguments() {
-                return Stream.of(
-                                Arguments.of(
-                                                "User successfully deleted by name",
-                                                false,
-                                                "/user/name/Petra",
-                                                "Torsten",
-                                                status().isOk(),
-                                                TestMessages.USER_PETRA_DELETED_BY_NAME),
-                                Arguments.of(
-                                                "Actor wants to delete himself",
-                                                false,
-                                                "/user/name/Torsten",
-                                                "Torsten",
-                                                status().isInternalServerError(),
-                                                ErrorMessages.USER_DELETE_HIMSELF),
-                                Arguments.of(
-                                                "Actor not present",
-                                                false,
-                                                "/user/name/Petra",
-                                                null,
-                                                status().isBadRequest(),
-                                                TestMessages.ACTOR_NOT_PRESENT),
-                                Arguments.of(
-                                                "Actor not in database",
-                                                false,
-                                                "/user/name/Petra",
-                                                "ActorName",
-                                                status().isForbidden(),
-                                                String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "ActorName")),
-                                Arguments.of(
-                                                "User to delete not in database ",
-                                                false,
-                                                "/user/name/UserToDeleteNichtBekannt",
-                                                "Torsten",
-                                                status().isNotFound(),
-                                                String.format(ErrorMessages.USER_NOT_FOUND_NAME,
-                                                                "UserToDeleteNichtBekannt")),
-                                Arguments.of(
-                                                "User is referenced in another table",
-                                                true,
-                                                "/user/name/Petra",
-                                                "Torsten",
-                                                status().isInternalServerError(),
-                                                String.format(ErrorMessages.USER_REFERENCED, "Petra")));
-        }
+    @Test
+    void testFindUserByName() throws Exception {
+            mockMvc.perform(get("/user/")
+                            .param("name", "Torsten")).andDo(print()).andExpect(status().isOk()).andReturn();
+    }
 
-        @ParameterizedTest(name = "{0}")
-        @MethodSource("getDeleteUserByNameArguments")
-        void testDeleteUserByName(
-                        String testname,
-                        Boolean createLog,
-                        String url,
-                        String actor,
-                        ResultMatcher status,
-                        String message)
-                        throws Exception {
-                if (createLog) {
-                        logRepository.save(
-                                        Log.builder()
-                                                        .id(1)
-                                                        .user(userList.get(0))
-                                                        .message("Test")
-                                                        .severity("INFO")
-                                                        .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
-                                                        .build());
-                }
-                MvcResult result = mockMvc
-                                .perform(delete(url).param("actor", actor))
-                                .andDo(print())
-                                .andExpect(status)
-                                .andReturn();
+    private static Stream<Arguments> getDeleteUserByIdArguments() {
+            return Stream.of(
+                            Arguments.of(
+                                            false,
+                                            "/user/id/1",
+                                            "Hans",
+                                            status().isOk(),
+                                            TestMessages.USER_DELETED_BY_ID),
+                            Arguments.of(
+                                            false,
+                                            "/user/id/1",
+                                            "Paul",
+                                            status().isForbidden(),
+                                            String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "Paul")),
+                            Arguments.of(
+                                            false, "/user/id/1", null, status().isBadRequest(),
+                                            TestMessages.ACTOR_NOT_PRESENT),
+                            Arguments.of(
+                                            false,
+                                            "/user/id/8",
+                                            "Torsten",
+                                            status().isInternalServerError(),
+                                            String.format(ErrorMessages.USER_NOT_FOUND_ID, 8)),
+                            Arguments.of(
+                                            false,
+                                            "/user/id/2",
+                                            "Torsten",
+                                            status().isInternalServerError(),
+                                            ErrorMessages.USER_DELETE_HIMSELF),
+                            Arguments.of(
+                                            true,
+                                            "/user/id/1",
+                                            "Torsten",
+                                            status().isInternalServerError(),
+                                            String.format(ErrorMessages.USER_REFERENCED, "Petra")));
+    }
 
-                assertEquals(message, result.getResponse().getContentAsString());
-        }
+    @ParameterizedTest(name = "{4}")
+    @MethodSource("getDeleteUserByIdArguments")
+    void testDeleteUserById(
+                    Boolean userIsReferenced, String url, String actor, ResultMatcher status, String message)
+                    throws Exception {
+            if (userIsReferenced) {
+                    logRepository.save(
+                                    Log.builder()
+                                                    .id(1)
+                                                    .user(userList.get(0))
+                                                    .message("Test")
+                                                    .severity("INFO")
+                                                    .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
+                                                    .build());
+            }
+            MvcResult result = mockMvc
+                            .perform(delete(url).param("actor", actor))
+                            .andDo(print())
+                            .andExpect(status)
+                            .andReturn();
+
+            assertEquals(message, result.getResponse().getContentAsString());
+    }
+
+    private static Stream<Arguments> getDeleteUserByNameArguments() {
+            return Stream.of(
+                Arguments.of(
+                                "User successfully deleted by name",
+                                false,
+                                "/user/name/Petra",
+                                "Torsten",
+                                status().isOk(),
+                                TestMessages.USER_PETRA_DELETED_BY_NAME),
+                Arguments.of(
+                                "Actor wants to delete himself",
+                                false,
+                                "/user/name/Torsten",
+                                "Torsten",
+                                status().isInternalServerError(),
+                                ErrorMessages.USER_DELETE_HIMSELF),
+                Arguments.of(
+                                "Actor not present",
+                                false,
+                                "/user/name/Petra",
+                                null,
+                                status().isBadRequest(),
+                                TestMessages.ACTOR_NOT_PRESENT),
+                Arguments.of(
+                                "Actor not in database",
+                                false,
+                                "/user/name/Petra",
+                                "ActorName",
+                                status().isForbidden(),
+                                String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, "ActorName")),
+                Arguments.of(
+                                "User to delete not in database ",
+                                false,
+                                "/user/name/UserToDeleteNichtBekannt",
+                                "Torsten",
+                                status().isNotFound(),
+                                String.format(ErrorMessages.USER_NOT_FOUND_NAME,
+                                                "UserToDeleteNichtBekannt")),
+                Arguments.of(
+                                "User is referenced in another table",
+                                true,
+                                "/user/name/Petra",
+                                "Torsten",
+                                status().isInternalServerError(),
+                                String.format(ErrorMessages.USER_REFERENCED, "Petra")));
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("getDeleteUserByNameArguments")
+    void testDeleteUserByName(
+                    String testname,
+                    Boolean createLog,
+                    String url,
+                    String actor,
+                    ResultMatcher status,
+                    String message)
+                    throws Exception {
+            if (createLog) {
+                    logRepository.save(
+                                    Log.builder()
+                                                    .id(1)
+                                                    .user(userList.get(0))
+                                                    .message("Test")
+                                                    .severity("INFO")
+                                                    .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
+                                                    .build());
+            }
+            MvcResult result = mockMvc
+                            .perform(delete(url).param("actor", actor))
+                            .andDo(print())
+                            .andExpect(status)
+                            .andReturn();
+
+            assertEquals(message, result.getResponse().getContentAsString());
+    }
 
     private void createBook() {
         Book haya = Book.builder()
@@ -467,77 +445,77 @@ class UserControllerIT {
     return userList;
   }
 
-        @Nested
-        class FindUserByIdTests {
+    @Nested
+    class FindUserByIdTests {
 
-                @Test
-                void testFindUserById() throws Exception {
-                        MvcResult result = mockMvc
-                                        .perform(get("/user/id").param("id", "1"))
-                                        .andDo(print())
-                                        .andExpect(status().isOk())
-                                        .andReturn();
+            @Test
+            void testFindUserById() throws Exception {
+                    MvcResult result = mockMvc
+                                    .perform(get("/user/id").param("id", "1"))
+                                    .andDo(print())
+                                    .andExpect(status().isOk())
+                                    .andReturn();
 
-                        assertEquals(TestMessages.PETRA, result.getResponse().getContentAsString());
-                }
+                    assertEquals(TestMessages.PETRA, result.getResponse().getContentAsString());
+            }
 
-                @Test
-                void whenIdToFindIsNullThenReturnBadRequest() throws Exception {
-                        MvcResult result = mockMvc
-                                        .perform(get("/user/id"))
-                                        .andDo(print())
-                                        .andExpect(status().isBadRequest())
-                                        .andReturn();
+            @Test
+            void whenIdToFindIsNullThenReturnBadRequest() throws Exception {
+                    MvcResult result = mockMvc
+                                    .perform(get("/user/id"))
+                                    .andDo(print())
+                                    .andExpect(status().isBadRequest())
+                                    .andReturn();
 
-                        assertEquals(
-                                        ErrorMessages.ID_NOT_PRESENT, result.getResponse().getContentAsString());
-                }
+                    assertEquals(
+                                    ErrorMessages.ID_NOT_PRESENT, result.getResponse().getContentAsString());
+            }
 
-                @Test
-                void whenIdToFindNotFoundThenReturnNull() throws Exception {
-                        MvcResult result = mockMvc
-                                        .perform(get("/user/id").param("id", "50"))
-                                        .andDo(print())
-                                        .andExpect(status().isOk())
-                                        .andReturn();
+            @Test
+            void whenIdToFindNotFoundThenReturnNull() throws Exception {
+                    MvcResult result = mockMvc
+                                    .perform(get("/user/id").param("id", "50"))
+                                    .andDo(print())
+                                    .andExpect(status().isOk())
+                                    .andReturn();
 
-                        assertEquals("null", result.getResponse().getContentAsString());
-                }
-        }
+                    assertEquals("null", result.getResponse().getContentAsString());
+            }
+    }
 
-        @Nested
-        class DeleteAllTests {
+    @Nested
+    class DeleteAllTests {
 
-                @Test
-                void testDeleteAll() throws Exception {
-                        logRepository.deleteAll();
-                        MvcResult result = mockMvc
-                                        .perform(delete("/users"))
-                                        .andDo(print())
-                                        .andExpect(status().isOk())
-                                        .andReturn();
+            @Test
+            void testDeleteAll() throws Exception {
+                    logRepository.deleteAll();
+                    MvcResult result = mockMvc
+                                    .perform(delete("/users"))
+                                    .andDo(print())
+                                    .andExpect(status().isOk())
+                                    .andReturn();
 
-                        assertEquals(TestMessages.EMPTY_LIST, result.getResponse().getContentAsString());
-                }
+                    assertEquals(TestMessages.EMPTY_LIST, result.getResponse().getContentAsString());
+            }
 
-                @Test
-                void whenUserIsUsedSomewhereThenReturnCouldNotDelete() throws Exception {
-                        logRepository.save(
-                                        Log.builder()
-                                                        .id(1)
-                                                        .user(userList.get(0))
-                                                        .message("Test")
-                                                        .severity("INFO")
-                                                        .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
-                                                        .build());
-                        MvcResult result = mockMvc
-                                        .perform(delete("/users"))
-                                        .andDo(print())
-                                        .andExpect(status().isInternalServerError())
-                                        .andReturn();
+            @Test
+            void whenUserIsUsedSomewhereThenReturnCouldNotDelete() throws Exception {
+                    logRepository.save(
+                                    Log.builder()
+                                                    .id(1)
+                                                    .user(userList.get(0))
+                                                    .message("Test")
+                                                    .severity("INFO")
+                                                    .timestamp(LocalDateTime.of(2000, 12, 12, 12, 12, 12))
+                                                    .build());
+                    MvcResult result = mockMvc
+                                    .perform(delete("/users"))
+                                    .andDo(print())
+                                    .andExpect(status().isInternalServerError())
+                                    .andReturn();
 
-                        assertEquals(
-                                        ErrorMessages.USERS_REFERENCED, result.getResponse().getContentAsString());
-                }
-        }
+                    assertEquals(
+                                    ErrorMessages.USERS_REFERENCED, result.getResponse().getContentAsString());
+            }
+    }
 }
