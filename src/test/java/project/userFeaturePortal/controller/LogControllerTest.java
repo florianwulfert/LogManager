@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.userFeaturePortal.common.dto.log.AddLogRequestDto;
+import project.userFeaturePortal.common.dto.log.GetLogsRequestDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.model.mapper.LogDTOMapper;
 import project.userFeaturePortal.service.model.LogService;
@@ -47,6 +48,7 @@ class LogControllerTest {
                         .message("Test")
                         .severity("WARNING")
                         .build())
+                .getLogsRequest(GetLogsRequestDto.builder().build())
                 .user("Peter")
                 .build();
     systemUnderTest.addLog(testDto);

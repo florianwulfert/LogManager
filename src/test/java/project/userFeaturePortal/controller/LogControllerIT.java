@@ -64,27 +64,17 @@ class LogControllerIT {
         return Stream.of(
                 Arguments.of(
                         "MessageIsMissing",
-                        "{\"severity\":\"INFO\",\"user\":\"Petra\"}",
-                        status().isBadRequest(),
-                        ErrorMessages.PARAMETER_IS_MISSING),
-                Arguments.of(
-                        "SeverityIsMissing",
-                        "{\"message\":\"Test\",\"user\":\"Petra\"}",
-                        status().isBadRequest(),
-                        ErrorMessages.PARAMETER_IS_MISSING),
-                Arguments.of(
-                        "UserIsMissing",
-                        "{\"message\":\"Test\",\"severity\":\"INFO\"}",
+                        TestMessages.MESSAGE_IS_MISSING,
                         status().isBadRequest(),
                         ErrorMessages.PARAMETER_IS_MISSING),
                 Arguments.of(
                         "SeverityIsFalse",
-                        "{\"message\":\"Test\", \"severity\":\"hi\",\"user\":\"Petra\"}",
+                        TestMessages.SEVERITY_IS_FALSE,
                         status().isInternalServerError(),
                         String.format(ErrorMessages.SEVERITY_NOT_REGISTERED_CHOICE, "HI")),
                 Arguments.of(
                         "UserIsNotAllowed",
-                        "{\"message\":\"Test\", \"severity\":\"INFO\",\"user\":\"Alex\"}",
+                        TestMessages.USER_NOT_ALLOWED,
                         status().isForbidden(),
                         ErrorMessages.USER_NOT_ALLOWED));
     }
@@ -168,7 +158,7 @@ class LogControllerIT {
             ResultMatcher status,
             Integer logNumber)
             throws Exception {
-        MvcResult result = mockMvc
+        mockMvc
                 .perform(
                         get("/logs")
                                 .param("severity", severity)
@@ -204,7 +194,7 @@ class LogControllerIT {
         createUser();
         mockMvc.perform(post("/log")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content("{\"message\":\"Test\",\"severity\":\"INFO\",\"user\":\"Petra\"}")
+                .content(TestMessages.TEST_LOG)
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -216,7 +206,7 @@ class LogControllerIT {
         createUser();
         mockMvc.perform(post("/log")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content("{\"message\":\"Katze\", \"severity\":\"INFO\",\"user\":\"Petra\"}")
+                .content(TestMessages.KATZE_TO_HUND)
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(print())
                 .andExpect(status().isCreated())

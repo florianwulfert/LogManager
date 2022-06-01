@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.userFeaturePortal.common.dto.log.AddLogRequestDto;
 import project.userFeaturePortal.common.dto.log.LogDTO;
 import project.userFeaturePortal.common.dto.log.LogMessageDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
@@ -88,7 +89,7 @@ class LogServiceTest {
   void testAddLog() {
     when(logValidationService.validateMessage(anyString())).thenReturn(customLogMessageDto.get(1));
     when(userValidationService.checkIfNameExists(anyString(),anyBoolean(),anyString())).thenReturn(users.get(0));
-    assertEquals("Message \"Banane\" saved as INFO!",
+    assertEquals("Message \"Banane\" saved as WARNING!",
             systemUnderTest.addLog(logRequestDtos.get(0)));
     verify(logRepository, times(1)).save(any());
   }
@@ -166,9 +167,20 @@ class LogServiceTest {
   private List<LogRequestDto> testLogRequestDto() {
     List<LogRequestDto> logRequestDtos = new ArrayList<>();
     logRequestDtos.add(
-        LogRequestDto.builder().message("Hallo").severity("INFO").user("Hans").build());
+        LogRequestDto.builder()
+                .addLogRequest(AddLogRequestDto.builder()
+                        .message("Test")
+                        .severity("WARNING")
+                        .build())
+                .user("Hans")
+                .build());
     logRequestDtos.add(
-        LogRequestDto.builder().message("Hallo").severity("Moin").user("Hans").build());
+        LogRequestDto.builder()
+                .addLogRequest(AddLogRequestDto.builder()
+                        .message("Test")
+                        .severity("Hi")
+                        .build())
+                .user("Hans").build());
     return logRequestDtos;
   }
 }

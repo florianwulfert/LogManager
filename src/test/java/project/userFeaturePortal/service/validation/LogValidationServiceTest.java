@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.userFeaturePortal.common.dto.log.AddLogRequestDto;
 import project.userFeaturePortal.common.dto.log.LogMessageDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
@@ -32,7 +33,13 @@ class LogValidationServiceTest {
   @Test
   void testEntryIsNull() {
     LogRequestDto testDto =
-        LogRequestDto.builder().message(null).severity(null).user("Hans").build();
+        LogRequestDto.builder()
+                .addLogRequest(AddLogRequestDto.builder()
+                        .message(null)
+                        .severity(null)
+                        .build())
+                .user("Hans")
+                .build();
     ParameterNotPresentException ex =
         assertThrows(
             ParameterNotPresentException.class,
@@ -43,7 +50,13 @@ class LogValidationServiceTest {
   @Test
   void testEntryIsEmptyString() {
     LogRequestDto testDto =
-        LogRequestDto.builder().message("Test").severity("WARNING").user("").build();
+        LogRequestDto.builder()
+                .addLogRequest(AddLogRequestDto.builder()
+                        .message("Test")
+                        .severity("WARNING")
+                        .build())
+                .user("")
+                .build();
     ParameterNotPresentException ex =
         assertThrows(
             ParameterNotPresentException.class,
