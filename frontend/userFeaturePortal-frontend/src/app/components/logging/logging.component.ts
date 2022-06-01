@@ -3,12 +3,13 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {LogFacade} from "../../modules/logging/logs.facade";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
+import {AddLogRequestWithFilter} from "../../modules/logging/addLogs/dto/add-log-request-with-filter";
 import {MatPaginator} from "@angular/material/paginator";
 import {UsersFacade} from "../../modules/users/users.facade";
 import {GetLogsRequest} from "../../modules/logging/getLogs/dto/getLogs-request";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
+import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
 
 @Component({
   selector: 'app-logging',
@@ -90,9 +91,14 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   createLog(): void {
-    let request = new AddLogRequest
-    this.prepareAddLogRequest(request)
-    this.logsFacade.addLog(request);
+    let addLogRequest = new AddLogRequest()
+    this.prepareAddLogRequest(addLogRequest)
+    let getLogsRequest = new GetLogsRequest()
+    this.prepareGetLogsRequest(getLogsRequest)
+    let request = new AddLogRequestWithFilter()
+    request.addLogRequest = addLogRequest
+    request.getLogsRequest = getLogsRequest
+    this.logsFacade.addLog(request)
   }
 
   deleteLog(element: any): void {

@@ -3,8 +3,8 @@ import {Store} from "@ngrx/store";
 import {addLogAction, deleteLogAction, deleteLogsAction, getLogsAction} from "./logs.actions";
 import {getLogs} from "./logs.selector";
 import {LogsState} from "./logs.state";
-import {AddLogRequest} from "./addLogs/dto/add-log-request";
 import {GetLogsRequest} from "./getLogs/dto/getLogs-request";
+import {AddLogRequestWithFilter} from "./addLogs/dto/add-log-request-with-filter";
 
 @Injectable({providedIn: 'root'})
 export class LogFacade {
@@ -23,7 +23,7 @@ export class LogFacade {
     this.logsState.dispatch(deleteLogsAction())
   }
 
-  addLog(request: AddLogRequest): void {
+  addLog(request: AddLogRequestWithFilter): void {
     this.logsState.dispatch(addLogAction(request));
   }
 

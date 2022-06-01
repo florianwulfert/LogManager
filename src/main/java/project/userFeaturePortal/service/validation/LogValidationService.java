@@ -25,10 +25,10 @@ public class LogValidationService {
   private final UserRepository userRepository;
 
   public void checkIfAnyEntriesAreNull(LogRequestDto allParameters) {
-    if (allParameters.severity == null
-        || allParameters.severity.equals("")
-        || allParameters.message == null
-        || allParameters.message.equals("")
+    if (allParameters.addLogRequest.severity == null
+        || allParameters.addLogRequest.severity.equals("")
+        || allParameters.addLogRequest.message == null
+        || allParameters.addLogRequest.message.equals("")
         || allParameters.user == null
         || allParameters.user.equals("")) {
       LOGGER.warn(ErrorMessages.PARAMETER_IS_MISSING);
