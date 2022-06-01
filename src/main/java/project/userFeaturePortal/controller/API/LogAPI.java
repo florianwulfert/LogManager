@@ -38,9 +38,7 @@ public interface LogAPI {
 
   @PostMapping("/log")
   @Operation(summary = "Add manually a new Log-Entry")
-  ResponseEntity<LogResponseDto> addLog(@RequestBody LogRequestDto allParameters,
-                                        @RequestParam(required = false) LocalDateTime startDateTime,
-                                        @RequestParam(required = false) LocalDateTime endDateTime);
+  ResponseEntity<LogResponseDto> addLog(@RequestBody LogRequestDto allParameters);
 
   @GetMapping("/logs/{id}")
   @Operation(summary = "Found logs by id of the log")

@@ -19,6 +19,7 @@ import {
 } from "./logs.actions";
 import {LogService} from "./logs.service";
 import {GetLogsRequest} from "./getLogs/dto/getLogs-request";
+import {AddLogRequestWithFilter} from "./addLogs/dto/add-log-request-with-filter";
 
 
 @Injectable({providedIn: 'root'})
@@ -50,7 +51,7 @@ export class LogEffects {
   add$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(addLogAction),
-      switchMap((addLogRequest: GetLogsRequest) =>
+      switchMap((addLogRequest: AddLogRequestWithFilter) =>
         this.logService.addLog(addLogRequest).pipe(
           map((addLogResponse) => addLogResponseAction(addLogResponse)),
           catchError((error: string) => of(loadAddLogErrorAction({error})))

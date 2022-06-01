@@ -46,13 +46,13 @@ public class LogService {
   public String addLog(LogRequestDto logRequestDto) {
     // validate log entry
     logValidationService.checkIfAnyEntriesAreNull(logRequestDto);
-    logValidationService.validateSeverity(logRequestDto.getSeverity());
-    LogMessageDto logMessage = logValidationService.validateMessage(logRequestDto.message);
+    logValidationService.validateSeverity(logRequestDto.addLogRequest.getSeverity());
+    LogMessageDto logMessage = logValidationService.validateMessage(logRequestDto.addLogRequest.message);
     User user = userValidationService.checkIfNameExists(logRequestDto.user, true, ErrorMessages.USER_NOT_ALLOWED);
 
     // build Log
     LocalDateTime timeStamp = LocalDateTime.now();
-    Log log = Log.builder().message(logRequestDto.message).severity(logRequestDto.severity).user(user).timestamp(timeStamp).build();
+    Log log = Log.builder().message(logRequestDto.addLogRequest.message).severity(logRequestDto.addLogRequest.severity).user(user).timestamp(timeStamp).build();
 
     // save Log
     logRepository.save(log);
@@ -61,11 +61,11 @@ public class LogService {
     logMessage.setReturnMessage(
         logMessage.getReturnMessage()
             + String.format(
-            InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
+            InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.addLogRequest.getSeverity()));
 
     LOGGER.info(
         String.format(
-            InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
+            InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.addLogRequest.getSeverity()));
     return logMessage.getReturnMessage();
   }
 

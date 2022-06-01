@@ -9,6 +9,7 @@ import {ActorFacade} from "../actor/actor.facade";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {DeleteLogResponse} from "./deleteLog/dto/delete-log-response";
 import {GetLogsRequest} from "./getLogs/dto/getLogs-request";
+import {AddLogRequestWithFilter} from "./addLogs/dto/add-log-request-with-filter";
 
 const API_GET_LOGS = 'http://localhost:8081/logs';
 const API_DELETE_LOGS = 'http://localhost:8081/logs';
@@ -111,7 +112,7 @@ export class LogService implements OnDestroy{
     );
   }
 
-  addLog(addLogRequest: GetLogsRequest): Observable<AddLogResponse> {
+  addLog(addLogRequest: AddLogRequestWithFilter): Observable<AddLogResponse> {
     this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       this.name = r
     })

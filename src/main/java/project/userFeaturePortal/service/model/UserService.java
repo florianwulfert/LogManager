@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import project.userFeaturePortal.common.dto.log.AddLogRequestDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.dto.user.UserDto;
 import project.userFeaturePortal.common.dto.user.UserRequestDto;
@@ -44,8 +45,10 @@ public class UserService {
     userRepository.save(buildUser(userRequestDto, new User()));
 
     logService.addLog(LogRequestDto.builder()
-            .message(String.format(InfoMessages.USER_CREATED, userRequestDto.getName()))
-            .severity("INFO")
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(String.format(InfoMessages.USER_CREATED, userRequestDto.getName()))
+                    .severity("INFO")
+                    .build())
             .user(userRequestDto.actor)
             .build());
     LOGGER.info(String.format(InfoMessages.USER_CREATED, userRequestDto.getName()));
@@ -144,8 +147,10 @@ public class UserService {
     userRepository.deleteById(userToDelete.getId());
 
     logService.addLog(LogRequestDto.builder()
-            .message(String.format(InfoMessages.USER_DELETED_ID, userToDelete.getId()))
-            .severity("WARNING")
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(String.format(InfoMessages.USER_DELETED_ID, userToDelete.getId()))
+                    .severity("WARNING")
+                    .build())
             .user(actorName)
             .build());
     LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, userToDelete.getId()));
@@ -161,8 +166,10 @@ public class UserService {
     userRepository.deleteById(userToDelete.getId());
 
     logService.addLog(LogRequestDto.builder()
-            .message(String.format(InfoMessages.USER_DELETED_NAME, name))
-            .severity("WARNING")
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(String.format(InfoMessages.USER_DELETED_NAME, name))
+                    .severity("WARNING")
+                    .build())
             .user(actorName)
             .build());
     LOGGER.info(String.format(InfoMessages.USER_DELETED_NAME, name));
