@@ -26,7 +26,7 @@ export class BibleComponent implements OnInit, OnDestroy {
               public featureManager: FeatureManager) {
   }
 
-  displayedColumns: string[] = ['text', 'lieblingsvers', 'lieblingsversText', 'label', 'leser', 'kommentar', 'delete'];
+  displayedColumns: string[] = ['text', 'lieblingsvers', 'lieblingsversText', 'label', 'leser', 'kommentar', 'update', 'delete'];
   labelList: string[] = [];
   lieblingsverse: string[] = [];
   lieblingsversTexte: string[] = [];
@@ -98,5 +98,9 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.labelList = [];
     this.lieblingsverse = [];
     this.lieblingsversTexte = [];
+  }
+
+  updateBibellese(text: string) {
+
   }
 }
