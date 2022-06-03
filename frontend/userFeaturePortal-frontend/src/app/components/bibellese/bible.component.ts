@@ -11,6 +11,8 @@ import {DeleteBibelleseRequest} from "../../modules/bibellese/deleteBibellese/de
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
+import {MatDialog} from "@angular/material/dialog";
+import {BibelleseUpdateComponent} from "./bibelleseUpdate/bibelleseUpdate.component";
 
 @Component({
   selector: 'app-bible',
@@ -23,7 +25,8 @@ export class BibleComponent implements OnInit, OnDestroy {
   constructor(private bibelleseFacade: BibelleseFacade,
               private _snackBar: MatSnackBar,
               private actorFacade: ActorFacade,
-              public featureManager: FeatureManager) {
+              public featureManager: FeatureManager,
+              public dialog: MatDialog) {
   }
 
   displayedColumns: string[] = ['text', 'lieblingsvers', 'lieblingsversText', 'label', 'leser', 'kommentar', 'update', 'delete'];
@@ -33,6 +36,7 @@ export class BibleComponent implements OnInit, OnDestroy {
   userAvailable: boolean = false
   onDestroy = new Subject()
   isExpanded = false;
+  name: string | undefined
 
   dataSource: any;
 
@@ -50,6 +54,17 @@ export class BibleComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.onDestroy.next(null)
     this.onDestroy.complete()
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(BibelleseUpdateComponent, {
+      width: '1000px',
+      data: {name: this.name}
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+
+    });
   }
 
   public form: FormGroup = new FormGroup({
@@ -98,9 +113,5 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.labelList = [];
     this.lieblingsverse = [];
     this.lieblingsversTexte = [];
-  }
-
-  updateBibellese(text: string) {
-
   }
 }

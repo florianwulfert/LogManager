@@ -3,8 +3,8 @@ import {HttpClient} from "@angular/common/http";
 import {Observable, throwError} from "rxjs";
 import {catchError, map} from "rxjs/operators";
 import {UpdateBibelleseRequest} from "./update-bibellese-request";
-import {ActorFacade} from "../../actor/actor.facade";
-import {FeatureManager} from "../../../../assets/utils/feature.manager";
+import {ActorFacade} from "../actor/actor.facade";
+import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {UpdateBibelleseResponse} from "./update-bibellese-response";
 
 const API_BIBELLESE_UPDATE = 'http://localhost:8082/gelesen/update'

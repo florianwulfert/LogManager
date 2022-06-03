@@ -13,15 +13,11 @@ import {
   loadAddBibelleseErrorAction,
   loadDeleteBibelleseErrorAction,
   loadGetBibelleseErrorAction,
-  loadUpdateBibelleseErrorAction,
-  updateBibelleseAction,
-  updateBibelleseResponseAction
 } from "./bibellese.actions";
 import {BibelleseService} from "./bibellese.service";
 import {AddBibelleseRequest} from "./addBibellese/add-bibellese-request";
 import {DeleteBibelleseRequest} from "./deleteBibellese/delete-bibellese-request";
 import {GetBibelleseRequest} from "./getBibellese/get-bibellese-request";
-import {UpdateBibelleseRequest} from "./updateBibellese/update-bibellese-request";
 
 @Injectable({providedIn: 'root'})
 export class BibelleseEffects {
@@ -44,18 +40,6 @@ export class BibelleseEffects {
         this.bibelleseService.addBibellese(addBibelleseRequest).pipe(
           map((addBibelleseResponse) => addBibelleseResponseAction(addBibelleseResponse)),
           catchError((error: string) => of(loadAddBibelleseErrorAction({error})))
-        )
-      )
-    )
-  );
-
-  update$: Observable<Action> = createEffect(() =>
-    this.actions$.pipe(
-      ofType(updateBibelleseAction),
-      switchMap((updateBibelleseRequest: UpdateBibelleseRequest) =>
-        this.bibelleseService.updateBibellese(updateBibelleseRequest).pipe(
-          map((updateBibelleseResponse) => updateBibelleseResponseAction(updateBibelleseResponse)),
-          catchError((error: string) => of(loadUpdateBibelleseErrorAction({error})))
         )
       )
     )
