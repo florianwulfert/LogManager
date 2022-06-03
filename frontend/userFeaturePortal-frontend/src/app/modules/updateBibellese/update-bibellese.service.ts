@@ -24,6 +24,7 @@ export class UpdateBibelleseService {
     }).pipe(
       map((r) => {
         this.featureManager.openSnackbar(r.body?.returnMessage, "success");
+        console.log(r.body)
         return r.body || {
           result: [],
           returnMessage: ''

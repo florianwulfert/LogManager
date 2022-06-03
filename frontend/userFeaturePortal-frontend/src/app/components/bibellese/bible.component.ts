@@ -63,7 +63,6 @@ export class BibleComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {
-
     });
   }
 
@@ -76,7 +75,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     leser: new FormControl('', [Validators.required]),
   })
 
-  prepareAddBibelleseRequest(request: AddBibelleseRequest) {
+  public prepareAddBibelleseRequest(request: AddBibelleseRequest) {
     request.bibelabschnitt = this.form.get("bibelabschnitt")?.value
     request.lieblingsverse = this.lieblingsverse
     request.versText = this.lieblingsversTexte

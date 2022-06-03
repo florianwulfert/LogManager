@@ -6,6 +6,8 @@ import {takeUntil} from "rxjs/operators";
 import {ActorFacade} from "../../../modules/actor/actor.facade";
 import {Subject} from "rxjs";
 import {FeatureManager} from "../../../../assets/utils/feature.manager";
+import {GetBibelleseRequest} from "../../../modules/bibellese/getBibellese/get-bibellese-request";
+import {BibelleseFacade} from "../../../modules/bibellese/bibellese.facade";
 
 @Component({
   selector: 'app-bibelleseUpdate',
@@ -16,7 +18,8 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
 
   constructor(private updateBibelleseFacade: UpdateBibelleseFacade,
               private actorFacade: ActorFacade,
-              public featureManager: FeatureManager) {
+              public featureManager: FeatureManager,
+              private bibelleseFacade: BibelleseFacade) {
   }
 
   isExpanded = false;
@@ -27,6 +30,7 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
   lieblingsversTexte: string[] = [];
 
   ngOnInit() {
+    this.getBibelleseData()
     this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if (r) {
         this.userAvailable = true
@@ -39,10 +43,22 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
     this.onDestroy.complete()
   }
 
+  prepareUpdateBibelleseRequest(updateBibelleseRequest: UpdateBibelleseRequest) {
+    updateBibelleseRequest.id = this.form.get("id")?.value
+    updateBibelleseRequest.bibelabschnitt = this.form.get("bibelabschnitt")?.value
+    updateBibelleseRequest.lieblingsverse = this.lieblingsverse
+    updateBibelleseRequest.versText = this.lieblingsversTexte
+    updateBibelleseRequest.labels = this.labelList
+    updateBibelleseRequest.kommentar = this.form.get("kommentar")?.value
+    updateBibelleseRequest.leser = this.form.get("leser")?.value
+    return updateBibelleseRequest;
+  }
+
   updateBibellese() {
     let request = new UpdateBibelleseRequest()
+    request = this.prepareUpdateBibelleseRequest(request)
     this.updateBibelleseFacade.updateBibellese(request)
-    this.isExpanded = false;
+
   }
 
   public form: FormGroup = new FormGroup({
@@ -59,5 +75,13 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
     this.labelList = [];
     this.lieblingsverse = [];
     this.lieblingsversTexte = [];
+  }
+
+  getBibelleseData() {
+    let request = new GetBibelleseRequest()
+    this.bibelleseFacade.getBibellese(request)
+    this.bibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      console.log(result)
+    })
   }
 }
