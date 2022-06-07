@@ -13,6 +13,7 @@ import {Subject} from "rxjs";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {MatDialog} from "@angular/material/dialog";
 import {BibelleseUpdateComponent} from "./bibelleseUpdate/bibelleseUpdate.component";
+import {UpdateBibelleseRequest} from "../../modules/updateBibellese/update-bibellese-request";
 
 @Component({
   selector: 'app-bible',
@@ -29,7 +30,7 @@ export class BibleComponent implements OnInit, OnDestroy {
               public dialog: MatDialog) {
   }
 
-  displayedColumns: string[] = ['text', 'lieblingsvers', 'lieblingsversText', 'label', 'leser', 'kommentar', 'update', 'delete'];
+  displayedColumns: string[] = ['bibelabschnitt', 'lieblingsverse', 'versText', 'labels', 'leser', 'kommentar', 'update', 'delete'];
   labelList: string[] = [];
   lieblingsverse: string[] = [];
   lieblingsversTexte: string[] = [];
@@ -56,10 +57,19 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.onDestroy.complete()
   }
 
-  openDialog(): void {
+  openDialog(element: UpdateBibelleseRequest): void {
+    console.log(element)
     const dialogRef = this.dialog.open(BibelleseUpdateComponent, {
       width: '1000px',
-      data: {name: this.name}
+      data: {
+        id : element.id,
+        bibelabschnitt : element.bibelabschnitt,
+        lieblingsverse : element.lieblingsverse,
+        versText : element.versText,
+        labels : element.labels,
+        kommentar : element.kommentar,
+        leser : element.leser
+      }
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {
@@ -97,6 +107,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.bibelleseFacade.getBibellese(request)
     this.bibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
+      console.log(this.dataSource)
       this.dataSource.paginator = this.paginator;
     })
   }

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {Component, Inject, OnDestroy, OnInit} from "@angular/core";
 import {UpdateBibelleseFacade} from "../../../modules/updateBibellese/update-bibellese.facade";
 import {UpdateBibelleseRequest} from "../../../modules/updateBibellese/update-bibellese-request";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -6,8 +6,8 @@ import {takeUntil} from "rxjs/operators";
 import {ActorFacade} from "../../../modules/actor/actor.facade";
 import {Subject} from "rxjs";
 import {FeatureManager} from "../../../../assets/utils/feature.manager";
-import {GetBibelleseRequest} from "../../../modules/bibellese/getBibellese/get-bibellese-request";
 import {BibelleseFacade} from "../../../modules/bibellese/bibellese.facade";
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-bibelleseUpdate',
@@ -19,10 +19,10 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
   constructor(private updateBibelleseFacade: UpdateBibelleseFacade,
               private actorFacade: ActorFacade,
               public featureManager: FeatureManager,
-              private bibelleseFacade: BibelleseFacade) {
+              private bibelleseFacade: BibelleseFacade,
+              @Inject(MAT_DIALOG_DATA) public data: UpdateBibelleseRequest) {
   }
 
-  isExpanded = false;
   userAvailable: boolean = false
   onDestroy = new Subject()
   labelList: string[] = [];
@@ -30,7 +30,7 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
   lieblingsversTexte: string[] = [];
 
   ngOnInit() {
-    this.getBibelleseData()
+    this.fillFormWithData()
     this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if (r) {
         this.userAvailable = true
@@ -62,8 +62,9 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
   }
 
   public form: FormGroup = new FormGroup({
+    id: new FormControl(''),
     bibelabschnitt: new FormControl('', [Validators.required]),
-    lieblingsvers: new FormControl('',),
+    lieblingsverse: new FormControl('',),
     versText: new FormControl('',),
     labels: new FormControl(''),
     kommentar: new FormControl('', [Validators.required]),
@@ -77,11 +78,14 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
     this.lieblingsversTexte = [];
   }
 
-  getBibelleseData() {
-    let request = new GetBibelleseRequest()
-    this.bibelleseFacade.getBibellese(request)
-    this.bibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
-      console.log(result)
-    })
+  fillFormWithData() {
+    console.log(this.data)
+    this.form.controls['id'].setValue(this.data.id)
+    this.form.controls['bibelabschnitt'].setValue(this.data.bibelabschnitt)
+    this.form.controls['lieblingsverse'].setValue(this.data.lieblingsverse)
+    this.form.controls['versText'].setValue(this.data.versText)
+    this.form.controls['labels'].setValue(this.data.labels)
+    this.form.controls['kommentar'].setValue(this.data.kommentar)
+    this.form.controls['leser'].setValue(this.data.leser)
   }
 }

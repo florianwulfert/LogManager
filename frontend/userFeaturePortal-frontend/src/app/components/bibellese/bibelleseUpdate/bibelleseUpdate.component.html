@@ -18,7 +18,7 @@
           </mat-form-field>
         </div>
         <div>
-          <button mat-icon-button (click)="featureManager.addItemToList(form, 'lieblingsvers', lieblingsverse)">
+          <button mat-icon-button (click)="featureManager.addItemToList(form, 'lieblingsvers', lieblingsverse, true)">
             <mat-icon>add</mat-icon>
           </button>
           <mat-chip-list *ngFor="let vers of lieblingsverse" class="mat-standard-chip">
@@ -32,15 +32,15 @@
           </mat-chip-list>
           <mat-form-field appearance="fill">
             <mat-label>Favourite verse</mat-label>
-            <input matInput formControlName="lieblingsvers">
-            <button *ngIf="form.controls['lieblingsvers'].value" matSuffix mat-icon-button aria-label="Clear"
-                    (click)="form.controls['lieblingsvers'].reset()">
+            <input matInput formControlName="lieblingsverse">
+            <button *ngIf="form.controls['lieblingsverse'].value" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="form.controls['lieblingsverse'].reset()">
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>
         </div>
         <div>
-          <button mat-icon-button (click)="featureManager.addItemToList(form, 'versText', lieblingsversTexte)">
+          <button mat-icon-button (click)="featureManager.addItemToList(form, 'versText', lieblingsversTexte, true)">
             <mat-icon>add</mat-icon>
           </button>
           <mat-list *ngFor="let text of lieblingsversTexte">
@@ -64,7 +64,7 @@
           </mat-form-field>
         </div>
         <div>
-          <button mat-icon-button (click)="featureManager.addItemToList(form, 'labels', labelList)">
+          <button mat-icon-button (click)="featureManager.addItemToList(form, 'labels', labelList, true)">
             <mat-icon>add</mat-icon>
           </button>
           <mat-chip-list class="mat-standard-chip" *ngFor="let label of labelList">

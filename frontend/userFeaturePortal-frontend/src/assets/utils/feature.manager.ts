@@ -20,8 +20,8 @@ export class FeatureManager {
     }
   }
 
-  addItemToList(form: FormGroup, itemToAdd: string, list: string[]) {
-    if (!form.get(itemToAdd)?.value) {
+  addItemToList(form: FormGroup, itemToAdd: string, list: string[], isForm: boolean) {
+    if (isForm && !form.get(itemToAdd)?.value) {
       this.openSnackbar("Value for " + itemToAdd + " must be filled", "failed")
       return;
     }
