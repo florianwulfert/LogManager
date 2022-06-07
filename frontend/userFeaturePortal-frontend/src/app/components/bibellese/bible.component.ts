@@ -58,7 +58,6 @@ export class BibleComponent implements OnInit, OnDestroy {
   }
 
   openDialog(element: UpdateBibelleseRequest): void {
-    console.log(element)
     const dialogRef = this.dialog.open(BibelleseUpdateComponent, {
       width: '1000px',
       data: {
@@ -72,7 +71,8 @@ export class BibleComponent implements OnInit, OnDestroy {
       }
     });
 
-    dialogRef.afterClosed().subscribe((result: any) => {
+    dialogRef.afterClosed().subscribe((result) => {
+      this.dataSource = new MatTableDataSource(result)
     });
   }
 
@@ -107,7 +107,6 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.bibelleseFacade.getBibellese(request)
     this.bibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
-      console.log(this.dataSource)
       this.dataSource.paginator = this.paginator;
     })
   }

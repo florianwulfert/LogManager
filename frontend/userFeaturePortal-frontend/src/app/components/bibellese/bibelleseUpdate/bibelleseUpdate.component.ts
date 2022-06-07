@@ -58,6 +58,9 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
     let request = new UpdateBibelleseRequest()
     request = this.prepareUpdateBibelleseRequest(request)
     this.updateBibelleseFacade.updateBibellese(request)
+    this.bibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+
+    })
 
   }
 
@@ -79,7 +82,6 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
   }
 
   fillFormWithData() {
-    console.log(this.data)
     this.form.controls['id'].setValue(this.data.id)
     this.form.controls['bibelabschnitt'].setValue(this.data.bibelabschnitt)
 
