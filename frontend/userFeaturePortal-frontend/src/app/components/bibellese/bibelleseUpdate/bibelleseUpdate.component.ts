@@ -82,9 +82,17 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
     console.log(this.data)
     this.form.controls['id'].setValue(this.data.id)
     this.form.controls['bibelabschnitt'].setValue(this.data.bibelabschnitt)
-    this.form.controls['lieblingsverse'].setValue(this.data.lieblingsverse)
-    this.form.controls['versText'].setValue(this.data.versText)
-    this.form.controls['labels'].setValue(this.data.labels)
+
+    for (let item of this.data.labels) {
+      this.labelList.push(item)
+    }
+    for (let item of this.data.lieblingsverse) {
+      this.lieblingsverse.push(item)
+    }
+    for (let item of this.data.versText) {
+      this.lieblingsversTexte.push(item)
+    }
+
     this.form.controls['kommentar'].setValue(this.data.kommentar)
     this.form.controls['leser'].setValue(this.data.leser)
   }
