@@ -11,7 +11,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BibleComponent} from "../bible.component";
 
 @Component({
-  selector: 'app-bibel-leseUpdate',
+  selector: 'app-bibelLeseUpdate',
   templateUrl: './bibel-lese-update.component.html',
   styleUrls: ['./bibel-lese-update.component.scss']
 })
