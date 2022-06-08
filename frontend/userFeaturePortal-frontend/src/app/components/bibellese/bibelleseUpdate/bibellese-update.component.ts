@@ -61,7 +61,6 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
     request = this.prepareUpdateBibelleseRequest(request)
     this.updateBibelleseFacade.updateBibellese(request)
     this.updateBibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
-      console.log(r)
       this.dialogRef.close(this.data)
 
     })

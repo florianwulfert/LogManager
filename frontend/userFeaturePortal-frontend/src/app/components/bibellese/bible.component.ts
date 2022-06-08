@@ -72,7 +72,6 @@ export class BibleComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(result)
       this.dataSource = new MatTableDataSource(result)
       this.getBibellese()
     });
