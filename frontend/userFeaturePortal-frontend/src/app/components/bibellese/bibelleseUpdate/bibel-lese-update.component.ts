@@ -11,11 +11,11 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {BibleComponent} from "../bible.component";
 
 @Component({
-  selector: 'app-bibelleseUpdate',
-  templateUrl: './bibellese-update.component.html',
-  styleUrls: ['./bibellese-update.component.scss']
+  selector: 'app-bibel-leseUpdate',
+  templateUrl: './bibel-lese-update.component.html',
+  styleUrls: ['./bibel-lese-update.component.scss']
 })
-export class BibelleseUpdateComponent implements OnInit, OnDestroy {
+export class BibelLeseUpdateComponent implements OnInit, OnDestroy {
 
   constructor(private updateBibelleseFacade: UpdateBibelleseFacade,
               private actorFacade: ActorFacade,
