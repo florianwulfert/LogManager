@@ -19,12 +19,10 @@ export class UpdateBibelleseService {
   name: string | undefined
 
   updateBibellese(updateBibelleseRequest: UpdateBibelleseRequest): Observable<UpdateBibelleseResponse> {
-    console.log(updateBibelleseRequest)
     return this.http.post<any>(API_BIBELLESE_UPDATE, {...updateBibelleseRequest}, {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r.body)
         this.featureManager.openSnackbar(r.body?.returnMessage, "success");
         return r.body || {
           result: [],

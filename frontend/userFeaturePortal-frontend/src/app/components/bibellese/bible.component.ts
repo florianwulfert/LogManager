@@ -44,12 +44,12 @@ export class BibleComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit() {
-    this.getBibellese()
     this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if (r) {
         this.userAvailable = true
       }
     })
+    this.getBibellese()
   }
 
   ngOnDestroy() {
@@ -72,7 +72,9 @@ export class BibleComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
+      console.log(result)
       this.dataSource = new MatTableDataSource(result)
+      this.getBibellese()
     });
   }
 
