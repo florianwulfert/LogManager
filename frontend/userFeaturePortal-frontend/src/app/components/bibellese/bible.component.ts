@@ -12,7 +12,7 @@ import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {MatDialog} from "@angular/material/dialog";
-import {BibelleseUpdateComponent} from "./bibelleseUpdate/bibelleseUpdate.component";
+import {BibelLeseUpdateComponent} from "./bibelleseUpdate/bibelLeseUpdate.component";
 import {UpdateBibelleseRequest} from "../../modules/updateBibellese/update-bibellese-request";
 
 @Component({
@@ -58,7 +58,7 @@ export class BibleComponent implements OnInit, OnDestroy {
   }
 
   openDialog(element: UpdateBibelleseRequest): void {
-    const dialogRef = this.dialog.open(BibelleseUpdateComponent, {
+    const dialogRef = this.dialog.open(BibelLeseUpdateComponent, {
       width: '1000px',
       data: {
         id : element.id,
