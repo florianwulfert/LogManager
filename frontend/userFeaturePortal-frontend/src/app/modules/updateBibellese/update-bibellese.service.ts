@@ -19,10 +19,12 @@ export class UpdateBibelleseService {
   name: string | undefined
 
   updateBibellese(updateBibelleseRequest: UpdateBibelleseRequest): Observable<UpdateBibelleseResponse> {
+    console.log(updateBibelleseRequest)
     return this.http.post<any>(API_BIBELLESE_UPDATE, {...updateBibelleseRequest}, {
       observe: 'response'
     }).pipe(
       map((r) => {
+        console.log(r.body)
         this.featureManager.openSnackbar(r.body?.returnMessage, "success");
         return r.body || {
           result: [],
@@ -31,13 +33,11 @@ export class UpdateBibelleseService {
       }),
       catchError((err) => {
         if(err.error instanceof Object) {
-          console.error(err.error.text)
           this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          console.error(err.error)
           this.featureManager.openSnackbar(err.error, "failed");
         }
-        return throwError('Due to technical issues it is currently not possible to add entry for Bibellese.');
+        return throwError('Due to technical issues it is currently not possible to update entry for Bibellese.');
       })
     );
   }

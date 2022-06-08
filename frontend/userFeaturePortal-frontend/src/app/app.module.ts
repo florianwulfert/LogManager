@@ -42,6 +42,7 @@ import {BibelleseModule} from "./modules/bibellese/bibellese.module";
 import {BookModule} from "./modules/book/book.module";
 import {MatChipsModule} from "@angular/material/chips";
 import {BibelleseUpdateComponent} from "./components/bibellese/bibelleseUpdate/bibelleseUpdate.component";
+import {UpdateBibelleseModule} from "./modules/updateBibellese/update-bibellese.module";
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import {BibelleseUpdateComponent} from "./components/bibellese/bibelleseUpdate/b
     BibelleseModule,
     UserModule,
     BookModule,
-    MatChipsModule
+    MatChipsModule,
+    UpdateBibelleseModule
   ],
   exports: [
     BrowserModule,

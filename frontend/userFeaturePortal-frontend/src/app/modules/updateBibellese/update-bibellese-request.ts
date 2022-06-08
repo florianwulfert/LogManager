@@ -1,5 +1,5 @@
 export class UpdateBibelleseRequest {
-  id: number | undefined
+  id: string | undefined
   bibelabschnitt: string | undefined
   lieblingsverse: string[] = []
   versText: string[] = []

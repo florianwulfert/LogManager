@@ -7,7 +7,8 @@ import {ActorFacade} from "../../../modules/actor/actor.facade";
 import {Subject} from "rxjs";
 import {FeatureManager} from "../../../../assets/utils/feature.manager";
 import {BibelleseFacade} from "../../../modules/bibellese/bibellese.facade";
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {BibleComponent} from "../bible.component";
 
 @Component({
   selector: 'app-bibelleseUpdate',
@@ -20,6 +21,7 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
               private actorFacade: ActorFacade,
               public featureManager: FeatureManager,
               private bibelleseFacade: BibelleseFacade,
+              public dialogRef: MatDialogRef<BibleComponent>,
               @Inject(MAT_DIALOG_DATA) public data: UpdateBibelleseRequest) {
   }
 
@@ -58,7 +60,9 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
     let request = new UpdateBibelleseRequest()
     request = this.prepareUpdateBibelleseRequest(request)
     this.updateBibelleseFacade.updateBibellese(request)
-    this.bibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+    this.updateBibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
+      console.log(r)
+      this.dialogRef.close(this.data)
 
     })
 
