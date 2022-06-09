@@ -132,7 +132,70 @@
       </mat-accordion>
     </div>
   </div>
-  <div class="col-12 mb-5">
+
+  <div>
+    <form [formGroup]="formFilter" (keydown.enter)="filterBibellese()">
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Bibelabschnitt</mat-label>
+        <mat-select formControlName="bibelabschnitt">
+          <mat-option *ngFor="let bibelabschnitt of bibelabschnitte" [value]="bibelabschnitt">
+            {{bibelabschnitt}}
+          </mat-option>
+        </mat-select>
+        <button *ngIf="formFilter.controls['severity'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['severity'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <!--<mat-form-field appearance="fill" class="filter-button">
+        <mat-label>User</mat-label>
+        <mat-select formControlName="user">
+          <mat-option *ngFor="let user of users" [value]="user">
+            {{user.name}}
+          </mat-option>
+        </mat-select>
+        <button *ngIf="formFilter.controls['user'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['user'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Date From</mat-label>
+        <input type="date" matInput formControlName="startDateTime">
+        <button *ngIf="formFilter.controls['startDateTime'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['startDateTime'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Date To</mat-label>
+        <input type="date" matInput formControlName="endDateTime">
+        <button *ngIf="formFilter.controls['endDateTime'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['endDateTime'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Message</mat-label>
+        <input matInput formControlName="message">
+
+        <button *ngIf="formFilter.controls['message'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['message'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <button mat-raised-button class="filter-button-format" (click)="filterLogs()">Search logs
+      </button>
+      -->
+    </form>
+  </div>
+
+  <div class="col-12 mb-5" *ngIf="filterButtonPressed">
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource">
 

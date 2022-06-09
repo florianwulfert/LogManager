@@ -33,6 +33,8 @@ export class BibleComponent implements OnInit, OnDestroy {
   userAvailable: boolean = false
   onDestroy = new Subject()
   isExpanded = false;
+  filterButtonPressed: boolean = false
+  bibelabschnitte: any
 
   dataSource: any;
 
@@ -99,4 +101,13 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.lieblingsverse = [];
     this.lieblingsversTexte = [];
   }
+
+  filterBibellese() {
+    this.getBibellese()
+    this.filterButtonPressed = true
+  }
+
+  public formFilter: FormGroup = new FormGroup({
+
+  })
 }
