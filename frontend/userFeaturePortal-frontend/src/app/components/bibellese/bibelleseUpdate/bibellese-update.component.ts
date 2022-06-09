@@ -60,9 +60,11 @@ export class BibelleseUpdateComponent implements OnInit, OnDestroy {
     this.updateBibelleseFacade.updateBibellese(request)
     this.updateBibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       this.dialogRef.close(this.data)
-
     })
+  }
 
+  cancel(): void {
+    this.dialogRef.close();
   }
 
   public form: FormGroup = new FormGroup({
