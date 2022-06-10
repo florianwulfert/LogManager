@@ -4,8 +4,15 @@ import {Action} from "@ngrx/store";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {catchError, map, switchMap} from "rxjs/operators";
 import {
-  addBibelleseAction, addBibelleseResponseAction, deleteBibelleseAction, deleteBibelleseResponseAction,
-  getBibelleseAction, getBibelleseResponseAction, loadAddBibelleseErrorAction, loadDeleteBibelleseErrorAction, loadGetBibelleseErrorAction
+  addBibelleseAction,
+  addBibelleseResponseAction,
+  deleteBibelleseAction,
+  deleteBibelleseResponseAction,
+  getBibelleseAction,
+  getBibelleseResponseAction,
+  loadAddBibelleseErrorAction,
+  loadDeleteBibelleseErrorAction,
+  loadGetBibelleseErrorAction,
 } from "./bibellese.actions";
 import {BibelleseService} from "./bibellese.service";
 import {AddBibelleseRequest} from "./addBibellese/add-bibellese-request";

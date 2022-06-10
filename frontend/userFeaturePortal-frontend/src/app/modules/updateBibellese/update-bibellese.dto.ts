@@ -1,7 +1,8 @@
-export interface BibelleseDto {
+export interface UpdateBibelleseDto {
   id: string
   text: string
-  lieblingsverse: string[]
+  lieblingsvers: string[]
+  versText: string
   label: string[]
   leser: string
   kommentar: string

@@ -41,6 +41,8 @@ import {BibleComponent} from "./components/bibellese/bible.component";
 import {BibelleseModule} from "./modules/bibellese/bibellese.module";
 import {BookModule} from "./modules/book/book.module";
 import {MatChipsModule} from "@angular/material/chips";
+import {BibelleseUpdateComponent} from "./components/bibellese/bibelleseUpdate/bibellese-update.component";
+import {UpdateBibelleseModule} from "./modules/updateBibellese/update-bibellese.module";
 
 @NgModule({
   declarations: [
@@ -53,7 +55,8 @@ import {MatChipsModule} from "@angular/material/chips";
     HomeComponent,
     ProfileMenuComponent,
     BookComponent,
-    BibleComponent
+    BibleComponent,
+    BibelleseUpdateComponent
   ],
   imports: [
     BrowserModule,
@@ -92,7 +95,8 @@ import {MatChipsModule} from "@angular/material/chips";
     BibelleseModule,
     UserModule,
     BookModule,
-    MatChipsModule
+    MatChipsModule,
+    UpdateBibelleseModule
   ],
   exports: [
     BrowserModule,
