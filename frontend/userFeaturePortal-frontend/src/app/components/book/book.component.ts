@@ -48,7 +48,7 @@ export class BookComponent implements OnInit, OnDestroy {
     this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if (r) {
         this.userAvailable = true
-        this.delay(157).then(r => this.getFavouriteBook());
+        this.delay(200).then(r => this.getFavouriteBook());
       }
     })
   }
