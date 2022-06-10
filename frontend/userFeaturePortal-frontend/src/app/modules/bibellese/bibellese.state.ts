@@ -1,6 +1,6 @@
 import {BibelleseDto} from "./bibellese.dto";
 
-export const BOOKS_FEATURE_NAME = 'books'
+export const BIBELLESE_FEATURE_NAME = 'bibellese'
 
 export interface BibelleseState {
   bibelleseList: BibelleseDto[]

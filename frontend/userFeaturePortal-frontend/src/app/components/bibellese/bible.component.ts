@@ -11,6 +11,9 @@ import {DeleteBibelleseRequest} from "../../modules/bibellese/deleteBibellese/de
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
+import {MatDialog} from "@angular/material/dialog";
+import {BibelleseUpdateComponent} from "./bibelleseUpdate/bibellese-update.component";
+import {UpdateBibelleseRequest} from "../../modules/updateBibellese/update-bibellese-request";
 
 @Component({
   selector: 'app-bible',
@@ -23,33 +26,55 @@ export class BibleComponent implements OnInit, OnDestroy {
   constructor(private bibelleseFacade: BibelleseFacade,
               private _snackBar: MatSnackBar,
               private actorFacade: ActorFacade,
-              public featureManager: FeatureManager) {
+              public featureManager: FeatureManager,
+              public dialog: MatDialog) {
   }
 
-  displayedColumns: string[] = ['text', 'lieblingsvers', 'lieblingsversText', 'label', 'leser', 'kommentar', 'delete'];
+  displayedColumns: string[] = ['bibelabschnitt', 'lieblingsverse', 'versText', 'labels', 'leser', 'kommentar', 'update', 'delete'];
   labelList: string[] = [];
   lieblingsverse: string[] = [];
   lieblingsversTexte: string[] = [];
   userAvailable: boolean = false
   onDestroy = new Subject()
   isExpanded = false;
+  name: string | undefined
 
   dataSource: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit() {
-    this.getBibellese()
     this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if (r) {
         this.userAvailable = true
       }
     })
+    this.getBibellese()
   }
 
   ngOnDestroy() {
     this.onDestroy.next(null)
     this.onDestroy.complete()
+  }
+
+  openDialog(element: UpdateBibelleseRequest): void {
+    const dialogRef = this.dialog.open(BibelleseUpdateComponent, {
+      width: '1000px',
+      data: {
+        id : element.id,
+        bibelabschnitt : element.bibelabschnitt,
+        lieblingsverse : element.lieblingsverse,
+        versText : element.versText,
+        labels : element.labels,
+        kommentar : element.kommentar,
+        leser : element.leser
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.dataSource = new MatTableDataSource(result)
+      this.getBibellese()
+    });
   }
 
   public form: FormGroup = new FormGroup({
@@ -61,7 +86,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     leser: new FormControl('', [Validators.required]),
   })
 
-  prepareAddBibelleseRequest(request: AddBibelleseRequest) {
+  public prepareAddBibelleseRequest(request: AddBibelleseRequest) {
     request.bibelabschnitt = this.form.get("bibelabschnitt")?.value
     request.lieblingsverse = this.lieblingsverse
     request.versText = this.lieblingsversTexte
