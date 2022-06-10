@@ -84,6 +84,25 @@ public class TestMessages {
             + "{\"id\":5,\"titel\":\"omar\",\"erscheinungsjahr\":2002},"
             + "{\"id\":6,\"titel\":\"paul\",\"erscheinungsjahr\":2002}],"
             + "\"returnMessage\":null}";
+    ;
+    public static final String KATZE_TO_HUND = "{\"addLogRequest\":{\"message\":\"Katze\",\"severity\":\"INFO\"}," +
+            "\"getLogsRequest\":{\"severity\":\"DEBUG\",\"message\":\"\",\"startDateTime\":\"\",\"endDateTime\":\"\",\"user\":\"\"}," +
+            "\"type\":\"Add log\",\"user\":\"Petra\"}";
+
+    public static final String TEST_LOG = "{\"addLogRequest\":{\"message\":\"Test\",\"severity\":\"INFO\"}," +
+            "\"getLogsRequest\":{\"severity\":\"DEBUG\",\"message\":\"\",\"startDateTime\":\"\",\"endDateTime\":\"\",\"user\":\"\"}," +
+            "\"type\":\"Add log\",\"user\":\"Petra\"}";
+    public static final String MESSAGE_IS_MISSING = "{\"addLogRequest\":{\"message\":\"\",\"severity\":\"INFO\"}," +
+            "\"getLogsRequest\":{\"severity\":\"DEBUG\",\"message\":\"\",\"startDateTime\":\"\",\"endDateTime\":\"\",\"user\":\"\"}," +
+            "\"type\":\"Add log\",\"user\":\"Petra\"}";
+    public static final String SEVERITY_IS_FALSE = "{\"addLogRequest\":{\"message\":\"Test\",\"severity\":\"HI\"}," +
+            "\"getLogsRequest\":{\"severity\":\"DEBUG\",\"message\":\"\",\"startDateTime\":\"\",\"endDateTime\":\"\",\"user\":\"\"}," +
+            "\"type\":\"Add log\",\"user\":\"Petra\"}";
+    public static final String USER_NOT_ALLOWED = "{\"addLogRequest\":{\"message\":\"Test\",\"severity\":\"INFO\"}," +
+            "\"getLogsRequest\":{\"severity\":\"DEBUG\",\"message\":\"\",\"startDateTime\":\"\",\"endDateTime\":\"\",\"user\":\"\"}," +
+            "\"type\":\"Add log\",\"user\":\"Florian\"}";
+}
+            + "\"returnMessage\":null}";
 
     public static final String BOOK_HAYA_ADDED_BY_TORSTEN = "{\"favouriteBook\":\"haya\",\"returnMessage\":" +
             "\"Book haya added to user Torsten.\"}";

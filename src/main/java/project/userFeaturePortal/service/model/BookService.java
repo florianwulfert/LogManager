@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.userFeaturePortal.common.dto.books.BookDto;
+import project.userFeaturePortal.common.dto.log.AddLogRequestDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
@@ -37,8 +38,12 @@ public class BookService {
     bookRepository.save(buildBook(titel, erscheinungsjahr, new Book()));
 
     logService.addLog(LogRequestDto.builder()
-        .message(String.format("Book %s was added.", titel)).severity("INFO").user(actor)
-        .build());
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(String.format("Book %s was added.", titel))
+                    .severity("INFO")
+                    .build())
+            .user(actor)
+            .build());
     LOGGER.info(String.format(InfoMessages.BOOK_CREATED, titel));
     return bookRepository.findAll();
   }
@@ -82,8 +87,12 @@ public class BookService {
     bookRepository.deleteById(id);
 
     logService.addLog(LogRequestDto.builder()
-        .message(String.format(InfoMessages.BOOK_DELETED_ID, id)).severity("WARNING").user(actor)
-        .build());
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(String.format(InfoMessages.BOOK_DELETED_ID, id))
+                    .severity("WARNING")
+                    .build())
+            .user(actor)
+            .build());
     return String.format(InfoMessages.BOOK_DELETED_ID, id);
   }
 
@@ -101,8 +110,12 @@ public class BookService {
     bookRepository.deleteById(booksToDelete.get(0).getId());
 
     logService.addLog(LogRequestDto.builder()
-        .message(String.format(InfoMessages.BOOK_DELETED_TITLE, titel)).severity("INFO").user(actor)
-        .build());
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(String.format(InfoMessages.BOOK_DELETED_TITLE, titel))
+                    .severity("INFO")
+                    .build())
+            .user(actor)
+            .build());
     return String.format(InfoMessages.BOOK_DELETED_TITLE, titel);
   }
 
@@ -114,8 +127,12 @@ public class BookService {
     bookRepository.deleteAll();
     LOGGER.info(InfoMessages.ALL_BOOKS_DELETED);
     logService.addLog(LogRequestDto.builder()
-        .message(InfoMessages.ALL_BOOKS_DELETED).severity("INFO").user(actor)
-        .build());
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(InfoMessages.ALL_BOOKS_DELETED)
+                    .severity("INFO")
+                    .build())
+            .user(actor)
+            .build());
     return InfoMessages.ALL_BOOKS_DELETED;
   }
 }

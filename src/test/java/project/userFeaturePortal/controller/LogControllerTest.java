@@ -5,6 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.userFeaturePortal.common.dto.log.AddLogRequestDto;
+import project.userFeaturePortal.common.dto.log.GetLogsRequestDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.model.mapper.LogDTOMapper;
 import project.userFeaturePortal.service.model.LogService;
@@ -41,7 +43,14 @@ class LogControllerTest {
   @Test
   void testAddLog() {
     LogRequestDto testDto =
-        LogRequestDto.builder().message("TestMessage").severity("INFO").user("Peter").build();
+        LogRequestDto.builder()
+                .addLogRequest(AddLogRequestDto.builder()
+                        .message("Test")
+                        .severity("WARNING")
+                        .build())
+                .getLogsRequest(GetLogsRequestDto.builder().build())
+                .user("Peter")
+                .build();
     systemUnderTest.addLog(testDto);
     verify(logService).addLog(any());
   }
