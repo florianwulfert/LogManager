@@ -12,6 +12,7 @@ import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {MatDialog} from "@angular/material/dialog";
+import {UsersFacade} from "../../modules/users/users.facade";
 import {BibelleseUpdateComponent} from "./bibelleseUpdate/bibellese-update.component";
 import {UpdateBibelleseRequest} from "../../modules/updateBibellese/update-bibellese-request";
 
@@ -27,6 +28,7 @@ export class BibleComponent implements OnInit, OnDestroy {
               private _snackBar: MatSnackBar,
               private actorFacade: ActorFacade,
               public featureManager: FeatureManager,
+              public userFacade: UsersFacade,
               public dialog: MatDialog) {
   }
 
@@ -39,6 +41,7 @@ export class BibleComponent implements OnInit, OnDestroy {
   isExpanded = false;
   filterButtonPressed: boolean = false
   bibelabschnitte: any
+  leser: any
   name: string | undefined
 
   dataSource: any;
@@ -46,12 +49,13 @@ export class BibleComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit() {
+    this.getUserList()
+    this.getBibellese()
     this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if (r) {
         this.userAvailable = true
       }
     })
-    this.getBibellese()
   }
 
   ngOnDestroy() {
@@ -133,6 +137,18 @@ export class BibleComponent implements OnInit, OnDestroy {
   }
 
   public formFilter: FormGroup = new FormGroup({
-
+    bibelabschnitt: new FormControl(''),
+    lieblingsvers: new FormControl(''),
+    versText: new FormControl(''),
+    label: new FormControl(''),
+    kommentar: new FormControl(''),
+    leser: new FormControl('')
   })
+
+  getUserList(): void {
+    this.userFacade.getUsers();
+    this.userFacade.stateGetUsersResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      this.leser = result
+    });
+  }
 }
