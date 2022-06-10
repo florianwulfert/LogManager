@@ -93,7 +93,7 @@ import {UpdateBibelleseModule} from "./modules/updateBibellese/update-bibellese.
     UserModule,
     BookModule,
     MatChipsModule,
-    FavouriteBookModule
+    FavouriteBookModule,
     MatChipsModule,
     UpdateBibelleseModule
   ],

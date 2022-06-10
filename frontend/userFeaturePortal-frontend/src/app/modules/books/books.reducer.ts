@@ -10,7 +10,6 @@ import {BOOKS_GET_INITIAL_STATE, BooksState} from "./books.state";
 import {GetBooksResponse} from "./getBooks/get-books-response";
 
 const handleBooksResponse = (state: BooksState, resp: GetBooksResponse): BooksState => {
-  console.log(resp)
   return {
     ...state,
     booksList: resp.result,

@@ -48,7 +48,7 @@ export class BookComponent implements OnInit, OnDestroy {
     this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if (r) {
         this.userAvailable = true
-        this.delay(5000).then(r => this.getFavouriteBook());
+        this.delay(157).then(r => this.getFavouriteBook());
       }
     })
   }
@@ -71,9 +71,7 @@ export class BookComponent implements OnInit, OnDestroy {
 
   getBooks(): void {
     this.booksFacade.getBooks()
-    console.log(this.booksFacade.stateGetBooksResponse$)
     this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
-      console.log(result)
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
       this.books = result
