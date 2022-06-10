@@ -101,9 +101,5 @@ public class TestMessages {
     public static final String USER_NOT_ALLOWED = "{\"addLogRequest\":{\"message\":\"Test\",\"severity\":\"INFO\"}," +
             "\"getLogsRequest\":{\"severity\":\"DEBUG\",\"message\":\"\",\"startDateTime\":\"\",\"endDateTime\":\"\",\"user\":\"\"}," +
             "\"type\":\"Add log\",\"user\":\"Florian\"}";
-}
-            + "\"returnMessage\":null}";
-
-    public static final String BOOK_HAYA_ADDED_BY_TORSTEN = "{\"favouriteBook\":\"haya\",\"returnMessage\":" +
-            "\"Book haya added to user Torsten.\"}";
+    public static final String TESTBOOK_TO_TORSTEN = "{\"favouriteBook\":\"TestBook\",\"returnMessage\":\"Book TestBook added to user Torsten.\"}";
 }
