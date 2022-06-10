@@ -232,11 +232,11 @@ class UserControllerIT {
         void testAddBookToUser() throws Exception {
                 createBook();
                 MvcResult result = mockMvc
-                                .perform(post("/user/favouriteBook").param("bookTitel", "haya").param("actor", "Torsten"))
+                                .perform(post("/user/favouriteBook").param("bookTitel", "TestBook").param("actor", "Torsten"))
                                 .andDo(print())
                                 .andExpect(status().isOk())
                                 .andReturn();
-                assertEquals(String.format(InfoMessages.BOOK_BY_USER, "haya", "Torsten"), result.getResponse().getContentAsString());
+                assertEquals(TestMessages.TESTBOOK_TO_TORSTEN, result.getResponse().getContentAsString());
         }
 
         @Test
@@ -398,12 +398,12 @@ class UserControllerIT {
     }
 
     private void createBook() {
-        Book haya = Book.builder()
+        Book testBook = Book.builder()
                 .id(1)
                 .erscheinungsjahr(1998)
-                .titel("haya")
+                .titel("TestBook")
                 .build();
-        bookRepository.save(haya);
+        bookRepository.save(testBook);
     }
   private List<User> createUser() {
     List<User> userList = new ArrayList<>();

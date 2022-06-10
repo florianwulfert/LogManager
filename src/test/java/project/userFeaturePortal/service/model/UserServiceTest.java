@@ -116,11 +116,9 @@ class UserServiceTest {
   }
 
   @Test
-  void testDeleteFavouriteColor() {
-    when(userValidationService.checkIfNameExists(anyString(),anyBoolean(),anyString())).thenReturn(users.get(0));
-    assertEquals(String.format(InfoMessages.FAV_BOOK_DELETED,  "Peter"),
-            systemUnderTest.deleteFavouriteBook("Peter"));
-    verify(userRepository).save(any());
+  void testGetFavouriteBook() {
+    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString())).thenReturn(users.get(0));
+    assertEquals("TestBook",systemUnderTest.getFavouriteBook("Peter"));
   }
 
   @Test

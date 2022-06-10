@@ -89,17 +89,25 @@ public class UserService {
     userRepository.save(user);
 
     LOGGER.info(String.format(InfoMessages.BOOK_BY_USER, titel, user.getName()));
-    return String.format(InfoMessages.BOOK_BY_USER, titel, user.getName());
+    return user.getFavouriteBook().getTitel();
   }
 
   public String deleteFavouriteBook(String userName) {
-    User user = userValidationService.checkIfNameExists(userName, false, ErrorMessages.USER_NOT_FOUND_NAME);
+    User user = userValidationService.checkIfNameExists(userName, false, String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
     user.setFavouriteBook(null);
 
     userRepository.save(user);
 
     LOGGER.info(String.format(InfoMessages.FAV_BOOK_DELETED, userName));
-    return String.format(InfoMessages.FAV_BOOK_DELETED,  userName);
+    return "";
+  }
+
+  public String getFavouriteBook(String name) {
+    User user = userValidationService.checkIfNameExists(name, false, String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
+    if (user.getFavouriteBook() != null) {
+      return user.getFavouriteBook().getTitel();
+    }
+    return "";
   }
 
   public List<UserDto> findUserList() {

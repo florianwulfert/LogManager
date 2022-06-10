@@ -7,10 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
-import project.userFeaturePortal.common.dto.user.FindUserResponseDto;
-import project.userFeaturePortal.common.dto.user.UserRequestDto;
-import project.userFeaturePortal.common.dto.user.UserResponseDto;
-import project.userFeaturePortal.common.dto.user.ValidateUserResponseDto;
+import project.userFeaturePortal.common.dto.user.*;
+import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.controller.API.UserAPI;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.UserRepository;
@@ -34,13 +32,20 @@ public class UserController implements UserAPI {
   }
 
   @Override
-  public String addFavouriteBookToUser(String bookTitel, String actor) {
-    return userService.addFavouriteBookToUser(bookTitel, actor);
+  public ResponseEntity<GetFavouriteBookResponseDto> addFavouriteBookToUser(String bookTitel, String actor) {
+    String returnMessage = String.format(InfoMessages.BOOK_BY_USER, bookTitel, actor);
+    return ResponseEntity.status(HttpStatus.OK).body(new GetFavouriteBookResponseDto(userService.addFavouriteBookToUser(bookTitel, actor), returnMessage));
   }
 
   @Override
-  public String deleteFavouriteBook(String name) {
-    return userService.deleteFavouriteBook(name);
+  public ResponseEntity<GetFavouriteBookResponseDto> deleteFavouriteBook(String name) {
+    String returnMessage = String.format(InfoMessages.FAV_BOOK_DELETED, name);
+    return ResponseEntity.status(HttpStatus.OK).body(new GetFavouriteBookResponseDto(userService.deleteFavouriteBook(name), returnMessage));
+  }
+
+  @Override
+  public ResponseEntity<GetFavouriteBookResponseDto> getFavouriteBook(String name) {
+    return ResponseEntity.status(HttpStatus.OK).body(new GetFavouriteBookResponseDto(userService.getFavouriteBook(name), null));
   }
 
   @Override

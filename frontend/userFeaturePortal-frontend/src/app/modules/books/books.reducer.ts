@@ -1,10 +1,8 @@
 import {createReducer, on} from "@ngrx/store";
 import {
   addBookResponseAction,
-  assignBookToUserResponseAction,
   deleteBookResponseAction,
   deleteBooksResponseAction,
-  deleteFavouriteBookResponseAction,
   getBooksResponseAction,
   updateBookResponseAction
 } from "./books.actions";
@@ -23,8 +21,6 @@ export const BooksReducer = createReducer(
   on(getBooksResponseAction, handleBooksResponse),
   on(addBookResponseAction, handleBooksResponse),
   on(deleteBookResponseAction, handleBooksResponse),
-  on(assignBookToUserResponseAction, handleBooksResponse),
   on(deleteBooksResponseAction, handleBooksResponse),
-  on(deleteFavouriteBookResponseAction, handleBooksResponse),
   on(updateBookResponseAction, handleBooksResponse)
 )

@@ -40,6 +40,7 @@ import {UserModule} from "./modules/user/user.module";
 import {BibleComponent} from "./components/bibellese/bible.component";
 import {BibelleseModule} from "./modules/bibellese/bibellese.module";
 import {BookModule} from "./modules/book/book.module";
+import {FavouriteBookModule} from "./modules/favouriteBook/favouriteBook.module";
 import {MatChipsModule} from "@angular/material/chips";
 import {BibelleseUpdateComponent} from "./components/bibellese/bibelleseUpdate/bibellese-update.component";
 import {UpdateBibelleseModule} from "./modules/updateBibellese/update-bibellese.module";
@@ -78,16 +79,12 @@ import {UpdateBibelleseModule} from "./modules/updateBibellese/update-bibellese.
     UsersModule,
     ReactiveFormsModule,
     MatSnackBarModule,
-    MatTooltipModule,
     MatDialogModule,
-    FormsModule,
     MatTooltipModule,
     LogModule,
     ActorModule,
-    LogModule,
     MatSelectModule,
     FormsModule,
-    LogModule,
     BmiModule,
     MatPaginatorModule,
     ActorIsValidModule,
@@ -95,6 +92,8 @@ import {UpdateBibelleseModule} from "./modules/updateBibellese/update-bibellese.
     BibelleseModule,
     UserModule,
     BookModule,
+    MatChipsModule,
+    FavouriteBookModule,
     MatChipsModule,
     UpdateBibelleseModule
   ],
