@@ -139,8 +139,8 @@
       <mat-form-field appearance="fill" class="filter-button">
         <mat-label>Bibelabschnitt</mat-label>
         <mat-select formControlName="bibelabschnitt">
-          <mat-option *ngFor="let bibelabschnitt of bibelabschnitte" [value]="bibelabschnitt">
-            {{bibelabschnitt}}
+          <mat-option *ngFor="let bibelabschnitt of bibellese" [value]="bibelabschnitt">
+            {{bibelabschnitt.bibelabschnitt}}
           </mat-option>
         </mat-select>
         <button *ngIf="formFilter.controls['bibelabschnitt'].value" matSuffix mat-icon-button aria-label="Clear"
@@ -152,8 +152,8 @@
       <mat-form-field appearance="fill" class="filter-button">
         <mat-label>Lieblingsvers</mat-label>
         <mat-select formControlName="lieblingsvers">
-          <mat-option *ngFor="let lieblingsVers of lieblingsverse" [value]="lieblingsVers">
-            {{lieblingsVers}}
+          <mat-option *ngFor="let lieblingsVers of bibellese" [value]="lieblingsVers">
+            {{lieblingsVers.lieblingsverse}}
           </mat-option>
         </mat-select>
         <button *ngIf="formFilter.controls['lieblingsvers'].value" matSuffix mat-icon-button aria-label="Clear"
@@ -174,8 +174,8 @@
       <mat-form-field appearance="fill" class="filter-button">
         <mat-label>Label</mat-label>
         <mat-select formControlName="label">
-          <mat-option *ngFor="let label of labelList" [value]="label">
-            {{label}}
+          <mat-option *ngFor="let label of bibellese" [value]="label">
+            {{label.labels}}
           </mat-option>
         </mat-select>
         <button *ngIf="formFilter.controls['label'].value" matSuffix mat-icon-button aria-label="Clear"
@@ -196,7 +196,7 @@
       <mat-form-field appearance="fill" class="filter-button">
         <mat-label>Leser</mat-label>
         <mat-select formControlName="leser">
-          <mat-option *ngFor="let leser of leser" [value]="leser">
+          <mat-option *ngFor="let leser of leserList" [value]="leser">
             {{leser.name}}
           </mat-option>
         </mat-select>

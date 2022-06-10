@@ -41,10 +41,13 @@ export class BibleComponent implements OnInit, OnDestroy {
   isExpanded = false;
   filterButtonPressed: boolean = false
   bibelabschnitte: any
-  leser: any
+  leserList: any
   name: string | undefined
+  labels: any
+  bibellese: any
 
   dataSource: any;
+
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
@@ -115,6 +118,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.bibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
+      this.bibellese = result
     })
   }
 
@@ -148,7 +152,7 @@ export class BibleComponent implements OnInit, OnDestroy {
   getUserList(): void {
     this.userFacade.getUsers();
     this.userFacade.stateGetUsersResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
-      this.leser = result
+      this.leserList = result
     });
   }
 }
