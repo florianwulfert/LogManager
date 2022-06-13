@@ -28,6 +28,7 @@ export class BibelleseService {
       return ""
     } else {
       this.countParameter++
+      console.log(this.countParameter)
       let connectionItem = this.countParameter > 1 ? "&" : "?"
       return connectionItem + parameterName + '=' + requestParameter
     }
@@ -50,6 +51,7 @@ export class BibelleseService {
   }
 
   getBibellese(request: GetBibelleseRequest): Observable<GetBibelleseResponse> {
+    this.countParameter = 0
     return this.http.get<GetBibelleseResponse>(API_BIBELLESE + this.buildGetBibelleseRequestParams(request), {
       observe: 'response'
     }).pipe(
