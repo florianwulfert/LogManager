@@ -40,7 +40,6 @@ export class BibleComponent implements OnInit, OnDestroy {
   onDestroy = new Subject()
   isExpanded = false;
   filterButtonPressed: boolean = false
-  bibelabschnitte: any
   leserList: any
   name: string | undefined
   labels: any
@@ -112,8 +111,18 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.isExpanded = false;
   }
 
+  prepareGetLogsRequest(request: GetBibelleseRequest) {
+    request.bibelabschnitt = this.formFilter.get("bibelabschnitt")?.value.bibelabschnitt
+    request.kommentarAusschnitt = this.formFilter.get("kommentarAusschnitt")?.value
+    request.leser = this.formFilter.get("leser")?.value.name
+    request.label = this.formFilter.get("label")?.value.labels
+    request.lieblingsvers = this.formFilter.get("lieblingsvers")?.value.lieblingsverse
+    console.log(request.label)
+  }
+
   getBibellese(): void {
     let request = new GetBibelleseRequest();
+    this.prepareGetLogsRequest(request)
     this.bibelleseFacade.getBibellese(request)
     this.bibelleseFacade.stateGetBibelleseResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
@@ -145,7 +154,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     lieblingsvers: new FormControl(''),
     versText: new FormControl(''),
     label: new FormControl(''),
-    kommentar: new FormControl(''),
+    kommentarAusschnitt: new FormControl(''),
     leser: new FormControl('')
   })
 

@@ -1,6 +1,77 @@
 <div class="page row">
   <h1>Reading Bible</h1>
-  <div class="col-12" *ngIf="userAvailable">
+
+  <div>
+    <form [formGroup]="formFilter" (keydown.enter)="filterBibellese()">
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Bibelabschnitt</mat-label>
+        <mat-select formControlName="bibelabschnitt">
+          <mat-option *ngFor="let bibelabschnitt of bibellese" [value]="bibelabschnitt">
+            {{bibelabschnitt.bibelabschnitt}}
+          </mat-option>
+        </mat-select>
+        <button *ngIf="formFilter.controls['bibelabschnitt'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['bibelabschnitt'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Lieblingsvers</mat-label>
+        <mat-select formControlName="lieblingsvers">
+          <mat-option *ngFor="let lieblingsVers of bibellese" [value]="lieblingsVers">
+            {{lieblingsVers.lieblingsverse}}
+          </mat-option>
+        </mat-select>
+        <button *ngIf="formFilter.controls['lieblingsvers'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['lieblingsvers'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Label</mat-label>
+        <mat-select formControlName="label">
+          <mat-option *ngFor="let label of bibellese" [value]="label">
+            {{label.labels}}
+          </mat-option>
+        </mat-select>
+        <button *ngIf="formFilter.controls['label'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['label'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Kommentar</mat-label>
+        <input matInput formControlName="kommentarAusschnitt">
+        <button *ngIf="formFilter.controls['kommentarAusschnitt'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['kommentarAusschnitt'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Leser</mat-label>
+        <mat-select formControlName="leser">
+          <mat-option *ngFor="let leser of leserList" [value]="leser">
+            {{leser.name}}
+          </mat-option>
+        </mat-select>
+        <button *ngIf="formFilter.controls['leser'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['leser'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <button mat-raised-button class="filter-button-format" (click)="filterBibellese()">Search entries
+      </button>
+
+    </form>
+  </div>
+
+  <div class="col-12" *ngIf="userAvailable && filterButtonPressed">
     <div class="space-between-fields">
       <mat-accordion>
         <mat-expansion-panel [expanded]="isExpanded"
@@ -113,7 +184,11 @@
               <div>
                 <mat-form-field appearance="fill">
                   <mat-label>Reader</mat-label>
-                  <input matInput formControlName="leser">
+                  <mat-select formControlName="leser">
+                    <mat-option *ngFor="let leser of leserList" [value]="leser">
+                      {{leser.name}}
+                    </mat-option>
+                  </mat-select>
                   <button *ngIf="form.controls['leser'].value" matSuffix mat-icon-button aria-label="Clear"
                           (click)="form.controls['leser'].reset()">
                     <mat-icon>close</mat-icon>
@@ -131,85 +206,6 @@
         </mat-expansion-panel>
       </mat-accordion>
     </div>
-  </div>
-
-  <div>
-    <form [formGroup]="formFilter" (keydown.enter)="filterBibellese()">
-
-      <mat-form-field appearance="fill" class="filter-button">
-        <mat-label>Bibelabschnitt</mat-label>
-        <mat-select formControlName="bibelabschnitt">
-          <mat-option *ngFor="let bibelabschnitt of bibellese" [value]="bibelabschnitt">
-            {{bibelabschnitt.bibelabschnitt}}
-          </mat-option>
-        </mat-select>
-        <button *ngIf="formFilter.controls['bibelabschnitt'].value" matSuffix mat-icon-button aria-label="Clear"
-                (click)="formFilter.controls['bibelabschnitt'].reset()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="filter-button">
-        <mat-label>Lieblingsvers</mat-label>
-        <mat-select formControlName="lieblingsvers">
-          <mat-option *ngFor="let lieblingsVers of bibellese" [value]="lieblingsVers">
-            {{lieblingsVers.lieblingsverse}}
-          </mat-option>
-        </mat-select>
-        <button *ngIf="formFilter.controls['lieblingsvers'].value" matSuffix mat-icon-button aria-label="Clear"
-                (click)="formFilter.controls['lieblingsvers'].reset()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="filter-button">
-        <mat-label>Vers Text</mat-label>
-        <input matInput formControlName="versText">
-        <button *ngIf="formFilter.controls['versText'].value" matSuffix mat-icon-button aria-label="Clear"
-                (click)="formFilter.controls['versText'].reset()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="filter-button">
-        <mat-label>Label</mat-label>
-        <mat-select formControlName="label">
-          <mat-option *ngFor="let label of bibellese" [value]="label">
-            {{label.labels}}
-          </mat-option>
-        </mat-select>
-        <button *ngIf="formFilter.controls['label'].value" matSuffix mat-icon-button aria-label="Clear"
-                (click)="formFilter.controls['label'].reset()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="filter-button">
-        <mat-label>Kommentar</mat-label>
-        <input matInput formControlName="kommentar">
-        <button *ngIf="formFilter.controls['kommentar'].value" matSuffix mat-icon-button aria-label="Clear"
-                (click)="formFilter.controls['kommentar'].reset()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="filter-button">
-        <mat-label>Leser</mat-label>
-        <mat-select formControlName="leser">
-          <mat-option *ngFor="let leser of leserList" [value]="leser">
-            {{leser.name}}
-          </mat-option>
-        </mat-select>
-        <button *ngIf="formFilter.controls['leser'].value" matSuffix mat-icon-button aria-label="Clear"
-                (click)="formFilter.controls['leser'].reset()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <button mat-raised-button class="filter-button-format" (click)="filterBibellese()">Search entries
-      </button>
-
-    </form>
   </div>
 
   <div class="col-12 mb-5" *ngIf="filterButtonPressed">
