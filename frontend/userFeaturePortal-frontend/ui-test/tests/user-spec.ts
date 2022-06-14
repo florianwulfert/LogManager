@@ -23,7 +23,7 @@ import {USERS} from "../mock-data/mock-data";
 export default class UserSpec {
   @BeforeSuite()
   public async beforeSuite() {
-    await openBrowser({headless: false});
+    await openBrowser({headless: true});
   }
 
   @AfterSuite()
@@ -38,7 +38,9 @@ export default class UserSpec {
 
   @Step("Login")
   public async login() {
-    await write('Eugen', into({id:'inputName'}));
+    await intercept("http://localhost:8081/users", USERS)
+    await write('Alf', {id: "inputName"});
+    //await write('Eugen', textBox(below("Sign in")));
     await click('Apply');
   }
 
@@ -49,6 +51,6 @@ export default class UserSpec {
 
   @Step("Find User")
   public async findUser() {
-    await intercept("http://localhost:8081/users", USERS)
+    await text('Eugen').exists()
   }
 }
