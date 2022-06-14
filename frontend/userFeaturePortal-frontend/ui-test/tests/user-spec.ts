@@ -40,7 +40,7 @@ export default class UserSpec {
   public async login() {
     await intercept("http://localhost:8081/users", USERS)
     await write('Alf', {id: "inputName"});
-    //await write('Eugen', textBox(below("Sign in")));
+    // await write('Eugen', textBox(below("Sign in")));
     await click('Apply');
   }
 
