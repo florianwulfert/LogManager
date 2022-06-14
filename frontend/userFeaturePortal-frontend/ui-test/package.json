@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@types/node": "latest",
+    "@getgauge/cli": "^1.4.3",
     "taiko": "^1.0.26"
   }
 }
