@@ -60,3 +60,23 @@ jobs:
       - name: Lint
         working-directory: frontend/userFeaturePortal-frontend
         run: npm run lint
+  #frontend-gauge-tests:
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - uses: actions/checkout@v2
+  #    - name: Use Node.js 12.x
+  #      uses: actions/setup-node@v1
+  #      with:
+  #        node-version: 12.x
+  #    - name: Install dependencies
+  #      working-directory: frontend/userFeaturePortal-frontend
+  #      run: npm install
+  #    - name: Install dependencies for UI-Tests
+  #      working-directory: frontend/userFeaturePortal-frontend/ui-test
+  #      run: npm install
+  #    - name: Install Gauge
+  #      working-directory: frontend/userFeaturePortal-frontend/ui-test
+  #      run: npm install -g @getgauge/cli
+  #    - name: run specs
+  #      working-directory: frontend/userFeaturePortal-frontend/ui-test
+  #      run: gauge run specs
