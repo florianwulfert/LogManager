@@ -7,8 +7,8 @@
       <mat-form-field appearance="fill" class="filter-button">
         <mat-label>Bibelabschnitt</mat-label>
         <mat-select formControlName="bibelabschnitt">
-          <mat-option *ngFor="let bibelabschnitt of bibellese" [value]="bibelabschnitt">
-            {{bibelabschnitt.bibelabschnitt}}
+          <mat-option *ngFor="let bibelabschnitt of allBibellese" [value]="bibelabschnitt">
+            {{bibelabschnitt.bibelabschnitte}}
           </mat-option>
         </mat-select>
         <button *ngIf="formFilter.controls['bibelabschnitt'].value" matSuffix mat-icon-button aria-label="Clear"

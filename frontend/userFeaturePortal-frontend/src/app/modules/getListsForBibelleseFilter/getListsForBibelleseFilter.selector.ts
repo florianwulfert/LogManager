@@ -6,4 +6,4 @@ import {
 } from "./getListsForBibelleseFilter.state";
 
 const bibelleseState = createFeatureSelector<GetListsForBibelleseFilterState>(GET_LISTS_FOR_FILTER_BIBELLESE_FEATURE_NAME)
-export const getBibellese = createSelector(bibelleseState, (state: GetListsForBibelleseFilterState): GetListsDto[] => state.listsForFilterBibellese)
+export const getLists = createSelector(bibelleseState, (state: GetListsForBibelleseFilterState): GetListsDto => state.listsForFilterBibellese)

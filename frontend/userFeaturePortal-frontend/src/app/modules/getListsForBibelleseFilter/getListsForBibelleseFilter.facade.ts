@@ -2,11 +2,11 @@ import {Injectable} from "@angular/core";
 import {Store} from "@ngrx/store";
 import {GetListsForBibelleseFilterState} from "./getListsForBibelleseFilter.state";
 import {getAllBibelleseAction,} from "./getListsForBibelleseFilter.actions";
-import {getBibellese} from "./getListsForBibelleseFilter.selector";
+import {getLists} from "./getListsForBibelleseFilter.selector";
 
 @Injectable({providedIn: 'root'})
 export class GetListsForBibelleseFilterFacade {
-  stateGetListsForBibelleseFilterResponse$ = this.getListsForBibelleseFilterState.select(getBibellese)
+  stateGetListsForBibelleseFilterResponse$ = this.getListsForBibelleseFilterState.select(getLists)
 
   constructor(
     private readonly getListsForBibelleseFilterState: Store<GetListsForBibelleseFilterState>

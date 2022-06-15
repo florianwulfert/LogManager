@@ -7,6 +7,7 @@ import {
 import {GetListsForFilterBibelleseResponse} from "./getListsForFilterBibellese-response";
 
 const handleGetListsResponse = (state: GetListsForBibelleseFilterState, resp: GetListsForFilterBibelleseResponse): GetListsForBibelleseFilterState => {
+  console.log(resp)
   return {
     ...state,
     listsForFilterBibellese: resp.result,

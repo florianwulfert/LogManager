@@ -5,6 +5,7 @@ import {catchError, map} from "rxjs/operators";
 import {ActorFacade} from "../actor/actor.facade";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {GetListsForFilterBibelleseResponse} from "./getListsForFilterBibellese-response";
+import {GetListsDto} from "./getLists.dto";
 
 const API_BIBELLESE_ALL = 'http://localhost:8082/gelesen/all'
 
@@ -17,6 +18,11 @@ export class GetListsForBibelleseFilterService {
   }
 
   name: string | undefined
+  getListsDto: GetListsDto = {
+    bibelabschnitte: [],
+    labels: [],
+    lieblingsverse: []
+  }
 
   getAllBibellese(): Observable<GetListsForFilterBibelleseResponse> {
     return this.http.get<GetListsForFilterBibelleseResponse>(API_BIBELLESE_ALL, {
@@ -25,7 +31,7 @@ export class GetListsForBibelleseFilterService {
       map((r) => {
         console.log(r.body)
         return r.body || {
-          result: []
+          result: this.getListsDto
         }
       }),
       catchError((err) => {

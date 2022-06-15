@@ -50,6 +50,7 @@ export class BibleComponent implements OnInit, OnDestroy {
   bibellese: any
   lieblingsVerseToShow: string[] = []
   labelsToShow: string[] = []
+  bibelabschnitteToShow: string[] = []
   allBibellese: any
 
   dataSource: any;
@@ -151,7 +152,6 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.getListsFacade.stateGetListsForBibelleseFilterResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       console.log(result)
       this.allBibellese = result
-      this.labelsToShow = this.allBibellese.labels
     })
   }
 
