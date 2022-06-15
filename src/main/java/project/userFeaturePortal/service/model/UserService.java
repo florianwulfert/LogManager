@@ -66,7 +66,7 @@ public class UserService {
     user.setBirthdate(userRequestDto.getBirthdateAsLocalDate());
     user.setWeight(userRequestDto.weight);
     user.setHeight(userRequestDto.height);
-    user.setBmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height));
+    user.setBmi(user.calculateBMI());
     user.setFavouriteBook(book);
     return user;
   }
