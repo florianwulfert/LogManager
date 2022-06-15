@@ -9,7 +9,7 @@ public class TestMessages {
             + "{\"id\":3,\"name\":\"Hans\",\"birthdate\":\"1993-02-03\",\"weight\":75.7,\"height\":1.85,"
             + "\"favouriteBookTitel\":null,\"bmi\":22.11}],\"returnMessage\":null}";
     public static final String PETRA = "{\"id\":1,\"name\":\"Petra\",\"birthdate\":\"1999-12-13\","
-            + "\"weight\":65.0,\"height\":1.6,\"favouriteBook\":null,\"bmi\":25.39}";
+            + "\"weight\":65.0,\"height\":1.6,\"favouriteBook\":null,\"bmi\":25.39,\"bmiMessage\":\"User has a BMI of 25.39 and therewith he has overweight.\"}";
     public static final String LOG_EXAMPLE = "[{\"id\":1,\"severity\":\"INFO\",\"message\":\"Test\",\"timestamp\":\"2000-12-12T12:12:12\",\"user\":null}]";
     public static final String ID_FOR_LOGS_HAS_WRONG_FORMAT = "Required path variable was not found or request param has wrong format! "
             + "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; "
