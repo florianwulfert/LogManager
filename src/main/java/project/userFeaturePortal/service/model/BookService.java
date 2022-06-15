@@ -66,13 +66,7 @@ public class BookService {
   }
 
   public List<Book> getAllBooks() {
-    List<Book> books = bookRepository.findAll();
-    List<String> bookNames = new ArrayList<>();
-    for (Book book : books) {
-      bookNames.add(book.getTitel());
-    }
-    LOGGER.info("Books found: " + bookNames);
-    return books;
+    return bookRepository.findAll();
   }
 
   public BookDto searchBooksByTitel(String titel) {
