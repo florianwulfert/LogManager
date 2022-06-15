@@ -15,6 +15,9 @@ import {MatDialog} from "@angular/material/dialog";
 import {UsersFacade} from "../../modules/users/users.facade";
 import {BibelleseUpdateComponent} from "./bibelleseUpdate/bibellese-update.component";
 import {UpdateBibelleseRequest} from "../../modules/updateBibellese/update-bibellese-request";
+import {
+  GetListsForBibelleseFilterFacade
+} from "../../modules/getListsForBibelleseFilter/getListsForBibelleseFilter.facade";
 
 @Component({
   selector: 'app-bible',
@@ -29,7 +32,8 @@ export class BibleComponent implements OnInit, OnDestroy {
               private actorFacade: ActorFacade,
               public featureManager: FeatureManager,
               public userFacade: UsersFacade,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private getListsFacade: GetListsForBibelleseFilterFacade) {
   }
 
   displayedColumns: string[] = ['bibelabschnitt', 'lieblingsverse', 'versText', 'labels', 'leser', 'kommentar', 'update', 'delete'];
@@ -44,6 +48,9 @@ export class BibleComponent implements OnInit, OnDestroy {
   name: string | undefined
   labels: any
   bibellese: any
+  lieblingsVerseToShow: string[] = []
+  labelsToShow: string[] = []
+  allBibellese: any
 
   dataSource: any;
 
@@ -53,6 +60,7 @@ export class BibleComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getUserList()
     this.getBibellese()
+    this.getBibelabschnittAndLieblingsversAndLabel()
     this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if (r) {
         this.userAvailable = true
@@ -100,7 +108,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     request.versText = this.lieblingsversTexte
     request.labels = this.labelList
     request.kommentar = this.form.get("kommentar")?.value
-    request.leser = this.form.get("leser")?.value
+    request.leser = this.form.get("leser")?.value.name
     return request;
   }
 
@@ -111,13 +119,20 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.isExpanded = false;
   }
 
+  addAnotherBibellese() {
+    let request = new AddBibelleseRequest()
+    this.prepareAddBibelleseRequest(request)
+    this.bibelleseFacade.addBibellese(request);
+    this.isExpanded = true;
+    this.resetForm()
+  }
+
   prepareGetLogsRequest(request: GetBibelleseRequest) {
     request.bibelabschnitt = this.formFilter.get("bibelabschnitt")?.value.bibelabschnitt
     request.kommentarAusschnitt = this.formFilter.get("kommentarAusschnitt")?.value
     request.leser = this.formFilter.get("leser")?.value.name
     request.label = this.formFilter.get("label")?.value.labels
     request.lieblingsvers = this.formFilter.get("lieblingsvers")?.value.lieblingsverse
-    console.log(request.label)
   }
 
   getBibellese(): void {
@@ -128,6 +143,15 @@ export class BibleComponent implements OnInit, OnDestroy {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
       this.bibellese = result
+    })
+  }
+
+  getBibelabschnittAndLieblingsversAndLabel() {
+    this.getListsFacade.getAllBibellese()
+    this.getListsFacade.stateGetListsForBibelleseFilterResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      console.log(result)
+      this.allBibellese = result
+      this.labelsToShow = this.allBibellese.labels
     })
   }
 

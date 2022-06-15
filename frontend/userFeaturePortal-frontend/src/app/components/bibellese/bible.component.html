@@ -20,8 +20,8 @@
       <mat-form-field appearance="fill" class="filter-button">
         <mat-label>Lieblingsvers</mat-label>
         <mat-select formControlName="lieblingsvers">
-          <mat-option *ngFor="let lieblingsVers of bibellese" [value]="lieblingsVers">
-            {{lieblingsVers.lieblingsverse}}
+          <mat-option  *ngFor="let lieblingsVers of lieblingsVerseToShow" [value]="lieblingsVers">
+            {{lieblingsVers}}
           </mat-option>
         </mat-select>
         <button *ngIf="formFilter.controls['lieblingsvers'].value" matSuffix mat-icon-button aria-label="Clear"
@@ -33,8 +33,8 @@
       <mat-form-field appearance="fill" class="filter-button">
         <mat-label>Label</mat-label>
         <mat-select formControlName="label">
-          <mat-option *ngFor="let label of bibellese" [value]="label">
-            {{label.labels}}
+          <mat-option *ngFor="let label of labelsToShow" [value]="label">
+            {{label}}
           </mat-option>
         </mat-select>
         <button *ngIf="formFilter.controls['label'].value" matSuffix mat-icon-button aria-label="Clear"
@@ -109,7 +109,8 @@
                 <mat-chip-list *ngFor="let vers of lieblingsverse" class="mat-standard-chip">
                   <mat-chip>
                     {{vers}}
-                    <button mat-icon-button class="deleteButton" (click)="featureManager.deleteItemFromList(vers, lieblingsverse)">
+                    <button mat-icon-button class="deleteButton"
+                            (click)="featureManager.deleteItemFromList(vers, lieblingsverse)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </mat-chip>
@@ -131,7 +132,8 @@
                   <mat-card>
                     <mat-list-item>
                       {{text}}
-                      <button mat-icon-button class="deleteButton" (click)="featureManager.deleteItemFromList(text, lieblingsversTexte)">
+                      <button mat-icon-button class="deleteButton"
+                              (click)="featureManager.deleteItemFromList(text, lieblingsversTexte)">
                         <mat-icon>delete</mat-icon>
                       </button>
                     </mat-list-item>
@@ -153,7 +155,8 @@
                 <mat-chip-list class="mat-standard-chip" *ngFor="let label of labelList">
                   <mat-chip>
                     {{label}}
-                    <button mat-icon-button class="deleteButton" (click)="featureManager.deleteItemFromList(label, labelList)">
+                    <button mat-icon-button class="deleteButton"
+                            (click)="featureManager.deleteItemFromList(label, labelList)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </mat-chip>
@@ -200,7 +203,11 @@
               </div>
             </div>
           </form>
-          <button mat-raised-button class="create button-format" (click)="addBibellese()" [disabled]="!form.valid">Add Read
+          <button mat-raised-button class="create button-format" (click)="addBibellese()" [disabled]="!form.valid">Add
+            Read
+          </button>
+          <button mat-raised-button class="create button-format" (click)="addAnotherBibellese()"
+                  [disabled]="!form.valid">Add Another Read
           </button>
           <button mat-raised-button class="reset button-format" (click)="resetForm()">Reset</button>
         </mat-expansion-panel>
@@ -286,7 +293,8 @@
         <ng-container matColumnDef="delete">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
-            <button mat-icon-button class="deleteButton" (click)="deleteBibellese(element)" id="remove" *ngIf="userAvailable">
+            <button mat-icon-button class="deleteButton" (click)="deleteBibellese(element)" id="remove"
+                    *ngIf="userAvailable">
               <mat-icon>delete</mat-icon>
             </button>
           </td>

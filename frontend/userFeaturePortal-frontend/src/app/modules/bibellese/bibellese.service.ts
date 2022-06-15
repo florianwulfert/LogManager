@@ -12,6 +12,8 @@ import {DeleteBibelleseResponse} from "./deleteBibellese/delete-bibellese-respon
 
 const API_BIBELLESE = 'http://localhost:8082/gelesen'
 const API_BIBELLESE_UPDATE = 'http://localhost:8082/gelesen/update'
+const API_BIBELLESE_ALL = 'http://localhost:8082/gelesen/all'
+
 
 @Injectable({
   providedIn: 'root'
