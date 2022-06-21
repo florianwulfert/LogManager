@@ -152,6 +152,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.getListsFacade.stateGetListsForBibelleseFilterResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       console.log(result)
       this.allBibellese = result
+      this.bibelabschnitteToShow = this.allBibellese.bibelabschnitte
     })
   }
 

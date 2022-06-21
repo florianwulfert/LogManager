@@ -18,11 +18,11 @@ export class GetListsForBibelleseFilterService {
   }
 
   name: string | undefined
-  getListsDto: GetListsDto = {
+  getListsDto: GetListsDto[] = [{
     bibelabschnitte: [],
     labels: [],
     lieblingsverse: []
-  }
+  }]
 
   getAllBibellese(): Observable<GetListsForFilterBibelleseResponse> {
     return this.http.get<GetListsForFilterBibelleseResponse>(API_BIBELLESE_ALL, {
