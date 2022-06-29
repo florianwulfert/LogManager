@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import project.userFeaturePortal.service.model.UserService;
+import project.userFeaturePortal.service.UserService;
 
 @RestControllerAdvice
 public class CustomRestExceptionHandler {

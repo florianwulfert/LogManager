@@ -15,7 +15,7 @@ import project.userFeaturePortal.model.entity.Log;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.LogRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
-import project.userFeaturePortal.service.model.UserService;
+import project.userFeaturePortal.service.UserService;
 
 import java.util.List;
 import java.util.Optional;

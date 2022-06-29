@@ -11,8 +11,7 @@ import project.userFeaturePortal.common.dto.user.*;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.controller.API.UserAPI;
 import project.userFeaturePortal.model.entity.User;
-import project.userFeaturePortal.model.repository.UserRepository;
-import project.userFeaturePortal.service.model.UserService;
+import project.userFeaturePortal.service.UserService;
 
 import java.util.Optional;
 
@@ -23,12 +22,11 @@ import java.util.Optional;
 public class UserController implements UserAPI {
 
   private final UserService userService;
-  private final UserRepository userRepository;
 
   @Override
   public ResponseEntity<UserResponseDto> addUser(UserRequestDto allParameters) {
     String returnMessage = userService.addUser(allParameters);
-    return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponseDto(userService.findUserList(), returnMessage));
+    return ResponseEntity.status(201).body(new UserResponseDto(userService.findUserList(), returnMessage));
   }
 
   @Override

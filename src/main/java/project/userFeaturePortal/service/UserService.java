@@ -1,4 +1,4 @@
-package project.userFeaturePortal.service.model;
+package project.userFeaturePortal.service;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +15,8 @@ import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.mapper.UserDtoMapper;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
+import project.userFeaturePortal.service.model.BmiService;
+import project.userFeaturePortal.service.model.LogService;
 import project.userFeaturePortal.service.validation.BookValidationService;
 import project.userFeaturePortal.service.validation.UserValidationService;
 

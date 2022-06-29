@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import project.userFeaturePortal.common.dto.user.UserRequestDto;
 import project.userFeaturePortal.model.entity.User;
-import project.userFeaturePortal.service.model.UserService;
+import project.userFeaturePortal.service.UserService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

@@ -11,7 +11,7 @@ import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
-import project.userFeaturePortal.service.model.UserService;
+import project.userFeaturePortal.service.UserService;
 
 import java.util.List;
 
