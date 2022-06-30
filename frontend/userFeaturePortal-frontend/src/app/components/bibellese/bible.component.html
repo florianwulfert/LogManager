@@ -196,6 +196,14 @@
           </td>
         </ng-container>
 
+        <!-- Timestamp Column -->
+        <ng-container matColumnDef="timestamp">
+          <th mat-header-cell *matHeaderCellDef> Timestamp</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-card class="card-style">{{element.timestamp}}</mat-card>
+          </td>
+        </ng-container>
+
         <!-- Update -->
         <ng-container matColumnDef="update">
           <th mat-header-cell *matHeaderCellDef></th>

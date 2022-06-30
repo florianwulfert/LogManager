@@ -30,7 +30,7 @@ export class BibleComponent implements OnInit, OnDestroy {
               public dialog: MatDialog) {
   }
 
-  displayedColumns: string[] = ['bibelabschnitt', 'lieblingsverse', 'versText', 'labels', 'leser', 'kommentar', 'update', 'delete'];
+  displayedColumns: string[] = ['bibelabschnitt', 'lieblingsverse', 'versText', 'labels', 'leser', 'kommentar', 'timestamp', 'update', 'delete'];
   labelList: string[] = [];
   lieblingsverse: string[] = [];
   lieblingsversTexte: string[] = [];
