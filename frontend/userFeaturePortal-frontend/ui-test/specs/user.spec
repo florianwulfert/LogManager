@@ -6,8 +6,8 @@
 ## User interactions
 * Click User
 * Find User
-Create User
-Update User
-Filter User
-Delete User
+* Create User
+* Update User
+* Filter User
+* Delete User
 
