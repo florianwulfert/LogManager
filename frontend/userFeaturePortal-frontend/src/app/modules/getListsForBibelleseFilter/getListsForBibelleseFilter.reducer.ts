@@ -7,10 +7,10 @@ import {
 import {GetListsForFilterBibelleseResponse} from "./getListsForFilterBibellese-response";
 
 const handleGetListsResponse = (state: GetListsForBibelleseFilterState, resp: GetListsForFilterBibelleseResponse): GetListsForBibelleseFilterState => {
-  console.log(resp)
+  console.log(resp.result)
   return {
     ...state,
-    listsForFilterBibellese: resp.result,
+    result: resp.result
   };
 }
 
