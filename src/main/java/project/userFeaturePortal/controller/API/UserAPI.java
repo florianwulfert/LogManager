@@ -395,7 +395,7 @@ public interface UserAPI {
                                     mediaType = "text/plain",
                                     schema =
                                     @Schema(
-                                            example = "User with the ID 8 not found.")))
+                                            example = "User Florian cannot be deleted because he is referenced in another table!")))
             })
     ResponseEntity<UserResponseDto> deleteUserByName(@PathVariable final String name, @RequestParam final String actor);
 
