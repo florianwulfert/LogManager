@@ -91,6 +91,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       this.dataSource = new MatTableDataSource(result)
       this.getBibellese()
+      this.getBibelabschnittAndLieblingsversAndLabel()
     });
   }
 
@@ -118,6 +119,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.prepareAddBibelleseRequest(request)
     this.bibelleseFacade.addBibellese(request);
     this.isExpanded = false;
+    this.getBibelabschnittAndLieblingsversAndLabel()
   }
 
   addAnotherBibellese() {
@@ -126,6 +128,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     this.bibelleseFacade.addBibellese(request);
     this.isExpanded = true;
     this.resetForm()
+    this.getBibelabschnittAndLieblingsversAndLabel()
   }
 
   prepareGetLogsRequest(request: GetBibelleseRequest) {
@@ -153,6 +156,8 @@ export class BibleComponent implements OnInit, OnDestroy {
       console.log(result)
       this.allBibellese = result
       this.bibelabschnitteToShow = this.allBibellese.bibelabschnitte
+      this.labelsToShow = this.allBibellese.labels
+      this.lieblingsVerseToShow = this.allBibellese.lieblingsverse
     })
   }
 
@@ -160,6 +165,7 @@ export class BibleComponent implements OnInit, OnDestroy {
     let request = new DeleteBibelleseRequest()
     request.id = element.id
     this.bibelleseFacade.deleteBibellese(request)
+    this.getBibelabschnittAndLieblingsversAndLabel()
   }
 
   resetForm() {
