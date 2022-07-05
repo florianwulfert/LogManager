@@ -52,13 +52,13 @@
                     matTooltip="Delete all users"
                     [matTooltipPosition]="position.value"
                     class="main-deleteButton"
-                    (click)="deleteUsers()" data-test-id="delete">
-              <mat-icon> delete</mat-icon>
+                    (click)="deleteUsers()">
+              <mat-icon>delete</mat-icon>
             </button>
           </th>
           <td mat-cell *matCellDef="let element">
-            <button mat-icon-button class="deleteButton" (click)="deleteUser(element.name)">
-              <mat-icon> delete</mat-icon>
+            <button mat-icon-button class="deleteButton" (click)="deleteUser(element.name)" data-test-id="delete">
+              <mat-icon>delete</mat-icon>
             </button>
           </td>
         </ng-container>
@@ -190,7 +190,7 @@
               <mat-form-field appearance="fill">
                 <mat-label>Name</mat-label>
                 <mat-select formControlName="name" (selectionChange)="getUsersData($event.value)">
-                  <mat-option *ngFor="let name of users" [value]="name.name">
+                  <mat-option *ngFor="let name of users" [value]="name.name" data-test-id="updateName">
                     {{name.name}}
                   </mat-option>
                 </mat-select>

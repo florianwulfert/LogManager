@@ -1,5 +1,18 @@
 import {AfterSuite, BeforeSuite, Step} from "gauge-ts";
-import {below, click, closeBrowser, goto, openBrowser, tap, text, textBox, timeField, write} from 'taiko';
+import {
+  below,
+  button,
+  click,
+  dropDown,
+  goto,
+  openBrowser,
+  text,
+  textBox,
+  timeField,
+  toRightOf,
+  waitFor,
+  write
+} from 'taiko';
 
 export default class UserSpec {
   @BeforeSuite()
@@ -9,7 +22,7 @@ export default class UserSpec {
 
   @AfterSuite()
   public async afterSuite() {
-    await closeBrowser();
+    //await closeBrowser();
   };
 
   @Step("Open User Feature Portal")
@@ -42,28 +55,30 @@ export default class UserSpec {
     await write('90', textBox("Weight"))
     await write('1.90', textBox("Height"))
     await click("Create")
+    await click("Create user")
+    await waitFor(1000)
   }
 
   @Step("Update User")
   public async updateUser() {
     await click("Update user")
-    await write('Hans', textBox(below("Update user")))
-    await timeField("Birthdate").select(new Date('2001-08-12'))
+    await waitFor(500)
+    await dropDown(below("Update user")).select("Hans")
+    /*await timeField("Birthdate").select(new Date('2001-08-12'))
     await write('91', textBox("Weight"))
     await write('1.88', textBox("Height"))
+    await write("TestBuch", textBox("Favourite Book"))*/
     await click("Update")
   }
 
   @Step("Filter User")
   public async filterUser() {
-    await write('Florian', textBox("Filter"))
-    await text('Florian').exists()
+    await write('Hans', textBox("Filter"))
+    await text('Hans').exists()
   }
 
   @Step("Delete User")
   public async deleteUser() {
-    await tap({id: "delete"})
+    await click(button(toRightOf("TestBuch")))
   }
-
-
 }
