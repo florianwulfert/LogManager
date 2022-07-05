@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.exception.ParameterNotPresentException;
-import project.userFeaturePortal.service.UserService;
+import project.userFeaturePortal.service.model.UserService;
 
 @Component
 @RequiredArgsConstructor

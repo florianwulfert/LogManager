@@ -11,7 +11,7 @@ import project.userFeaturePortal.common.dto.user.*;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.controller.API.UserAPI;
 import project.userFeaturePortal.model.entity.User;
-import project.userFeaturePortal.service.UserService;
+import project.userFeaturePortal.service.model.UserService;
 
 import java.util.Optional;
 
