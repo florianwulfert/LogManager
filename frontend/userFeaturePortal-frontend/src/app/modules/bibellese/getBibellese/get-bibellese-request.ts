@@ -4,4 +4,6 @@ export class GetBibelleseRequest {
   leser: string | undefined
   label: string | undefined
   lieblingsvers: string | undefined
+  startDateTime: string | undefined
+  endDateTime: string | undefined
 }

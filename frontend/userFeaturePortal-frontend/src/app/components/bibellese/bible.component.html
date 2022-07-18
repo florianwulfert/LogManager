@@ -65,6 +65,24 @@
         </button>
       </mat-form-field>
 
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Date From</mat-label>
+        <input type="date" matInput formControlName="startDateTime">
+        <button *ngIf="formFilter.controls['startDateTime'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['startDateTime'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Date To</mat-label>
+        <input type="date" matInput formControlName="endDateTime">
+        <button *ngIf="formFilter.controls['endDateTime'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['endDateTime'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
       <button mat-raised-button class="filter-button-format" (click)="filterBibellese()">Search entries
       </button>
 

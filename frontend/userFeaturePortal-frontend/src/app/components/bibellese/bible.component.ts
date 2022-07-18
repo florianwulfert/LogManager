@@ -137,6 +137,8 @@ export class BibleComponent implements OnInit, OnDestroy {
     request.leser = this.formFilter.get("leser")?.value.name
     request.label = this.formFilter.get("label")?.value
     request.lieblingsvers = this.formFilter.get("lieblingsvers")?.value
+    request.startDateTime = this.formFilter.get("startDateTime")?.value
+    request.endDateTime = this.formFilter.get("endDateTime")?.value
   }
 
   getBibellese(): void {
@@ -185,7 +187,9 @@ export class BibleComponent implements OnInit, OnDestroy {
     versText: new FormControl(''),
     label: new FormControl(''),
     kommentarAusschnitt: new FormControl(''),
-    leser: new FormControl('')
+    leser: new FormControl(''),
+    startDateTime: new FormControl(''),
+    endDateTime: new FormControl('')
   })
 
   getUserList(): void {
