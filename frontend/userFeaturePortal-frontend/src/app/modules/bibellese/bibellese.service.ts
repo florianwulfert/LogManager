@@ -30,7 +30,6 @@ export class BibelleseService {
       return ""
     } else {
       this.countParameter++
-      console.log(this.countParameter)
       let connectionItem = this.countParameter > 1 ? "&" : "?"
       return connectionItem + parameterName + '=' + requestParameter
     }

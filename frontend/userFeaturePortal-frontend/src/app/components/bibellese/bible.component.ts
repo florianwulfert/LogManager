@@ -132,11 +132,11 @@ export class BibleComponent implements OnInit, OnDestroy {
   }
 
   prepareGetLogsRequest(request: GetBibelleseRequest) {
-    request.bibelabschnitt = this.formFilter.get("bibelabschnitt")?.value.bibelabschnitt
+    request.bibelabschnitt = this.formFilter.get("bibelabschnitt")?.value
     request.kommentarAusschnitt = this.formFilter.get("kommentarAusschnitt")?.value
     request.leser = this.formFilter.get("leser")?.value.name
-    request.label = this.formFilter.get("label")?.value.labels
-    request.lieblingsvers = this.formFilter.get("lieblingsvers")?.value.lieblingsverse
+    request.label = this.formFilter.get("label")?.value
+    request.lieblingsvers = this.formFilter.get("lieblingsvers")?.value
   }
 
   getBibellese(): void {
@@ -153,7 +153,6 @@ export class BibleComponent implements OnInit, OnDestroy {
   getBibelabschnittAndLieblingsversAndLabel() {
     this.getListsFacade.getAllBibellese()
     this.getListsFacade.stateGetListsForBibelleseFilterResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
-      console.log(result)
       this.allBibellese = result
       this.bibelabschnitteToShow = this.allBibellese.bibelabschnitte
       this.labelsToShow = this.allBibellese.labels

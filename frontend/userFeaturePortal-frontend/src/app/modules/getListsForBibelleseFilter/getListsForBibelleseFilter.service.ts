@@ -29,7 +29,6 @@ export class GetListsForBibelleseFilterService {
       observe: 'response'
     }).pipe(
       map((r) => {
-        console.log(r.body)
         return r.body || {
           result: this.getListsDto
         }
