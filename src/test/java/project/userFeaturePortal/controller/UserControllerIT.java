@@ -150,6 +150,7 @@ class UserControllerIT {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("getAddUserArguments")
+    //@WithMockUser(roles = {"ADMIN"}, username = "devs", password = "Test")
     void testAddUser(
                     String testName,
                     Boolean isEmptyUserList,

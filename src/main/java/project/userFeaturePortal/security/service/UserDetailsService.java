@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import project.userFeaturePortal.model.entity.Privilege;
 import project.userFeaturePortal.model.entity.Role;
 import project.userFeaturePortal.model.entity.User;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
+@Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
     @Autowired
     private UserRepository userRepository;
