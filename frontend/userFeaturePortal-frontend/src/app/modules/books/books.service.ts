@@ -14,9 +14,7 @@ const API_GET_BOOKS = 'http://localhost:8081/books'
 const API_ADD_BOOK = 'http://localhost:8081/book'
 const API_UPDATE_BOOK = 'http://localhost:8081/book/update'
 const API_DELETE_BOOK = 'http://localhost:8081/book/titel?titel='
-const API_ADD_BOOK_TO_USER = 'http://localhost:8081/user/favouriteBook?bookTitel='
 const API_DELETE_BOOKS = 'http://localhost:8081/books'
-const API_DELETE_FAVOURITE_BOOK = 'http://localhost:8081/user/favouriteBook/delete?name='
 
 @Injectable({
   providedIn: 'root'
@@ -153,55 +151,4 @@ export class BooksService implements OnDestroy{
       })
     );
   }
-
-  assignBookToUser(book: AddBookRequest): Observable<AddBookResponse> {
-    this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
-      this.name = r
-    })
-    return this.http.post<AddBookResponse>(API_ADD_BOOK_TO_USER + book.titel + '&actor=' + this.name, {
-      observe: 'response'
-    }).pipe(
-      map((r) => {
-        this.featureManager.openSnackbar("Book " + book.titel + " was assigned to user " + this.name + ".", "success");
-        return r || {
-          result: [],
-          returnMessage: ""
-        }
-      }),
-      catchError((err) => {
-        if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text, "failed");
-        } else {
-          this.featureManager.openSnackbar(err.error, "failed");
-        }
-        return throwError('Due to technical issues it is currently not possible to delete this book.')
-      })
-    );
-  }
-
-  deleteFavouriteBook(): Observable<AddBookResponse> {
-    this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
-      this.name = r
-    })
-    return this.http.post<AddBookResponse>(API_DELETE_FAVOURITE_BOOK + this.name, {
-      observe: 'response'
-    }).pipe(
-      map((r) => {
-        this.featureManager.openSnackbar("User " + this.name + " does not have a favourite book anymore.", "success");
-        return r || {
-          result: [],
-          returnMessage: ""
-        }
-      }),
-      catchError((err) => {
-        if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text, "failed");
-        } else {
-          this.featureManager.openSnackbar(err.error, "failed");
-        }
-        return throwError('Due to technical issues it is currently not possible to delete this book.')
-      })
-    );
-  }
-
 }

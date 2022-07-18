@@ -6,21 +6,15 @@ import {catchError, map, switchMap} from "rxjs/operators";
 import {
   addBookAction,
   addBookResponseAction,
-  assignBookToUserAction,
-  assignBookToUserResponseAction,
   deleteBookAction,
   deleteBookResponseAction,
   deleteBooksAction,
   deleteBooksResponseAction,
-  deleteFavouriteBookAction,
-  deleteFavouriteBookResponseAction,
   getBooksAction,
   getBooksResponseAction,
   loadAddBookErrorAction,
-  loadAssignBookToUserErrorAction,
   loadDeleteBookErrorAction,
   loadDeleteBooksErrorAction,
-  loadDeleteFavouriteBookErrorAction,
   loadGetBooksErrorAction,
   loadUpdateBookErrorAction,
   updateBookAction,
@@ -39,7 +33,7 @@ export class BooksEffects {
       switchMap(() =>
         this.booksService.getBooks().pipe(
           map((getBooksResponse) => getBooksResponseAction(getBooksResponse)),
-          catchError((error: string) => of(loadGetBooksErrorAction({error})))
+          catchError((error: string) => of(loadGetBooksErrorAction({error}))),
         )
       )
     )
@@ -89,32 +83,6 @@ export class BooksEffects {
         this.booksService.deleteBooks().pipe(
           map((deleteBooksResponse) => deleteBooksResponseAction(deleteBooksResponse)),
           catchError((error: string) => of(loadDeleteBooksErrorAction({error})))
-        )
-      )
-    )
-  );
-
-  assignBookToUser$: Observable<Action> = createEffect(() =>
-    this.actions$.pipe(
-      ofType(assignBookToUserAction),
-      switchMap((assignBookToUserRequest: AddBookRequest) =>
-        this.booksService.assignBookToUser(assignBookToUserRequest).pipe(
-          map((addBookResponse) =>
-            assignBookToUserResponseAction(addBookResponse)),
-          catchError((error: string) => of(loadAssignBookToUserErrorAction({error})))
-        )
-      )
-    )
-  );
-
-  deleteFavouriteBook$: Observable<Action> = createEffect(() =>
-    this.actions$.pipe(
-      ofType(deleteFavouriteBookAction),
-      switchMap(() =>
-        this.booksService.deleteFavouriteBook().pipe(
-          map((deleteFavouriteBookResponse) =>
-            deleteFavouriteBookResponseAction(deleteFavouriteBookResponse)),
-          catchError((error: string) => of(loadDeleteFavouriteBookErrorAction({error})))
         )
       )
     )
