@@ -45,7 +45,7 @@ export class BibelleseEffects {
     )
   );
 
-  deleteBook$: Observable<Action> = createEffect(() =>
+  delete$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(deleteBibelleseAction),
       switchMap((deleteBibelleseRequest: DeleteBibelleseRequest) =>
