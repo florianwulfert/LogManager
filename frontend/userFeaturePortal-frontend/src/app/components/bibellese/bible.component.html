@@ -60,7 +60,7 @@
           </mat-option>
         </mat-select>
         <button *ngIf="formFilter.controls['leser'].value" matSuffix mat-icon-button aria-label="Clear"
-                (click)="formFilter.controls['leser'].reset()">
+                (click)="formFilter.controls['leser'].setValue('')">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
