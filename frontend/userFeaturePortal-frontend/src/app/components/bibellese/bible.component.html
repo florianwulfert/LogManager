@@ -1,6 +1,95 @@
 <div class="page row">
   <h1>Reading Bible</h1>
-  <div class="col-12" *ngIf="userAvailable">
+
+  <div>
+    <form [formGroup]="formFilter" (keydown.enter)="filterBibellese()">
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Bibelabschnitt</mat-label>
+        <mat-select formControlName="bibelabschnitt">
+          <mat-option *ngFor="let bibelabschnitt of bibelabschnitteToShow" [value]="bibelabschnitt">
+            {{bibelabschnitt}}
+          </mat-option>
+        </mat-select>
+        <button *ngIf="formFilter.controls['bibelabschnitt'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['bibelabschnitt'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Lieblingsvers</mat-label>
+        <mat-select formControlName="lieblingsvers">
+          <mat-option  *ngFor="let lieblingsVers of lieblingsVerseToShow" [value]="lieblingsVers">
+            {{lieblingsVers}}
+          </mat-option>
+        </mat-select>
+        <button *ngIf="formFilter.controls['lieblingsvers'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['lieblingsvers'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Label</mat-label>
+        <mat-select formControlName="label">
+          <mat-option *ngFor="let label of labelsToShow" [value]="label">
+            {{label}}
+          </mat-option>
+        </mat-select>
+        <button *ngIf="formFilter.controls['label'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['label'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Kommentar</mat-label>
+        <input matInput formControlName="kommentarAusschnitt">
+        <button *ngIf="formFilter.controls['kommentarAusschnitt'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['kommentarAusschnitt'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Leser</mat-label>
+        <mat-select formControlName="leser">
+          <mat-option *ngFor="let leser of leserList" [value]="leser">
+            {{leser.name}}
+          </mat-option>
+        </mat-select>
+        <button *ngIf="formFilter.controls['leser'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['leser'].setValue('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Date From</mat-label>
+        <input type="date" matInput formControlName="startDateTime">
+        <button *ngIf="formFilter.controls['startDateTime'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['startDateTime'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="filter-button">
+        <mat-label>Date To</mat-label>
+        <input type="date" matInput formControlName="endDateTime">
+        <button *ngIf="formFilter.controls['endDateTime'].value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="formFilter.controls['endDateTime'].reset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <button mat-raised-button class="filter-button-format" (click)="filterBibellese()">Search entries
+      </button>
+
+    </form>
+  </div>
+
+  <div class="col-12" *ngIf="userAvailable && filterButtonPressed">
     <div class="space-between-fields">
       <mat-accordion>
         <mat-expansion-panel [expanded]="isExpanded"
@@ -38,7 +127,8 @@
                 <mat-chip-list *ngFor="let vers of lieblingsverse" class="mat-standard-chip">
                   <mat-chip>
                     {{vers}}
-                    <button mat-icon-button class="deleteButton" (click)="featureManager.deleteItemFromList(vers, lieblingsverse)">
+                    <button mat-icon-button class="deleteButton"
+                            (click)="featureManager.deleteItemFromList(vers, lieblingsverse)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </mat-chip>
@@ -60,7 +150,8 @@
                   <mat-card>
                     <mat-list-item>
                       {{text}}
-                      <button mat-icon-button class="deleteButton" (click)="featureManager.deleteItemFromList(text, lieblingsversTexte)">
+                      <button mat-icon-button class="deleteButton"
+                              (click)="featureManager.deleteItemFromList(text, lieblingsversTexte)">
                         <mat-icon>delete</mat-icon>
                       </button>
                     </mat-list-item>
@@ -82,7 +173,8 @@
                 <mat-chip-list class="mat-standard-chip" *ngFor="let label of labelList">
                   <mat-chip>
                     {{label}}
-                    <button mat-icon-button class="deleteButton" (click)="featureManager.deleteItemFromList(label, labelList)">
+                    <button mat-icon-button class="deleteButton"
+                            (click)="featureManager.deleteItemFromList(label, labelList)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </mat-chip>
@@ -113,7 +205,11 @@
               <div>
                 <mat-form-field appearance="fill">
                   <mat-label>Reader</mat-label>
-                  <input matInput formControlName="leser">
+                  <mat-select formControlName="leser">
+                    <mat-option *ngFor="let leser of leserList" [value]="leser">
+                      {{leser.name}}
+                    </mat-option>
+                  </mat-select>
                   <button *ngIf="form.controls['leser'].value" matSuffix mat-icon-button aria-label="Clear"
                           (click)="form.controls['leser'].reset()">
                     <mat-icon>close</mat-icon>
@@ -125,14 +221,19 @@
               </div>
             </div>
           </form>
-          <button mat-raised-button class="create button-format" (click)="addBibellese()" [disabled]="!form.valid">Add Read
+          <button mat-raised-button class="create button-format" (click)="addBibellese()" [disabled]="!form.valid">Add
+            Read
+          </button>
+          <button mat-raised-button class="create button-format" (click)="addAnotherBibellese()"
+                  [disabled]="!form.valid">Add Another Read
           </button>
           <button mat-raised-button class="reset button-format" (click)="resetForm()">Reset</button>
         </mat-expansion-panel>
       </mat-accordion>
     </div>
   </div>
-  <div class="col-12 mb-5">
+
+  <div class="col-12 mb-5" *ngIf="filterButtonPressed">
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource">
 
@@ -196,6 +297,22 @@
           </td>
         </ng-container>
 
+        <!-- Timestamp Column -->
+        <ng-container matColumnDef="timestamp">
+          <th mat-header-cell *matHeaderCellDef> Timestamp</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-card class="card-style">{{element.timestamp}}</mat-card>
+          </td>
+        </ng-container>
+
+        <!-- Timestamp Update Column -->
+        <ng-container matColumnDef="timestamp update">
+          <th mat-header-cell *matHeaderCellDef>Timestamp Update</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-card class="card-style">{{element.updatedTimestamp}}</mat-card>
+          </td>
+        </ng-container>
+
         <!-- Update -->
         <ng-container matColumnDef="update">
           <th mat-header-cell *matHeaderCellDef></th>
@@ -210,7 +327,8 @@
         <ng-container matColumnDef="delete">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
-            <button mat-icon-button class="deleteButton" (click)="deleteBibellese(element)" id="remove" *ngIf="userAvailable">
+            <button mat-icon-button class="deleteButton" (click)="deleteBibellese(element)" id="remove"
+                    *ngIf="userAvailable">
               <mat-icon>delete</mat-icon>
             </button>
           </td>

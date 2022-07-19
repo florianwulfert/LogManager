@@ -12,6 +12,8 @@ import {DeleteBibelleseResponse} from "./deleteBibellese/delete-bibellese-respon
 
 const API_BIBELLESE = 'http://localhost:8082/gelesen'
 const API_BIBELLESE_UPDATE = 'http://localhost:8082/gelesen/update'
+const API_BIBELLESE_ALL = 'http://localhost:8082/gelesen/all'
+
 
 @Injectable({
   providedIn: 'root'
@@ -33,23 +35,38 @@ export class BibelleseService {
     }
   }
 
+  checkDateTime(dateTime: string): string {
+    if (dateTime === '' || dateTime === null) {
+      return ''
+    } else {
+      return dateTime + "-00-00-00"
+    }
+  }
+
   buildGetBibelleseRequestParams(getBibelleseRequest: GetBibelleseRequest): String {
     let bibelabschnitt: string
     let kommentarAusschnitt: string
     let leser: string
     let label: string
     let lieblingsvers: string
+    let startDateTime: string
+    let endDateTime: string
 
     bibelabschnitt = this.checkParameter(getBibelleseRequest.bibelabschnitt, "bibelabschnitt")
     kommentarAusschnitt = this.checkParameter(getBibelleseRequest.kommentarAusschnitt, "kommentarAusschnitt")
     leser = this.checkParameter(getBibelleseRequest.leser, "leser")
     label = this.checkParameter(getBibelleseRequest.label, "label")
     lieblingsvers = this.checkParameter(getBibelleseRequest.lieblingsvers, "lieblingsvers")
+    startDateTime = this.checkParameter(getBibelleseRequest.startDateTime, "startDateTime")
+    endDateTime = this.checkParameter(getBibelleseRequest.endDateTime, "endDateTime")
+    let startDate = this.checkDateTime(startDateTime)
+    let endDate = this.checkDateTime(endDateTime)
 
-    return bibelabschnitt + kommentarAusschnitt + leser + label + lieblingsvers
+    return bibelabschnitt + kommentarAusschnitt + leser + label + lieblingsvers + startDate + endDate
   }
 
   getBibellese(request: GetBibelleseRequest): Observable<GetBibelleseResponse> {
+    this.countParameter = 0
     return this.http.get<GetBibelleseResponse>(API_BIBELLESE + this.buildGetBibelleseRequestParams(request), {
       observe: 'response'
     }).pipe(
