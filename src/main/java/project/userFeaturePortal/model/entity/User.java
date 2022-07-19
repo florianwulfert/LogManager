@@ -50,12 +50,16 @@ public class User {
   @Column(name = "bmi")
   double bmi;
 
+  @Column
   String email;
 
+  @Column
   String password;
 
+  @Column
   boolean isEnabled;
 
+  @Column
   private boolean tokenExpired;
 
   @ManyToMany

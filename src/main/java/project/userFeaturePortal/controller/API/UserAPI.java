@@ -12,6 +12,10 @@ import project.userFeaturePortal.model.entity.User;
 import java.util.Optional;
 
 public interface UserAPI {
+
+    @RequestMapping("/login")
+    boolean login(@RequestBody User user);
+
     @PostMapping("/user")
     @Operation(
             summary = "Add  an user manually",

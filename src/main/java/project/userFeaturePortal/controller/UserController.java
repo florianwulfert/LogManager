@@ -24,6 +24,11 @@ public class UserController implements UserAPI {
   private final UserService userService;
 
   @Override
+  public boolean login(User user) {
+    return true;
+  }
+
+  @Override
   public ResponseEntity<UserResponseDto> addUser(UserRequestDto allParameters) {
     String returnMessage = userService.addUser(allParameters);
     return ResponseEntity.status(201).body(new UserResponseDto(userService.findUserList(), returnMessage));
