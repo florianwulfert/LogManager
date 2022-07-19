@@ -18,8 +18,8 @@ import {
   loadGetLogsErrorAction
 } from "./logs.actions";
 import {LogService} from "./logs.service";
-import {AddLogRequest} from "./addLogs/dto/add-log-request";
-import {DeleteLogRequest} from "./deleteLog/dto/delete-log-request";
+import {GetLogsRequest} from "./getLogs/dto/getLogs-request";
+import {AddLogRequestWithFilter} from "./addLogs/dto/add-log-request-with-filter";
 
 
 @Injectable({providedIn: 'root'})
@@ -27,8 +27,8 @@ export class LogEffects {
   get$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getLogsAction),
-      switchMap(() =>
-        this.logService.getLogs().pipe(
+      switchMap((getLogsRequest: GetLogsRequest) =>
+        this.logService.getLogs(getLogsRequest).pipe(
           map((getLogsResponse) => getLogsResponseAction(getLogsResponse)),
           catchError((error: string) => of(loadGetLogsErrorAction({error})))
         )
@@ -51,7 +51,7 @@ export class LogEffects {
   add$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(addLogAction),
-      switchMap((addLogRequest: AddLogRequest) =>
+      switchMap((addLogRequest: AddLogRequestWithFilter) =>
         this.logService.addLog(addLogRequest).pipe(
           map((addLogResponse) => addLogResponseAction(addLogResponse)),
           catchError((error: string) => of(loadAddLogErrorAction({error})))
@@ -63,8 +63,8 @@ export class LogEffects {
   deleteLog$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(deleteLogAction),
-      switchMap((deleteLogRequest: DeleteLogRequest) =>
-        this.logService.deleteLog(deleteLogRequest.id).pipe(
+      switchMap((deleteLogRequest: GetLogsRequest) =>
+        this.logService.deleteLog(deleteLogRequest).pipe(
           map((deleteLogResponse) => deleteLogResponseAction(deleteLogResponse)),
           catchError((error: string) => of(loadDeleteLogErrorAction({error})))
         )

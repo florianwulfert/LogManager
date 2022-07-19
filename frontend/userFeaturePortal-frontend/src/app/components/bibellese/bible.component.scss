@@ -1,0 +1,66 @@
+table {
+  width: 100%;
+}
+
+.page {
+  margin-top: 20px;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+th {
+   color: #180c65;
+ }
+
+.create {
+  background-color: #180c65;
+  color: white;
+}
+
+.reset {
+  background-color: #efebeb;
+}
+
+.button-format {
+  margin-left: 10px;
+  width: 150px;
+  float: right;
+}
+
+mat-error {
+  color: red;
+}
+
+.truncated-cell {
+  max-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.space-between-fields {
+  margin-bottom: 15px;
+}
+
+.card-style{
+  height: 140px;
+  max-height: 200px;
+  max-width: 400px;
+  min-width: 140px;
+  overflow: scroll;
+}
+
+.filter-button {
+  width: 12%;
+  margin-right: 10px;
+}
+
+.filter-button-format {
+  background-color: #180c65;
+  color: white;
+  width: 150px;
+}

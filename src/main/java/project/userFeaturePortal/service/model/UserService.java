@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import project.userFeaturePortal.common.dto.log.AddLogRequestDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.dto.user.UserDto;
 import project.userFeaturePortal.common.dto.user.UserRequestDto;
@@ -12,10 +13,13 @@ import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.mapper.UserDtoMapper;
+import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
+import project.userFeaturePortal.service.validation.BookValidationService;
 import project.userFeaturePortal.service.validation.UserValidationService;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,118 +33,163 @@ public class UserService {
   private final UserRepository userRepository;
   private final BmiService bmiService;
   private final UserValidationService userValidationService;
-  private final BookService bookService;
+  private final BookRepository bookRepository;
   private final UserDtoMapper userDtoMapper;
+  private final BookValidationService bookValidationService;
 
   public String addUser(UserRequestDto userRequestDto) {
     userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
-    List<Book> books = bookService.searchBooksByTitel(userRequestDto.favouriteBook);
+    userValidationService.validateUserToCreate(userRequestDto.name);
+    userValidationService.validateActor(userRequestDto.name, userRequestDto.actor);
+
+    userRepository.save(buildUser(userRequestDto, new User()));
+
+    logService.addLog(LogRequestDto.builder()
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(String.format(InfoMessages.USER_CREATED, userRequestDto.getName()))
+                    .severity("INFO")
+                    .build())
+            .user(userRequestDto.actor)
+            .build());
+    LOGGER.info(String.format(InfoMessages.USER_CREATED, userRequestDto.getName()));
+    return String.format(InfoMessages.USER_CREATED, userRequestDto.getName());
+  }
+
+  private User buildUser(UserRequestDto userRequestDto, User user) {
+    List<Book> books = bookRepository.findByTitel(userRequestDto.favouriteBook);
     Book book = null;
     if (!books.isEmpty()) {
       book = books.get(0);
     }
-    User user =
-        User.builder()
-            .name(userRequestDto.name)
-            .birthdate(userRequestDto.getBirthdateAsLocalDate())
-            .weight(userRequestDto.weight)
-            .height(userRequestDto.height)
-            .bmi(bmiService.calculateBMI(userRequestDto.weight, userRequestDto.height))
-            .favouriteBook(book)
-            .build();
 
-    userValidationService.checkIfUserToPostExists(user.getName());
-    if (userValidationService.checkIfUsersListIsEmpty()) {
-      userValidationService.checkIfActorEqualsUserToCreate(userRequestDto.actor, user, true);
-      saveUser(user, userRequestDto.actor);
-    } else {
-      User activeUser = userValidationService.checkIfNameExists(
-          userRequestDto.actor,
-          true,
-          String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, userRequestDto.actor));
-      saveUser(user, activeUser.getName());
-    }
-    return String.format(InfoMessages.USER_CREATED, userRequestDto.name);
+    user.setName(userRequestDto.name);
+    user.setBirthdate(userRequestDto.getBirthdateAsLocalDate());
+    user.setWeight(userRequestDto.weight);
+    user.setHeight(userRequestDto.height);
+    user.setBmi(user.calculateBMI());
+    user.setFavouriteBook(book);
+    return user;
   }
 
-  public String addFavouriteBookToUser(String titel, String actorName) {
-    List<Book> book = userValidationService.checkIfBookExists(titel);
-    User actor = userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED);
-    actor.setFavouriteBook(book.get(0));
-    userRepository.save(actor);
-    LOGGER.info(String.format(InfoMessages.BOOK_BY_USER, titel, actor.getName()));
-    return String.format(InfoMessages.BOOK_BY_USER, titel, actor.getName());
+  public String updateUser(UserRequestDto userRequestDto) {
+    userValidationService.checkIfAnyEntriesAreNull(userRequestDto);
+    User user = userValidationService.checkIfNameExists(userRequestDto.name, false, "");
+    userValidationService.validateActor(userRequestDto.name, userRequestDto.actor);
+
+    buildUser(userRequestDto, user);
+    LOGGER.info(String.format(InfoMessages.USER_UPDATED, userRequestDto.name));
+    return String.format(InfoMessages.USER_UPDATED, userRequestDto.name);
+  }
+
+  public String addFavouriteBookToUser(String titel, String userName) {
+    User user = userValidationService.checkIfNameExists(userName, true, ErrorMessages.USER_NOT_ALLOWED);
+    Book book = bookValidationService.checkIfBookExists(titel);
+    user.setFavouriteBook(book);
+
+    userRepository.save(user);
+
+    LOGGER.info(String.format(InfoMessages.BOOK_BY_USER, titel, user.getName()));
+    return user.getFavouriteBook().getTitel();
+  }
+
+  public String deleteFavouriteBook(String userName) {
+    User user = userValidationService.checkIfNameExists(userName, false, String.format(ErrorMessages.USER_NOT_FOUND_NAME, userName));
+    user.setFavouriteBook(null);
+
+    userRepository.save(user);
+
+    LOGGER.info(String.format(InfoMessages.FAV_BOOK_DELETED, userName));
+    return "";
+  }
+
+  public String getFavouriteBook(String name) {
+    User user = userValidationService.checkIfNameExists(name, false, String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
+    if (user.getFavouriteBook() != null) {
+      return user.getFavouriteBook().getTitel();
+    }
+    return "";
   }
 
   public List<UserDto> findUserList() {
     List<User> users = userRepository.findAll();
-    LOGGER.info(users);
+
+    List<String> userNames = new ArrayList<>();
+    for (User user: users)  {
+        userNames.add(user.getName());
+    }
+    LOGGER.info("Actual Users: " + userNames);
+
     return userDtoMapper.usersToUserDtos(users);
   }
 
   public Optional<User> findUserById(Integer id) {
-    Optional<User> user = userRepository.findById(id).isPresent() ? userRepository.findById(id) : Optional.empty();
-    LOGGER.info(user);
-    return user;
+    return userRepository.findById(id);
   }
 
-  public boolean findUserByName(String name) {
+  public UserDto findUserByName(String name) {
     User user = userRepository.findUserByName(name);
+    return userDtoMapper.userToUserDto(user);
+  }
+
+  public boolean validateUserByName(String name) {
+    User user = userRepository.findUserByName(name);
+
     if (user == null) {
       List<UserDto> users = findUserList();
       return users.isEmpty();
     }
-    LOGGER.debug(String.format(InfoMessages.USER_FOUND, name));
+
     return true;
   }
 
-  public void deleteById(Integer id, String actorName) {
-    User userToDelete = userValidationService.checkIfIdExists(id);
-    User actor = userValidationService.checkIfNameExists(
-        actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
-    userValidationService.checkIfUserToDeleteIdEqualsActorId(id, actor.getId());
-    userValidationService.checkIfUsersListIsEmpty();
-    userValidationService.checkIfExistLogByUserToDelete(userToDelete);
+  public void deleteById(int id, String actorName) {
+    // validate actor
+    userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
 
-    userRepository.deleteById(id);
-    saveLog(String.format(InfoMessages.USER_DELETED_ID, id), "WARNING", actorName);
-    LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, id));
+    // proof that the ID you want to delete exists
+    User userToDelete = userValidationService.checkIfIdExists(id);
+
+    // validate user you want to delete
+    userValidationService.validateUserToDelete(userToDelete.getName(), actorName);
+
+    userRepository.deleteById(userToDelete.getId());
+
+    logService.addLog(LogRequestDto.builder()
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(String.format(InfoMessages.USER_DELETED_ID, userToDelete.getId()))
+                    .severity("WARNING")
+                    .build())
+            .user(actorName)
+            .build());
+    LOGGER.info(String.format(InfoMessages.USER_DELETED_ID, userToDelete.getId()));
   }
 
   public String deleteByName(String name, String actorName) {
-    User user = userValidationService.checkIfNameExists(name, false, ErrorMessages.CANNOT_DELETE_USER);
-    userValidationService.checkIfExistLogByUserToDelete(user);
-    userValidationService.checkIfNameExists(actorName, true, ErrorMessages.USER_NOT_ALLOWED_DELETE_USER);
-    userValidationService.checkIfUserToDeleteEqualsActor(name, actorName);
+    // validate actor
+    userValidationService.checkIfNameExists(actorName, true, String.format(ErrorMessages.USER_NOT_ALLOWED_DELETE_USER, actorName));
 
-    userRepository.deleteById(user.getId());
-    saveLog(String.format(InfoMessages.USER_DELETED_NAME, name), "WARNING", actorName);
+    // validate user you want to delete
+    User userToDelete = userValidationService.validateUserToDelete(name, actorName);
+
+    userRepository.deleteById(userToDelete.getId());
+
+    logService.addLog(LogRequestDto.builder()
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(String.format(InfoMessages.USER_DELETED_NAME, name))
+                    .severity("WARNING")
+                    .build())
+            .user(actorName)
+            .build());
     LOGGER.info(String.format(InfoMessages.USER_DELETED_NAME, name));
     return String.format(InfoMessages.USER_DELETED_NAME, name);
   }
 
   public String deleteAll() {
     userValidationService.checkIfUsersAreReferenced();
+
     userRepository.deleteAll();
+
     LOGGER.info(InfoMessages.ALL_USERS_DELETED);
     return InfoMessages.ALL_USERS_DELETED;
-  }
-
-  private void saveUser(User user, String actor) {
-    userRepository.save(user);
-    String bmi = bmiService.calculateBmiAndGetBmiMessage(
-        user.getBirthdate(), user.getWeight(), user.getHeight());
-    saveLog(String.format(InfoMessages.USER_CREATED + "%s", user.getName(), bmi), "INFO", actor);
-    LOGGER.info(String.format(InfoMessages.USER_CREATED, user.getName()));
-  }
-
-  private void saveLog(String message, String severity, String actor) {
-    LogRequestDto logRequestDto = LogRequestDto.builder()
-        .message(message)
-        .severity(severity)
-        .user(actor)
-        .build();
-    LOGGER.info("Log " + logRequestDto + String.format(" was saved as %s", severity));
-    logService.addLog(logRequestDto);
   }
 }

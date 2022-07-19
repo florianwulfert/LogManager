@@ -5,17 +5,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import project.userFeaturePortal.common.dto.books.BookDto;
+import project.userFeaturePortal.common.dto.log.AddLogRequestDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
-import project.userFeaturePortal.exception.ParameterNotPresentException;
-import project.userFeaturePortal.exception.UserNotAllowedException;
-import project.userFeaturePortal.exception.UserNotFoundException;
 import project.userFeaturePortal.model.entity.Book;
-import project.userFeaturePortal.model.entity.User;
+import project.userFeaturePortal.model.mapper.BookDtoMapper;
 import project.userFeaturePortal.model.repository.BookRepository;
-import project.userFeaturePortal.model.repository.UserRepository;
+import project.userFeaturePortal.service.validation.BookValidationService;
+import project.userFeaturePortal.service.validation.UserValidationService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,108 +24,109 @@ import java.util.List;
 public class BookService {
 
   private static final Logger LOGGER = LogManager.getLogger(BookService.class);
-  @Autowired private final BookRepository bookRepository;
+  @Autowired
+  private final BookRepository bookRepository;
   private final LogService logService;
-  private final UserRepository userRepository;
+  private final BookValidationService bookValidationService;
+  private final UserValidationService userValidationService;
+  private final BookDtoMapper bookDtoMapper;
 
-  public void saveBook(Book book) {
-    bookRepository.save(book);
-  }
+  public List<Book> addBook(int erscheinungsjahr, String titel, String actor) {
+    userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
+    bookValidationService.validateParameters(erscheinungsjahr, titel, true);
 
-  public List<Book> addBook(Integer erscheinungsjahr, String titel, String actor) {
-    validateActor(actor);
-    validateErscheinungsjahrAndTitel(erscheinungsjahr,titel);
-    Book book = new Book();
-    book.setErscheinungsjahr(erscheinungsjahr);
-    book.setTitel(titel);
-    saveBook(book);
-    logService.addLog(
-        LogRequestDto.builder()
-            .message(String.format("Book %s was added.", titel))
-            .severity("INFO")
+    bookRepository.save(buildBook(titel, erscheinungsjahr, new Book()));
+
+    logService.addLog(LogRequestDto.builder()
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(String.format("Book %s was added.", titel))
+                    .severity("INFO")
+                    .build())
             .user(actor)
             .build());
     LOGGER.info(String.format(InfoMessages.BOOK_CREATED, titel));
     return bookRepository.findAll();
   }
 
-  private void validateActor(String actor) {
-    if (actor == null) {
-      throw new UserNotFoundException("null");
-    }
-    User user = userRepository.findUserByName(actor);
-    if (user == null) {
-      throw new UserNotAllowedException(ErrorMessages.USER_NOT_ALLOWED);
-    }
+  private Book buildBook(String titel, int erscheinungsjahr, Book book) {
+    book.setTitel(titel);
+    book.setErscheinungsjahr(erscheinungsjahr);
+    return book;
   }
 
-  private void validateErscheinungsjahrAndTitel(Integer erscheinungsjahr, String titel) {
-    if (erscheinungsjahr == null || titel == null) {
-      throw new ParameterNotPresentException();
-    }
+  public String updateBook(String titel, int erscheinungsjahr, String actor) {
+    bookValidationService.validateParameters(erscheinungsjahr, titel, false);
+    userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
+    Book book = bookValidationService.checkIfBookExists(titel);
+
+    bookRepository.save(buildBook(titel,erscheinungsjahr,book));
+
+    LOGGER.info(String.format(InfoMessages.BOOK_UPDATED, titel));
+    return String.format(InfoMessages.BOOK_UPDATED, titel);
   }
 
   public List<Book> getAllBooks() {
-    LOGGER.debug("All books founds");
     return bookRepository.findAll();
   }
 
-  public List<Book> searchBooksByTitel(String titel) {
-    LOGGER.info(String.format(InfoMessages.Book_FOUND_TITLE, titel));
-    return bookRepository.findByTitel(titel);
+  public BookDto searchBooksByTitel(String titel) {
+    List<Book> books = bookRepository.findByTitel(titel);
+    return bookDtoMapper.bookToBookDto(books.get(0));
   }
 
   public String deleteById(int id, String actor) {
-    validateActor(actor);
-    checkIfBookIsReferenced(id);
-    Book book = bookRepository.getOne(id);
-    bookRepository.delete(book);
-    saveLog(String.format(InfoMessages.BOOK_DELETED_ID, id), "WARNING", actor);
-    LOGGER.info(String.format(InfoMessages.BOOK_DELETED_ID, id));
+    userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
+    bookValidationService.checkIfBookIsReferenced(id);
+
+    bookRepository.deleteById(id);
+
+    logService.addLog(LogRequestDto.builder()
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(String.format(InfoMessages.BOOK_DELETED_ID, id))
+                    .severity("WARNING")
+                    .build())
+            .user(actor)
+            .build());
     return String.format(InfoMessages.BOOK_DELETED_ID, id);
   }
 
-  private void checkIfBookIsReferenced(int id) {
-    List<User> users = userRepository.findByFavouriteBookId(id);
-    if (!users.isEmpty()) {
-      throw new RuntimeException(String.format(String.format(InfoMessages.USER_WITH_BOOK, id)));
+  public String  deleteByTitel(String titel, String actor) {
+    userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
+    List<Book> booksToDelete = bookRepository.findByTitel(titel);
+
+    if (booksToDelete.isEmpty()) {
+      LOGGER.warn(String.format(InfoMessages.NO_BOOKS_FOUND, titel));
+      return String.format(InfoMessages.NO_BOOKS_FOUND, titel);
     }
+
+    bookValidationService.checkIfBookIsReferenced(booksToDelete.get(0).getId());
+
+    bookRepository.deleteById(booksToDelete.get(0).getId());
+
+    logService.addLog(LogRequestDto.builder()
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(String.format(InfoMessages.BOOK_DELETED_TITLE, titel))
+                    .severity("INFO")
+                    .build())
+            .user(actor)
+            .build());
+    return String.format(InfoMessages.BOOK_DELETED_TITLE, titel);
   }
 
-  public String deleteByTitel(String titel, String actor) {
-    List<Book> deleteBooks = bookRepository.findByTitel(titel);
-    if (deleteBooks.isEmpty()) {
-      LOGGER.info(String.format(InfoMessages.NO_BOOKS_FOUNDS, titel));
-      return String.format(InfoMessages.NO_BOOKS_FOUNDS, titel);
-    } else if (deleteBooks.size() == 1) {
-      bookRepository.deleteById(deleteBooks.get(0).getId());
-      saveLog(String.format(InfoMessages.BOOK_DELETED_TITLE, titel), "INFO", actor);
-      return String.format(InfoMessages.BOOK_DELETED_TITLE, titel);
-    } else {
-      String listString = "";
-      for (Book b : deleteBooks) {
-        if (!listString.equals("")) {
-          listString = listString.concat(", ");
-        }
-        listString = listString.concat("{Titel:").concat(b.getTitel()).concat(", Erscheinungsjahr:")
-            .concat(b.getErscheinungsjahr().toString())
-            .concat(", Id:").concat(b.getId().toString());
-      }
-      LOGGER.info(String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel));
-      return String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, titel);
+  public String deleteBooks(String actor) {
+    userValidationService.checkIfNameExists(actor, true, ErrorMessages.USER_NOT_ALLOWED);
+    for (Book book: bookRepository.findAll()) {
+      bookValidationService.checkIfBookIsReferenced(book.getId());
     }
-  }
-
-  public String deleteBooks() {
     bookRepository.deleteAll();
     LOGGER.info(InfoMessages.ALL_BOOKS_DELETED);
+    logService.addLog(LogRequestDto.builder()
+            .addLogRequest(AddLogRequestDto.builder()
+                    .message(InfoMessages.ALL_BOOKS_DELETED)
+                    .severity("INFO")
+                    .build())
+            .user(actor)
+            .build());
     return InfoMessages.ALL_BOOKS_DELETED;
-  }
-
-  public void saveLog(String message, String severity, String actor) {
-    LogRequestDto logRequestDto =
-        LogRequestDto.builder().message(message).severity(severity).user(actor).build();
-    LOGGER.info(message);
-    logService.addLog(logRequestDto);
   }
 }

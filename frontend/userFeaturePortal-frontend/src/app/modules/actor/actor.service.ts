@@ -5,7 +5,8 @@ import {catchError, map} from "rxjs/operators";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {Injectable} from "@angular/core";
 
-const API_FIND_USER = 'http://localhost:8081/user?name='
+const API_FIND_USER = 'http://localhost:8081/user/validate?name='
+
 
 @Injectable({
   providedIn: 'root'
@@ -25,9 +26,9 @@ export class ActorService {
       }),
       catchError((err) => {
         if (err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
+          this.featureManager.openSnackbar(err.error.text, "failed");
         } else {
-          this.featureManager.openSnackbar(err.error);
+          this.featureManager.openSnackbar(err.error, "failed");
         }
         return throwError('Due to technical issues it is currently not possible to request this user.');
       })

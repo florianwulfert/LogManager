@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import project.userFeaturePortal.common.message.ErrorMessages;
-import project.userFeaturePortal.service.model.UserService;
 
 /**
  * @author - EugenFriesen 14.02.2021
@@ -19,7 +18,7 @@ import project.userFeaturePortal.service.model.UserService;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
-  private static final Logger LOGGER = LogManager.getLogger(UserService.class);
+  private static final Logger LOGGER = LogManager.getLogger(RestExceptionHandler.class);
 
   @ResponseBody
   @ExceptionHandler(MissingServletRequestParameterException.class)

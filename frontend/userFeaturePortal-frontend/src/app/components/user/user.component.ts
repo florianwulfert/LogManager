@@ -1,13 +1,16 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {UserFacade} from "../../modules/user/user.facade";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
+import {UsersFacade} from "../../modules/users/users.facade";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {AddUserRequest} from "../../modules/user/addUser/add-user-request";
-import {DeleteUserRequest} from "../../modules/user/deleteUser/delete-user-request";
+import {AddUserRequest} from "../../modules/users/addUser/add-user-request";
+import {DeleteUserRequest} from "../../modules/users/deleteUser/delete-user-request";
 import {MatPaginator} from "@angular/material/paginator";
 import {BooksFacade} from "../../modules/books/books.facade";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
+import {GetUserRequest} from "../../modules/user/getUser/getUser-request";
+import {UserFacade} from "../../modules/user/user.facade";
 
 @Component({
   selector: 'app-user',
@@ -16,14 +19,24 @@ import {BooksFacade} from "../../modules/books/books.facade";
 })
 export class UserComponent implements OnInit, OnDestroy {
 
-  constructor(private userFacade: UserFacade, private _snackBar: MatSnackBar, private booksFacade: BooksFacade) {
+  constructor(private usersFacade: UsersFacade,
+              private _snackBar: MatSnackBar,
+              private booksFacade: BooksFacade,
+              private userFacade: UserFacade) {
   }
 
-  subscriptionManager = new SubscriptionManager();
-
-  displayedColumns: string[] = ['id', 'name', 'birthdate', 'weight', 'height', 'bmi', 'favouriteBook', 'delete']
+  displayedColumns: string[] = ['name', 'birthdate', 'weight', 'height', 'bmi', 'favouriteBook', 'delete']
   dataSource: any
   books: any
+  onDestroy = new Subject()
+  users: any
+
+  name: string | undefined
+  birthdate: string = "2002.03.08"
+  favouriteBook: string | undefined
+  height: number | undefined
+  weight: number | undefined
+
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit(): void {
@@ -32,7 +45,8 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptionManager.clear();
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
   }
 
   position = new FormControl('above');
@@ -62,32 +76,51 @@ export class UserComponent implements OnInit, OnDestroy {
   createUser(): void {
     let request = new AddUserRequest
     request = this.prepareAddUserRequest(request)
-    this.userFacade.addUser(request)
+    this.usersFacade.addUser(request)
   }
 
   deleteUsers(): void {
-    this.userFacade.deleteUsers()
+    this.usersFacade.deleteUsers()
   }
 
-  deleteUser(element: any): void {
+  deleteUser(element: string): void {
     let request = new DeleteUserRequest
-    let elementValues = Object.keys(element).map(key => element[key])
-    request.id = elementValues[0]
-    this.userFacade.deleteUser(request);
+    request.name = element
+    this.usersFacade.deleteUser(request)
   }
 
   getUserList(): void {
-    this.userFacade.getUser();
-    this.subscriptionManager.add(this.userFacade.stateGetUserResponse$).subscribe(result => {
+    this.usersFacade.getUsers();
+    this.usersFacade.stateGetUsersResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
       this.dataSource.paginator = this.paginator;
+      this.users = result
     });
   }
 
   getBooks(): void {
     this.booksFacade.getBooks();
-    this.subscriptionManager.add(this.booksFacade.stateGetBooksResponse$).subscribe(result => {
+    this.booksFacade.stateGetBooksResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
      this.books = result
     });
+  }
+
+  updateUser() {
+    let request = new AddUserRequest
+    request = this.prepareAddUserRequest(request)
+    this.usersFacade.updateUser(request)
+  }
+
+
+  getUsersData(name: string) {
+    let getRequest = new GetUserRequest()
+    getRequest.name = name
+    this.userFacade.getUser(getRequest)
+    this.userFacade.stateGetUserResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      this.form.get("birthdate")?.setValue(result.birthdate)
+      this.form.get("weight")?.setValue(result.weight)
+      this.form.get("height")?.setValue(result.height)
+      this.form.get("favouriteBook")?.setValue(result.favouriteBookTitel)
+    })
   }
 }

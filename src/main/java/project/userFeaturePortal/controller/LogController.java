@@ -1,16 +1,15 @@
 package project.userFeaturePortal.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
 import project.userFeaturePortal.common.dto.log.LogDTO;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.dto.log.LogResponseDto;
+import project.userFeaturePortal.controller.API.LogAPI;
 import project.userFeaturePortal.model.entity.Log;
 import project.userFeaturePortal.model.mapper.LogDTOMapper;
 import project.userFeaturePortal.service.model.LogService;
@@ -19,71 +18,72 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author - EugenFriesen 12.02.2021
- */
+/** @author - EugenFriesen 12.02.2021 */
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin
 @Tag(name = "Log")
-public class LogController {
+public class LogController implements LogAPI {
 
   private final LogService logService;
   private final LogDTOMapper logDTOMapper;
 
-  @GetMapping("/logs")
-  @Operation(summary = "Get Logs filtered by severity and/or message and/or date or nothing", responses = {
-      @ApiResponse(
-          description = "Get logs succeeded",
-          responseCode = "200",
-          content = @Content(
-              mediaType = "application/json",
-              schema = @Schema(implementation = LogResponseDto.class)
-          )
-      )
-  })
-  public LogResponseDto getLogs(
-      @RequestParam(required = false) final String severity,
-      @RequestParam(required = false) final String message,
-      @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime startDateTime,
-      @RequestParam(required = false) @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss") final LocalDateTime endDateTime) {
+  @Override
+  public ResponseEntity<LogResponseDto> getLogs(
+      String severity,
+      String message,
+      LocalDateTime startDateTime,
+      LocalDateTime endDateTime,
+      String user) {
 
-    return new LogResponseDto(logService.getLogs(severity, message, startDateTime, endDateTime), null);
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(
+            new LogResponseDto(
+                logService.getLogs(severity, message, startDateTime, endDateTime, user), null));
   }
 
-  @PostMapping("/log")
-  @Operation(summary = "Add manually a new Log-Entry")
-  public LogResponseDto addLog(@RequestBody LogRequestDto allParameters) {
+  @Override
+  public ResponseEntity<LogResponseDto> addLog(LogRequestDto allParameters) {
     String returnMessage = logService.addLog(allParameters);
-    return new LogResponseDto(logService.getLogs(null, null, null, null), returnMessage);
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(new LogResponseDto(logService.getLogs(allParameters.getLogsRequest.getSeverity(),
+                allParameters.getLogsRequest.getMessage(), allParameters.getLogsRequest.getStartDateTime(),
+                allParameters.getLogsRequest.getEndDateTime(), allParameters.getLogsRequest.getUser()), returnMessage));
   }
 
-  @GetMapping("/logs/{id}")
-  @Operation(summary = "Found logs by id of the log")
-  public List<LogDTO> getLogsByID(@PathVariable final Integer id) {
+  @Override
+  public List<LogDTO> getLogsByID(Integer id) {
     Log logs = logService.searchLogsByID(id);
     List<Log> returnList = new ArrayList<>();
     returnList.add(logs);
     return logDTOMapper.logsToLogDTOs(returnList);
   }
 
-  @DeleteMapping("/log/id/{id}")
-  @Operation(summary = "Delete logs by id of the log")
-  public LogResponseDto deleteLogsByID(@PathVariable final Integer id) {
+  @Override
+  public ResponseEntity<LogResponseDto> deleteLogsByID(
+      Integer id,
+      String severity,
+      String message,
+      LocalDateTime startDateTime,
+      LocalDateTime endDateTime,
+      String user) {
     String returnMessage = logService.deleteById(id);
-    return new LogResponseDto(logService.getLogs(null,null,null,null), returnMessage);
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(
+            new LogResponseDto(
+                logService.getLogs(severity, message, startDateTime, endDateTime, user),
+                returnMessage));
   }
 
-  @DeleteMapping("/log/severity")
-  @Operation(summary = "Delete logs by severity of the log")
-  public String deleteLogsBySeverity(@RequestParam final String severity) {
+  @Override
+  public String deleteLogsBySeverity(String severity) {
     return logService.deleteBySeverity(severity);
   }
 
-  @DeleteMapping("/logs")
-  @Operation(summary = "Delete all Logs")
-  public LogResponseDto deleteAll() {
+  @Override
+  public ResponseEntity<LogResponseDto> deleteAll() {
     String returnMessage = logService.deleteAll();
-    return new LogResponseDto(logService.getLogs(null, null, null, null), returnMessage);
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(new LogResponseDto(logService.getLogs(null, null, null, null, null), returnMessage));
   }
 }

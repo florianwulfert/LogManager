@@ -5,6 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.userFeaturePortal.common.dto.log.AddLogRequestDto;
+import project.userFeaturePortal.common.dto.log.GetLogsRequestDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.model.mapper.LogDTOMapper;
 import project.userFeaturePortal.service.model.LogService;
@@ -34,14 +36,21 @@ class LogControllerTest {
   void testGetLogs() {
     LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
     LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
-    systemUnderTest.getLogs("INFO", "Test", startDate, endDate);
-    verify(logService).getLogs(any(), any(), any(), any());
+    systemUnderTest.getLogs("INFO", "Test", startDate, endDate, null);
+    verify(logService).getLogs(any(), any(), any(), any(), any());
   }
 
   @Test
   void testAddLog() {
     LogRequestDto testDto =
-        LogRequestDto.builder().message("TestMessage").severity("INFO").user("Peter").build();
+        LogRequestDto.builder()
+                .addLogRequest(AddLogRequestDto.builder()
+                        .message("Test")
+                        .severity("WARNING")
+                        .build())
+                .getLogsRequest(GetLogsRequestDto.builder().build())
+                .user("Peter")
+                .build();
     systemUnderTest.addLog(testDto);
     verify(logService).addLog(any());
   }
@@ -54,7 +63,9 @@ class LogControllerTest {
 
   @Test
   void testDeleteById() {
-    systemUnderTest.deleteLogsByID(1);
+    LocalDateTime startDate = LocalDateTime.of(2020, Month.JANUARY, 25, 15, 0, 0);
+    LocalDateTime endDate = LocalDateTime.of(2020, Month.JANUARY, 25, 18, 0, 0);
+    systemUnderTest.deleteLogsByID(1, "INFO", "Test", startDate, endDate, "Hans");
     verify(logService).deleteById(1);
   }
 

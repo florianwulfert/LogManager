@@ -13,6 +13,7 @@ import project.userFeaturePortal.service.model.BookService;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,8 +45,8 @@ public class BookControllerTest {
 
   @Test
   void testDeleteAll() {
-    bookController.deleteAll();
-    verify(bookService).deleteBooks();
+    bookController.deleteAll(anyString());
+    verify(bookService).deleteBooks(anyString());
   }
 
   @Test
@@ -56,8 +57,8 @@ public class BookControllerTest {
 
   @Test
   void testDeleteBooksByTitel() {
-    bookController.deleteBooksByTitel(books.get(0).getTitel(), "Torsten");
-    verify(bookService).deleteByTitel("haya", "Torsten");
+    bookController.deleteBooksByTitel("haya", "Torsten");
+    verify(bookService).deleteByTitel("haya","Torsten");
   }
 
   @Test

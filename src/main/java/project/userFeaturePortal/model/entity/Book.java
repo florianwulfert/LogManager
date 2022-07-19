@@ -20,13 +20,8 @@ public class Book {
   @Column(name = "id", unique = true, nullable = false)
   private Integer id;
 
-  @Column
+  @Column(name = "titel", nullable = false, unique = true)
   private String titel;
   @Column
   private Integer erscheinungsjahr;
-
-  public String toString() {
-    return "{\"id\":".concat(id.toString()).concat(",\"titel\":\"").concat(titel).concat("\",\"erscheinungsjahr\":")
-        .concat(erscheinungsjahr.toString()).concat("}");
-  }
 }

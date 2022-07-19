@@ -6,23 +6,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import project.userFeaturePortal.common.dto.log.AddLogRequestDto;
 import project.userFeaturePortal.common.dto.log.LogMessageDto;
 import project.userFeaturePortal.common.dto.log.LogRequestDto;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.exception.ParameterNotPresentException;
 import project.userFeaturePortal.exception.SeverityNotFoundException;
-import project.userFeaturePortal.exception.UserNotFoundException;
-import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.UserRepository;
-
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * @author - EugenFriesen 13.02.2021
@@ -39,7 +33,13 @@ class LogValidationServiceTest {
   @Test
   void testEntryIsNull() {
     LogRequestDto testDto =
-        LogRequestDto.builder().message(null).severity(null).user("Hans").build();
+        LogRequestDto.builder()
+                .addLogRequest(AddLogRequestDto.builder()
+                        .message(null)
+                        .severity(null)
+                        .build())
+                .user("Hans")
+                .build();
     ParameterNotPresentException ex =
         assertThrows(
             ParameterNotPresentException.class,
@@ -50,7 +50,13 @@ class LogValidationServiceTest {
   @Test
   void testEntryIsEmptyString() {
     LogRequestDto testDto =
-        LogRequestDto.builder().message("Test").severity("WARNING").user("").build();
+        LogRequestDto.builder()
+                .addLogRequest(AddLogRequestDto.builder()
+                        .message("Test")
+                        .severity("WARNING")
+                        .build())
+                .user("")
+                .build();
     ParameterNotPresentException ex =
         assertThrows(
             ParameterNotPresentException.class,
@@ -88,27 +94,5 @@ class LogValidationServiceTest {
     LogMessageDto customLogMessageDto =
         LogMessageDto.builder().message("Apfel").returnMessage("").build();
     Assertions.assertEquals(customLogMessageDto, systemUnderTest.validateMessage("Apfel"));
-  }
-
-  @Test
-  void actorIsNull() {
-    UserNotFoundException ex = assertThrows(UserNotFoundException.class,
-        () -> systemUnderTest.checkActor("Heinrich"));
-    assertEquals("User named Heinrich not found!", ex.getMessage());
-  }
-
-  @Test
-  void actorIsNotNull() {
-    User testUser = User.builder()
-        .id(1)
-        .name("Peter")
-        .birthdate(LocalDate.of(1999, 12, 13))
-        .bmi(25.39)
-        .weight(65)
-        .height(1.60)
-        .build();
-    when(userRepository.findUserByName(anyString())).thenReturn(testUser);
-    systemUnderTest.checkActor("Heinrich");
-    verify(userRepository).findUserByName("Heinrich");
   }
 }

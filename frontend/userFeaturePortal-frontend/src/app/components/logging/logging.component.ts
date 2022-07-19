@@ -1,14 +1,15 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {LogFacade} from "../../modules/logging/logs.facade";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {MatTableDataSource} from "@angular/material/table";
-import {FeatureManager} from "../../../assets/utils/feature.manager";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
-import {DeleteLogRequest} from "../../modules/logging/deleteLog/dto/delete-log-request";
+import {AddLogRequestWithFilter} from "../../modules/logging/addLogs/dto/add-log-request-with-filter";
 import {MatPaginator} from "@angular/material/paginator";
-
+import {UsersFacade} from "../../modules/users/users.facade";
+import {GetLogsRequest} from "../../modules/logging/getLogs/dto/getLogs-request";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
+import {AddLogRequest} from "../../modules/logging/addLogs/dto/add-log-request";
 
 @Component({
   selector: 'app-logging',
@@ -17,24 +18,27 @@ import {MatPaginator} from "@angular/material/paginator";
 })
 export class LoggingComponent implements OnInit, OnDestroy {
 
-  constructor(private logsFacade: LogFacade, private _snackBar: MatSnackBar) {
+  constructor(private logsFacade: LogFacade, private _snackBar: MatSnackBar, private userFacade: UsersFacade) {
   }
-
-  subscriptionManager = new SubscriptionManager();
-  featureManager = new FeatureManager(this._snackBar);
 
   displayedColumns: string[] = ['id', 'message', 'severity', 'timestamp', 'user', 'delete'];
   severities: string[] = ['TRACE', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'FATAL'];
   dataSource: any;
+  users: any
+  messages: any
+  filterButtonPressed: boolean = false
+  onDestroy = new Subject()
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit(): void {
     this.getLogs()
+    this.getUserList()
   }
 
   ngOnDestroy() {
-    this.subscriptionManager.clear()
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
   }
 
   position = new FormControl('above');
@@ -53,11 +57,30 @@ export class LoggingComponent implements OnInit, OnDestroy {
     severity: new FormControl('', [Validators.required]),
   })
 
+  public formFilter: FormGroup = new FormGroup({
+    severity: new FormControl(''),
+    user: new FormControl(''),
+    startDateTime: new FormControl(''),
+    endDateTime: new FormControl(''),
+    message: new FormControl('')
+  })
+
+  prepareGetLogsRequest(request: GetLogsRequest) {
+    request.severity = this.formFilter.get("severity")?.value
+    request.message = this.formFilter.get("message")?.value
+    request.startDateTime = this.formFilter.get("startDateTime")?.value
+    request.endDateTime = this.formFilter.get("endDateTime")?.value
+    request.user = this.formFilter.get("user")?.value
+  }
+
   getLogs(): void {
-    this.logsFacade.getLogs()
-    this.subscriptionManager.add(this.logsFacade.stateGetLogsResponse$).subscribe(result => {
+    let request = new GetLogsRequest()
+    this.prepareGetLogsRequest(request)
+    this.logsFacade.getLogs(request)
+    this.logsFacade.stateGetLogsResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
       this.dataSource = new MatTableDataSource(result)
-      this.dataSource.paginator = this.paginator;
+      this.dataSource.paginator = this.paginator
+      this.messages = result
     })
   }
 
@@ -68,15 +91,34 @@ export class LoggingComponent implements OnInit, OnDestroy {
   }
 
   createLog(): void {
-    let request = new AddLogRequest
-    this.prepareAddLogRequest(request)
-    this.logsFacade.addLog(request);
+    let addLogRequest = new AddLogRequest()
+    this.prepareAddLogRequest(addLogRequest)
+    let getLogsRequest = new GetLogsRequest()
+    this.prepareGetLogsRequest(getLogsRequest)
+    let request = new AddLogRequestWithFilter()
+    request.addLogRequest = addLogRequest
+    request.getLogsRequest = getLogsRequest
+    this.logsFacade.addLog(request)
   }
 
   deleteLog(element: any): void {
-    let request = new DeleteLogRequest
+    let request = new GetLogsRequest()
+    this.prepareGetLogsRequest(request)
     let elementValues = Object.keys(element).map(key => element[key])
     request.id = elementValues[0]
     this.logsFacade.deleteLog(request)
   }
+
+  getUserList(): void {
+    this.userFacade.getUsers();
+    this.userFacade.stateGetUsersResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      this.users = result
+    });
+  }
+
+  filterLogs(): void {
+    this.getLogs()
+    this.filterButtonPressed = true
+  }
+
 }

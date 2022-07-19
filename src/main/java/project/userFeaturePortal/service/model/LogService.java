@@ -13,12 +13,12 @@ import project.userFeaturePortal.model.entity.Log;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.mapper.LogDTOMapper;
 import project.userFeaturePortal.model.repository.LogRepository;
+import project.userFeaturePortal.model.repository.UserRepository;
 import project.userFeaturePortal.service.validation.LogValidationService;
+import project.userFeaturePortal.service.validation.UserValidationService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,39 +34,39 @@ public class LogService {
   private final LogRepository logRepository;
   private final LogValidationService logValidationService;
   private final LogDTOMapper logDTOMapper;
+  private final UserRepository userRepository;
+  private final UserValidationService userValidationService;
 
-  public List<LogDTO> getLogs(
-      String severity, String message, LocalDateTime startDate, LocalDateTime endDate) {
-
+  public List<LogDTO> getLogs(String severity, String message, LocalDateTime startDate, LocalDateTime endDate, String userName) {
+    User user = userRepository.findUserByName(userName);
     return logDTOMapper.logsToLogDTOs(
-        logRepository.findLogs(severity, message, startDate, endDate));
+        logRepository.findLogs(severity, message, startDate, endDate, user));
   }
 
   public String addLog(LogRequestDto logRequestDto) {
+    // validate log entry
     logValidationService.checkIfAnyEntriesAreNull(logRequestDto);
-    logValidationService.validateSeverity(logRequestDto.getSeverity());
-    LogMessageDto logMessage = logValidationService.validateMessage(logRequestDto.message);
-    User user = logValidationService.checkActor(logRequestDto.user);
-    saveLog(logMessage.getMessage(), logRequestDto.getSeverity(), user);
+    logValidationService.validateSeverity(logRequestDto.addLogRequest.getSeverity());
+    LogMessageDto logMessage = logValidationService.validateMessage(logRequestDto.addLogRequest.message);
+    User user = userValidationService.checkIfNameExists(logRequestDto.user, true, ErrorMessages.USER_NOT_ALLOWED);
 
+    // build Log
+    LocalDateTime timeStamp = LocalDateTime.now();
+    Log log = Log.builder().message(logRequestDto.addLogRequest.message).severity(logRequestDto.addLogRequest.severity).user(user).timestamp(timeStamp).build();
+
+    // save Log
+    logRepository.save(log);
+
+    // return message to User-Interface
     logMessage.setReturnMessage(
         logMessage.getReturnMessage()
             + String.format(
-            InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
+            InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.addLogRequest.getSeverity()));
+
     LOGGER.info(
         String.format(
-            InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.getSeverity()));
+            InfoMessages.MESSAGE_SAVED, logMessage.getMessage(), logRequestDto.addLogRequest.getSeverity()));
     return logMessage.getReturnMessage();
-  }
-
-  private void saveLog(String message, String severity, User user) {
-    Log log = new Log();
-    log.setMessage(message);
-    log.setSeverity(severity);
-    log.setUser(user);
-    Date timestamp = new Date();
-    log.setTimestamp(timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-    logRepository.save(log);
   }
 
   public Log searchLogsByID(Integer id) {
@@ -79,16 +79,9 @@ public class LogService {
     return String.format(InfoMessages.ENTRY_DELETED_ID, id);
   }
 
-  public boolean existLogByUserToDelete(User actor) {
-    List<Log> logs = logRepository.findByUser(actor);
-    LOGGER.info(String.format(InfoMessages.LOGS_BY_USER, actor));
-    return !logs.isEmpty();
-  }
-
   public String deleteBySeverity(String severity) {
     List<Log> deletedLogs = logRepository.deleteBySeverity(severity);
     if (deletedLogs.isEmpty()) {
-      LOGGER.info(ErrorMessages.NO_ENTRIES_FOUND);
       return ErrorMessages.NO_ENTRIES_FOUND;
     }
 
@@ -103,6 +96,7 @@ public class LogService {
     }
 
     sb.append("Entries with the ID(s) ").append(iDs).append(" were deleted from database.");
+    LOGGER.info(sb.toString());
     return sb.toString();
   }
 

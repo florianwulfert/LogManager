@@ -11,12 +11,10 @@ import project.userFeaturePortal.exception.FirstUserUnequalActorException;
 import project.userFeaturePortal.exception.ParameterNotPresentException;
 import project.userFeaturePortal.exception.UserNotAllowedException;
 import project.userFeaturePortal.exception.UserNotFoundException;
-import project.userFeaturePortal.model.entity.Book;
+import project.userFeaturePortal.model.entity.Log;
 import project.userFeaturePortal.model.entity.User;
-import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.model.repository.LogRepository;
 import project.userFeaturePortal.model.repository.UserRepository;
-import project.userFeaturePortal.service.model.LogService;
 import project.userFeaturePortal.service.model.UserService;
 
 import java.util.List;
@@ -28,9 +26,7 @@ public class UserValidationService {
 
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
   private final UserRepository userRepository;
-  private final LogService logService;
   private final LogRepository logRepository;
-  private final BookRepository bookRepository;
 
   public void checkIfAnyEntriesAreNull(UserRequestDto allParameters) {
     if (allParameters.actor == null
@@ -47,97 +43,89 @@ public class UserValidationService {
     LOGGER.debug(InfoMessages.PARAMETERS_ARE_VALID);
   }
 
-  public boolean checkIfUsersListIsEmpty() {
+  public void checkIfUsersAreReferenced() {
+    if (!logRepository.findAll().isEmpty()) {
+      LOGGER.warn(ErrorMessages.USERS_REFERENCED);
+      throw new RuntimeException(ErrorMessages.USERS_REFERENCED);
+    }
+  }
+
+  public void validateActor(String name, String actor) {
     List<User> usersList = userRepository.findAll();
+
+    // proof that the usersList in the db is empty
+    // --> if so, first user has to be equal to the acting user (actor)
+    boolean userListEmpty = false;
     if (usersList.isEmpty()) {
-      LOGGER.info(InfoMessages.LIST_IS_EMPTY);
-      return true;
-    }
-    return false;
-  }
-
-  public void checkIfActorEqualsUserToCreate(String actor, User user, boolean isActor) {
-    if (!user.getName().equals(actor)) {
-      if (isActor) {
-        LOGGER.warn(ErrorMessages.NO_USERS_YET + user.getName() + " unequal " + actor);
-        throw new FirstUserUnequalActorException(actor, user.getName());
+      userListEmpty = true;
+      if (!name.equals(actor)) {
+        LOGGER.warn(ErrorMessages.NO_USERS_YET + name + " unequal " + actor);
+        throw new FirstUserUnequalActorException(actor, name);
       }
-      LOGGER.error(String.format(ErrorMessages.USER_NOT_FOUND_NAME, user.getName()));
-      throw new UserNotFoundException(user.getName());
     }
-    LOGGER.info(InfoMessages.ACTOR_EQUALS_USER);
+
+    // if userList is not empty, check if actor is allowed to create user
+    if (!userListEmpty) {
+      checkIfNameExists(actor, true,
+              String.format(ErrorMessages.USER_NOT_ALLOWED_CREATE_USER, actor));
+    }
   }
 
-  public User checkIfNameExists(String name, boolean isActor, String action) {
-    User user = userRepository.findUserByName(name);
-    if (user == null) {
-      handleNameNotExist(isActor, action, name);
-    }
-    return user;
-  }
-
-  public List<Book> checkIfBookExists(String bookTitel) {
-    List<Book> books = bookRepository.findByTitel(bookTitel);
-    if (books.isEmpty()) {
-      LOGGER.warn(String.format(ErrorMessages.BOOK_NOT_FOUND_TITEL, bookTitel));
-      throw new RuntimeException(String.format(ErrorMessages.BOOK_NOT_FOUND_TITEL, bookTitel));
-    }
-    return books;
-  }
-
-  private void handleNameNotExist(boolean isActor, String action, String name) {
-    if (isActor) {
-      LOGGER.info(String.format(action, name));
-      throw new UserNotAllowedException(String.format(action, name));
-    }
-    LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
-    throw new UserNotFoundException(name);
-  }
-
-  public void checkIfUserToPostExists(String name) {
+  public void validateUserToCreate(String name) {
+    // proof that the user you want to create is not existing yet
     if (userRepository.findUserByName(name) != null) {
       LOGGER.warn(String.format(ErrorMessages.USER_EXISTS, name));
       throw new RuntimeException(String.format(ErrorMessages.USER_EXISTS, name));
     }
   }
 
-  public void checkIfUserToDeleteIdEqualsActorId(int userToDeleteId, int actorId) {
-    if (userToDeleteId == actorId) {
+  public User validateUserToDelete(String name, String actorName) {
+    User userToDelete = checkIfNameExists(name, false, ErrorMessages.CANNOT_DELETE_USER);
+
+    // proof that there are no logs created by the user you want to delete
+    List<Log> logs = logRepository.findByUser(userToDelete);
+    if (!logs.isEmpty()) {
+      LOGGER.error(String.format(ErrorMessages.USER_REFERENCED, userToDelete.getName()));
+      throw new RuntimeException(
+              String.format(ErrorMessages.USER_REFERENCED, userToDelete.getName()));
+    }
+
+    // proof that user is not deleting himself
+    if (userToDelete.getName().equals(actorName)) {
       LOGGER.error(ErrorMessages.USER_DELETE_HIMSELF);
       throw new RuntimeException(ErrorMessages.USER_DELETE_HIMSELF);
     }
-    LOGGER.info(InfoMessages.USER_CAN_BE_DELETED);
+
+    return userToDelete;
   }
 
   public User checkIfIdExists(int id) {
     Optional<User> user = userRepository.findById(id);
+
+    // if no users with wanted id found throw exception
     if (user.isEmpty()) {
       LOGGER.info(String.format(ErrorMessages.USER_NOT_FOUND_ID, id));
       throw new RuntimeException(String.format(ErrorMessages.USER_NOT_FOUND_ID, id));
     }
+
     return user.get();
   }
 
-  public void checkIfExistLogByUserToDelete(User userToDelete) {
-    if (logService.existLogByUserToDelete(userToDelete)) {
-      LOGGER.error(String.format(ErrorMessages.USER_REFERENCED, userToDelete.getName()));
-      throw new RuntimeException(
-          String.format(ErrorMessages.USER_REFERENCED, userToDelete.getName()));
-    }
-  }
+  public User checkIfNameExists(String name, boolean isActor, String action) {
+    User user = userRepository.findUserByName(name);
 
-  public void checkIfUserToDeleteEqualsActor(String name, String actorName) {
-    User actor = userRepository.findUserByName(actorName);
-    if (userRepository.findUserByName(name).equals(actor)) {
-      LOGGER.error(ErrorMessages.USER_DELETE_HIMSELF);
-      throw new RuntimeException(ErrorMessages.USER_DELETE_HIMSELF);
+    // proof that user is not null -->
+    // if so, decide whether userName was simply not found
+    // or he is not authorized to execute wanted action
+    if (user == null) {
+      if (isActor) {
+        LOGGER.info(String.format(action, name));
+        throw new UserNotAllowedException(String.format(action, name));
+      }
+      LOGGER.warn(String.format(ErrorMessages.USER_NOT_FOUND_NAME, name));
+      throw new UserNotFoundException(name);
     }
-  }
 
-  public void checkIfUsersAreReferenced() {
-    if (!logRepository.findAll().isEmpty()) {
-      LOGGER.warn(ErrorMessages.USERS_REFERENCED);
-      throw new RuntimeException(ErrorMessages.USERS_REFERENCED);
-    }
+    return user;
   }
 }

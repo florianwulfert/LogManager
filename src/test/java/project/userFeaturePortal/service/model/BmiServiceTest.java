@@ -80,11 +80,6 @@ class BmiServiceTest {
   }
 
   @Test
-  void testBerechneBMI() {
-    Assertions.assertEquals(30.86, systemUnderTest.calculateBMI(100.0, 1.8));
-  }
-
-  @Test
   void testFindUserAndCalculateBMI() {
     when(userRepository.findUserByName(users.get(1).getName())).thenReturn(users.get(1));
     systemUnderTest.findUserAndGetBMI(users.get(1).getName());

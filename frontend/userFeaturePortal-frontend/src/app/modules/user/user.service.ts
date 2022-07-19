@@ -1,120 +1,57 @@
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable, throwError} from 'rxjs';
-import {GetUserResponse} from 'src/app/modules/user/getUser/get-user-response';
+import {Injectable, OnDestroy} from '@angular/core';
+import {Observable, Subject, throwError} from 'rxjs';
 import {catchError, map} from "rxjs/operators";
-import {AddUserResponse} from "./addUser/add-user-response";
-import {AddUserRequest} from "./addUser/add-user-request";
-import {DeleteUserResponse} from "./deleteUser/delete-user-response";
-import {SubscriptionManager} from "../../../assets/utils/subscription.manager";
 import {ActorFacade} from "../actor/actor.facade";
-import {DeleteUsersResponse} from "./deleteUsers/delete-users-response";
 import {FeatureManager} from "../../../assets/utils/feature.manager";
+import {GetUserResponse} from "./getUser/get-user-response";
+import {UserDto} from "../users/getUsers/user.dto";
+import {GetUserRequest} from "./getUser/getUser-request";
 
-const API_BASE = 'http://localhost:8081/users';
-const API_ADD_USER = 'http://localhost:8081/user';
-const API_DELETE_USERS = 'http://localhost:8081/users';
-const API_DELETE_USER = 'http://localhost:8081/user/id/';
+const API_GET_USER = 'http://localhost:8081/user?name=';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class UserService implements OnDestroy {
   constructor(private readonly http: HttpClient, private readonly actorFacade: ActorFacade, private featureManager: FeatureManager) {
   }
 
-  name: string | undefined
-  subscriptionManager = new SubscriptionManager();
-
-  getUsers(): Observable<GetUserResponse> {
-    return this.http.get<GetUserResponse>(API_BASE, {
-      observe: 'response'
-    }).pipe(
-      map((r) => {
-        return r.body || {
-          result: [],
-          returnMessage: ""
-        }
-      }),
-      catchError((err) => {
-        if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
-        } else {
-          this.featureManager.openSnackbar(err.error);
-        }
-        return throwError('Due to technical issues it is currently not possible to request users.');
-      })
-    );
+  ngOnDestroy() {
+    this.onDestroy.next(null)
+    this.onDestroy.complete()
   }
 
-  addUser(addUserRequest: AddUserRequest): Observable<AddUserResponse> {
-    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
-      this.name = r
-    })
-    return this.http.post<AddUserResponse>(API_ADD_USER, {...addUserRequest, actor: this.name}, {
-      observe: 'response'
-    }).pipe(
-      map((r) => {
-        this.featureManager.openSnackbar(r.body?.returnMessage);
-        return r.body || {
-          result: [],
-          returnMessage: ""
-        }
-      }),
-      catchError((err) => {
-        if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
-        } else {
-          this.featureManager.openSnackbar(err.error);
-        }
-        return throwError('Due to technical issues it is currently not possible to add users.');
-      })
-    );
+  onDestroy = new Subject()
+  userDto: UserDto = {
+    id: 0,
+    name: "",
+    birthdate: "",
+    height: 0,
+    weight: 0,
+    bmi: 0,
+    favouriteBookTitel: ""
   }
 
-  deleteUsers(): Observable<DeleteUsersResponse> {
-    return this.http.delete<DeleteUsersResponse>(API_DELETE_USERS, {
+  getUser(request: GetUserRequest): Observable<GetUserResponse> {
+    return this.http.get<GetUserResponse>(API_GET_USER + request.name, {
       observe: 'response'
     }).pipe(
       map((r) => {
-        this.featureManager.openSnackbar(r.body?.returnMessage);
         return r.body || {
-          result: [],
-          returnMessage: ""
+          user: this.userDto
         }
       }),
       catchError((err) => {
-        if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
-        } else {
-          this.featureManager.openSnackbar(err.error);
+        if (err.error instanceof Object) {
+          this.featureManager.openSnackbar(err.error.text, "failed");
+          return throwError('Wrong object in interface')
+        } if (err.error) {
+          this.featureManager.openSnackbar(err.error, "failed");
+          return throwError('business error')
         }
-        return throwError('Due to technical issues it is currently not possible to delete users.');
-      })
-    );
-  }
-
-  deleteUser(i: number | undefined): Observable<DeleteUserResponse> {
-    this.subscriptionManager.add(this.actorFacade.stateActor$).subscribe(r => {
-      this.name = r
-    })
-    return this.http.delete<DeleteUserResponse>(API_DELETE_USER + i + "?actor=" + this.name, {
-      observe: 'response'
-    }).pipe(
-      map((r) => {
-        this.featureManager.openSnackbar("User with the ID " + i + " was deleted.");
-        return r.body || {
-          result: [],
-          returnMessage: ""
-        }
-      }),
-      catchError((err) => {
-        if(err.error instanceof Object) {
-          this.featureManager.openSnackbar(err.error.text);
-        } else {
-          this.featureManager.openSnackbar(err.error);
-        }
-        return throwError('Due to technical issues it is currently not possible to delete this user.');
+        this.featureManager.openSnackbar('Due to technical issues it is currently not possible to request this user.', "failed")
+        return throwError('Due to technical issues it is currently not possible to request this user.')
       })
     );
   }

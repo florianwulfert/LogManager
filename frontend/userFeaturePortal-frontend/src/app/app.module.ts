@@ -22,7 +22,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-import {UserModule} from "./modules/user/user.module";
+import {UsersModule} from "./modules/users/users.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatTooltipModule} from "@angular/material/tooltip";
@@ -36,6 +36,15 @@ import {ActorIsValidModule} from "./modules/actor/actorIsValid.module";
 import {BookComponent} from "./components/book/book.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {BooksModule} from "./modules/books/books.module";
+import {UserModule} from "./modules/user/user.module";
+import {BibleComponent} from "./components/bibellese/bible.component";
+import {BibelleseModule} from "./modules/bibellese/bibellese.module";
+import {BookModule} from "./modules/book/book.module";
+import {FavouriteBookModule} from "./modules/favouriteBook/favouriteBook.module";
+import {MatChipsModule} from "@angular/material/chips";
+import {BibelleseUpdateComponent} from "./components/bibellese/bibelleseUpdate/bibellese-update.component";
+import {UpdateBibelleseModule} from "./modules/updateBibellese/update-bibellese.module";
+import {GetListsForBibelleseFilterModule} from "./modules/getListsForBibelleseFilter/getListsForBibelleseFilter.module";
 
 @NgModule({
   declarations: [
@@ -47,7 +56,9 @@ import {BooksModule} from "./modules/books/books.module";
     LoggingComponent,
     HomeComponent,
     ProfileMenuComponent,
-    BookComponent
+    BookComponent,
+    BibleComponent,
+    BibelleseUpdateComponent
   ],
   imports: [
     BrowserModule,
@@ -66,23 +77,27 @@ import {BooksModule} from "./modules/books/books.module";
     MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
-    UserModule,
+    UsersModule,
     ReactiveFormsModule,
     MatSnackBarModule,
-    MatTooltipModule,
     MatDialogModule,
-    FormsModule,
     MatTooltipModule,
     LogModule,
     ActorModule,
-    LogModule,
     MatSelectModule,
     FormsModule,
-    LogModule,
     BmiModule,
     MatPaginatorModule,
     ActorIsValidModule,
-    BooksModule
+    BooksModule,
+    BibelleseModule,
+    UserModule,
+    BookModule,
+    MatChipsModule,
+    FavouriteBookModule,
+    MatChipsModule,
+    UpdateBibelleseModule,
+    GetListsForBibelleseFilterModule
   ],
   exports: [
     BrowserModule,
@@ -93,6 +108,7 @@ import {BooksModule} from "./modules/books/books.module";
     MatIconModule,
     MatSidenavModule
   ],
+
   providers: [],
   bootstrap: [AppComponent]
 })

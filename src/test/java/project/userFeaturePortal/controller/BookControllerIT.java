@@ -1,7 +1,6 @@
 package project.userFeaturePortal.controller;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import project.userFeaturePortal.TestMessages;
 import project.userFeaturePortal.common.message.ErrorMessages;
-import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.model.entity.Book;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.model.repository.BookRepository;
@@ -57,13 +55,13 @@ class BookControllerIT {
     private static Stream<Arguments> getAddBookArguments() {
     return Stream.of(
         Arguments.of(
-            "{\"titel\":\"haya\",\"erscheinungsjahr\":\"1998\",\"actor\":\"Torsten\"}",
-            status().isOk(),
-            TestMessages.HAYA),
+            "{\"titel\":\"TestBook1\",\"erscheinungsjahr\":\"1998\",\"actor\":\"Torsten\"}",
+            status().isCreated(),
+            TestMessages.TESTBOOK_CREATED),
         Arguments.of(
             "{\"titel\":\"peter\",\"erscheinungsjahr\":\"1988\"}",
-            status().isNotFound(),
-            String.format(ErrorMessages.USER_NOT_FOUND_NAME, "null"),
+            status().isForbidden(),
+            ErrorMessages.USER_NOT_ALLOWED,
         Arguments.of(
             "{\"erscheinungsjahr\":\"1977\",\"actor\":\"Torsten\"}",
             status().isBadRequest(),
@@ -106,16 +104,10 @@ class BookControllerIT {
         return Stream.of(
                 Arguments.of(
                         "Book was successfully deleted",
-                        "peter",
+                        "TestBook",
                         "Torsten",
                         status().isOk(),
-                        String.format(InfoMessages.BOOK_DELETED_TITLE, "peter")),
-                Arguments.of(
-                        "Book was successfully deleted",
-                        "omar",
-                        "Torsten",
-                        status().isOk(),
-                        String.format(InfoMessages.BOOK_DELETED_TITLE, "omar")),
+                        TestMessages.TESTBOOK_DELETED_BY_TITLE),
                 Arguments.of(
                         "Actor is not present ",
                         null,
@@ -127,13 +119,7 @@ class BookControllerIT {
                         "hajer",
                         "Torsten",
                         status().isOk(),
-                        String.format(InfoMessages.NO_BOOKS_FOUNDS, "hajer")),
-                Arguments.of(
-                        "There are more books with the title paul",
-                        "paul",
-                        "Torsten",
-                        status().isOk(),
-                        String.format(InfoMessages.BOOK_CAN_NOT_BE_IDENTIFIED, "paul")));
+                        TestMessages.NO_BOOKS_FOUND));
     }
 
   @BeforeAll
@@ -152,7 +138,7 @@ class BookControllerIT {
                 .andReturn();
         String booksString = books.toString().replace(" ", "");
     assertEquals(
-        "{\"result\":" + booksString + ",\"returnMessage\":null}",
+        TestMessages.GET_BOOKS,
         result.getResponse().getContentAsString());
     }
 
@@ -214,12 +200,13 @@ class BookControllerIT {
     void testDeleteAll() throws Exception {
 
         MvcResult result = mockMvc
-                .perform(delete("/books"))
+                .perform(delete("/books")
+                        .param("actor", "Torsten"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
 
-        assertEquals(InfoMessages.ALL_BOOKS_DELETED, result.getResponse().getContentAsString());
+        assertEquals(TestMessages.ALL_BOOKS_DELETED, result.getResponse().getContentAsString());
 
     }
 
@@ -229,7 +216,7 @@ class BookControllerIT {
         Book haya = Book.builder()
                 .id(1)
                 .erscheinungsjahr(1998)
-                .titel("haya")
+                .titel("TestBook")
                 .build();
         books.add(haya);
         bookRepository.save(haya);
@@ -268,28 +255,17 @@ class BookControllerIT {
                 .build();
         books.add(paul);
         bookRepository.save(paul);
-        Book paul1 = Book.builder()
-                .id(7)
-                .erscheinungsjahr(2008)
-                .titel("paul")
-                .build();
-        books.add(paul1);
-        bookRepository.save(paul1);
         return books;
     }
 
-    @Nested
-    class FindBookByTitelTests {
-
-        @Test
-        void testFindBookBytitel() throws Exception {
-            MvcResult result = mockMvc
-                    .perform(get("/book").param("titel", "haya"))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andReturn();
-            assertEquals(String.format(TestMessages.BOOK_HAYA),
-                    result.getResponse().getContentAsString());
-        }
+    @Test
+    void testFindBookByTitel() throws Exception {
+        MvcResult result = mockMvc
+                .perform(get("/book").param("titel", "TestBook"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        assertEquals(String.format(TestMessages.TESTBOOK),
+                result.getResponse().getContentAsString());
     }
 }

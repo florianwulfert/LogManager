@@ -3,10 +3,13 @@ package project.userFeaturePortal.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import project.userFeaturePortal.common.dto.user.FindUserResponseDto;
-import project.userFeaturePortal.common.dto.user.UserRequestDto;
-import project.userFeaturePortal.common.dto.user.UserResponseDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+import project.userFeaturePortal.common.dto.user.*;
+import project.userFeaturePortal.common.message.InfoMessages;
+import project.userFeaturePortal.controller.API.UserAPI;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.service.model.UserService;
 
@@ -16,54 +19,74 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 @Tag(name = "User")
-public class UserController {
+public class UserController implements UserAPI {
 
   private final UserService userService;
 
-  @PostMapping("/user")
-  public UserResponseDto addUser(@RequestBody UserRequestDto allParameters) {
+  @Override
+  public ResponseEntity<UserResponseDto> addUser(UserRequestDto allParameters) {
     String returnMessage = userService.addUser(allParameters);
-    return new UserResponseDto(userService.findUserList(), returnMessage);
+    return ResponseEntity.status(201).body(new UserResponseDto(userService.findUserList(), returnMessage));
   }
 
-  @PostMapping("/user/favouriteBook")
-  public String addFavouriteBookToUser(
-      @RequestParam final String bookTitel,
-      @RequestParam final String actor) {
-    return userService.addFavouriteBookToUser(bookTitel, actor);
+  @Override
+  public ResponseEntity<GetFavouriteBookResponseDto> addFavouriteBookToUser(String bookTitel, String actor) {
+    String returnMessage = String.format(InfoMessages.BOOK_BY_USER, bookTitel, actor);
+    return ResponseEntity.status(HttpStatus.OK).body(new GetFavouriteBookResponseDto(userService.addFavouriteBookToUser(bookTitel, actor), returnMessage));
   }
 
-  @GetMapping("/users")
-  public UserResponseDto findUsers() {
-    return new UserResponseDto(userService.findUserList(), null);
+  @Override
+  public ResponseEntity<GetFavouriteBookResponseDto> deleteFavouriteBook(String name) {
+    String returnMessage = String.format(InfoMessages.FAV_BOOK_DELETED, name);
+    return ResponseEntity.status(HttpStatus.OK).body(new GetFavouriteBookResponseDto(userService.deleteFavouriteBook(name), returnMessage));
   }
 
-  @GetMapping("/user/id")
-  public Optional<User> findUserByID(@RequestParam final Integer id) {
+  @Override
+  public ResponseEntity<GetFavouriteBookResponseDto> getFavouriteBook(String name) {
+    return ResponseEntity.status(HttpStatus.OK).body(new GetFavouriteBookResponseDto(userService.getFavouriteBook(name), null));
+  }
+
+  @Override
+  public ResponseEntity<UserResponseDto> updateUser(UserRequestDto allParameters) {
+    String returnMessage = userService.updateUser(allParameters);
+    return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(userService.findUserList(), returnMessage));
+  }
+
+  @Override
+  public ResponseEntity<UserResponseDto> findUsers() {
+    return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(userService.findUserList(), null));
+  }
+
+  @Override
+  public Optional<User> findUserByID(Integer id) {
     return userService.findUserById(id);
   }
 
-  @GetMapping("/user")
-  public FindUserResponseDto findUserByName(@RequestParam final String name) {
-    return new FindUserResponseDto(userService.findUserByName(name));
+  @Override
+  public ResponseEntity<FindUserResponseDto> findUserByName(String name) {
+    return ResponseEntity.status(HttpStatus.OK).body(new FindUserResponseDto(userService.findUserByName(name)));
   }
 
-  @DeleteMapping("/user/id/{id}")
-  public UserResponseDto deleteUserByID(@PathVariable final Integer id, @RequestParam final String actor) {
+  @Override
+    public ResponseEntity<ValidateUserResponseDto> validateUserByName(String name) {
+      return ResponseEntity.status(HttpStatus.OK).body(new ValidateUserResponseDto(userService.validateUserByName(name)));
+  }
+
+  @Override
+  public ResponseEntity<UserResponseDto> deleteUserByID(Integer id, String actor) {
     userService.deleteById(id, actor);
-    return new UserResponseDto(userService.findUserList(), null);
+    return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(userService.findUserList(), null));
   }
 
-  @DeleteMapping("/user/name/{name}")
-  public UserResponseDto deleteUserByName(
-      @PathVariable final String name, @RequestParam final String actor) {
+  @Override
+  public ResponseEntity<UserResponseDto> deleteUserByName(String name, String actor) {
     String returnMessage = userService.deleteByName(name, actor);
-    return new UserResponseDto(userService.findUserList(), returnMessage);
+    return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(userService.findUserList(), returnMessage));
   }
 
-  @DeleteMapping("/users")
-  public UserResponseDto deleteAll() {
+  @Override
+  public ResponseEntity<UserResponseDto> deleteAll() {
     String returnMessage = userService.deleteAll();
-    return new UserResponseDto(userService.findUserList(), returnMessage);
+    return ResponseEntity.status(HttpStatus.OK).body(new UserResponseDto(userService.findUserList(), returnMessage));
   }
 }

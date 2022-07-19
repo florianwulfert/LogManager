@@ -6,16 +6,19 @@ import {catchError, map, switchMap} from "rxjs/operators";
 import {
   addBookAction,
   addBookResponseAction,
-  assignBookToUserAction,
-  assignBookToUserResponseAction,
   deleteBookAction,
   deleteBookResponseAction,
+  deleteBooksAction,
+  deleteBooksResponseAction,
   getBooksAction,
   getBooksResponseAction,
   loadAddBookErrorAction,
-  loadAssignBookToUserErrorAction,
   loadDeleteBookErrorAction,
-  loadGetBooksErrorAction
+  loadDeleteBooksErrorAction,
+  loadGetBooksErrorAction,
+  loadUpdateBookErrorAction,
+  updateBookAction,
+  updateBookResponseAction
 } from "./books.actions";
 import {BooksService} from "./books.service";
 import {AddBookRequest} from "./addBooks/add-book-request";
@@ -30,7 +33,7 @@ export class BooksEffects {
       switchMap(() =>
         this.booksService.getBooks().pipe(
           map((getBooksResponse) => getBooksResponseAction(getBooksResponse)),
-          catchError((error: string) => of(loadGetBooksErrorAction({error})))
+          catchError((error: string) => of(loadGetBooksErrorAction({error}))),
         )
       )
     )
@@ -48,11 +51,23 @@ export class BooksEffects {
     )
   );
 
+  update$: Observable<Action> = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateBookAction),
+      switchMap((updateBookRequest: AddBookRequest) =>
+        this.booksService.updateBook(updateBookRequest).pipe(
+          map((updateBookResponse) => updateBookResponseAction(updateBookResponse)),
+          catchError((error: string) => of(loadUpdateBookErrorAction({error})))
+        )
+      )
+    )
+  );
+
   deleteBook$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(deleteBookAction),
       switchMap((deleteBookRequest: DeleteBookRequest) =>
-        this.booksService.deleteBook(deleteBookRequest.id).pipe(
+        this.booksService.deleteBook(deleteBookRequest.titel).pipe(
           map((deleteBookResponse) =>
             deleteBookResponseAction(deleteBookResponse)),
           catchError((error: string) => of(loadDeleteBookErrorAction({error})))
@@ -61,14 +76,13 @@ export class BooksEffects {
     )
   );
 
-  assignBookToUser$: Observable<Action> = createEffect(() =>
+  deleteBooks$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(assignBookToUserAction),
-      switchMap((assignBookToUserRequest: AddBookRequest) =>
-        this.booksService.assignBookToUser(assignBookToUserRequest).pipe(
-          map((addBookResponse) =>
-            assignBookToUserResponseAction(addBookResponse)),
-          catchError((error: string) => of(loadAssignBookToUserErrorAction({error})))
+      ofType(deleteBooksAction),
+      switchMap(() =>
+        this.booksService.deleteBooks().pipe(
+          map((deleteBooksResponse) => deleteBooksResponseAction(deleteBooksResponse)),
+          catchError((error: string) => of(loadDeleteBooksErrorAction({error})))
         )
       )
     )
