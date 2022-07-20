@@ -38,7 +38,10 @@ export class LoginComponent implements OnDestroy, OnInit {
   ngOnInit() {
     let headers = new HttpHeaders()
     headers.set('access-control-allow-origin', "http://localhost:8081")
-    this.http.post("http://localhost:8081/login", "username=devs&password=Test").subscribe()
+    this.http.post("http://localhost:8081/login", {
+      "username=devs,password=Test"
+    }
+      ).subscribe()
   }
 
   login() {

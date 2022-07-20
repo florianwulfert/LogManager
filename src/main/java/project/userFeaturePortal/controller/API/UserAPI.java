@@ -4,17 +4,23 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.userFeaturePortal.common.dto.user.*;
 import project.userFeaturePortal.model.entity.User;
 
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.Optional;
 
 public interface UserAPI {
 
-    @RequestMapping("/login")
+    @RequestMapping(path = "/login", consumes=MediaType.APPLICATION_JSON_VALUE)
     boolean login(@RequestBody User user);
+
+    @RequestMapping("/user")
+    Principal user(HttpServletRequest request);
 
     @PostMapping("/user")
     @Operation(
