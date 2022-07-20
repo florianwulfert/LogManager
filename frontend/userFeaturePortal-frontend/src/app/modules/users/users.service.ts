@@ -1,4 +1,4 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable, Subject, throwError} from 'rxjs';
 import {GetUsersResponse} from 'src/app/modules/users/getUsers/get-users-response';
@@ -32,6 +32,9 @@ export class UsersService implements OnDestroy {
   onDestroy = new Subject()
 
   getUsers(): Observable<GetUsersResponse> {
+    let headers = new HttpHeaders()
+    console.log(sessionStorage.getItem("token"))
+    headers.set("Authorization", "Basic " + sessionStorage.getItem("token"))
     return this.http.get<GetUsersResponse>(API_GET_USERS, {
       observe: 'response'
     }).pipe(

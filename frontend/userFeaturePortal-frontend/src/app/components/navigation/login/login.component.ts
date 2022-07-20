@@ -4,6 +4,7 @@ import {takeUntil} from "rxjs/operators";
 import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Router} from "@angular/router";
+import {Login} from "./login.interface"
 
 @Component({
   selector: 'app-login',

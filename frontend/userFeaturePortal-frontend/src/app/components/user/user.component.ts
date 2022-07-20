@@ -11,6 +11,7 @@ import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {GetUserRequest} from "../../modules/user/getUser/getUser-request";
 import {UserFacade} from "../../modules/user/user.facade";
+import {FeatureManager} from "../../../assets/utils/feature.manager";
 
 @Component({
   selector: 'app-user',
@@ -20,9 +21,10 @@ import {UserFacade} from "../../modules/user/user.facade";
 export class UserComponent implements OnInit, OnDestroy {
 
   constructor(private usersFacade: UsersFacade,
-              private _snackBar: MatSnackBar,
               private booksFacade: BooksFacade,
-              private userFacade: UserFacade) {
+              private userFacade: UserFacade,
+              private features: FeatureManager
+              ) {
   }
 
   displayedColumns: string[] = ['name', 'birthdate', 'weight', 'height', 'bmi', 'favouriteBook', 'delete']
@@ -40,6 +42,7 @@ export class UserComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
 
   ngOnInit(): void {
+    this.features.login()
     this.getUserList()
     this.getBooks()
   }
