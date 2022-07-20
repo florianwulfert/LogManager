@@ -32,7 +32,7 @@ public class UserController implements UserAPI {
       if (user.getName() == null) {
         throw new LoginUserEmptyException("Please fill name for user!");
       }
-      return user.getName().equals("user") && user.getPassword().equals("password");
+      return user.getName().equals("devs") && user.getPassword().equals("Test");
     }
 
     @Override

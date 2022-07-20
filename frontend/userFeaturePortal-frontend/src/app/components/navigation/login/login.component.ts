@@ -1,10 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActorFacade} from "../../../modules/actor/actor.facade";
 import {takeUntil} from "rxjs/operators";
-import {Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Login} from "./login.interface";
-
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-login',
@@ -22,6 +21,7 @@ export class LoginComponent implements OnDestroy, OnInit {
   constructor(
     private readonly http: HttpClient,
     private readonly actorFacade: ActorFacade,
+    private readonly router: Router
   ) {
     this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
       if (r !== "" && r !== "not registered user") {
@@ -42,11 +42,19 @@ export class LoginComponent implements OnDestroy, OnInit {
   login() {
     let headers = new HttpHeaders()
     headers.set('access-control-allow-origin', "http://localhost:8081")
-    this.http.post("http://localhost:8081/login", {
-      "user": {
-        "name": "devs",
-        "password": "Test"
+    this.http.post<Observable<boolean>>("http://localhost:8081/login", {
+      name: "devs",
+      password: "Test"
+    }).subscribe(isValid => {
+      if (isValid) {
+        sessionStorage.setItem(
+          'token',
+          btoa("devs" + ':' + "Test")
+        );
+        this.router.navigate(['/home']);
+      } else {
+        alert("Authentication failed.")
       }
-    }).subscribe()
+    });
   }
 }

@@ -47,7 +47,7 @@ public class CustomRestExceptionHandler {
   }
 
   @ResponseBody
-  @ExceptionHandler(UserNotAllowedException.class)
+  @ExceptionHandler({UserNotAllowedException.class})
   @ResponseStatus(HttpStatus.FORBIDDEN)
   String userNotAllowedExceptionHandler(UserNotAllowedException ex) {
     return ex.getMessage();
@@ -55,7 +55,7 @@ public class CustomRestExceptionHandler {
 
   @ResponseBody
   @ExceptionHandler(LoginUserEmptyException.class)
-  @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+  @ResponseStatus(code = HttpStatus.PRECONDITION_FAILED)
   String loginUserEmptyExceptionHandler(LoginUserEmptyException ex) {
     return ex.getMessage();
   }
