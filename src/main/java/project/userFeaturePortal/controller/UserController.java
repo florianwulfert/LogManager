@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.userFeaturePortal.common.dto.user.*;
 import project.userFeaturePortal.common.message.InfoMessages;
 import project.userFeaturePortal.controller.API.UserAPI;
+import project.userFeaturePortal.exception.LoginUserEmptyException;
 import project.userFeaturePortal.model.entity.User;
 import project.userFeaturePortal.service.model.UserService;
 
@@ -28,7 +29,10 @@ public class UserController implements UserAPI {
 
     @Override
     public boolean login(User user) {
-        return user.getName().equals("user") && user.getPassword().equals("password");
+      if (user.getName() == null) {
+        throw new LoginUserEmptyException("Please fill name for user!");
+      }
+      return user.getName().equals("user") && user.getPassword().equals("password");
     }
 
     @Override

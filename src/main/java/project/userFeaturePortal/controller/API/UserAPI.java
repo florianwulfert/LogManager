@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public interface UserAPI {
 
-    @RequestMapping(path = "/login", consumes=MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/login", consumes=MediaType.APPLICATION_JSON_VALUE)
     boolean login(@RequestBody User user);
 
     @RequestMapping("/user")

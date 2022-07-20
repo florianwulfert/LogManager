@@ -24,7 +24,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     private readonly actorFacade: ActorFacade,
   ) {
     this.actorFacade.stateActor$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
-      if(r !== "" && r !== "not registered user") {
+      if (r !== "" && r !== "not registered user") {
         this.isLoggedIn = true
       }
     })
@@ -36,18 +36,17 @@ export class LoginComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
+    this.login()
+  }
+
+  login() {
     let headers = new HttpHeaders()
     headers.set('access-control-allow-origin', "http://localhost:8081")
     this.http.post("http://localhost:8081/login", {
       "user": {
-        "name":"devs",
-        "password":"Test"
+        "name": "devs",
+        "password": "Test"
       }
     }).subscribe()
-  }
-
-  login() {
-    console.log("Login")
-
   }
 }

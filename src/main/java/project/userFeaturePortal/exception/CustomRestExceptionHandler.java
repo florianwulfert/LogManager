@@ -52,4 +52,11 @@ public class CustomRestExceptionHandler {
   String userNotAllowedExceptionHandler(UserNotAllowedException ex) {
     return ex.getMessage();
   }
+
+  @ResponseBody
+  @ExceptionHandler(LoginUserEmptyException.class)
+  @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+  String loginUserEmptyExceptionHandler(LoginUserEmptyException ex) {
+    return ex.getMessage();
+  }
 }
