@@ -31,7 +31,6 @@ public class UserService {
   private static final Logger LOGGER = LogManager.getLogger(UserService.class);
   private final LogService logService;
   private final UserRepository userRepository;
-  private final BmiService bmiService;
   private final UserValidationService userValidationService;
   private final BookRepository bookRepository;
   private final UserDtoMapper userDtoMapper;
@@ -77,6 +76,15 @@ public class UserService {
     userValidationService.validateActor(userRequestDto.name, userRequestDto.actor);
 
     buildUser(userRequestDto, user);
+    logService.addLog(LogRequestDto
+            .builder()
+            .addLogRequest(AddLogRequestDto
+                    .builder()
+                    .message(String.format(InfoMessages.USER_UPDATED, userRequestDto.name))
+                    .severity("INFO")
+                    .build())
+            .user(userRequestDto.actor)
+            .build());
     LOGGER.info(String.format(InfoMessages.USER_UPDATED, userRequestDto.name));
     return String.format(InfoMessages.USER_UPDATED, userRequestDto.name);
   }
