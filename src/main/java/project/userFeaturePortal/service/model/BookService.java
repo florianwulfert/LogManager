@@ -16,7 +16,6 @@ import project.userFeaturePortal.model.repository.BookRepository;
 import project.userFeaturePortal.service.validation.BookValidationService;
 import project.userFeaturePortal.service.validation.UserValidationService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -61,6 +60,15 @@ public class BookService {
 
     bookRepository.save(buildBook(titel,erscheinungsjahr,book));
 
+    logService.addLog(LogRequestDto
+            .builder()
+            .addLogRequest(AddLogRequestDto
+                    .builder()
+                    .message(String.format(InfoMessages.BOOK_UPDATED, book.getTitel()))
+                    .severity("INFO")
+                    .build())
+            .user(actor)
+            .build());
     LOGGER.info(String.format(InfoMessages.BOOK_UPDATED, titel));
     return String.format(InfoMessages.BOOK_UPDATED, titel);
   }
