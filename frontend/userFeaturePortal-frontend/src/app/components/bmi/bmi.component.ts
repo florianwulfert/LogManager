@@ -1,19 +1,27 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {CalculateBmiRequest} from "../../modules/bmi/calculate-bmi/dto/calculate-bmi-request";
 import {BmiFacade} from "../../modules/bmi/bmi.facade";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
+import {UsersFacade} from "../../modules/users/users.facade";
+import {UserFacade} from "../../modules/user/user.facade";
+import {GetUserRequest} from "../../modules/user/getUser/getUser-request";
+import {ActorFacade} from "../../modules/actor/actor.facade";
 
 @Component({
   selector: 'app-bmi',
   templateUrl: './bmi.component.html',
   styleUrls: ['./bmi.component.scss']
 })
-export class BmiComponent implements OnDestroy{
+export class BmiComponent implements OnDestroy, OnInit {
 
-  constructor(private bmiFacade: BmiFacade, private _snackBar: MatSnackBar) {
+  constructor(private bmiFacade: BmiFacade,
+              private _snackBar: MatSnackBar,
+              private usersFacade: UsersFacade,
+              private userFacade: UserFacade,
+              private actorFacade: ActorFacade) {
   }
 
   ngOnDestroy() {
@@ -21,8 +29,20 @@ export class BmiComponent implements OnDestroy{
     this.onDestroy.complete()
   }
 
+  ngOnInit() {
+    this.getUserList()
+    this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
+      if (r) {
+        this.userAvailable = true
+      }
+    })
+  }
+
   returnUserMessage: string | undefined
   onDestroy = new Subject()
+  users: any
+  usersBmi: void | undefined
+  userAvailable: boolean = false
 
 
   public form: FormGroup = new FormGroup({
@@ -47,4 +67,25 @@ export class BmiComponent implements OnDestroy{
     })
   }
 
+  getUserList(): void {
+    this.usersFacade.getUsers();
+    this.usersFacade.stateGetUsersResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      this.users = result
+    });
+  }
+
+  public formUser: FormGroup = new FormGroup({
+    user: new FormControl('', [Validators.required]),
+    bmi: new FormControl('')
+  })
+
+  getUsersData(name: string) {
+    let getRequest = new GetUserRequest()
+    getRequest.name = name
+    this.userFacade.getUser(getRequest)
+    this.userFacade.stateGetUserResponse$.pipe(takeUntil(this.onDestroy)).subscribe(result => {
+      this.usersBmi = this.formUser.get("bmi")?.setValue(result.bmi)
+
+    })
+  }
 }
