@@ -83,6 +83,7 @@ class UserServiceTest {
   @Test
   void whenBooksListNotEmpty_ThenReturnFirstBookOfList() {
     List<Book> bookList = testBook();
+    when(bookRepository.findByTitel(anyString())).thenReturn(bookList);
     systemUnderTest.addUser(UserRequestDto.builder()
             .actor("Torsten")
             .name("Hugo")
@@ -116,9 +117,22 @@ class UserServiceTest {
   }
 
   @Test
-  void testGetFavouriteBook() {
+  void testGetFavouriteBookSuccess() {
     when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString())).thenReturn(users.get(0));
     assertEquals("TestBook",systemUnderTest.getFavouriteBook("Peter"));
+  }
+
+  @Test
+  void testGetFavouriteBookFail() {
+    when(userValidationService.checkIfNameExists(anyString(), anyBoolean(), anyString())).thenReturn(users.get(1));
+    assertEquals("",systemUnderTest.getFavouriteBook(users.get(1).getName()));
+  }
+
+  @Test
+  void testDeleteFavouriteBook() {
+    when(userValidationService.checkIfNameExists(anyString(),anyBoolean(),anyString())).thenReturn(users.get(0));
+    assertEquals("", systemUnderTest.deleteFavouriteBook(users.get(0).getName()));
+    verify(userRepository).save(any());
   }
 
   @Test
@@ -207,7 +221,7 @@ class UserServiceTest {
             .weight(70.0)
             .height(1.85)
             .bmi(20.45)
-            .favouriteBook(testBook)
+            .favouriteBook(null)
             .build());
     return users;
   }
