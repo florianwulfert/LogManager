@@ -31,14 +31,6 @@ public class CustomRestExceptionHandler {
   }
 
   @ResponseBody
-  @ExceptionHandler(IllegalColorException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  String illegalColorExceptionHandler(IllegalColorException ex) {
-    LOGGER.warn(ex.getMessage());
-    return ex.getMessage();
-  }
-
-  @ResponseBody
   @ExceptionHandler(UserNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
   String userNotFoundExceptionHandler(UserNotFoundException ex) {
