@@ -78,24 +78,6 @@ class BookValidationServiceTest {
                         .erscheinungsjahr(1900)
                         .titel("peter")
                         .build());
-        books.add(
-                Book.builder()
-                        .id(3)
-                        .erscheinungsjahr(1800)
-                        .titel("petra")
-                        .build());
-        books.add(
-                Book.builder()
-                        .id(4)
-                        .erscheinungsjahr(1888)
-                        .titel("chris")
-                        .build());
-        books.add(
-                Book.builder()
-                        .id(5)
-                        .erscheinungsjahr(1888)
-                        .titel("chris")
-                        .build());
         return books;
     }
 
