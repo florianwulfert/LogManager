@@ -52,7 +52,7 @@
         </button>
       </mat-form-field>
 
-      <mat-form-field appearance="fill" class="filter-button">
+      <mat-form-field appearance="fill" class="filter-button" *ngIf="userAvailable">
         <mat-label>Leser</mat-label>
         <mat-select formControlName="leser">
           <mat-option *ngFor="let leser of leserList" [value]="leser">
