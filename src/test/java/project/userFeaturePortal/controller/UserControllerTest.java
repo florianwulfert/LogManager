@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 
@@ -49,9 +50,27 @@ class UserControllerTest {
   }
 
   @Test
-  void tsetAddFavouriteBookToUser() {
+  void testAddFavouriteBookToUser() {
     systemUnderTest.addFavouriteBookToUser(anyString(), anyString());
     verify(userService).addFavouriteBookToUser(anyString(), anyString());
+  }
+
+  @Test
+  void testDeleteFavouriteBook() {
+    systemUnderTest.deleteFavouriteBook(anyString());
+    verify(userService).deleteFavouriteBook(anyString());
+  }
+
+  @Test
+  void testGetFavouriteBook() {
+    systemUnderTest.getFavouriteBook(anyString());
+    verify(userService).getFavouriteBook(anyString());
+  }
+
+  @Test
+  void testUpdateUser() {
+    systemUnderTest.updateUser(any());
+    verify(userService).updateUser(any());
   }
 
   @Test
@@ -70,6 +89,12 @@ class UserControllerTest {
   void testFindUserByName() {
     systemUnderTest.findUserByName(users.get(0).getName());
     verify(userService).findUserByName(users.get(0).getName());
+  }
+
+  @Test
+  void testValidateUserByName() {
+    systemUnderTest.validateUserByName(anyString());
+    verify(userService).validateUserByName(anyString());
   }
 
   @Test

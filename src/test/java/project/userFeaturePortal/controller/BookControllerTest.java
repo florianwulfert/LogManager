@@ -44,6 +44,18 @@ public class BookControllerTest {
   }
 
   @Test
+  void testUpdateBook() {
+    BookRequestDto test =
+            BookRequestDto.builder()
+                    .actor("Torsten")
+                    .erscheinungsjahr(books.get(0).getErscheinungsjahr())
+                    .titel(books.get(0).getTitel())
+                    .build();
+    bookController.updateBook(test);
+    verify(bookService).updateBook(books.get(0).getTitel(), books.get(0).getErscheinungsjahr(),"Torsten");
+  }
+
+  @Test
   void testDeleteAll() {
     bookController.deleteAll(anyString());
     verify(bookService).deleteBooks(anyString());
@@ -58,7 +70,7 @@ public class BookControllerTest {
   @Test
   void testDeleteBooksByTitel() {
     bookController.deleteBooksByTitel("haya", "Torsten");
-    verify(bookService).deleteByTitel("haya","Torsten");
+    verify(bookService).deleteByTitel(anyString(), anyString());
   }
 
   @Test

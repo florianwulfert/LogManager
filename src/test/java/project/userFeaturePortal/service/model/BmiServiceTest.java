@@ -100,7 +100,7 @@ class BmiServiceTest {
         User.builder()
             .id(1)
             .name("Peter")
-            .birthdate(LocalDate.of(2005, 12, 12))
+            .birthdate(LocalDate.of(2007, 12, 12))
             .weight(90.0)
             .height(1.85)
             .bmi(26.29)

@@ -23,21 +23,27 @@
             <mat-icon class="marginRight-15">book</mat-icon>
             <mat-card-subtitle>Book-Interactions</mat-card-subtitle>
           </mat-card-title-group>
-          <mat-card-content>
+          <mat-card-content *ngIf="userAvailable">
             {{bookDescription}}
+          </mat-card-content>
+          <mat-card-content *ngIf="!userAvailable">
+            {{bookDescriptionNotLoggedIn}}
           </mat-card-content>
         </a>
       </mat-card>
 
-      <mat-card class="col cardFormat zoom" *ngIf="userAvailable">
+      <mat-card class="col cardFormat zoom">
         <a routerLink="/bible">
           <mat-card-title-group>
             <mat-card-title>Reading bible</mat-card-title>
             <mat-icon class="marginRight-15">library_books</mat-icon>
             <mat-card-subtitle>Thoughts about reading bible</mat-card-subtitle>
           </mat-card-title-group>
-          <mat-card-content>
+          <mat-card-content *ngIf="userAvailable">
             {{bibelleseDescription}}
+          </mat-card-content>
+          <mat-card-content *ngIf="!userAvailable">
+            {{bibelleseDescriptionNotLoggedIn}}
           </mat-card-content>
         </a>
       </mat-card>
