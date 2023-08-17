@@ -53,12 +53,12 @@
                     [matTooltipPosition]="position.value"
                     class="main-deleteButton"
                     (click)="deleteUsers()">
-              <mat-icon> delete</mat-icon>
+              <mat-icon>delete</mat-icon>
             </button>
           </th>
           <td mat-cell *matCellDef="let element">
-            <button mat-icon-button class="deleteButton" (click)="deleteUser(element.name)">
-              <mat-icon> delete</mat-icon>
+            <button mat-icon-button class="deleteButton" (click)="deleteUser(element.name)" data-test-id="delete">
+              <mat-icon>delete</mat-icon>
             </button>
           </td>
         </ng-container>
@@ -98,7 +98,7 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Name</mat-label>
-                <input matInput formControlName="name">
+                <input matInput formControlName="name" data-test-id="name">
                 <button *ngIf="form.controls['name'].value" matSuffix mat-icon-button aria-label="Clear"
                         (click)="form.controls['name'].reset()">
                   <mat-icon>close</mat-icon>
@@ -112,7 +112,7 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Birthdate</mat-label>
-                <input type="date" matInput formControlName="birthdate">
+                <input type="date" matInput formControlName="birthdate" data-test-id="birthdate">
                 <button *ngIf="form.controls['birthdate'].value" matSuffix mat-icon-button aria-label="Clear"
                         (click)="form.controls['birthdate'].reset()">
                   <mat-icon>close</mat-icon>
@@ -126,7 +126,7 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Weight</mat-label>
-                <input matInput formControlName="weight">
+                <input matInput formControlName="weight" data-test-id="weight">
                 <button *ngIf="form.controls['weight'].value" matSuffix mat-icon-button aria-label="Clear"
                         (click)="form.controls['weight'].reset()">
                   <mat-icon>close</mat-icon>
@@ -140,7 +140,7 @@
             <div>
               <mat-form-field appearance="fill">
                 <mat-label>Height</mat-label>
-                <input matInput formControlName="height">
+                <input matInput formControlName="height" data-test-id="height">
                 <button *ngIf="form.controls['height'].value" matSuffix mat-icon-button aria-label="Clear"
                         (click)="form.controls['height'].reset()">
                   <mat-icon>close</mat-icon>
@@ -190,7 +190,7 @@
               <mat-form-field appearance="fill">
                 <mat-label>Name</mat-label>
                 <mat-select formControlName="name" (selectionChange)="getUsersData($event.value)">
-                  <mat-option *ngFor="let name of users" [value]="name.name">
+                  <mat-option *ngFor="let name of users" [value]="name.name" data-test-id="updateName">
                     {{name.name}}
                   </mat-option>
                 </mat-select>

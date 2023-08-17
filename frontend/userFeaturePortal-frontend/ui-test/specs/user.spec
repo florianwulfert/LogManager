@@ -7,7 +7,7 @@
 * Click User
 * Find User
 Create User
-Update User
-Filter User
-Delete User
+* Update User
+* Filter User
+* Delete User
 
