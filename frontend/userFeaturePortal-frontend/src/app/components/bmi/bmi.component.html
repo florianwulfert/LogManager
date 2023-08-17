@@ -1,55 +1,95 @@
-<div class="container ">
+<div class="container marginTop-40">
+  <div class="row">
 
-  <mat-card class="main-card">
-    <h1 align="center">BMI-Calculator</h1>
-    <form [formGroup]="form" (keydown.enter)="calculateBmi()">
+    <mat-card class="col main-card">
+      <h1 align="center">BMI-Calculator</h1>
+      <form [formGroup]="form" (keydown.enter)="calculateBmi()">
 
-      <div class="calculate-bmi-body">
+        <div class="calculate-bmi-body">
 
-        <div>
-          <mat-form-field appearance="fill">
-            <mat-label>Birthdate</mat-label>
-            <input type="date" matInput formControlName="birthdate">
-            <button *ngIf="form.controls['birthdate'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['birthdate'].reset()">
-              <mat-icon>close</mat-icon>
-            </button>
-            <mat-error *ngIf="form.controls['birthdate'].hasError('required')">
-              Birthdate is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>Birthdate</mat-label>
+              <input type="date" matInput formControlName="birthdate">
+              <button *ngIf="form.controls['birthdate'].value" matSuffix mat-icon-button aria-label="Clear"
+                      (click)="form.controls['birthdate'].reset()">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error *ngIf="form.controls['birthdate'].hasError('required')">
+                Birthdate is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>Weight</mat-label>
+              <input matInput formControlName="weight">
+              <button *ngIf="form.controls['weight'].value" matSuffix mat-icon-button aria-label="Clear"
+                      (click)="form.controls['weight'].reset()">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error *ngIf="form.controls['weight'].hasError('required')">
+                Weight is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>Height</mat-label>
+              <input matInput formControlName="height">
+              <button *ngIf="form.controls['height'].value" matSuffix mat-icon-button aria-label="Clear"
+                      (click)="form.controls['height'].reset()">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error *ngIf="form.controls['height'].hasError('required')">
+                Height is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
         </div>
+      </form>
 
-        <div>
-          <mat-form-field appearance="fill">
-            <mat-label>Weight</mat-label>
-            <input matInput formControlName="weight">
-            <button *ngIf="form.controls['weight'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['weight'].reset()">
-              <mat-icon>close</mat-icon>
-            </button>
-            <mat-error *ngIf="form.controls['weight'].hasError('required')">
-              Weight is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
+      <button mat-raised-button class="calculate button-format" (click)="calculateBmi()" [disabled]="!form.valid">
+        Calculate
+      </button>
+      <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
+    </mat-card>
+
+    <mat-card class="col main-card" *ngIf="userAvailable">
+      <h1 align="center">BMI of users</h1>
+      <form [formGroup]="formUser">
+
+        <div class="calculate-bmi-body">
+
+          <div>
+            <mat-form-field appearance="fill">
+              <mat-label>Choose user</mat-label>
+              <mat-select formControlName="user" (selectionChange)="getUsersData($event.value)">
+                <mat-option *ngFor="let user of users" [value]="user.name">
+                  {{user.name}}
+                </mat-option>
+              </mat-select>
+              <button *ngIf="formUser.controls['user'].value" matSuffix mat-icon-button aria-label="Clear"
+                      (click)="formUser.controls['user'].reset()">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error *ngIf="formUser.controls['user'].hasError('required')">
+                User is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-card appearance="fill" class="users-bmi">
+              <mat-label>Users BMI:</mat-label>
+              <input matInput formControlName="bmi">
+            </mat-card>
+          </div>
         </div>
+      </form>
+    </mat-card>
 
-        <div>
-          <mat-form-field appearance="fill">
-            <mat-label>Height</mat-label>
-            <input matInput formControlName="height">
-            <button *ngIf="form.controls['height'].value" matSuffix mat-icon-button aria-label="Clear" (click)="form.controls['height'].reset()">
-              <mat-icon>close</mat-icon>
-            </button>
-            <mat-error *ngIf="form.controls['height'].hasError('required')">
-              Height is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-      </div>
-    </form>
-
-    <button mat-raised-button class="calculate button-format" (click)="calculateBmi()" [disabled]="!form.valid">Calculate</button>
-    <button mat-raised-button class="reset button-format" (click)="form.reset()">Reset</button>
-  </mat-card>
-
+  </div>
 </div>

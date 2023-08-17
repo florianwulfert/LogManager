@@ -13,10 +13,7 @@ mat-card-title {
 }
 
 .main-card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin-right: 40px;
   padding: 30px;
   width: 350px;
 }
@@ -24,13 +21,13 @@ mat-card-title {
 .button-format {
   margin-left: 10px;
   width: 100px;
-  float: right;
+  float: left;
 }
 
 .calculate {
   background-color: #180c65;
   color: white;
-  margin-right: 19px;
+  margin-left: 19px;
 }
 
 .reset {
@@ -49,4 +46,13 @@ mat-error {
 mat-form-field {
   width: 100%;
   margin-bottom: 10px;
+}
+
+.marginTop-40{
+  margin-top: 40px;
+}
+
+.users-bmi {
+  background-color: #180c65;
+  color: white;
 }
