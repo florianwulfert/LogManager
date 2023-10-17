@@ -9,6 +9,7 @@ import {BookComponent} from "../components/book/book.component";
 import {BibleComponent} from "../components/bibellese/bible.component";
 import {CalculatorComponent} from "../components/calculator/calculator.component";
 import {DjiStoreComponent} from "../components/dji store/dji.store.component";
+import {Dji_MiniComponent} from "../components/dji store/DJI Mini/DJI.Mini.component";
 
 const routes: Routes = [
   {path: 'app', redirectTo: 'home'},
@@ -46,6 +47,10 @@ const routesDjiStore: Routes = [
   {path: 'DjiStore', component: DjiStoreComponent}
 ]
 
+const routesDji_Mini: Routes = [
+  {path: 'Dji_Mini', component: Dji_MiniComponent}
+]
+
 const different: Routes = [
   {path: '**', redirectTo: 'home'},
 ];
@@ -62,6 +67,7 @@ const different: Routes = [
     RouterModule.forChild(routesBible),
     RouterModule.forChild(routesCalculator),
     RouterModule.forChild(routesDjiStore),
+    RouterModule.forChild(routesDji_Mini),
     RouterModule.forChild(different)
   ],
   exports: [
