@@ -45,6 +45,8 @@ import {MatChipsModule} from "@angular/material/chips";
 import {BibelleseUpdateComponent} from "./components/bibellese/bibelleseUpdate/bibellese-update.component";
 import {UpdateBibelleseModule} from "./modules/updateBibellese/update-bibellese.module";
 import {GetListsForBibelleseFilterModule} from "./modules/getListsForBibelleseFilter/getListsForBibelleseFilter.module";
+import {CalculatorComponent} from "./components/calculator/calculator.component";
+import {DjiStoreComponent} from "./components/dji store/dji.store.component";
 
 @NgModule({
   declarations: [
@@ -58,7 +60,9 @@ import {GetListsForBibelleseFilterModule} from "./modules/getListsForBibelleseFi
     ProfileMenuComponent,
     BookComponent,
     BibleComponent,
-    BibelleseUpdateComponent
+    BibelleseUpdateComponent,
+    DjiStoreComponent,
+    CalculatorComponent
   ],
   imports: [
     BrowserModule,

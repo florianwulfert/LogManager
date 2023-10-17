@@ -7,6 +7,8 @@ import {LoggingComponent} from "../components/logging/logging.component";
 import {HomeComponent} from "../components/home/home.component";
 import {BookComponent} from "../components/book/book.component";
 import {BibleComponent} from "../components/bibellese/bible.component";
+import {CalculatorComponent} from "../components/calculator/calculator.component";
+import {DjiStoreComponent} from "../components/dji store/dji.store.component";
 
 const routes: Routes = [
   {path: 'app', redirectTo: 'home'},
@@ -36,6 +38,14 @@ const routesBible: Routes = [
   {path: 'bible', component: BibleComponent}
 ];
 
+const routesCalculator: Routes = [
+  {path: 'calculator', component: CalculatorComponent}
+]
+
+const routesDjiStore: Routes = [
+  {path: 'DjiStore', component: DjiStoreComponent}
+]
+
 const different: Routes = [
   {path: '**', redirectTo: 'home'},
 ];
@@ -50,6 +60,8 @@ const different: Routes = [
     RouterModule.forChild(routesLogging),
     RouterModule.forChild(routesHome),
     RouterModule.forChild(routesBible),
+    RouterModule.forChild(routesCalculator),
+    RouterModule.forChild(routesDjiStore),
     RouterModule.forChild(different)
   ],
   exports: [
