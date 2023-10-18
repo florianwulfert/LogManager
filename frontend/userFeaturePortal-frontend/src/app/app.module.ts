@@ -46,7 +46,8 @@ import {BibelleseUpdateComponent} from "./components/bibellese/bibelleseUpdate/b
 import {UpdateBibelleseModule} from "./modules/updateBibellese/update-bibellese.module";
 import {GetListsForBibelleseFilterModule} from "./modules/getListsForBibelleseFilter/getListsForBibelleseFilter.module";
 import {CalculatorComponent} from "./components/calculator/calculator.component";
-import {DjiStoreComponent} from "./components/dji store/dji.store.component";
+import {DjiStoreComponent} from "./components/djiStore/dji-store.component";
+import {DjiMiniComponent} from "./components/djiStore/DjiMini/dji-mini.component";
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import {DjiStoreComponent} from "./components/dji store/dji.store.component";
     BibleComponent,
     BibelleseUpdateComponent,
     DjiStoreComponent,
-    CalculatorComponent
+    CalculatorComponent,
+    DjiMiniComponent
   ],
   imports: [
     BrowserModule,

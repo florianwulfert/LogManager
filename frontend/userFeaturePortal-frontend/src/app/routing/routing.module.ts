@@ -8,8 +8,14 @@ import {HomeComponent} from "../components/home/home.component";
 import {BookComponent} from "../components/book/book.component";
 import {BibleComponent} from "../components/bibellese/bible.component";
 import {CalculatorComponent} from "../components/calculator/calculator.component";
-import {DjiStoreComponent} from "../components/dji store/dji.store.component";
-import {Dji_MiniComponent} from "../components/dji store/DJI Mini/DJI.Mini.component";
+import {DjiStoreComponent} from "../components/djiStore/dji-store.component";
+import {DjiMavicComponent} from "../components/djiStore/DjiMavic/dji-Mavic.component";
+import {DjiAirComponent} from "../components/djiStore/DjiAir/dji-Air.component";
+import {DjiAvataComponent} from "../components/djiStore/DjiAvata_and_FPV/dji-Avata.component";
+import {DjiPhantomComponent} from "../components/djiStore/Phantom/dji-Phantom.component";
+import {DjiInspireComponent} from "../components/djiStore/Inspire/dji-Inspire.component";
+import {DjiThermalComponent} from "../components/djiStore/Thermal/dji-Thermal.component";
+import {DjiMiniComponent} from "../components/djiStore/DjiMini/dji-mini.component";
 
 const routes: Routes = [
   {path: 'app', redirectTo: 'home'},
@@ -47,8 +53,32 @@ const routesDjiStore: Routes = [
   {path: 'DjiStore', component: DjiStoreComponent}
 ]
 
-const routesDji_Mini: Routes = [
-  {path: 'Dji_Mini', component: Dji_MiniComponent}
+const routesDjiMini: Routes = [
+  {path: 'djiMini', component: DjiMiniComponent}
+]
+
+const routesDjiMavic: Routes = [
+  {path: 'djiMavic', component: DjiMavicComponent}
+  ]
+
+const routesDjiAir: Routes = [
+  {path: 'DjiAir', component: DjiAirComponent}
+]
+
+const routesDjiAvata: Routes = [
+  {path: 'DjiAvata', component: DjiAvataComponent}
+  ]
+
+const routesDjiPhantom: Routes = [
+  {path: 'DjiPhantom', component: DjiPhantomComponent}
+]
+
+const routesDjiInspire: Routes = [
+  {path: 'DjiInspire', component: DjiInspireComponent}
+]
+
+const routesDjiThermal: Routes = [
+  {path: 'DjiThermal', component: DjiThermalComponent}
 ]
 
 const different: Routes = [
@@ -67,7 +97,13 @@ const different: Routes = [
     RouterModule.forChild(routesBible),
     RouterModule.forChild(routesCalculator),
     RouterModule.forChild(routesDjiStore),
-    RouterModule.forChild(routesDji_Mini),
+    RouterModule.forChild(routesDjiMini),
+    RouterModule.forChild(routesDjiMavic),
+    RouterModule.forChild(routesDjiAir),
+    RouterModule.forChild(routesDjiAvata),
+    RouterModule.forChild(routesDjiInspire),
+    RouterModule.forChild(routesDjiPhantom),
+    RouterModule.forChild(routesDjiThermal),
     RouterModule.forChild(different)
   ],
   exports: [
