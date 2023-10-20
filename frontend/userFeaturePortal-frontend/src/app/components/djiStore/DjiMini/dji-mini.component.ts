@@ -6,7 +6,8 @@ import {Component} from "@angular/core";
   styleUrls: ['./dji-Mini.component.scss']
 })
 
-export class DjiMiniComponent {
+
+ export class DjiMiniComponent {
   constructor() {
   }
 }

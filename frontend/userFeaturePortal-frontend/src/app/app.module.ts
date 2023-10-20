@@ -48,6 +48,12 @@ import {GetListsForBibelleseFilterModule} from "./modules/getListsForBibelleseFi
 import {CalculatorComponent} from "./components/calculator/calculator.component";
 import {DjiStoreComponent} from "./components/djiStore/dji-store.component";
 import {DjiMiniComponent} from "./components/djiStore/DjiMini/dji-mini.component";
+import {DjiMavicComponent} from "./components/djiStore/DjiMavic/dji-Mavic.component";
+import {DjiAirComponent} from "./components/djiStore/DjiAir/dji-Air.component";
+import {DjiAvataComponent} from "./components/djiStore/DjiAvata_and_FPV/dji-Avata.component";
+import {DjiInspireComponent} from "./components/djiStore/Inspire/dji-Inspire.component";
+import {DjiPhantomComponent} from "./components/djiStore/Phantom/dji-Phantom.component";
+import {DjiThermalComponent} from "./components/djiStore/Thermal/dji-Thermal.component";
 
 @NgModule({
   declarations: [
@@ -64,7 +70,13 @@ import {DjiMiniComponent} from "./components/djiStore/DjiMini/dji-mini.component
     BibelleseUpdateComponent,
     DjiStoreComponent,
     CalculatorComponent,
-    DjiMiniComponent
+    DjiMiniComponent,
+    DjiMavicComponent,
+    DjiAirComponent,
+    DjiAvataComponent,
+    DjiInspireComponent,
+    DjiPhantomComponent,
+    DjiThermalComponent
   ],
   imports: [
     BrowserModule,
