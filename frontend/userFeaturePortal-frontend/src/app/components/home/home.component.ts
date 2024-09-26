@@ -3,6 +3,7 @@ import {ActorFacade} from "../../modules/actor/actor.facade";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {UserFacade} from "../../modules/user/user.facade";
+import {FeatureManager} from "../../../assets/utils/feature.manager";
 
 @Component({
   selector: 'app-home',
@@ -11,18 +12,13 @@ import {UserFacade} from "../../modules/user/user.facade";
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  userAvailable: boolean = false
   onDestroy = new Subject()
 
-  constructor(private readonly actorFacade: ActorFacade, private readonly userFacade: UserFacade) {
+  constructor(private readonly features: FeatureManager) {
   }
 
   ngOnInit() {
-    this.actorFacade.stateActorIsValid$.pipe(takeUntil(this.onDestroy)).subscribe(r => {
-      if (r) {
-        this.userAvailable = true
-      }
-    })
+    this.features.login()
   }
 
   ngOnDestroy() {

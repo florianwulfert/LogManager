@@ -7,9 +7,10 @@ import {LoggingComponent} from "../components/logging/logging.component";
 import {HomeComponent} from "../components/home/home.component";
 import {BookComponent} from "../components/book/book.component";
 import {BibleComponent} from "../components/bibellese/bible.component";
+import {LoginComponent} from "../components/navigation/login/login.component";
 
-const routes: Routes = [
-  {path: 'app', redirectTo: 'home'},
+const routesLogin: Routes = [
+  {path: 'login', component: LoginComponent}
 ];
 
 const routesBmi: Routes = [
@@ -37,7 +38,7 @@ const routesBible: Routes = [
 ];
 
 const different: Routes = [
-  {path: '**', redirectTo: 'home'},
+  {path: '**', redirectTo: 'login'},
 ];
 
 @NgModule({
@@ -50,6 +51,7 @@ const different: Routes = [
     RouterModule.forChild(routesLogging),
     RouterModule.forChild(routesHome),
     RouterModule.forChild(routesBible),
+    RouterModule.forChild(routesLogin),
     RouterModule.forChild(different)
   ],
   exports: [

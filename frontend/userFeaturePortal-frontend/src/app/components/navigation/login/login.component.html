@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Sign in</h1>
+
+<div mat-dialog-content>
+  <mat-form-field appearance="fill">
+    <mat-label>Username</mat-label>
+    <input matInput data-test-id="inputName">
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Password</mat-label>
+    <input matInput type="password"  data-test-id="inputName">
+  </mat-form-field>
+</div>
+<p *ngIf="errorMessage !== ''" align="center">User not registered yet!<br>
+  Please contact an administrator.</p>
+<div mat-dialog-actions>
+  <button mat-button (click)="login()" class="apply-button">Login</button>
+</div>

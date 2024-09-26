@@ -1,10 +1,13 @@
 import {MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition} from "@angular/material/snack-bar";
 import {Injectable} from "@angular/core";
 import {FormGroup} from "@angular/forms";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {Router} from "@angular/router";
 
 @Injectable({providedIn: 'root'})
 export class FeatureManager {
-  constructor(private _snackBar: MatSnackBar) {
+  constructor(private _snackBar: MatSnackBar, private readonly router: Router, private readonly http: HttpClient) {
   }
 
   openSnackbar(message: string | undefined, success: string): void {
@@ -38,5 +41,23 @@ export class FeatureManager {
       }
       count++
     }
+  }
+
+  login() {
+    let headers = new HttpHeaders()
+    headers.set('access-control-allow-origin', "http://localhost:8081")
+    this.http.post<Observable<boolean>>("http://localhost:8081/login", {
+      name: "devs",
+      password: "Test"
+    }).subscribe(isValid => {
+      if (isValid) {
+        sessionStorage.setItem(
+          'token',
+          btoa("devs" + ':' + "Test")
+        );
+      } else {
+        alert("Authentication failed.")
+      }
+    });
   }
 }

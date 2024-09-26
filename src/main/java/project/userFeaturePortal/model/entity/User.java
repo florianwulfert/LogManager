@@ -1,18 +1,19 @@
 package project.userFeaturePortal.model.entity;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.time.LocalDate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import project.userFeaturePortal.common.message.ErrorMessages;
 import project.userFeaturePortal.common.message.InfoMessages;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.Collection;
 
 /**
  * @author - Florian Wulfert 25.11.2021
@@ -48,6 +49,27 @@ public class User {
 
   @Column(name = "bmi")
   double bmi;
+
+  @Column
+  String email;
+
+  @Column
+  String password;
+
+  @Column
+  boolean isEnabled;
+
+  @Column
+  private boolean tokenExpired;
+
+  @ManyToMany
+  @JoinTable(
+          name = "users_roles",
+          joinColumns = @JoinColumn(
+                  name = "user_id", referencedColumnName = "id"),
+          inverseJoinColumns = @JoinColumn(
+                  name = "role_id", referencedColumnName = "id"))
+  private Collection<Role> roles;
 
   private static final Logger LOGGER = LogManager.getLogger(User.class);
 
